@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId", "pesel","name","surname", "email", "phoneNumber","availabilityStatus" })
+@ToString(of = {"candidateId","name","surname", "email", "phoneNumber","availabilityStatus" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +19,6 @@ public class CandidateEntity {
     @Column(name = "candidate_id")
     private Integer candidateId;
 
-    @Column(name = "pesel")
-    private String pesel;
 
     @Column(name = "name")
     private String name;

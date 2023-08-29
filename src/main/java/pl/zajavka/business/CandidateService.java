@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zajavka.api.dto.CandidateDTO;
 import pl.zajavka.business.dao.CandidateDAO;
 import pl.zajavka.domain.Candidate;
 import pl.zajavka.domain.exception.NotFoundException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,17 +20,17 @@ public class CandidateService {
 
 
     @Transactional
-    public List<Candidate> findAvailable() {
-        List<Candidate> availableCandidate = candidateDAO.findAvailable();
-        log.info("Available candidate: [{}]", availableCandidate.size());
-        return availableCandidate;
+    public List<Candidate> findCandidates() {
+        List<Candidate> candidates = candidateDAO.findCandidates();
+        log.info("Available candidates: [{}]", candidates.size());
+        return candidates;
     }
 
     @Transactional
-    public Candidate findCandidate(String pesel) {
-        Optional<Candidate> candidate = candidateDAO.findByPesel(pesel);
+    public Candidate findCandidate(String email) {
+        Optional<Candidate> candidate = candidateDAO.findByEmail(email);
         if (candidate.isEmpty()) {
-            throw new NotFoundException("Could not find candidate by pesel: [%s]".formatted(pesel));
+            throw new NotFoundException("Could not find candidate by email: [%s]".formatted(email));
         }
         return candidate.get();
     }

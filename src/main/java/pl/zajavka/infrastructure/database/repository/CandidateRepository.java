@@ -19,15 +19,15 @@ public class CandidateRepository implements CandidateDAO {
 
 
     @Override
-    public List<Candidate> findAvailable() {
+    public Optional<Candidate> findByEmail(String email) {
+        return candidateJpaRepository.findByEmail(email)
+                .map(entity -> candidateEntityMapper.mapFromEntity(entity));
+    }
+    @Override
+    public List<Candidate> findCandidates() {
         return candidateJpaRepository.findAll().stream()
-                .map(candidateEntityMapper::mapFromEntity)
+                .map(entity -> candidateEntityMapper.mapFromEntity(entity))
                 .toList();
     }
 
-    @Override
-    public Optional<Candidate> findByPesel(String pesel) {
-        return candidateJpaRepository.findByPesel(pesel)
-                .map(candidateEntityMapper::mapFromEntity);
-    }
 }

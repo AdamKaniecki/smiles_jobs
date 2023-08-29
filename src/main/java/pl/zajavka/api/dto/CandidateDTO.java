@@ -18,9 +18,8 @@ public class CandidateDTO {
 
 
 
-private String candidateName;
-private String candidateSurname;
-private String candidateEmail;
-
+        String name;
+        String surname;
+        String email;
 
         }

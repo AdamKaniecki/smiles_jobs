@@ -6,12 +6,11 @@ import pl.zajavka.infrastructure.database.entity.AddressEntity;
 @With
 @Value
 @Builder
-@EqualsAndHashCode(of = "pesel")
-@ToString(of = {"candidateId","pesel", "name", "surname", "email","phoneNumber","availabilityStatus"})
+@EqualsAndHashCode(of = "email")
+@ToString(of = {"candidateId", "name", "surname", "email","phoneNumber","availabilityStatus"})
 public class Candidate {
 
     Integer candidateId;
-    String pesel;
     String name;
     String surname;
     String email;

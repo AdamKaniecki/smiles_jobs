@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "companyId")
-@ToString(of = {"companyId", "companyName", "companyDescription", "contactPerson","recruitmentCriteria","candidateStatus","requestEmployment" })
+@ToString(of = {"companyId", "companyName", "companyDescription", "email","recruitmentCriteria","requestEmployment" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,14 +25,12 @@ public class CompanyEntity {
     @Column(name= "company_description")
     private String companyDescription;
 
-    @Column(name= "contact_person")
-    private String contactPerson;
+    @Column(name = "email")
+    private String email;
 
     @Column(name= "recruitment_criteria")
     private String recruitmentCriteria;
 
-    @Column(name= "candidate_status")
-    private String candidateStatus;
 
     @Column(name= "request_employment")
     private String requestEmployment;

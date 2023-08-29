@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface CompanyDAO {
 
     Optional<Company> findByEmail(String email);
-    List<Company> findAvailable();
+    List<Company> findCompanies();
 }

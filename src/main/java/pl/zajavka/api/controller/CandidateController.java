@@ -18,11 +18,10 @@ public class CandidateController {
     @GetMapping(value = CANDIDATE)
     public String homePage(Model model) {
 
-        var availableCandidate = candidateDAO.findAvailable().stream()
+        var candidates = candidateDAO.findCandidates().stream()
                         .map(candidateMapper::map)
                                 .toList();
-
-        model.addAttribute("availableCandidateDTOs", availableCandidate);
+        model.addAttribute("candidatesDTOs", candidates);
         return "candidate";
     }
 }

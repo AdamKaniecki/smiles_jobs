@@ -1,6 +1,5 @@
 CREATE TABLE candidate (
     candidate_id SERIAL NOT NULL,
-    pesel VARCHAR(20) NOT NULL,
     name VARCHAR(255),
     surname VARCHAR(255),
     email VARCHAR(255) NOT NULL,
