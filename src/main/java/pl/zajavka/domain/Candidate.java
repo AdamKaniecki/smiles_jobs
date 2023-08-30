@@ -16,6 +16,5 @@ public class Candidate {
     String email;
     String phoneNumber;
     Boolean availabilityStatus;
-//    String CV;
     AddressEntity address;
 }

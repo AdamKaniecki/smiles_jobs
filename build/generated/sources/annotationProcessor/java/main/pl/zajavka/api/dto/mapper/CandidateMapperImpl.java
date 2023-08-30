@@ -7,7 +7,7 @@ import pl.zajavka.domain.Candidate;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-08-28T17:09:09+0200",
+    date = "2023-08-29T14:33:33+0200",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.4.jar, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 @Component
@@ -20,6 +20,10 @@ public class CandidateMapperImpl implements CandidateMapper {
         }
 
         CandidateDTO.CandidateDTOBuilder candidateDTO = CandidateDTO.builder();
+
+        candidateDTO.name( candidate.getName() );
+        candidateDTO.surname( candidate.getSurname() );
+        candidateDTO.email( candidate.getEmail() );
 
         return candidateDTO.build();
     }

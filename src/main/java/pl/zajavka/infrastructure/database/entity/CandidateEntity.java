@@ -3,6 +3,8 @@ package pl.zajavka.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @EqualsAndHashCode(of = "candidateId")
@@ -43,4 +45,7 @@ public class CandidateEntity {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "candidate_advertisement_id")
+    private Set<CandidateAdvertisementEntity> candidateAdvertisements;
 }

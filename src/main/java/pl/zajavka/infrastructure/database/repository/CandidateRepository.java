@@ -21,12 +21,12 @@ public class CandidateRepository implements CandidateDAO {
     @Override
     public Optional<Candidate> findByEmail(String email) {
         return candidateJpaRepository.findByEmail(email)
-                .map(entity -> candidateEntityMapper.mapFromEntity(entity));
+                .map(candidateEntityMapper::mapFromEntity);
     }
     @Override
     public List<Candidate> findCandidates() {
         return candidateJpaRepository.findAll().stream()
-                .map(entity -> candidateEntityMapper.mapFromEntity(entity))
+                .map(candidateEntityMapper::mapFromEntity)
                 .toList();
     }
 

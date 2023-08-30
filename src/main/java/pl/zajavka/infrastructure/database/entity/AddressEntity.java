@@ -36,8 +36,8 @@ public class AddressEntity {
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     private CompanyEntity company;
 
-//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
-//    private CandidateEntity candidate;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
+    private CandidateEntity candidate;
 }
 
 
