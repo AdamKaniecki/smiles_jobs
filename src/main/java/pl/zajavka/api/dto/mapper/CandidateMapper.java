@@ -6,5 +6,6 @@ import pl.zajavka.domain.Candidate;
 
 @Mapper(componentModel = "spring")
 public interface CandidateMapper {
-    CandidateDTO map(final Candidate candidate);
+    Candidate map(final CandidateDTO candidateDTO);
+    CandidateDTO mapToDTO(final Candidate candidate);
 }

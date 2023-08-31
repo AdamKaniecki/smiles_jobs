@@ -8,6 +8,7 @@ import pl.zajavka.domain.Company;
 import pl.zajavka.infrastructure.database.repository.jpa.CompanyJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CompanyEntityMapper;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,6 @@ public class CompanyRepository implements CompanyDAO {
                     .map(companyEntityMapper::mapFromEntity)
                     .toList();
     }
+
+
 }

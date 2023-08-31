@@ -2,6 +2,9 @@ package pl.zajavka.domain;
 
 import lombok.*;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.infrastructure.database.entity.CandidateAdvertisementEntity;
+
+import java.util.Set;
 
 @With
 @Value
@@ -16,5 +19,6 @@ public class Candidate {
     String email;
     String phoneNumber;
     Boolean availabilityStatus;
-    AddressEntity address;
+    Address address;
+    Set<CandidateAdvertisement> candidateAdvertisements;
 }

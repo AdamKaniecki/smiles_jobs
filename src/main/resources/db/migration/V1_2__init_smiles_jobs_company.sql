@@ -3,7 +3,7 @@ CREATE TABLE company (
     company_name VARCHAR(255) NOT NULL,
     company_description TEXT,
     email VARCHAR(255),
-    recruitment_criteria TEXT,
+    recruitment_criteria VARCHAR(255),
     request_employment BOOLEAN,
     address_id INT  NOT NULL,
     PRIMARY KEY (company_id),

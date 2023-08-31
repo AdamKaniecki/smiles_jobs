@@ -15,6 +15,7 @@ public class CandidateAdvertisement {
      String number;
      String workExperience;
      String knowledgeTechnology;
+     String programmingLanguage;
      OffsetDateTime dateOfAdvertisement;
      Candidate candidate;
 }

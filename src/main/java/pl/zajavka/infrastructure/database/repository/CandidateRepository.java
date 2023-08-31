@@ -7,6 +7,7 @@ import pl.zajavka.domain.Candidate;
 import pl.zajavka.infrastructure.database.repository.jpa.CandidateJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -29,5 +30,6 @@ public class CandidateRepository implements CandidateDAO {
                 .map(candidateEntityMapper::mapFromEntity)
                 .toList();
     }
+
 
 }

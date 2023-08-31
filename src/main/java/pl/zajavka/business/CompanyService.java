@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.business.dao.CompanyDAO;
 import pl.zajavka.domain.Candidate;
+import pl.zajavka.domain.CandidateAdvertisement;
 import pl.zajavka.domain.Company;
 import pl.zajavka.domain.exception.NotFoundException;
 
@@ -33,5 +34,7 @@ public class CompanyService {
         }
         return company.get();
     }
+
+
 }
 

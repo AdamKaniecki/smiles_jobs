@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "candidateAdvertisementId")
-@ToString(of = {"candidateAdvertisementId","number","workExperience", "knowledgeTechnology", "dateOfAdvertisement" })
+@ToString(of = {"candidateAdvertisementId", "number", "dateOfAdvertisement" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,11 +23,20 @@ public class CandidateAdvertisementEntity {
     @Column(name = "number")
     private String number;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
     @Column(name = "work_experience")
     private String workExperience;
 
     @Column(name = "knowledge_technology")
     private String knowledgeTechnology;
+
+    @Column(name = "programming_language")
+    private String programmingLanguage;
 
     @Column(name = "date_of_advertisement")
     private OffsetDateTime dateOfAdvertisement;

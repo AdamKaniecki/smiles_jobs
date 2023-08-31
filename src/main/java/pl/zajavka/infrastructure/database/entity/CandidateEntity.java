@@ -37,15 +37,10 @@ public class CandidateEntity {
     @Column(name = "availability_status")
     private Boolean availabilityStatus;
 
-//    @Column(name = "CV")
-//    private String CV;
-
-
-
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "candidate_advertisement_id")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "candidateAdvertisementId")
     private Set<CandidateAdvertisementEntity> candidateAdvertisements;
 }

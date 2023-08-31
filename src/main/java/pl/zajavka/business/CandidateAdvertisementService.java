@@ -18,6 +18,7 @@ import java.util.Optional;
 public class CandidateAdvertisementService {
     private final CandidateAdvertisementDAO candidateAdvertisementDAO;
 
+
     @Transactional
     public List<CandidateAdvertisement> findCandidateAdvertisements(){
         List<CandidateAdvertisement> candidateAdvertisements = candidateAdvertisementDAO.findCandidateAdvertisements();
@@ -33,6 +34,7 @@ public class CandidateAdvertisementService {
         }
         return candidateAdvertisement.get();
     }
+
 
 
 }

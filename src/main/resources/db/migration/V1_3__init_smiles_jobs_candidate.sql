@@ -8,10 +8,13 @@ CREATE TABLE candidate (
 --    expected_salary NUMERIC (7, 2)
     availability_status BOOLEAN,
     address_id INT  NOT NULL,
+
+
     PRIMARY KEY (candidate_id),
     UNIQUE (email),
     UNIQUE (phone_number),
     CONSTRAINT fk_candidate_address
          FOREIGN KEY (address_id)
               REFERENCES address (address_id)
+
 );

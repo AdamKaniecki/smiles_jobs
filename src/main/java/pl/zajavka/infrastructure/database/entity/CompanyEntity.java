@@ -3,6 +3,8 @@ package pl.zajavka.infrastructure.database.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 
 @Getter
 @Setter
@@ -31,11 +33,13 @@ public class CompanyEntity {
     @Column(name= "recruitment_criteria")
     private String recruitmentCriteria;
 
-
     @Column(name= "request_employment")
     private String requestEmployment;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "jobOfferId")
+    private Set<JobOfferEntity> jobOffers;
 }
