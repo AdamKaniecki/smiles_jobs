@@ -2,8 +2,8 @@ package pl.zajavka.infrastructure.database.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.zajavka.domain.Candidate;
 
-import java.util.Set;
 
 @Getter
 @Setter
@@ -20,7 +20,6 @@ public class CandidateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "candidate_id")
     private Integer candidateId;
-
 
     @Column(name = "name")
     private String name;
@@ -41,6 +40,10 @@ public class CandidateEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "candidateAdvertisementId")
-    private Set<CandidateAdvertisementEntity> candidateAdvertisements;
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "candidate")
+    private CandidateAdvertisementEntity candidateAdvertisement;
+
+
+
 }

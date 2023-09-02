@@ -33,6 +33,9 @@ public class AddressEntity {
     @Column(name = "street_and_number")
     private String StreetAndNumber;
 
+    @Column(name = "address")
+    private String address;
+
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "address")
     private CompanyEntity company;
 

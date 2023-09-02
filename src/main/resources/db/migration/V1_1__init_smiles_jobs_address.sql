@@ -4,5 +4,6 @@ CREATE TABLE address (
     city VARCHAR(255),
     postal_code VARCHAR(10),
     street_and_number VARCHAR(255),
+    address     VARCHAR(32) NOT NULL,
     PRIMARY KEY (address_id)
 );

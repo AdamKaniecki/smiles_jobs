@@ -35,6 +35,9 @@ public class CompanyService {
         return company.get();
     }
 
-
+    @Transactional
+    public Company saveCompany(Company company) {
+        return companyDAO.saveCompany(company);
+    }
 }
 

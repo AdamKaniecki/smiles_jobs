@@ -6,11 +6,7 @@ CREATE TABLE candidate_advertisement (
     work_experience VARCHAR(255) NOT NULL,
     programming_language VARCHAR(255) NOT NULL,
     date_of_advertisement TIMESTAMP WITH TIME ZONE,
-    candidate_id INT NOT NULL,
-
     PRIMARY KEY (candidate_advertisement_id),
-    UNIQUE(number),
-        CONSTRAINT fk_candidate_advertisement_candidate
-                 FOREIGN KEY (candidate_id)
-                      REFERENCES candidate (candidate_id)
+    UNIQUE(number)
+
 );

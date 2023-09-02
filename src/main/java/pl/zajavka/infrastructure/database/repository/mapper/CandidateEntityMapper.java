@@ -13,4 +13,7 @@ public interface CandidateEntityMapper {
     @Mapping(target = "address", ignore = true)
     Candidate mapFromEntity(CandidateEntity entity);
 
+    @Mapping(target = "candidateAdvertisement", ignore = true)
+    CandidateEntity mapToEntity(Candidate candidate);
+
 }

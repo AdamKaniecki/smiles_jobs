@@ -11,6 +11,7 @@ import pl.zajavka.domain.CandidateAdvertisement;
 import pl.zajavka.domain.exception.NotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,6 +21,10 @@ import java.util.Set;
 public class CandidateService {
 
     private final CandidateDAO candidateDAO;
+
+    private boolean existingCandidateEmailExists(String email) {
+        return Objects.nonNull(email) && !email.isBlank();
+    }
 
 
     @Transactional
@@ -45,22 +50,17 @@ public class CandidateService {
                 .phoneNumber(candidate.getPhoneNumber())
                 .email(candidate.getEmail())
                 .address(Address.builder()
-                .country(address.getCountry())
-                .city(address.getCity())
-                .postalCode(address.getPostalCode())
-                .StreetAndNumber(address.getStreetAndNumber()) .build())
+                        .country(candidate.getAddress().getCountry())
+                        .city(candidate.getAddress().getCity())
+                        .postalCode(candidate.getAddress().getPostalCode())
+                        .StreetAndNumber(candidate.getAddress().getStreetAndNumber())
+                        .build())
                 .candidateAdvertisements(Set.of(candidateAdvertisement))
                 .build();
 
-
-
-//               .address(Address.builder()
-//                        .country(inputData.getCandidateAddressCountry())
-//                        .city(inputData.getCandidateAddressCity())
-//                        .postalCode(inputData.getCandidateAddressPostalCode())
-//                        .address(inputData.getCandidateAddressStreet())
-//                        .build())
-//                .invoices(Set.of(invoice))
-//                .build();
+    }
+    @Transactional
+    public Candidate saveCandidate(Candidate candidate) {
+        return candidateDAO.saveCandidate(candidate);
     }
 }

@@ -8,5 +8,5 @@ import pl.zajavka.domain.Company;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {
-    Company map(final CompanyDTO companyDTO);
+    CompanyDTO map(final Company company);
 }

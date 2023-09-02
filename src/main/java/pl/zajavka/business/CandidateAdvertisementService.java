@@ -10,6 +10,7 @@ import pl.zajavka.domain.CandidateAdvertisement;
 import pl.zajavka.domain.exception.NotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -17,6 +18,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CandidateAdvertisementService {
     private final CandidateAdvertisementDAO candidateAdvertisementDAO;
+    private final CandidateService candidateService;
+
 
 
     @Transactional

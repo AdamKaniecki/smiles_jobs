@@ -10,4 +10,6 @@ public interface CompanyDAO {
 
     Optional<Company> findByEmail(String email);
     List<Company> findCompanies();
+
+    Company saveCompany(Company company);
 }

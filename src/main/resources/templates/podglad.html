@@ -1,31 +1,112 @@
-<div class="job-seeker">
-    <div class="column">
-        <h2>Tytuł ogłoszenia</h2>
-        <p>Krótka prezentacja</p>
-        <p>Kwalifikacje i umiejętności</p>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+          crossorigin="anonymous">
+    <title>Smiles Jobs</title>
+</head>
+
+<body>
+<div class="container">
+    <h1>Welcome to Smiles Jobs!</h1>
+
+    <h2> Smiles Jobs to platforma ułatwiająca znalezienie pracy oraz pomaga w w zatrudnianiu pracowników</h2>
+    <p>Spójrz na ostanio zamieszczone ogłoszenia</p>
+
+    <div>
+        <table class="table" id="sortable-table">
+            <thead class="table-dark">
+            <tr>
+                <th>company</th>
+                <th>position</th>
+                <th>responsibilities</th>
+                <th>skills</th>
+                <th>benefits</th>
+                <th>salary range</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-    <div class="column">
-        <h2>Doświadczenie zawodowe</h2>
-        <ul>
-            <li>Nazwa firmy, stanowisko, okres zatrudnienia</li>
-            <li>Nazwa firmy, stanowisko, okres zatrudnienia</li>
-        </ul>
+    <br>
+    <div>
+        <table class="table" id="jsortable-table">
+            <thead class="table-dark">
+            <tr>
+                <th>Number</th>
+                <th>FullName</th>
+                <th>Work experience</th>
+                <th>Knowledge of IT technologies</th>
+                <th>My projects</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Send offers job</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="applicant : ${applicants}">
+                <td th:text="${applicant.number}"></td>
+                <td th:text="${applicant.fullName}"></td>
+                <td th:text="${applicant.workExperience}"></td>
+                <td th:text="${applicant.itTechnologies}"></td>
+                <td><a th:href="${applicant.projectsLink}">View Projects</a></td>
+                <td th:text="${applicant.date}"></td>
+                <td th:text="${applicant.status}"></td>
+                <td><button class="btn btn-primary">Send Offer</button></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <div class="column">
-        <h2>Edukacja</h2>
-        <ul>
-            <li>Tytuł naukowy, nazwa uczelni, data ukończenia</li>
-            <li>Tytuł naukowy, nazwa uczelni, data ukończenia</li>
-        </ul>
-    </div>
-    <div class="column">
-        <h2>Cel zawodowy</h2>
-        <p>Opis celu zawodowego</p>
-        <p>Preferencje zatrudnienia</p>
-    </div>
-    <div class="column">
-        <h2>Kontakt</h2>
-        <p>Adres e-mail: example@email.com</p>
-        <p>Numer telefonu: 123-456-789</p>
+
+
+
+    <h3>Jeśli chcesz mieć dostęp do pełnej listy ogłoszeń - dołącz do nas</h3>
+    <form action="#" th:action="@{/service/request}" th:object="${carServiceRequestDTO}" method="POST">
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <h3>Jeśli jesteś już naszym użytkownikiem wybierz swój dział</h3>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="col-md-4">
+                            <a th:href="@{/candidate}" class="btn btn-info" role="button">Candidate Portal</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <a th:href="@{/company}" class="btn btn-info" role="button">Company Portal</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>If you are new customer - please fill out every input in the form!</h3>
+                <br>
+                <p>Please enter customer data:</p>
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <label for="customerName">Customer name:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" id="customerName" th:field="*{customerName}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <input type="submit" value="Request!" class="btn btn-success">
+            </div>
+        </div>
+    </form>
     </div>
 </div>
+
+
+</body>
+
+</html>

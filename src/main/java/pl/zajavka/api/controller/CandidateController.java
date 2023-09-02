@@ -18,11 +18,13 @@ import pl.zajavka.domain.Candidate;
 @RequiredArgsConstructor
 public class CandidateController {
 
-    private static final String CANDIDATE = "/candidate";
+    private static final String CANDIDATE = "/candidate_portal";
     private static final String CANDIDATE_REGISTRY = "/candidate_registry";
     private final CandidateMapper candidateMapper;
     private final CandidateService candidateService;
-    private final CandidateDTO candidateDTO;
+
+//    private final CandidateDTO candidateDTO;
+
 
 
 
@@ -33,47 +35,45 @@ public class CandidateController {
 //        return new ModelAndView("car_purchase", model);
 
 
-
+//
     @GetMapping(value = CANDIDATE)
     public String homePage(Model model) {
 
         var candidates = candidateService.findCandidates().stream()
-                        .map((Candidate candidate) -> candidateMapper.map(candidateDTO))
+                        .map(candidateMapper::map)
                                 .toList();
         model.addAttribute("candidatesDTOs", candidates);
-        return "candidate";
+        return "candidate_portal";
     }
-
-    @PostMapping(value = CANDIDATE)
-    public String makeCandidate(
-            @Valid @ModelAttribute("candidateDTO") CandidateDTO candidateDTO,
-            BindingResult result,
-            ModelMap model
-    ) {
-        if(result.hasErrors()){
-            return "error";
-        } else
-//        CandidateDTO candidate = candidateMapper.mapToDTO(candidate);
-
-//        Invoice invoice = carPurchaseService.purchase(request);
-
-//        if (!candidateDTO.getExistingCandidateEmail().isBlank()){
-//            model.addAttribute("existingCandidateEmail", candidateDTO.getExistingCandidateEmail());
-
-
-        {
-
-
-            model.addAttribute("customerName", candidateDTO.getCandidateName());
-            model.addAttribute("customerSurname", candidateDTO.getCandidateSurname());
-        }
-//        model.addAttribute("invoiceNumber", invoice.getInvoiceNumber());
-
-        return "candidate_registry";
-    }
-    @GetMapping(CANDIDATE_REGISTRY)
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("candidateDto", new CandidateDTO());
-        return "registry_candidate"; // Zwracany widok formularza rejestracji
-    }
+//
+//    @PostMapping(value = CANDIDATE)
+//    public String makeCandidate(
+//            @Valid @ModelAttribute("candidateDTO") CandidateDTO candidateDTO,
+//            BindingResult result,
+//            ModelMap model
+//    ) {
+//        if(result.hasErrors()){
+//            return "error";
+//        } else {
+//
+////            Candidate candidate = candidateMapper.map(candidateDTO);
+////
+////        Invoice invoice = carPurchaseService.purchase(request);
+//
+////        if (!candidateDTO.getExistingCandidateEmail().isBlank()){
+////            model.addAttribute("existingCandidateEmail", candidateDTO.getExistingCandidateEmail());
+//            model.addAttribute("customerName", candidateDTO.getName());
+//            model.addAttribute("customerSurname", candidateDTO.getSurname());
+//        }
+//
+////        model.addAttribute("invoiceNumber", invoice.getInvoiceNumber());
+//
+//        return "candidate_registry";
+//    }
+//    @GetMapping(CANDIDATE_REGISTRY)
+//    public String showRegistrationForm(Model model) {
+//        model.addAttribute("candidateDto", candidateDTO);
+//        return "candidate_registry";
+//
+//    }
 }

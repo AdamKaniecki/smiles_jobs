@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 import pl.zajavka.business.dao.CompanyDAO;
 import pl.zajavka.domain.Candidate;
 import pl.zajavka.domain.Company;
+import pl.zajavka.infrastructure.database.entity.CandidateEntity;
+import pl.zajavka.infrastructure.database.entity.CompanyEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.CompanyJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CompanyEntityMapper;
 
@@ -34,5 +36,10 @@ public class CompanyRepository implements CompanyDAO {
                     .toList();
     }
 
-
+    @Override
+    public Company saveCompany(Company company) {
+        CompanyEntity toSave = companyEntityMapper.mapToEntity(company);
+        CompanyEntity saved = companyJpaRepository.save(toSave);
+        return companyEntityMapper.mapFromEntity(saved);
+    }
 }
