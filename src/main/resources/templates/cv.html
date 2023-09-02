@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>My CV</title>
+  <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .cv-container {
+            display: flex;
+            padding: 20px;
+        }
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .cv-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="cv-container">
+  <img class="profile-image" th:src="@{/images/profile.jpg}" alt="Profile Image">
+  <div class="cv-content">
+    <h1 th:text="${cvData.name}">John Doe</h1>
+    <div class="section">
+      <h2 class="section-title">About Me</h2>
+      <p th:text="${cvData.aboutMe}">
+        I am a passionate web developer with a strong interest in creating interactive and user-friendly websites.
+      </p>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Experience</h2>
+      <ul>
+        <li th:each="experience : ${cvData.experience}">
+          <h3 th:text="${experience.position}">Frontend Developer</h3>
+          <p th:text="${experience.company}">ABC Web Solutions</p>
+          <p th:text="${experience.duration}">January 2020 - Present</p>
+        </li>
+      </ul>
+    </div>
+    <div class="section">
+      <h2 class="section-title">Education</h2>
+      <ul>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>
