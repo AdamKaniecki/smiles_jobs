@@ -29,7 +29,7 @@ public class CandidateService {
 
     @Transactional
     public List<Candidate> findCandidates() {
-        List<Candidate> candidates = candidateDAO.findCandidates();
+        List<Candidate> candidates = candidateDAO.findCandidatesList();
         log.info("Available candidates: [{}]", candidates.size());
         return candidates;
     }

@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CandidateDAO {
-    public Optional<Candidate> findByEmail(String email);
-    public List<Candidate> findCandidates();
 
-    Candidate saveCandidate(Candidate candidate);
+     Candidate createCandidate(Candidate newCandidate);
+     Optional<Candidate> findByEmail(String email);
+     List<Candidate> findCandidatesList();
+     Candidate updateCandidate(Integer candidateId, Candidate updatedCandidate);
+     Candidate saveCandidate(Candidate candidate);
+     boolean deleteCandidate(Integer candidateId);
+
 }
