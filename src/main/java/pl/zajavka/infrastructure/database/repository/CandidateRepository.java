@@ -51,27 +51,27 @@ public class CandidateRepository implements CandidateDAO {
         CandidateEntity candidateEntity = candidateJpaRepository.findById(candidateId).orElse(null);
         if (candidateEntity != null) {
             // Aktualizuj pola encji na podstawie pól obiektu updatedCandidate
-            candidateEntity.setName(updatedCandidate.getName());
-            candidateEntity.setSurname(updatedCandidate.getSurname());
-            candidateEntity.setEmail(updatedCandidate.getEmail());
-            candidateEntity.setPhoneNumber(updatedCandidate.getPhoneNumber());
-            candidateEntity.setAvailabilityStatus(updatedCandidate.getAvailabilityStatus());
-
-            if (updatedCandidate.getAddress() != null) {
-                candidateEntity.getAddress().setCountry(updatedCandidate.getAddress().getCountry());
-                candidateEntity.getAddress().setCity(updatedCandidate.getAddress().getCity());
-                candidateEntity.getAddress().setPostalCode(updatedCandidate.getAddress().getPostalCode());
-                candidateEntity.getAddress().setStreetAndNumber(updatedCandidate.getAddress().getStreetAndNumber());
+            candidateEntity.setName(updatedCandidate.getCandidateName());
+//            candidateEntity.setSurname(updatedCandidate.getSurname());
+//            candidateEntity.setEmail(updatedCandidate.getEmail());
+//            candidateEntity.setPhoneNumber(updatedCandidate.getPhoneNumber());
+//            candidateEntity.setAvailabilityStatus(updatedCandidate.getAvailabilityStatus());
+//
+//            if (updatedCandidate.getAddress() != null) {
+//                candidateEntity.getAddress().setCountry(updatedCandidate.getAddress().getCountry());
+//                candidateEntity.getAddress().setCity(updatedCandidate.getAddress().getCity());
+//                candidateEntity.getAddress().setPostalCode(updatedCandidate.getAddress().getPostalCode());
+//                candidateEntity.getAddress().setStreetAndNumber(updatedCandidate.getAddress().getStreetAndNumber());
             }
 
             CandidateEntity savedEntity = candidateJpaRepository.save(candidateEntity);
             return candidateEntityMapper.mapFromEntity(savedEntity);
         }
-        return null;
-    }
+//        return null;
+//    }
 
     @Override
-    public Candidate saveCandidate(Candidate candidate) {
+    public Candidate save(Candidate candidate) {
         CandidateEntity toSave = candidateEntityMapper.mapToEntity(candidate);
         CandidateEntity saved = candidateJpaRepository.save(toSave);
         return candidateEntityMapper.mapFromEntity(saved);

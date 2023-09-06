@@ -11,7 +11,7 @@ import pl.zajavka.infrastructure.database.entity.CompanyEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-02T11:36:59+0200",
+    date = "2023-09-06T08:59:30+0200",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.4.jar, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 @Component
@@ -26,7 +26,6 @@ public class CandidateEntityMapperImpl implements CandidateEntityMapper {
         Candidate.CandidateBuilder candidate = Candidate.builder();
 
         candidate.candidateId( entity.getCandidateId() );
-        candidate.name( entity.getName() );
         candidate.surname( entity.getSurname() );
         candidate.email( entity.getEmail() );
         candidate.phoneNumber( entity.getPhoneNumber() );
@@ -44,7 +43,6 @@ public class CandidateEntityMapperImpl implements CandidateEntityMapper {
         CandidateEntity.CandidateEntityBuilder candidateEntity = CandidateEntity.builder();
 
         candidateEntity.candidateId( candidate.getCandidateId() );
-        candidateEntity.name( candidate.getName() );
         candidateEntity.surname( candidate.getSurname() );
         candidateEntity.email( candidate.getEmail() );
         candidateEntity.phoneNumber( candidate.getPhoneNumber() );

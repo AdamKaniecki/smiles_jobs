@@ -1,79 +1,72 @@
 package pl.zajavka.api.controller;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import pl.zajavka.api.dto.CandidateDTO;
 import pl.zajavka.api.dto.mapper.CandidateMapper;
 import pl.zajavka.business.CandidateService;
 import pl.zajavka.domain.Candidate;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @RequiredArgsConstructor
 public class CandidateController {
 
-    private static final String CANDIDATE = "/candidate_portal";
-    private static final String CANDIDATE_REGISTRY = "/candidate_registry";
+    private static final String CANDIDATE = "/candidate";
+
     private final CandidateMapper candidateMapper;
     private final CandidateService candidateService;
+    private  Candidate candidate;
 
-//    private final CandidateDTO candidateDTO;
-
-
-
-
-
-//    @GetMapping(value = PURCHASE)
-//    public ModelAndView carPurchasePage(){
-//        Map<String,?> model = prepareCarPurchaseData();
-//        return new ModelAndView("car_purchase", model);
-
-
-//
     @GetMapping(value = CANDIDATE)
-    public String homePage(Model model) {
-
-        var candidates = candidateService.findCandidates().stream()
-                        .map(candidateMapper::map)
-                                .toList();
-        model.addAttribute("candidatesDTOs", candidates);
-        return "candidate_portal";
+    public List<CandidateDTO> getAllCandidates() {
+        List<Candidate> candidates = candidateService.findCandidates();
+        return candidates.stream()
+                .map(candidateMapper::mapToCandidateDTO)
+                .collect(Collectors.toList());
     }
+
+
+    @PostMapping(value = CANDIDATE)
+    public String makeCandidate(
+            @Valid @ModelAttribute("candidateDTO") CandidateDTO candidateDTO,
+            ModelMap model
+    ) {
+        model.addAttribute("candidateName", candidateDTO.getCandidateName());
+
+        return "candidate";
+    }
+//    @PostMapping("/create")
+//    public ModelAndView createCandidate(CandidateDTO candidateDTO,final Candidate candidate) {
+//        ModelAndView modelAndView = new ModelAndView("candidate-form");
 //
-//    @PostMapping(value = CANDIDATE)
-//    public String makeCandidate(
-//            @Valid @ModelAttribute("candidateDTO") CandidateDTO candidateDTO,
-//            BindingResult result,
-//            ModelMap model
-//    ) {
-//        if(result.hasErrors()){
-//            return "error";
-//        } else {
+//        try {
+//            // Tworzenie nowego kandydata na podstawie danych z formularza
+//            Candidate newCandidate = new Candidate();
+//            newCandidate.setName(candidateDTO.getCandidateName());
 //
-////            Candidate candidate = candidateMapper.map(candidateDTO);
-////
-////        Invoice invoice = carPurchaseService.purchase(request);
 //
-////        if (!candidateDTO.getExistingCandidateEmail().isBlank()){
-////            model.addAttribute("existingCandidateEmail", candidateDTO.getExistingCandidateEmail());
-//            model.addAttribute("customerName", candidateDTO.getName());
-//            model.addAttribute("customerSurname", candidateDTO.getSurname());
+//            // Zapis nowego kandydata
+//            candidateService.saveCandidate(newCandidate);
+//
+//            modelAndView.addObject("message", "Kandydat został dodany pomyślnie.");
+//        } catch (Exception e) {
+//            modelAndView.addObject("error", "Wystąpił błąd podczas dodawania kandydata.");
 //        }
-//
-////        model.addAttribute("invoiceNumber", invoice.getInvoiceNumber());
-//
-//        return "candidate_registry";
-//    }
-//    @GetMapping(CANDIDATE_REGISTRY)
-//    public String showRegistrationForm(Model model) {
-//        model.addAttribute("candidateDto", candidateDTO);
-//        return "candidate_registry";
-//
+
+//        return modelAndView;
 //    }
 }
+
+

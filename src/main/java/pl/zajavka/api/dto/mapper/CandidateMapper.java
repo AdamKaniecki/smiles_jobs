@@ -1,14 +1,16 @@
 package pl.zajavka.api.dto.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import pl.zajavka.api.dto.CandidateDTO;
 import pl.zajavka.domain.Candidate;
 
 @Mapper(componentModel = "spring")
 public interface CandidateMapper {
+    @Mapping(source = "candidateName", target = "candidateName")
+        CandidateDTO mapToCandidateDTO(final Candidate candidate);
 
-    CandidateDTO map(final Candidate candidate);
-//    Candidate map(final CandidateDTO candidateDTO);
-
+//    @Mapping(source = "candidateName", target = "candidateName")
+//    Candidate mapToCandidate(final CandidateDTO candidateDTO);
 
 }

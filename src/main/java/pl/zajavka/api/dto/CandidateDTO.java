@@ -25,29 +25,29 @@ public class CandidateDTO {
 
 
 
-
-//        @Email
+        //        @Email
 //        private String existingCustomerEmail;
 //
-        private String name;
-        private String surname;
-//        @Size
+      String candidateName;
+//        private String surname;
+        //        @Size
 //        @Pattern(regexp = "^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$")
-        private String phoneNumber;
-//        @Email
-        private String email;
+//        private String phoneNumber;
+        //        @Email
+//        private String email;
 
 
-//        public Map<String, String> asMap() {
-//
-//                Map<String, String> result = new HashMap<>();
-//                ofNullable(name).ifPresent(value -> result.put("candidateName", value));
+        public Map<String, String> asMap() {
+
+                Map<String, String> result = new HashMap<>();
+                ofNullable(candidateName).ifPresent(value -> result.put("candidateName", value));
 //                ofNullable(surname).ifPresent(value -> result.put("candidateSurname", value));
 //                ofNullable(phoneNumber).ifPresent(value -> result.put("candidatePhone", value));
 //                ofNullable(email).ifPresent(value -> result.put("candidateEmail", value));
 //
-//                return result;
+                return result;
         }
+}
 
 
 
