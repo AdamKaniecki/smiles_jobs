@@ -17,7 +17,7 @@ public class CompanyController {
     private final CompanyMapper companyMapper;
     private final CompanyService companyService;
 
-    @GetMapping(value = COMPANY)
+    @GetMapping("/company")
     public String homePage(Model model){
         var companies = companyService.findCompanies().stream()
                 .map(companyMapper::map)

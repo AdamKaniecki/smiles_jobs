@@ -41,7 +41,7 @@ public class CandidateAdvertisementEntity {
     @Column(name = "date_of_advertisement")
     private OffsetDateTime dateOfAdvertisement;
 
-    @OneToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "candidate_id")
-    private CandidateEntity candidate;
+//    @OneToOne(fetch = FetchType.LAZY )
+//    @JoinColumn(name = "candidate_id")
+//    private CandidateEntity candidate;
 }

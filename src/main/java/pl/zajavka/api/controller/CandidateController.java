@@ -1,72 +1,88 @@
 package pl.zajavka.api.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import pl.zajavka.api.dto.CandidateDTO;
 import pl.zajavka.api.dto.mapper.CandidateMapper;
 import pl.zajavka.business.CandidateService;
-import pl.zajavka.domain.Candidate;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+@AllArgsConstructor
 @Controller
-@RequiredArgsConstructor
+
 public class CandidateController {
 
-    private static final String CANDIDATE = "/candidate";
+    public static final String CANDIDATE = "/candidate";
+    public static final String CANDIDATE_ID = "/{id}";
+    private CandidateService candidateService;
+    private CandidateMapper candidateMapper;
 
-    private final CandidateMapper candidateMapper;
-    private final CandidateService candidateService;
-    private  Candidate candidate;
-
-    @GetMapping(value = CANDIDATE)
-    public List<CandidateDTO> getAllCandidates() {
-        List<Candidate> candidates = candidateService.findCandidates();
-        return candidates.stream()
-                .map(candidateMapper::mapToCandidateDTO)
-                .collect(Collectors.toList());
+    @GetMapping(CANDIDATE)
+    public String getCandidatePage() {
+        return "candidate"; // Tutaj zwracamy nazwę widoku "candidate.html" lub "candidate" z katalogu "templates"
     }
 
 
-    @PostMapping(value = CANDIDATE)
-    public String makeCandidate(
-            @Valid @ModelAttribute("candidateDTO") CandidateDTO candidateDTO,
-            ModelMap model
-    ) {
-        model.addAttribute("candidateName", candidateDTO.getCandidateName());
-
-        return "candidate";
+    @GetMapping(CANDIDATE_ID)
+    public Object getCandidateById(@PathVariable Long id) {
+        CandidateDTO candidateDTO = candidateService.getCandidateById(id);
+        if (candidateDTO != null) {
+            return ResponseEntity.ok();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    @GetMapping
+    public ResponseEntity<List<CandidateDTO>> getAllCandidates() {
+        List<CandidateDTO> candidates = candidateService.getAllCandidates();
+        return ResponseEntity.ok(candidates);
+    }
+
 //    @PostMapping("/create")
-//    public ModelAndView createCandidate(CandidateDTO candidateDTO,final Candidate candidate) {
-//        ModelAndView modelAndView = new ModelAndView("candidate-form");
-//
-//        try {
-//            // Tworzenie nowego kandydata na podstawie danych z formularza
-//            Candidate newCandidate = new Candidate();
-//            newCandidate.setName(candidateDTO.getCandidateName());
-//
-//
-//            // Zapis nowego kandydata
-//            candidateService.saveCandidate(newCandidate);
-//
-//            modelAndView.addObject("message", "Kandydat został dodany pomyślnie.");
-//        } catch (Exception e) {
-//            modelAndView.addObject("error", "Wystąpił błąd podczas dodawania kandydata.");
-//        }
-
-//        return modelAndView;
+//    public ResponseEntity<CandidateDTO> createCandidate(@RequestBody CandidateDTO candidateDTO) {
+//        CandidateDTO createdCandidate = candidateService.createCandidate(candidateDTO);
+//        return ResponseEntity.ok(createdCandidate);
 //    }
+
+    @PostMapping("/create")
+    public String createCandidate(@RequestParam("candidateName") String candidateName) {
+        // Tworzenie nowego kandydata na podstawie podanej nazwy
+
+        CandidateDTO candidateDTO = new CandidateDTO();
+        candidateDTO.setCandidateName(candidateName);
+
+        // Zapis kandydata w serwisie
+        CandidateDTO createdCandidate = candidateService.createCandidate(candidateDTO);
+
+        // Możesz dodać odpowiednią obsługę, np. przekierowanie na stronę z informacją o sukcesie
+        return "redirect:/candidate_done"; // Tutaj przekierowujemy użytkownika na inną stronę po utworzeniu kandydata
+    }
+
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCandidate(@PathVariable Long id) {
+        boolean deleted = candidateService.deleteCandidate(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
+
+//        @PutMapping("/{id}")
+//    public ResponseEntity<CandidateDTO> updateCandidate(@PathVariable Long id, @RequestBody CandidateDTO candidateDTO) {
+//        CandidateDTO updatedCandidate = candidateService.updateCandidate(id, candidateDTO);
+//        if (updatedCandidate != null) {
+//            return ResponseEntity.ok(updatedCandidate);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
 
 

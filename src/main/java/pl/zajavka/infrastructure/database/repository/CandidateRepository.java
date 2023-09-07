@@ -5,9 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.zajavka.business.dao.CandidateDAO;
 import pl.zajavka.domain.Candidate;
 import pl.zajavka.infrastructure.database.entity.CandidateEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.CandidateAdvertisementJpaRepository;
 import pl.zajavka.infrastructure.database.repository.jpa.CandidateJpaRepository;
-import pl.zajavka.infrastructure.database.repository.mapper.CandidateAdvertisementMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CandidateEntityMapper;
 
 
@@ -21,6 +19,24 @@ public class CandidateRepository implements CandidateDAO {
     private final CandidateJpaRepository candidateJpaRepository;
     private final CandidateEntityMapper candidateEntityMapper;
 
+
+    @Override
+    public Optional<Candidate> findById(Long id) {
+        return candidateJpaRepository.findById(id).map(candidateEntityMapper::mapFromEntity);
+    }
+
+    @Override
+    public List<Candidate> findAll() {
+        List<CandidateEntity> candidateEntities = candidateJpaRepository.findAll();
+        return candidateEntityMapper.mapToDomainList(candidateEntities);
+    }
+
+
+    @Override
+    public Optional<Candidate> findByEmail(String email) {
+        return Optional.empty();
+    }
+
     @Override
     public Candidate createCandidate(Candidate newCandidate) {
         // Mapowanie obiektu DTO (newCandidate) na encję (CandidateEntity)
@@ -29,21 +45,11 @@ public class CandidateRepository implements CandidateDAO {
         // Zapisanie encji w bazie danych
         CandidateEntity savedEntity = candidateJpaRepository.save(candidateEntity);
 
-        // Mapowanie z powrotem z encji na obiekt DTO i zwrócenie go
+
         return candidateEntityMapper.mapFromEntity(savedEntity);
     }
 
-    @Override
-    public Optional<Candidate> findByEmail(String email) {
-        return candidateJpaRepository.findByEmail(email)
-                .map(candidateEntityMapper::mapFromEntity);
-    }
-    @Override
-    public List<Candidate> findCandidatesList() {
-        return candidateJpaRepository.findAll().stream()
-                .map(candidateEntityMapper::mapFromEntity)
-                .toList();
-    }
+
 
 
     @Override
@@ -51,24 +57,17 @@ public class CandidateRepository implements CandidateDAO {
         CandidateEntity candidateEntity = candidateJpaRepository.findById(candidateId).orElse(null);
         if (candidateEntity != null) {
             // Aktualizuj pola encji na podstawie pól obiektu updatedCandidate
-            candidateEntity.setName(updatedCandidate.getCandidateName());
-//            candidateEntity.setSurname(updatedCandidate.getSurname());
-//            candidateEntity.setEmail(updatedCandidate.getEmail());
-//            candidateEntity.setPhoneNumber(updatedCandidate.getPhoneNumber());
-//            candidateEntity.setAvailabilityStatus(updatedCandidate.getAvailabilityStatus());
-//
-//            if (updatedCandidate.getAddress() != null) {
-//                candidateEntity.getAddress().setCountry(updatedCandidate.getAddress().getCountry());
-//                candidateEntity.getAddress().setCity(updatedCandidate.getAddress().getCity());
-//                candidateEntity.getAddress().setPostalCode(updatedCandidate.getAddress().getPostalCode());
-//                candidateEntity.getAddress().setStreetAndNumber(updatedCandidate.getAddress().getStreetAndNumber());
+            candidateEntity.setName(updatedCandidate.getName());
+            candidateEntity.setSurname(updatedCandidate.getSurname());
+            candidateEntity.setEmail(updatedCandidate.getEmail());
+            candidateEntity.setPhoneNumber(updatedCandidate.getPhoneNumber());
+
             }
 
             CandidateEntity savedEntity = candidateJpaRepository.save(candidateEntity);
             return candidateEntityMapper.mapFromEntity(savedEntity);
         }
-//        return null;
-//    }
+
 
     @Override
     public Candidate save(Candidate candidate) {
@@ -87,12 +86,6 @@ public class CandidateRepository implements CandidateDAO {
         }
         return false;
     }
-
-
-
-
-
-
 
 }
 

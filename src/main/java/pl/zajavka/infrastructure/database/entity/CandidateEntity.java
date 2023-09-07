@@ -2,13 +2,12 @@ package pl.zajavka.infrastructure.database.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.zajavka.domain.Candidate;
 
 
 @Getter
 @Setter
-@EqualsAndHashCode(of = "candidateId")
-@ToString(of = {"candidateId","name","surname", "email", "phoneNumber","availabilityStatus" })
+@EqualsAndHashCode(of = "id")
+@ToString(of = {"id","name","surname", "email", "phoneNumber","availabilityStatus" })
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +18,7 @@ public class CandidateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "candidate_id")
-    private Integer candidateId;
+    private Integer id;
 
     @Column(name = "name")
     private String name;
@@ -41,9 +40,6 @@ public class CandidateEntity {
     private AddressEntity address;
 
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "candidate")
-    private CandidateAdvertisementEntity candidateAdvertisement;
-
-
-
 }
+//    @OneToOne(fetch = FetchType.EAGER, mappedBy = "candidate")
+//    private CandidateAdvertisementEntity candidateAdvertisement;
