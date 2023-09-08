@@ -20,19 +20,18 @@ public class CandidateDTO {
 
     Long id;
     String candidateName;
-    private String surname;
-    private String phoneNumber;
-
-    private String email;
+    String candidateSurname;
+    String candidatePhoneNumber;
+    String candidateEmail;
 
 
     public Map<String, String> asMap() {
 
         Map<String, String> result = new HashMap<>();
         ofNullable(candidateName).ifPresent(value -> result.put("candidateName", value));
-                ofNullable(surname).ifPresent(value -> result.put("candidateSurname", value));
-                ofNullable(phoneNumber).ifPresent(value -> result.put("candidatePhone", value));
-                ofNullable(email).ifPresent(value -> result.put("candidateEmail", value));
+                ofNullable(candidateSurname).ifPresent(value -> result.put("candidateSurname", value));
+                ofNullable(candidatePhoneNumber).ifPresent(value -> result.put("candidatePhone", value));
+                ofNullable(candidateEmail).ifPresent(value -> result.put("candidateEmail", value));
 
         return result;
     }
@@ -40,9 +39,9 @@ public class CandidateDTO {
     private CandidateDTO buildCandidate(Candidate candidate) {
         return CandidateDTO.builder()
                 .candidateName(candidate.getName())
-                .surname(candidate.getSurname())
-                .phoneNumber(candidate.getPhoneNumber())
-                .email(candidate.getEmail())
+                .candidateSurname(candidate.getSurname())
+                .candidatePhoneNumber(candidate.getPhoneNumber())
+                .candidateEmail(candidate.getEmail())
                 .build();
 
     }

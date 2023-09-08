@@ -9,7 +9,7 @@ import pl.zajavka.infrastructure.database.entity.CandidateEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-09-07T11:51:04+0200",
+    date = "2023-09-08T09:57:17+0200",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.4.jar, environment: Java 17.0.6 (Amazon.com Inc.)"
 )
 @Component

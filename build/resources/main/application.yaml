@@ -1,7 +1,7 @@
 server:
-  port: 8190
-  servlet:
-    context-path: /smiles-jobs
+  port: 8150
+#  servlet:
+#    context-path: /smiles-jobs
 
 spring:
   datasource:
@@ -28,3 +28,7 @@ spring:
       filter:
         enabled: true
 
+#logging:
+#  level:
+#    root: DEBUG
+#    org.springframework.web: TRACE

@@ -15,7 +15,7 @@ import java.util.List;
 public class CandidateController {
 
     public static final String CANDIDATE = "/candidate";
-    public static final String CANDIDATE_ID = "/{id}";
+    public static final String CANDIDATE_ID = "/candidate/{id}";
     private CandidateService candidateService;
     private CandidateMapper candidateMapper;
 
@@ -47,18 +47,26 @@ public class CandidateController {
 //        return ResponseEntity.ok(createdCandidate);
 //    }
 
-    @PostMapping("/create")
-    public String createCandidate(@RequestParam("candidateName") String candidateName) {
+    @PostMapping(CANDIDATE)
+    public String createCandidate (
+    @RequestParam("candidateName") String candidateName,
+    @RequestParam("candidateSurname") String candidateSurname,
+    @RequestParam("candidateEmail") String candidateEmail,
+    @RequestParam("candidatePhoneNumber") String candidatePhoneNumber)
+    {
         // Tworzenie nowego kandydata na podstawie podanej nazwy
 
         CandidateDTO candidateDTO = new CandidateDTO();
         candidateDTO.setCandidateName(candidateName);
+        candidateDTO.setCandidateSurname(candidateSurname);
+        candidateDTO.setCandidateEmail(candidateEmail);
+        candidateDTO.setCandidatePhoneNumber(candidatePhoneNumber);
 
         // Zapis kandydata w serwisie
         CandidateDTO createdCandidate = candidateService.createCandidate(candidateDTO);
 
         // Możesz dodać odpowiednią obsługę, np. przekierowanie na stronę z informacją o sukcesie
-        return "redirect:/candidate_done"; // Tutaj przekierowujemy użytkownika na inną stronę po utworzeniu kandydata
+        return "candidate_done"; // Tutaj przekierowujemy użytkownika na inną stronę po utworzeniu kandydata
     }
 
 
