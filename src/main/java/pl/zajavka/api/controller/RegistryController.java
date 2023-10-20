@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.MapperDTO;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
@@ -27,18 +28,18 @@ public class RegistryController {
         return "company_registry";
     }
 
-    
+
     @GetMapping(CANDIDATE_REGISTRY)
-    public String showUserForm(User user) {
+    public String showUserForm(UserDTO userDTO) {
         return "candidate_registry";
     }
 
 
     @PostMapping("/candidate_registry")
-    public String createCandidate (@ModelAttribute("user") User user, Model model) {
-
+    public String createCandidate (@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
+       User user = mapperDTO.map(userDTO);
         userService.createCandidate(user);
-        model.addAttribute("user", user);
+        model.addAttribute("userDTO", userDTO);
         return "user_created_successfully";
     }
 
