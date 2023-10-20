@@ -6,7 +6,7 @@ import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface MapperSecurity {
+public interface UserMapper {
 
 
     User map(UserEntity userEntity);

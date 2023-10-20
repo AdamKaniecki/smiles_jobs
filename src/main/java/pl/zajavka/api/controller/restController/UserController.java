@@ -12,7 +12,7 @@ import pl.zajavka.domain.Users;
 import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
-import pl.zajavka.infrastructure.security.mapper.MapperSecurity;
+import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.net.URI;
 import java.util.Set;
@@ -28,12 +28,12 @@ public class UserController {
 
 
     private UserRepository userRepository;
-    private MapperSecurity mapperSecurity;
+    private UserMapper userMapper;
 
     @GetMapping
     public Users usersList() {
         return Users.of(userRepository.findAll().stream()
-                .map(mapperSecurity::map)
+                .map(userMapper::map)
                 .toList());
     }
 
@@ -42,7 +42,7 @@ public class UserController {
             MediaType.APPLICATION_JSON_VALUE})
     public User userDetails(@PathVariable Integer userId) {
         return userRepository.findById(userId)
-                .map(mapperSecurity::map)
+                .map(userMapper::map)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "nima user takiego userId: [%s]".formatted(userId)
                 ));
@@ -64,7 +64,7 @@ public class UserController {
                 .roles(Set.of(Role.CANDIDATE))
                 .build();
 
-        UserEntity userEntity = mapperSecurity.map(newUser);
+        UserEntity userEntity = userMapper.map(newUser);
         UserEntity created = userRepository.save(userEntity);
    return ResponseEntity
            .created(URI.create(USER + USER_ID_RESULT.formatted(created.getId())))
