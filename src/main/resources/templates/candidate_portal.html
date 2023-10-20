@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Smiles Jobs</title>
+    <!-- Dodaj link do pliku CSS Bootstrapa -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">Welcome to Smiles Jobs</h1>
+
+    <h2 class="mt-4">Job Offers</h2>
+    <table class="table table-striped">
+         <thead class="table-dark">
+        <tr>
+            <th>Numer ogłoszenia</th>
+            <th>Nazwa firmy</th>
+            <th>Stanowisko</th>
+            <th>Zakres obowiązków</th>
+            <th>Wymagana znajomość technologii</th>
+            <th>Benefity</th>
+            <th>Data i godzina</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy -->
+        <tr th:each="jobOffer : ${jobOffers}">
+            <td th:text="${jobOffer.number}"></td>
+            <td th:text="${jobOffer.companyName}"></td>
+            <td th:text="${jobOffer.position}"></td>
+            <td th:text="${jobOffer.jobDescription}"></td>
+            <td th:text="${jobOffer.requiredTechnologies}"></td>
+            <td th:text="${jobOffer.benefits}"></td>
+            <td th:text="${jobOffer.dateTime}"></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{'/send-cv/' + ${jobOffer.id}}">Send CV</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h2 class="mt-4">Stwórz swoje ogłoszenie</h2>
+
+        <div class="col-md-4">
+            <a th:href="@{/candidate_advertisement}" class="btn btn-info" role="button">CREATE</a>
+        </div>
+
+
+
+
+
+    <h2 class="mt-4">Stwórz swoje CV </h2>
+    <button type="submit" class="btn btn-success">CREATE CV</button>
+
+</div>
+<br>
+<br>
+<br>
+<h1>Notifications</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Message</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Example data from the model -->
+    <tr th:each="notification : ${notifications}">
+        <td th:text="${notification.date}">2023-08-01</td>
+        <td th:text="${notification.message}">New message</td>
+        <td th:text="${notification.status}">Pending</td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<br>
+<br>
+
+
+<!-- Dodaj link do pliku JavaScript Bootstrapa (opcjonalnie) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>
