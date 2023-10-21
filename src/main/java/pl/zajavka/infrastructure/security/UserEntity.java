@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_table")
-public class UserEntity  {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +36,16 @@ public class UserEntity  {
     @Column(name = "active")
     private Boolean active;
 
-//    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-//    @JoinTable(
-//        name = "user_role_table",
-//        joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
-
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role_table", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<AdvertisementEntity> advertisements;
 }
+
+
+
+
+
