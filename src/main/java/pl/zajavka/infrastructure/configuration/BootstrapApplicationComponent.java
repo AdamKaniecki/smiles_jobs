@@ -5,8 +5,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.security.Role;
@@ -29,19 +28,20 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
 
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode("totombak");
+        String encodedPassword = "totobak";
 
         userRepository.deleteAll();
 
 
-//     UserEntity user1 =   userRepository.save(UserEntity.builder()
-//                .userName("ABBBBBB")
-//                .email("addf@frg")
-//                .password(encodedPassword)
-//                .active(true)
-//                .roles(Set.of(Role.CANDIDATE))
-//                .build());
-//
-//
+        UserEntity user1 = userRepository.save(UserEntity.builder()
+                .userName("ABBBBBB")
+                .email("addf@frg")
+                .password(encodedPassword)
+                .active(true)
+                .roles(Set.of(Role.CANDIDATE))
+                .build());
+
+
 //        BCryptPasswordEncoder passwordEncoder2 = new BCryptPasswordEncoder();
 //        String encodedPassword2 = passwordEncoder2.encode("totombak2");
 //
@@ -52,7 +52,8 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
 //                .active(true)
 //                .roles(Set.of(Role.COMPANY))
 //                .build());
-
+//
+//    }
     }
 }
 

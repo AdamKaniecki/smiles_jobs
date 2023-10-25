@@ -4,7 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.domain.User;
@@ -48,28 +48,28 @@ public class UserController {
                 ));
     }
 
-    @PostMapping
-    @Transactional
-    public ResponseEntity<User> addCandidate(
-            @RequestBody User user
-    ) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-
-        User newUser = User.builder()
-                .userName(user.getUserName())
-                .email(user.getEmail())
-                .password(encodedPassword)
-                .active(true)
-                .roles(Set.of(Role.CANDIDATE))
-                .build();
-
-        UserEntity userEntity = userMapper.map(newUser);
-        UserEntity created = userRepository.save(userEntity);
-   return ResponseEntity
-           .created(URI.create(USER + USER_ID_RESULT.formatted(created.getId())))
-           .build();
-    }
+//    @PostMapping
+//    @Transactional
+//    public ResponseEntity<User> addCandidate(
+//            @RequestBody User user
+//    ) {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//
+//        User newUser = User.builder()
+//                .userName(user.getUserName())
+//                .email(user.getEmail())
+//                .password(encodedPassword)
+//                .active(true)
+//                .roles(Set.of(Role.CANDIDATE))
+//                .build();
+//
+//        UserEntity userEntity = userMapper.map(newUser);
+//        UserEntity created = userRepository.save(userEntity);
+//   return ResponseEntity
+//           .created(URI.create(USER + USER_ID_RESULT.formatted(created.getId())))
+//           .build();
+//    }
 
 
 }

@@ -1,7 +1,7 @@
 package pl.zajavka.infrastructure.security;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.InitializingBean;
+//import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

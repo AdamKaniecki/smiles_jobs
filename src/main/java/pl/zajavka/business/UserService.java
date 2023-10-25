@@ -2,6 +2,7 @@ package pl.zajavka.business;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,9 +72,6 @@ public class UserService {
     }
 
 
-
-
-
     public List<User> findUsers() {
         return userRepository.findAll().stream().map(userMapper::map).toList();
     }
@@ -100,19 +98,20 @@ public class UserService {
         userRepository.delete(userEntity);
     }
 
-    public User getUserById(Integer userId) {
+    @Transactional
+    public User findById(Integer userId) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
 
         return userMapper.map(userEntity);
     }
 
-    public List<User> getAllUsers() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        return userEntities.stream()
-                .map(userMapper::map)
-                .collect(Collectors.toList());
-    }
+//    public List<User> getAllUsers() {
+//        List<UserEntity> userEntities = userRepository.findAll();
+//        return userEntities.stream()
+//                .map(userMapper::map)
+//                .collect(Collectors.toList());
+//    }
 
 }
 

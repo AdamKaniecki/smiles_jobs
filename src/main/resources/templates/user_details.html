@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>User Details</title>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">User Details</h1>
+<!--  <input type="hidden" name="userId" th:value="${user.id}" />-->
+
+<!--  <form action="#" th:action="@{/{userId}(userId=${user.userId})}" method="GET">-->
+<!--    <button type="submit" class="btn btn info">SHOW</button>-->
+<!--  </form>-->
+
+  <div th:if="${user}">
+    <p th:text="'User ID: ' + ${user.id}"></p>
+    <p th:text="'User Name: ' + ${user.userName}"></p>
+    <p th:text="'Email: ' + ${user.email}"></p>
+    <!-- Dodaj inne informacje o użytkowniku, jeśli są dostępne -->
+  </div>
+
+  <div th:if="${user == null}">
+    <p>User not found</p>
+  </div>
+</div>
+</body>
+</html>

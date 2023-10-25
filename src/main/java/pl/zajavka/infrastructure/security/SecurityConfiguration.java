@@ -45,8 +45,12 @@ public class SecurityConfiguration {
                 .requestMatchers( "/candidate_registry").permitAll()
                 .requestMatchers( "/company_registry").permitAll()
                 .requestMatchers("/candidate_portal/**").hasAuthority("CANDIDATE")
+
+//                .requestMatchers("/candidate_portal/**").hasAuthority("CANDIDATE")
                 .requestMatchers("/company_portal/**").hasAuthority("COMPANY")
-                .requestMatchers("/create_advertisement").hasAuthority("CANDIDATE")
+                .requestMatchers("/create_advertisement/**").hasAuthority("CANDIDATE")
+                .requestMatchers("/{userId}").hasAuthority("CANDIDATE")
+//                .requestMatchers("/{userId}").hasAuthority("CANDIDATE")
 
             .and()
             .formLogin()

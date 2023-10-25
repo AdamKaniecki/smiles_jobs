@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Advertisement</title>
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Create Advertisement</h1>
+  <input type="hidden" name="userId" th:value="${user.id}" />
+  <form th:action="@{/createAdvertisement}"   th:object="${userDTO}"method="post">
+    <div class="form-group">
+      <label for="name">Advertisement Name</label>
+      <input type="text" id="name" name="name" class="form-control" required>
+    </div>
+</form>
+
+  <div class="col-md-4">
+    <a th:href="@{/userId}" class="btn btn-info" role="button">Ctgyhy</a>
+  </div>
+</div>
+
+
+<!--<a th:href="@{/userId}" class="btn btn-info" role="button">noco tam</a>-->
+</body>
+</html>
