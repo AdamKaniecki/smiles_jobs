@@ -1,16 +1,15 @@
 package pl.zajavka.infrastructure.security;
 
 
-import org.springframework.security.core.GrantedAuthority;
 
-public enum Role implements GrantedAuthority {
+public enum Role  {
     CANDIDATE,
     ADMIN,
     COMPANY;
 
 
-    @Override
-    public String getAuthority() {
-        return name();
-    }
+//    @Override
+//    public String getAuthority() {
+//        return name();
+//    }
 }

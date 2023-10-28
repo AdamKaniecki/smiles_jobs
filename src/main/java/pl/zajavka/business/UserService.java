@@ -2,8 +2,7 @@ package pl.zajavka.business;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.domain.Advertisement;
@@ -26,13 +25,14 @@ public class UserService {
 
     @Transactional
     public UserEntity createCandidate(User user) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         UserEntity userEntity = UserEntity.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
-                .password(encodedPassword)
+                .password(user.getPassword())
+//                .password(encodedPassword)
                 .active(true)
                 .roles(Set.of(Role.CANDIDATE))
                 .build();
@@ -41,36 +41,21 @@ public class UserService {
 
     @Transactional
     public UserEntity createCompany(User user) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         UserEntity userEntity = UserEntity.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
-                .password(encodedPassword)
+//                .password(encodedPassword)
+                .password(user.getPassword())
                 .active(true)
                 .roles(Set.of(Role.COMPANY))
                 .build();
         return userRepository.save(userEntity);
     }
 
-    @Transactional
-    public void addAdvertisementToUser(User user, Advertisement advertisement) {
-        // Pobierz istniejące reklamy użytkownika
-
-        Set<Advertisement> userAdvertisements = user.getAdvertisements();
-
-        // Dodaj nową reklamę
-        userAdvertisements.add(advertisement);
-
-        // Zaktualizuj listę reklam użytkownika
-        user.setAdvertisements(userAdvertisements);
-        UserEntity userEntity = userMapper.map(user);
-
-        // Zapisz użytkownika w bazie danych
-        userRepository.save(userEntity);
-    }
-
+//
 
     public List<User> findUsers() {
         return userRepository.findAll().stream().map(userMapper::map).toList();
@@ -85,6 +70,7 @@ public class UserService {
         // Zaktualizuj pola użytkownika
         userEntity.setUserName(user.getUserName());
         userEntity.setEmail(user.getEmail());
+        userEntity.setAdvertisements(Set.of());
 
         // itd. Zaktualizuj pozostałe pola według potrzeb
 

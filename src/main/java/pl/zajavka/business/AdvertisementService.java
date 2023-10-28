@@ -19,30 +19,31 @@ import java.util.Set;
 @Service
 public class AdvertisementService {
 
-private AdvertisementRepository advertisementRepository;
+    private AdvertisementRepository advertisementRepository;
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private UserService userService;
 
     @Transactional
-    public void createAdvertisement(Integer userId, Advertisement advertisement) {
-        UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
+    public AdvertisementEntity create(Advertisement advertisement) {
+//        UserEntity userEntity = userRepository.findById(userId)
+//                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
 
         // Stwórz nową reklamę
         AdvertisementEntity advertisementEntity = AdvertisementEntity.builder()
                 .name(advertisement.getName())
-                .user(userEntity)
                 .build();
 
-        // Dodaj reklamę do użytkownika
-        userEntity.getAdvertisements().add(advertisementEntity);
+        return advertisementRepository.save(advertisementEntity);
+
 
         // Zapisz użytkownika w bazie danych
-        userRepository.save(userEntity);
-       advertisementRepository.save(advertisementEntity);
+//        userRepository.save(userEntity);
+//       advertisementRepository.save(advertisementEntity);
+
+
 
     }
-
 
 
 //

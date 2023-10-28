@@ -26,12 +26,10 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
     @Transactional
     public void onApplicationEvent(final @NonNull ContextRefreshedEvent event) {
 
+        userRepository.deleteAll();
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode("totombak");
         String encodedPassword = "totobak";
-
-        userRepository.deleteAll();
-
 
         UserEntity user1 = userRepository.save(UserEntity.builder()
                 .userName("ABBBBBB")

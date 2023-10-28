@@ -7,20 +7,21 @@
 <body>
 <div class="container">
   <h1 class="mt-4">Create Advertisement</h1>
-  <input type="hidden" name="userId" th:value="${user.id}" />
-  <form th:action="@{/createAdvertisement}"   th:object="${userDTO}"method="post">
+  <form th:action="@{/createAdvertisement}"   th:object="${advertisement}"method="post">
     <div class="form-group">
       <label for="name">Advertisement Name</label>
       <input type="text" id="name" name="name" class="form-control" required>
     </div>
-</form>
-
-  <div class="col-md-4">
-    <a th:href="@{/userId}" class="btn btn-info" role="button">Ctgyhy</a>
-  </div>
+    <!-- Dodaj inne pola reklamy -->
+    <button type="submit" class="btn btn-primary">Create Advertisement</button>
+  </form>
 </div>
 
+<form th:action="@{/show}" method="GET">
+  <input type="text" name="userId" placeholder="Wprowadź userId">
+  <button type="submit" class="btn btn-info">Company Registry</button>
+</form>
 
-<!--<a th:href="@{/userId}" class="btn btn-info" role="button">noco tam</a>-->
+<br>
 </body>
 </html>
