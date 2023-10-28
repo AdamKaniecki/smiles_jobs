@@ -15,7 +15,7 @@ public class LoginController {
     private UserRepository userRepository;
     private UserMapper userMapper;
 
-    @GetMapping("/candidate_portal/login")
+    @GetMapping("/login")
     public String login() {
         return "login"; // Zwraca widok "login.html"
     }
