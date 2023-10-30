@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class  UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 

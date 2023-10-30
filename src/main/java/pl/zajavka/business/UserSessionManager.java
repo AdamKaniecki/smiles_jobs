@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class UserSessionManager {
+public class  UserSessionManager {
     private final Map<String, User> loggedInUsers = new HashMap<>();
 
     public void registerLoggedInUser(String sessionId, User user) {

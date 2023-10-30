@@ -2,7 +2,7 @@ package pl.zajavka.infrastructure.security;
 
 
 
-public enum Role  {
+public enum  Role  {
     CANDIDATE,
     ADMIN,
     COMPANY;

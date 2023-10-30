@@ -1,7 +1,7 @@
 package pl.zajavka.domain;
 
 import lombok.*;
-import pl.zajavka.infrastructure.security.Role;
+import pl.zajavka.infrastructure.security.Role ;
 
 import java.util.Set;
 

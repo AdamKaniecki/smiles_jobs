@@ -1,4 +1,4 @@
 package pl.zajavka.api.dto;
 
-public class AdvertisementDTO {
+public class AdvertisementDTO  {
 }

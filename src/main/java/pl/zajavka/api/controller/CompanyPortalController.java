@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class CompanyPortalController {
 
-    public static final String COMPANY_PORTAL = "/company_portal";
+    public static final String COMPANY_PORTAL =  "/company_portal";
 
     @GetMapping(COMPANY_PORTAL)
     public String getCandidatePortalPage() {

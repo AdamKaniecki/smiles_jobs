@@ -38,13 +38,13 @@ public class LoginController {
 @PostMapping("/login")
 public String loginUser(Model model, String username, String password) {
     // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
-    System.out.println("przed find");
+
     User user = userService.findByUserName(username);
 
     if (user != null && user.getPassword().equals(password)&& user.getUserName().equals(username)) {
         // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
         model.addAttribute("message", "Zalogowano pomyślnie.");
-        System.out.println("po find");
+
         return "candidate_portal";
 
     } else {

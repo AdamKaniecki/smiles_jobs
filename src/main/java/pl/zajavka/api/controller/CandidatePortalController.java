@@ -91,15 +91,18 @@ public class CandidatePortalController {
 
     @PostMapping("/createAdvertisement")
     public String createdAdvertisement(
-            @ModelAttribute("advertisementEntity") AdvertisementEntity advertisementEntity, User user, String username,
+            @ModelAttribute("advertisementEntity") AdvertisementEntity advertisementEntity, UserEntity userEntity, String username,
             Model model) {
-        userService.findByUserName(username);
-        advertisementService.create(advertisementEntity,user);
+
+        UserEntity user1 = userRepository.findByUserName(username);
+        advertisementEntity.setUser(user1);
+        advertisementService.create(advertisementEntity);
+
+
 
         // Dodaj reklamę do modelu, aby przekazać ją do widoku
         model.addAttribute("advertisementEntity", advertisementEntity);
-        model.addAttribute("user", user);
-
+        model.addAttribute("user", userEntity);
 
         return "user_created_successfully";
     }
