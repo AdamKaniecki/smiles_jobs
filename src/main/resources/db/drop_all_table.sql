@@ -2,5 +2,5 @@
 DROP TABLE IF EXISTS user_table CASCADE;
 DROP TABLE IF EXISTS role_table CASCADE;
 DROP TABLE IF EXISTS user_role_table CASCADE;
-DROP TABLE IF EXISTS advertisement CASCADE;
+DROP TABLE IF EXISTS advertisement_table CASCADE;
 DROP TABLE IF EXISTS flyway_schema_history CASCADE;

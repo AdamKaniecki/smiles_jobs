@@ -6,6 +6,7 @@ CREATE TABLE user_table
     password  VARCHAR(128)  NOT NULL,
     active    BOOLEAN       NOT NULL,
     PRIMARY KEY (user_id)
+
 );
 
 

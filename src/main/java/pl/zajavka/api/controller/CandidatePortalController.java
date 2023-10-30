@@ -13,6 +13,7 @@ import pl.zajavka.business.UserService;
 import pl.zajavka.business.UserSessionManager;
 import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
@@ -60,10 +61,10 @@ public class CandidatePortalController {
         return "candidate_portal";
     }
 
-        @GetMapping(CREATE_ADVERTISEMENT)
-    public String getCreateAdvertisement(User user) {
-        return "create_advertisement";
-    }
+//        @GetMapping(CREATE_ADVERTISEMENT)
+//    public String getCreateAdvertisement(User user) {
+//        return "create_advertisement";
+//    }
 
 
 //    @GetMapping(USER_ID)
@@ -79,22 +80,26 @@ public class CandidatePortalController {
 //        return "user_details";
 //    }
 
-    @GetMapping
+    @GetMapping(CREATE_ADVERTISEMENT)
     public String users(Model model){
         List<User> users = userService.findUsers();
         model.addAttribute("users", users);
 //        model.addAttribute("updateEmployeeDTO", new UpdateEmployeeDTO());
-        return "users";
+        return "create_advertisement";
     }
 
 
     @PostMapping("/createAdvertisement")
     public String createdAdvertisement(
-            @ModelAttribute("advertisement") Advertisement advertisement,
+            @ModelAttribute("advertisementEntity") AdvertisementEntity advertisementEntity, User user, String username,
             Model model) {
-        advertisementService.create(advertisement);
+        userService.findByUserName(username);
+        advertisementService.create(advertisementEntity,user);
+
         // Dodaj reklamę do modelu, aby przekazać ją do widoku
-        model.addAttribute("advertisement", advertisement);
+        model.addAttribute("advertisementEntity", advertisementEntity);
+        model.addAttribute("user", user);
+
 
         return "user_created_successfully";
     }

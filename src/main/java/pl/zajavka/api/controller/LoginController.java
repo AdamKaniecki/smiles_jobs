@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.zajavka.business.UserService;
+import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
@@ -14,6 +16,7 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 public class LoginController {
     private UserRepository userRepository;
     private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/login")
     public String login() {
@@ -35,17 +38,22 @@ public class LoginController {
 @PostMapping("/login")
 public String loginUser(Model model, String username, String password) {
     // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
+    System.out.println("przed find");
+    User user = userService.findByUserName(username);
 
-    UserEntity user = userRepository.findByUserName(username);
-
-
-    if (user != null && user.getPassword().equals(password)) {
+    if (user != null && user.getPassword().equals(password)&& user.getUserName().equals(username)) {
         // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
         model.addAttribute("message", "Zalogowano pomyślnie.");
+        System.out.println("po find");
         return "candidate_portal";
+
     } else {
         model.addAttribute("error", "Nieprawidłowe dane logowania.");
         return "login";
     }
+
+
 }
+
+
 }

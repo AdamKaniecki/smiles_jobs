@@ -25,16 +25,17 @@ public class AdvertisementService {
     private UserService userService;
 
     @Transactional
-    public AdvertisementEntity create(Advertisement advertisement) {
+    public AdvertisementEntity create(AdvertisementEntity advertisementEntity, User user) {
 //        UserEntity userEntity = userRepository.findById(userId)
 //                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
 
         // Stwórz nową reklamę
-        AdvertisementEntity advertisementEntity = AdvertisementEntity.builder()
-                .name(advertisement.getName())
+        AdvertisementEntity newAdvertisementEntity = AdvertisementEntity.builder()
+                .name(advertisementEntity.getName())
+                .user(userRepository.findByUserName(user.getUserName()))
                 .build();
 
-        return advertisementRepository.save(advertisementEntity);
+      return  advertisementRepository.save(newAdvertisementEntity);
 
 
         // Zapisz użytkownika w bazie danych
@@ -43,6 +44,9 @@ public class AdvertisementService {
 
 
 
+    }
+
+    public void create(AdvertisementEntity advertisementEntity) {
     }
 
 
