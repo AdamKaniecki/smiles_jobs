@@ -9,9 +9,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.business.UserService;
+import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 import pl.zajavka.infrastructure.database.repository.AdvertisementRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AdvertisementMapper;
 import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
@@ -28,6 +30,7 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
     private UserMapper userMapper;
     private UserService userService;
     private AdvertisementRepository advertisementRepository;
+    private AdvertisementMapper advertisementMapper;
 
 
     @Override
@@ -55,11 +58,12 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
 //     jak to jest odkomentowane to w wyniku działania tej metody przypisuje advertisement do usera,
 //     a przez controllery nie może namierzyć usera.tworzy obiekt ale nie wiąże z userem
 
-//        AdvertisementEntity advertisementEntity = AdvertisementEntity.builder()
-//                .name("tyured")
-//                .user(userRepository.findByUserName(user.getUserName()))
-//                .build();
-//        advertisementRepository.save(advertisementEntity);
+        Advertisement advertisement = Advertisement.builder()
+                .name("tyured")
+                .user(userService.findByUserName(user.getUserName()))
+                .build();
+      AdvertisementEntity advertisementEntity =  advertisementMapper.map(advertisement);
+        advertisementRepository.save(advertisementEntity);
     }
 
 

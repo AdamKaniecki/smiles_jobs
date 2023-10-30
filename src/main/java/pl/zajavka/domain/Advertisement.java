@@ -14,4 +14,5 @@ public class Advertisement {
 
     private Integer id;
     private String name;
+    private User user;
 }
