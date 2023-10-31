@@ -1,6 +1,5 @@
 package pl.zajavka.api.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +13,10 @@ import pl.zajavka.business.UserSessionManager;
 import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
-import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Controller
@@ -31,6 +28,8 @@ public class CandidatePortalController {
 //    public static final String USER_ID = "/show/{userId}";
     public static final String USER_ID = "/show";
     private MapperDTO mapperDTO;
+    private HttpSession httpSession;
+    private UserSessionManager userSessionManager;
 
     private UserService userService;
 
@@ -79,33 +78,48 @@ public class CandidatePortalController {
 //        System.out.println("test get by id");
 //        return "user_details";
 //    }
-
-    @GetMapping(CREATE_ADVERTISEMENT)
-    public String users(Model model){
-        List<User> users = userService.findUsers();
-        model.addAttribute("users", users);
-//        model.addAttribute("updateEmployeeDTO", new UpdateEmployeeDTO());
+@GetMapping(CREATE_ADVERTISEMENT)
+public String createAdvertisementForm(Model model) {
+    if (httpSession.getAttribute("username") != null) {
+        String username = httpSession.getAttribute("username").toString();
+        model.addAttribute("username", username);
         return "create_advertisement";
+    } else {
+        // Obsłuż brak zalogowanego użytkownika
+        return "login";  // Przekieruj na stronę logowania
     }
+}
+
+//    @GetMapping(CREATE_ADVERTISEMENT)
+//    public String user(Model model){
+//        List<User> users = userService.findUsers();
+//        model.addAttribute("users", users);
+////        model.addAttribute("updateEmployeeDTO", new UpdateEmployeeDTO());
+//        return "create_advertisement";
+//    }
 
 
     @PostMapping("/createAdvertisement")
     public String createdAdvertisement(
-            @ModelAttribute("advertisement") Advertisement advertisement, User user, String username,
+            @ModelAttribute("advertisement") Advertisement advertisement,User loggedInUser,
+            String username,
             Model model) {
 
-        userService.findByUserName(username);
-
-        advertisementService.create(advertisement, user );
-        advertisement.setUser(user);
 
 
-        // Dodaj reklamę do modelu, aby przekazać ją do widoku
-        model.addAttribute("advertisement", advertisement);
-        model.addAttribute("user", user);
+         userService.findByUserName(username);
+         advertisementService.create(advertisement, loggedInUser);
+            advertisement.setUser(loggedInUser);
+
+
+            // Dodaj reklamę do modelu, aby przekazać ją do widoku
+            model.addAttribute("advertisement", advertisement);
+            model.addAttribute("user", loggedInUser);
 
         return "user_created_successfully";
     }
+    // Pomocnicza metoda do pobrania istniejącego użytkownika
+
 
 
 //    @PostMapping("/candidate_registry")

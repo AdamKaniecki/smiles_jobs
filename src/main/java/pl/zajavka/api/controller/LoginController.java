@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
@@ -13,6 +14,7 @@ import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 @AllArgsConstructor
 @Controller
+@SessionAttributes("username")
 public class LoginController {
     private UserRepository userRepository;
     private UserMapper userMapper;
@@ -35,8 +37,8 @@ public class LoginController {
 //            return "login";
 //        }
 //    }
-@PostMapping("/login")
-public String loginUser(Model model, String username, String password) {
+@PostMapping("/loginUser")
+public String loginUser(@RequestParam("username") String username,String password, Model model) {
     // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
 
     User user = userService.findByUserName(username);
@@ -44,7 +46,7 @@ public String loginUser(Model model, String username, String password) {
     if (user != null && user.getPassword().equals(password)&& user.getUserName().equals(username)) {
         // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
         model.addAttribute("message", "Zalogowano pomyślnie.");
-
+        model.addAttribute("username", username);
         return "candidate_portal";
 
     } else {
@@ -54,6 +56,15 @@ public String loginUser(Model model, String username, String password) {
 
 
 }
+
+    @PostMapping("/login")
+    public String login(@RequestParam("username") String username, Model model) {
+        // Przykład: autentykacja użytkownika, jeśli poprawna, to ustawmy nazwę użytkownika w sesji
+        model.addAttribute("username", username);
+
+        // Przekierowanie użytkownika na stronę główną
+        return "redirect:/home";
+    }
 
 
 }

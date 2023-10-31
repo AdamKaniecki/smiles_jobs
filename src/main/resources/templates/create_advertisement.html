@@ -1,27 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Create Advertisement</title>
+  <title>Tworzenie Ogłoszenia</title>
 </head>
 <body>
-<div class="container">
-  <h1 class="mt-4">Create Advertisement</h1>
-  <form th:action="@{/createAdvertisement}"   th:object="${advertisementEntity}"method="post">
-    <div class="form-group">
-      <label for="name">Advertisement Name</label>
-      <input type="text" id="name" name="name" class="form-control" required>
-    </div>
-    <!-- Dodaj inne pola reklamy -->
-    <button type="submit" class="btn btn-primary">Create Advertisement</button>
-  </form>
-</div>
+<h1>Tworzenie Ogłoszenia</h1>
 
-<!--<form th:action="@{/show}" method="GET">-->
-<!--  <input type="text" name="userId" placeholder="Wprowadź userId">-->
-<!--  <button type="submit" class="btn btn-info">Company Registry</button>-->
-<!--</form>-->
+<form method="post" action="/createAdvertisement">
+  <input type="hidden" name="username" value="${username}">
 
-<br>
+  <label for="name">Nazwa ogłoszenia:</label>
+  <input type="text" name="name" id="name" required>
+
+  <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
+
+  <button type="submit">Utwórz Ogłoszenie</button>
+</form>
 </body>
 </html>

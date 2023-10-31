@@ -44,7 +44,18 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
 //        String encodedPassword = passwordEncoder.encode("totombak");
         String encodedPassword = "totobak";
 
-        User user = User.builder()
+//        User user = User.builder()
+//
+//                .userName("ABBBBBB")
+//                .email("addf@frg")
+//                .password(encodedPassword)
+//                .active(true)
+//                .roles(Set.of(Role.CANDIDATE))
+//                .build();
+//        UserEntity userEntity = userMapper.map(user);
+//        userRepository.save(userEntity);
+
+        UserEntity userEntity = UserEntity.builder()
 
                 .userName("ABBBBBB")
                 .email("addf@frg")
@@ -52,20 +63,29 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
                 .active(true)
                 .roles(Set.of(Role.CANDIDATE))
                 .build();
-        UserEntity userEntity = userMapper.map(user);
-        userRepository.save(userEntity);
+      userRepository.save(userEntity);
+      User user =  userMapper.map(userEntity);
 
 //     jak to jest odkomentowane to w wyniku działania tej metody przypisuje advertisement do usera,
 //     a przez controllery nie może namierzyć usera.tworzy obiekt ale nie wiąże z userem
 
-        Advertisement advertisement = Advertisement.builder()
-                .name("tyured")
-                .user(userService.findByUserName(user.getUserName()))
-                .build();
-      AdvertisementEntity advertisementEntity =  advertisementMapper.map(advertisement);
-        advertisementRepository.save(advertisementEntity);
-    }
 
+//        Advertisement advertisement = Advertisement.builder()
+//                .name("tyured")
+//                .user(userService.findByUserName(user.getUserName()))
+//                .build();
+//        AdvertisementEntity advertisementEntity = advertisementMapper.map(advertisement);
+//        advertisementRepository.save(advertisementEntity);
+
+        AdvertisementEntity advertisementEntity = AdvertisementEntity.builder()
+                .name("tyured")
+                .user(userRepository.findByUserName(userEntity.getUserName()))
+                .build();
+        advertisementRepository.save(advertisementEntity);
+        Advertisement advertisement = advertisementMapper.map(advertisementEntity);
+
+
+    }
 
 
 // to działą tylko tworzy encję
@@ -92,6 +112,6 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
 //                .build());
 //
 //    }
-    }
+}
 
 
