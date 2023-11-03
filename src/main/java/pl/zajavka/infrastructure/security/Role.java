@@ -2,7 +2,9 @@ package pl.zajavka.infrastructure.security;
 
 
 
-public enum  Role  {
+public enum  Role
+//        implements GrantedAuthority
+{
     CANDIDATE,
     ADMIN,
     COMPANY;

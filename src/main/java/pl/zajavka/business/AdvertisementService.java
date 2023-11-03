@@ -30,7 +30,7 @@ public class AdvertisementService {
         // Stwórz nową reklamę
         AdvertisementEntity newAdvertisementEntity = AdvertisementEntity.builder()
                 .name(advertisement.getName())
-                .user(userRepository.findByUserName("ABBBBBB"))
+                .user(userMapper.map(user))
                 .build();
 
         advertisementRepository.saveAndFlush(newAdvertisementEntity);

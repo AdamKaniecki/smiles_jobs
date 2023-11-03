@@ -3,6 +3,7 @@
 //import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
+//import org.springframework.http.HttpMethod;
 //import org.springframework.security.authentication.AuthenticationManager;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 //import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -45,6 +46,8 @@
 //                .requestMatchers( "/candidate_registry").permitAll()
 //                .requestMatchers( "/company_registry").permitAll()
 //                .requestMatchers("/candidate_portal/**").hasAuthority("CANDIDATE")
+//                .requestMatchers(HttpMethod.POST,"/createAdvertisement").hasAuthority("CANDIDATE")
+//
 //
 ////                .requestMatchers("/candidate_portal/**").hasAuthority("CANDIDATE")
 //                .requestMatchers("/company_portal/**").hasAuthority("COMPANY")
@@ -54,6 +57,7 @@
 ////                .requestMatchers("/{userId}").hasAuthority("CANDIDATE")
 //
 //            .and()
+//
 //            .formLogin()
 //            .permitAll()
 //            .and()

@@ -2,6 +2,7 @@ package pl.zajavka.domain;
 
 import lombok.*;
 import pl.zajavka.infrastructure.security.Role ;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.util.Set;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 @With
 @Builder
 @EqualsAndHashCode(of = "id")
-public class User {
+public class User  {
 
     private Integer id;
     private String userName;

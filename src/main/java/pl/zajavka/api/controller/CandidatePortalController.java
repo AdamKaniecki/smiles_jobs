@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.mapper.MapperDTO;
 import pl.zajavka.business.AdvertisementService;
 import pl.zajavka.business.UserService;
-import pl.zajavka.business.UserSessionManager;
 import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
@@ -25,11 +24,10 @@ public class CandidatePortalController {
     public static final String CANDIDATE_PORTAL = "/candidate_portal";
     public static final String CREATE_ADVERTISEMENT = "/create_advertisement";
 
-//    public static final String USER_ID = "/show/{userId}";
+    //    public static final String USER_ID = "/show/{userId}";
     public static final String USER_ID = "/show";
     private MapperDTO mapperDTO;
     private HttpSession httpSession;
-    private UserSessionManager userSessionManager;
 
     private UserService userService;
 
@@ -55,10 +53,23 @@ public class CandidatePortalController {
 //        }
 //    }
 
+    //    @GetMapping(CANDIDATE_PORTAL)
+//    public String getCandidatePortalPage() {
+//        return "candidate_portal";
+//    }
     @GetMapping(CANDIDATE_PORTAL)
-    public String getCandidatePortalPage() {
-        return "candidate_portal";
+    public String dashboard(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            // Użytkownik jest zalogowany
+            model.addAttribute("user", user);
+            return "candidate_portal";
+        } else {
+            // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
+            return "redirect:/login";
+        }
     }
+
 
 //        @GetMapping(CREATE_ADVERTISEMENT)
 //    public String getCreateAdvertisement(User user) {
@@ -66,7 +77,7 @@ public class CandidatePortalController {
 //    }
 
 
-//    @GetMapping(USER_ID)
+    //    @GetMapping(USER_ID)
 //    public String showUserDetails(
 //            @PathVariable Integer userId,
 //            Model model
@@ -78,17 +89,17 @@ public class CandidatePortalController {
 //        System.out.println("test get by id");
 //        return "user_details";
 //    }
-@GetMapping(CREATE_ADVERTISEMENT)
-public String createAdvertisementForm(Model model) {
-    if (httpSession.getAttribute("username") != null) {
-        String username = httpSession.getAttribute("username").toString();
-        model.addAttribute("username", username);
-        return "create_advertisement";
-    } else {
-        // Obsłuż brak zalogowanego użytkownika
-        return "login";  // Przekieruj na stronę logowania
+    @GetMapping(CREATE_ADVERTISEMENT)
+    public String createAdvertisementForm(Model model) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("username", username);
+            return "create_advertisement";
+        } else {
+            // Obsłuż brak zalogowanego użytkownika
+            return "login";  // Przekieruj na stronę logowania
+        }
     }
-}
 
 //    @GetMapping(CREATE_ADVERTISEMENT)
 //    public String user(Model model){
@@ -101,25 +112,25 @@ public String createAdvertisementForm(Model model) {
 
     @PostMapping("/createAdvertisement")
     public String createdAdvertisement(
-            @ModelAttribute("advertisement") Advertisement advertisement,User loggedInUser,
-            String username,
+            @ModelAttribute("advertisement") Advertisement advertisement,
             Model model) {
+        String username = (String) httpSession.getAttribute("username");
 
-
-
-         userService.findByUserName(username);
-         advertisementService.create(advertisement, loggedInUser);
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
             advertisement.setUser(loggedInUser);
-
+            advertisementService.create(advertisement, loggedInUser);
 
             // Dodaj reklamę do modelu, aby przekazać ją do widoku
             model.addAttribute("advertisement", advertisement);
             model.addAttribute("user", loggedInUser);
 
-        return "user_created_successfully";
-    }
-    // Pomocnicza metoda do pobrania istniejącego użytkownika
-
+            return "user_created_successfully";
+        } else {
+            // Obsłuż brak zalogowanego użytkownika
+            return "login";  // Przekieruj na stronę logowania
+        }
+        // Pomocnicza metoda do pobrania istniejącego użytkownika
 
 
 //    @PostMapping("/candidate_registry")
@@ -129,10 +140,6 @@ public String createAdvertisementForm(Model model) {
 //        model.addAttribute("userDTO", userDTO);
 //        return "user_created_successfully";
 //    }
+//}
+    }
 }
-
-
-
-
-
-
