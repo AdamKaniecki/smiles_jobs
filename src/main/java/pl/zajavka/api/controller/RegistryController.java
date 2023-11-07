@@ -25,7 +25,7 @@ public class RegistryController {
 
 
     @GetMapping(COMPANY_REGISTRY)
-    public String getCompanyRegistry(UserDTO userDTO) {
+    public String getCompanyRegistry(User user) {
         return "company_registry";
     }
 
@@ -65,8 +65,22 @@ public String createCandidate(@ModelAttribute("user") User user, Model model, Ht
     return "user_created_successfully";
 }
 
+    @PostMapping("/companyRegistry")
+    public String createCompany(@ModelAttribute("user") User user, Model model, HttpSession session) {
+        // Utwórz kandydata w bazie danych
+        userService.createCompany(user);
 
-//    @GetMapping("/candidateRegistry")
+        // Zapisz użytkownika w sesji
+        session.setAttribute("user", user);
+
+        // Dodaj użytkownika do modelu, jeśli to jest potrzebne
+        model.addAttribute("user", user);
+
+        return "user_created_successfully";
+    }
+
+
+//    @GetMapping("/companyRegistry")
 //    public String createCandidate(@ModelAttribute("user") User user, Model model, Authentication authentication) {
 //        // Możesz uzyskać dostęp do Principal w tym miejscu
 //        UserDetails userDetails = (UserDetails) authentication.getPrincipal();

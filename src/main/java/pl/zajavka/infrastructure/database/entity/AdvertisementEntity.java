@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.zajavka.infrastructure.security.UserEntity;
 
+import java.time.OffsetDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,6 +24,19 @@ public class AdvertisementEntity {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
+    @Column(name = "work_experience")
+    private String workExperience;
+
+    @Column(name = "knowledge_of_technologies")
+    private String knowledgeOfTechnologies;
+
+    @Column(name = "date_time")
+    private OffsetDateTime dateTime;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

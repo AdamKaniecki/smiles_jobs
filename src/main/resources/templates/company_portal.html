@@ -28,25 +28,29 @@
         <table class="table" id="sortable-table">
             <thead class="table-dark">
             <tr>
-                <th>Number</th>
-                <th>FullName</th>
+                <th>Name</th>
+                <th>Surname</th>
                 <th>Work experience</th>
                 <th>Knowledge of IT technologies</th>
-                <th>My projects</th>
-                <th>Date</th>
-                <th>Status</th>
+<!--                <th>My projects</th>-->
+                <th>Date Time</th>
+<!--                <th>Status</th>-->
                 <th>Send offers job</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="applicant : ${applicants}">
-                <td th:text="${applicant.number}"></td>
-                <td th:text="${applicant.fullName}"></td>
-                <td th:text="${applicant.workExperience}"></td>
-                <td th:text="${applicant.itTechnologies}"></td>
-                <td><a th:href="${applicant.projectsLink}">View Projects</a></td>
-                <td th:text="${applicant.date}"></td>
-                <td th:text="${applicant.status}"></td>
+            <tr th:each="advertisement : ${advertisements}">
+                <td th:text="${advertisement.name}"></td>
+                <td th:text="${advertisement.surname}"></td>
+                <td th:text="${advertisement.workExperience}"></td>
+                <td th:text="${advertisement.knowledgeOfTechnologies}"></td>
+                <td th:text="${advertisement.dateTime}"></td>
+<!--                <td th:text="${applicant.fullName}"></td>-->
+<!--                <td th:text="${applicant.workExperience}"></td>-->
+<!--                <td th:text="${applicant.itTechnologies}"></td>-->
+<!--                <td><a th:href="${applicant.projectsLink}">View Projects</a></td>-->
+<!--                <td th:text="${applicant.date}"></td>-->
+<!--                <td th:text="${applicant.status}"></td>-->
                 <td><button class="btn btn-primary">Send Offer</button></td>
             </tr>
             </tbody>
@@ -54,6 +58,12 @@
     </div>
     <br>
     <br>
+    <h2 class="mt-4">Stwórz ofertę pracy</h2>
+
+    <div class="col-md-4">
+        <!--            <a th:href="@{/create_advertisement}" class="btn btn-info" role="button">CREATE</a>-->
+        <a th:href="@{/create_job_offer}" method="GET" class="btn btn-info" role="button">Create Job Offer</a>
+    </div>
     <br>
     <br>
     <br>

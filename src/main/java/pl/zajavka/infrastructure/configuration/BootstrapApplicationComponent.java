@@ -29,8 +29,8 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
     @Transactional
     public void onApplicationEvent(final @NonNull ContextRefreshedEvent event) {
 
-        advertisementRepository.deleteAll();
-        userRepository.deleteAll();
+//        advertisementRepository.deleteAll();
+//        userRepository.deleteAll();
     }
 }
 ////        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

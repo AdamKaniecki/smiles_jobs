@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.With;
 
+import java.time.OffsetDateTime;
+
 @Data
 @With
 @Builder
@@ -14,5 +16,9 @@ public class Advertisement {
 
     private Integer id;
     private String name;
+    private String surname;
+    private String workExperience;
+    private String knowledgeOfTechnologies;
+    private OffsetDateTime dateTime;
     private User user;
 }

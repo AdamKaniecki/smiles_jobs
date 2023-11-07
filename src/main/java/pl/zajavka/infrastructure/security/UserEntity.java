@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 
 import java.util.Set;
 
@@ -43,6 +44,9 @@ public class  UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AdvertisementEntity> advertisements;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<JobOfferEntity> jobOffers;
 }
 
 

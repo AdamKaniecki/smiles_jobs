@@ -1,29 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html>
 <head>
   <title>Tworzenie Ogłoszenia</title>
 </head>
 <body>
 <h1>Tworzenie Ogłoszenia</h1>
 
-<form method="post" action="/createAdvertisement" >
+<form method="post" action="/createJobOffer">
   <input type="hidden" name="username" value="${username}">
 
-  <label for="name">name</label>
-  <input type="text" name="name" id="name" required>
-  <label for="surname">surname</label>
-  <input type="text" name="surname" id="surname" required>
-  <label for="workExperience">workExperience</label>
-  <input type="text" name="workExperience" id="workExperience" required>
-  <label for="knowledgeOfTechnologies">knowledgeOfTechnologies</label>
-  <input type="text" name="knowledgeOfTechnologies" id="knowledgeOfTechnologies" required>
+  <label for="companyName">Nazwa firmy</label>
+  <input type="text" name="companyName" id="companyName" required>
+  <label for="position">Stanowisko</label>
+  <input type="text" name="position" id="position" required>
+  <label for="responsibilities">Zakres obowiązków</label>
+  <input type="text" name="responsibilities" id="responsibilities" required>
+  <label for="requiredTechnologies">Wymagane technologie</label>
+  <input type="text" name="requiredTechnologies" id="requiredTechnologies" required>
+  <label for="benefits">Benefity</label>
+  <input type="text" name="benefits" id="benefits" required>
+  <label for="salaryRange">Widełki płacowe</label>
+  <input type="text" name="salaryRange" id="salaryRange" required>
 
   <input type="hidden" name="dateTime" id="dateTime" required>
+
   <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
 
-  <button type="submit">Utwórz Ogłoszenie</button>
+  <button type="submit">Utwórz Ofertę Pracy</button>
 </form>
-
 <script>
   // Pobierz ukryte pole dateTime
   const dateTimeField = document.getElementById("dateTime");
@@ -39,7 +43,5 @@
   const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
   dateTimeField.value = currentDateTime;
 </script>
-
-
 </body>
 </html>

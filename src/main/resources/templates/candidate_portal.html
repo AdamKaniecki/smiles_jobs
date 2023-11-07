@@ -14,12 +14,12 @@
     <table class="table table-striped">
          <thead class="table-dark">
         <tr>
-            <th>Numer ogłoszenia</th>
             <th>Nazwa firmy</th>
             <th>Stanowisko</th>
             <th>Zakres obowiązków</th>
             <th>Wymagana znajomość technologii</th>
             <th>Benefity</th>
+            <th>Widełki płacowe</th>
             <th>Data i godzina</th>
             <th>Actions</th>
         </tr>
@@ -27,12 +27,12 @@
         <tbody>
         <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy -->
         <tr th:each="jobOffer : ${jobOffers}">
-            <td th:text="${jobOffer.number}"></td>
             <td th:text="${jobOffer.companyName}"></td>
             <td th:text="${jobOffer.position}"></td>
-            <td th:text="${jobOffer.jobDescription}"></td>
+            <td th:text="${jobOffer.responsibilities}"></td>
             <td th:text="${jobOffer.requiredTechnologies}"></td>
             <td th:text="${jobOffer.benefits}"></td>
+            <td th:text="${jobOffer.salaryRange}"></td>
             <td th:text="${jobOffer.dateTime}"></td>
             <td>
                 <a class="btn btn-primary" th:href="@{'/send-cv/' + ${jobOffer.id}}">Send CV</a>
@@ -46,7 +46,7 @@
 
         <div class="col-md-4">
 <!--            <a th:href="@{/create_advertisement}" class="btn btn-info" role="button">CREATE</a>-->
-            <a th:href="@{/create_advertisement}" method="GET" class="btn btn-info" role="button">Company Registry</a>
+            <a th:href="@{/create_advertisement}" method="GET" class="btn btn-info" role="button">Create Advertisement</a>
         </div>
 
 

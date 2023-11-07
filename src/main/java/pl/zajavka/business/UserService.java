@@ -39,12 +39,11 @@ public class  UserService {
     }
 
     @Transactional
-    public UserEntity createCompany(User user) {
+    public User createCompany(User user) {
 //        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 //        String encodedPassword = passwordEncoder.encode(user.getPassword());
 
         UserEntity userEntity = UserEntity.builder()
-//                .id(userId)
                 .userName(user.getUserName())
                 .email(user.getEmail())
 //                .password(encodedPassword)
@@ -52,7 +51,8 @@ public class  UserService {
                 .active(true)
                 .roles(Set.of(Role.COMPANY))
                 .build();
-        return userRepository.save(userEntity);
+       userRepository.save(userEntity);
+       return userMapper.map(userEntity);
     }
 
 //

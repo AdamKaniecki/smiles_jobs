@@ -8,10 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.mapper.MapperDTO;
 import pl.zajavka.business.AdvertisementService;
+import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
@@ -21,7 +23,7 @@ import java.util.List;
 @Controller
 @Slf4j
 public class CandidatePortalController {
-    public static final String CANDIDATE_PORTAL = "/candidate_portal";
+    public static final String CANDIDATE_PORTAL = "{user}/candidate_portal";
     public static final String CREATE_ADVERTISEMENT = "/create_advertisement";
 
     //    public static final String USER_ID = "/show/{userId}";
@@ -34,6 +36,9 @@ public class CandidatePortalController {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private AdvertisementService advertisementService;
+    private JobOfferService jobOfferService;
+
+
 //    private final UserSessionManager userSessionManager;
 
 //    @GetMapping("/candidate_portal")
@@ -58,11 +63,13 @@ public class CandidatePortalController {
 //        return "candidate_portal";
 //    }
     @GetMapping(CANDIDATE_PORTAL)
-    public String dashboard(HttpSession session, Model model) {
+    public String getCandidatePortalPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
+            List<JobOfferEntity> jobOffers = jobOfferService.getAllJobOffers();
+            model.addAttribute("jobOffers", jobOffers);
             return "candidate_portal";
         } else {
             // Użytkownik nie jest zalogowany, przekieruj na stronę logowania

@@ -11,6 +11,8 @@ import pl.zajavka.infrastructure.database.repository.mapper.AdvertisementMapper;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.util.List;
+
 
 @AllArgsConstructor
 @Service
@@ -30,6 +32,10 @@ public class AdvertisementService {
         // Stwórz nową reklamę
         AdvertisementEntity newAdvertisementEntity = AdvertisementEntity.builder()
                 .name(advertisement.getName())
+                .surname(advertisement.getSurname())
+                .workExperience(advertisement.getWorkExperience())
+                .knowledgeOfTechnologies(advertisement.getKnowledgeOfTechnologies())
+                .dateTime(advertisement.getDateTime())
                 .user(userMapper.map(user))
                 .build();
 
@@ -45,6 +51,11 @@ public class AdvertisementService {
 
 
 
+    }
+
+    public List<AdvertisementEntity> getAllAdvertisements() {
+
+        return advertisementRepository.findAll();
     }
 
 

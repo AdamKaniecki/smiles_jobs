@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
+
 @AllArgsConstructor
 @Controller
 @SessionAttributes("username")
@@ -44,18 +46,26 @@ public class LoginController {
 
         User user = userService.findByUserName(username);
 
-        if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username)) {
+        if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username) && user.getRoles().contains(Role.CANDIDATE)) {
             // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
             session.setAttribute("user", user); // Przechowaj użytkownika w sesji
-            System.out.println("Zalogowano pomyślnie");
+            System.out.println("Zalogowano Kandydata pomyślnie");
             model.addAttribute("username", username);
-            return "candidate_portal";
+            return "redirect: /candidate_portal";
         } else {
-            model.addAttribute("error", "Nieprawidłowe dane logowania.");
-            return "login";
+            if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username) && user.getRoles().contains(Role.COMPANY)) {
+                // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
+                session.setAttribute("user", user); // Przechowaj użytkownika w sesji
+                System.out.println("Zalogowano Firmę pomyślnie");
+                model.addAttribute("username", username);
+                return "redirect: /company_portal";
+            } else {
+                System.out.println("Nieprawidłowe dane logowania.");
+                return "login";
+            }
+
         }
     }
-
 
 
 //}

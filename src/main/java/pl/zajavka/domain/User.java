@@ -19,6 +19,7 @@ public class User  {
     private Boolean active;
     private Set<Role> roles;
     private Set<Advertisement>advertisements;
+    private Set<JobOffer>jobOffers;
 
 
 }
