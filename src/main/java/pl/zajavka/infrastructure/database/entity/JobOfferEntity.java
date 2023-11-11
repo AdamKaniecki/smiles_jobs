@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Data
@@ -38,11 +39,14 @@ public class JobOfferEntity {
     @Column(name = "benefits")
     private String benefits;
 
-    @Column(name = "salary_range")
-    private BigDecimal salaryRange;
+//    @Column(name = "salary_min")
+//    private BigDecimal salaryMin;
+//
+//    @Column(name = "salary_max")
+//    private BigDecimal salaryMax;
 
-    @Column(name = "date_time")
-    private ZonedDateTime dateTime;
+    @Column(name = "date_time_job_offer")
+    private OffsetDateTime jobOfferDateTime;
 
 
 

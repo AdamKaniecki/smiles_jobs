@@ -10,7 +10,7 @@ import pl.zajavka.infrastructure.database.repository.AdvertisementRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AdvertisementMapper;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
-
+import java.time.OffsetDateTime;
 import java.util.List;
 
 
@@ -29,18 +29,18 @@ public class AdvertisementService {
 //        UserEntity userEntity = userRepository.findById(userId)
 //                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
         System.out.println("twórz psie");
+       OffsetDateTime currentDateTime = OffsetDateTime.now();
         // Stwórz nową reklamę
         AdvertisementEntity newAdvertisementEntity = AdvertisementEntity.builder()
                 .name(advertisement.getName())
                 .surname(advertisement.getSurname())
                 .workExperience(advertisement.getWorkExperience())
                 .knowledgeOfTechnologies(advertisement.getKnowledgeOfTechnologies())
-                .dateTime(advertisement.getDateTime())
+                .dateTime(OffsetDateTime.from(currentDateTime))
                 .user(userMapper.map(user))
                 .build();
 
         advertisementRepository.saveAndFlush(newAdvertisementEntity);
-
         return    advertisementMapper.map(newAdvertisementEntity);
 
 
@@ -57,7 +57,19 @@ public class AdvertisementService {
 
         return advertisementRepository.findAll();
     }
-
+//    public List<AdvertisementEntity> searchAdvertisementsByKeyword(String keyword) {
+//        // Wykorzystaj metody repozytorium Spring Data JPA do zapytań niestandardowych
+//        return advertisementRepository.findAdvertisementsByKeyword(keyword);
+//
+//    }
+//@Transactional(readOnly = true)
+//public List<AdvertisementEntity> searchAdvertisementsByKeyword(String keyword) {
+//    // Wykorzystaj metody repozytorium Spring Data JPA do zapytań niestandardowych
+//    return advertisementRepository.findAdvertisementsByKeywordIgnoreCase("%" + keyword + "%");
+//}
+public List<AdvertisementEntity> searchAdvertisementsByKeywordAndCategory(String keyword, String category) {
+    return advertisementRepository.findAdvertisementsByKeywordAndCategory(keyword, category);
+}
 
 
 

@@ -35,7 +35,7 @@ public class AdvertisementEntity {
     private String knowledgeOfTechnologies;
 
     @Column(name = "date_time")
-    private OffsetDateTime dateTime;
+    private OffsetDateTime dateTime;;
 
 
     @ManyToOne(fetch = FetchType.EAGER)

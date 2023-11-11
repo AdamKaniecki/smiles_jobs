@@ -27,3 +27,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+
+        spring:
+          thymeleaf:
+            prefix: classpath:/templates/
+            suffix: .html

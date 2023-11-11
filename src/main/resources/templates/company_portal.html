@@ -20,9 +20,9 @@
 
     </div>
     <br>
-    <h2>Are you looking for a new employments?</h2>
-    <p>The best place to find an employee is the SmilesJobs!</p>
-    <p>Please take a look at job seekers  </p>
+    <h2>Are you looking for new employment?</h2>
+    <p>The best place to find an employee is SmilesJobs!</p>
+    <p>Please take a look at job seekers</p>
 
     <div>
         <table class="table" id="sortable-table">
@@ -32,9 +32,7 @@
                 <th>Surname</th>
                 <th>Work experience</th>
                 <th>Knowledge of IT technologies</th>
-<!--                <th>My projects</th>-->
                 <th>Date Time</th>
-<!--                <th>Status</th>-->
                 <th>Send offers job</th>
             </tr>
             </thead>
@@ -44,13 +42,7 @@
                 <td th:text="${advertisement.surname}"></td>
                 <td th:text="${advertisement.workExperience}"></td>
                 <td th:text="${advertisement.knowledgeOfTechnologies}"></td>
-                <td th:text="${advertisement.dateTime}"></td>
-<!--                <td th:text="${applicant.fullName}"></td>-->
-<!--                <td th:text="${applicant.workExperience}"></td>-->
-<!--                <td th:text="${applicant.itTechnologies}"></td>-->
-<!--                <td><a th:href="${applicant.projectsLink}">View Projects</a></td>-->
-<!--                <td th:text="${applicant.date}"></td>-->
-<!--                <td th:text="${applicant.status}"></td>-->
+                <td th:text="${#temporals.format(advertisement.dateTime, 'yyyy-MM-dd HH:mm')}"></td>
                 <td><button class="btn btn-primary">Send Offer</button></td>
             </tr>
             </tbody>
@@ -58,21 +50,52 @@
     </div>
     <br>
     <br>
-    <h2 class="mt-4">Stwórz ofertę pracy</h2>
+    <!-- Dodaj formularz do wyszukiwania -->
+<!--    <form action="/search" method="get" class="mt-4">-->
+<!--        <div class="form-group">-->
+<!--            <label for="keyword">Search for job seekers:</label>-->
+<!--            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
+<!--        </div>-->
+<!--        <button type="submit" class="btn btn-primary">Search</button>-->
+<!--    </form>-->
+    <!-- Dodaj formularz do wyszukiwania -->
+    <form action="/search" method="get" class="mt-4">
+        <div class="form-row">
+
+            <div class="col-md-4">
+                <label for="category">Search by category:</label>
+                <select id="category" name="category" class="form-control">
+                    <option value="name">Name</option>
+                    <option value="surname">Surname</option>
+                    <option value="workExperience">workExperience</option>
+                    <option value="knowledgeOfTechnologies">knowledgeOfTechnologies</option>
+                    <!-- Dodaj więcej opcji kategorii według potrzeb -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="keyword">Search for job seekers:</label>
+                <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <h2 class="mt-4">Create a job offer</h2>
 
     <div class="col-md-4">
-        <!--            <a th:href="@{/create_advertisement}" class="btn btn-info" role="button">CREATE</a>-->
         <a th:href="@{/create_job_offer}" method="GET" class="btn btn-info" role="button">Create Job Offer</a>
     </div>
     <br>
     <br>
     <br>
     <h4>
-        "After sending offers you can wait for response from candidates with CV and contacts him"</h4>
+        "After sending offers you can wait for a response from candidates with CV and contact them"</h4>
     <br>
     <h1>Notifications</h1>
     <table>
-         <thead>
+        <thead>
         <tr>
             <th>Date</th>
             <th>Message</th>

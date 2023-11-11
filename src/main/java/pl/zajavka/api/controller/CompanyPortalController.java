@@ -2,11 +2,13 @@ package pl.zajavka.api.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.business.AdvertisementService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
@@ -15,8 +17,10 @@ import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
-
+@Slf4j
 @AllArgsConstructor
 @Controller
 public class CompanyPortalController {
@@ -71,10 +75,12 @@ public class CompanyPortalController {
     public String createdJobOffers(
             @ModelAttribute("jobOffer") JobOffer jobOffer,
             Model model) {
+        log.info("Received job offer: {}", jobOffer);
         String username = (String) httpSession.getAttribute("username");
 
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
+//            jobOffer.setDateTime(OffsetDateTime.now());
             jobOffer.setUser(loggedInUser);
             jobOfferService.create(jobOffer, loggedInUser);
 
@@ -88,5 +94,31 @@ public class CompanyPortalController {
             return "login";  // Przekieruj na stronę logowania
         }
 
+    }
+
+//    @GetMapping("/search")
+//    public String searchAdvertisements(@RequestParam("keyword") String keyword, Model model) {
+//        List<AdvertisementEntity> searchResults = advertisementService.searchAdvertisementsByKeyword(keyword);
+//        model.addAttribute("searchResults", searchResults);
+//        model.addAttribute("keyword", keyword);
+//        return "search_results"; // Twój widok do wyświetlania wyników wyszukiwania
+//    }
+@GetMapping("/search")
+public String searchAdvertisements(
+        @RequestParam("keyword") String keyword,
+        @RequestParam("category") String category,
+        Model model) {
+    List<AdvertisementEntity> searchResults = advertisementService.searchAdvertisementsByKeywordAndCategory(keyword, category);
+    model.addAttribute("searchResults", searchResults);
+    model.addAttribute("keyword", keyword);
+    model.addAttribute("category", category);
+    return "search_results";
+}
+
+    @GetMapping("/search_results")
+    public String showSearchResults(@RequestParam String keyword, String category, Model model) {
+        List<AdvertisementEntity> searchResults = advertisementService.searchAdvertisementsByKeywordAndCategory(category,keyword);
+        model.addAttribute("searchResults", searchResults);
+        return "search_results";
     }
 }

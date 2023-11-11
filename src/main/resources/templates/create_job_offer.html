@@ -5,43 +5,44 @@
 </head>
 <body>
 <h1>Tworzenie Ogłoszenia</h1>
-
 <form method="post" action="/createJobOffer">
   <input type="hidden" name="username" value="${username}">
 
   <label for="companyName">Nazwa firmy</label>
   <input type="text" name="companyName" id="companyName" required>
+
   <label for="position">Stanowisko</label>
   <input type="text" name="position" id="position" required>
+
   <label for="responsibilities">Zakres obowiązków</label>
   <input type="text" name="responsibilities" id="responsibilities" required>
+
   <label for="requiredTechnologies">Wymagane technologie</label>
   <input type="text" name="requiredTechnologies" id="requiredTechnologies" required>
+
   <label for="benefits">Benefity</label>
   <input type="text" name="benefits" id="benefits" required>
-  <label for="salaryRange">Widełki płacowe</label>
-  <input type="text" name="salaryRange" id="salaryRange" required>
 
-  <input type="hidden" name="dateTime" id="dateTime" required>
+<!--  <label for="minSalary">Minimum Salary:</label>-->
+<!--  <input type="text" name="minSalary" id="minSalary" required>-->
+
+<!--  <label for="maxSalary">Maximum Salary:</label>-->
+<!--  <input type="text" name="maxSalary" id="maxSalary" required>-->
+
+
+  <input type="hidden" name="jobOfferDateTime" id="jobOfferDateTime" required>
 
   <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
 
   <button type="submit">Utwórz Ofertę Pracy</button>
 </form>
 <script>
-  // Pobierz ukryte pole dateTime
-  const dateTimeField = document.getElementById("dateTime");
+  // Pobierz pole dateTime
+  const jobOfferDateTime = document.getElementById("jobOfferDateTime");
 
-  // Ustaw wartość pola dateTime na aktualną datę i czas w odpowiednim formacie
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-
-  const currentDateTime = `${year}-${month}-${day} ${hours}:${minutes}`;
-  dateTimeField.value = currentDateTime;
+  // Ustaw wartość pola dateTime na aktualną datę i czas
+  const currentDateTime = new Date().toISOString().slice(0, 16);
+  jobOfferDateTimeField.value = currentDateTime;
 </script>
 </body>
 </html>

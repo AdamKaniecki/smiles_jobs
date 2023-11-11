@@ -17,6 +17,8 @@ import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -137,16 +139,23 @@ public class CandidatePortalController {
             // Obsłuż brak zalogowanego użytkownika
             return "login";  // Przekieruj na stronę logowania
         }
-        // Pomocnicza metoda do pobrania istniejącego użytkownika
+    }
+    @GetMapping("/searchJobOffers")
+    public String searchJobOffers(
+            @RequestParam("keyword") String keyword,
+            @RequestParam("category") String category,
+            Model model) {
+        List<JobOfferEntity> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
+        model.addAttribute("searchResults", searchResults);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("category", category);
+        return "search_job_offers_results"; // Twój widok do wyświetlania wyników wyszukiwania ofert pracy
+    }
 
-
-//    @PostMapping("/candidate_registry")
-//    public String createCandidate (@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
-//        User user = mapperDTO.map(userDTO);
-//        userService.createCandidate(user);
-//        model.addAttribute("userDTO", userDTO);
-//        return "user_created_successfully";
-//    }
-//}
+    @GetMapping("/search_job_offers_results")
+    public String showSearchResults(@RequestParam String keyword, String category, Model model) {
+        List<JobOfferEntity> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(category,keyword);
+        model.addAttribute("searchResults", searchResults);
+        return "search_job_offers_results";
     }
 }

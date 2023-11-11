@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.With;
+import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @With
@@ -19,6 +21,10 @@ public class JobOffer {
     private String responsibilities;
     private String requiredTechnologies;
     private String benefits;
-    private BigDecimal salaryRange;
+//    @NumberFormat(style = NumberFormat.Style.NUMBER)
+//    private BigDecimal salaryMin;
+//    @NumberFormat(style = NumberFormat.Style.NUMBER)
+    private BigDecimal salaryMax;
+    private OffsetDateTime jobOfferDateTime;
     private User user;
 }
