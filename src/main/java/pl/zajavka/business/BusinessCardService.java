@@ -25,7 +25,8 @@ public class BusinessCardService {
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
         Address address = businessCard.getAddress();
-        Address createdAddress = addressService.createAddress(address, user);
+//        Address createdAddress = addressService.createAddress(businessCard.getAddress(), user);
+
 
         BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
                 .office(businessCard.getOffice())
@@ -36,7 +37,8 @@ public class BusinessCardService {
                 .technologiesAndTools(businessCard.getTechnologiesAndTools())
                 .certificatesAndAwards(businessCard.getCertificatesAndAwards())
                 .user(userMapper.map(user))
-                .address(addressMapper.map(createdAddress))
+
+                .address(addressMapper.map(address))
                 .build();
 
         BusinessCardEntity created = businessCardRepository.saveAndFlush(businessCardEntity);
