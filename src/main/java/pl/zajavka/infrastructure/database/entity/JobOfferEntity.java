@@ -10,6 +10,7 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -39,8 +40,8 @@ public class JobOfferEntity {
     @Column(name = "benefits")
     private String benefits;
 
-//    @Column(name = "salary_min")
-//    private BigDecimal salaryMin;
+    @Column(name = "salary_min")
+    private BigDecimal salaryMin;
 //
 //    @Column(name = "salary_max")
 //    private BigDecimal salaryMax;
@@ -53,4 +54,11 @@ public class JobOfferEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "job_offer_notification_table",
+//            joinColumns = @JoinColumn(name = "job_offer_id"),
+//            inverseJoinColumns = @JoinColumn(name = "notification_id"))
+//    private Set<NotificationEntity> notifications;
 }

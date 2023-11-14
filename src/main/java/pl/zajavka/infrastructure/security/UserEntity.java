@@ -47,6 +47,9 @@ public class  UserEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<JobOfferEntity> jobOffers;
+
+//    @ManyToMany(mappedBy = "users")
+//    private Set<NotificationEntity> notifications;
 }
 
 

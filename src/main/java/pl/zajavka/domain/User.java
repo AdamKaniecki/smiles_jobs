@@ -5,7 +5,8 @@ import pl.zajavka.infrastructure.security.Role ;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.util.Set;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @With
 @Builder
@@ -20,6 +21,7 @@ public class User  {
     private Set<Role> roles;
     private Set<Advertisement>advertisements;
     private Set<JobOffer>jobOffers;
+//    private Set<Notification>notifications;
 
 
 }

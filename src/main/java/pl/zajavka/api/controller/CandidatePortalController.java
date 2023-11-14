@@ -5,20 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.api.dto.mapper.MapperDTO;
 import pl.zajavka.business.AdvertisementService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @AllArgsConstructor
@@ -39,6 +39,7 @@ public class CandidatePortalController {
     private UserMapper userMapper;
     private AdvertisementService advertisementService;
     private JobOfferService jobOfferService;
+//    private NotificationService notificationService;
 
 
 //    private final UserSessionManager userSessionManager;
@@ -70,6 +71,11 @@ public class CandidatePortalController {
         if (user != null) {
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
+
+
+//            List<NotificationEntity> notifications = notificationService.getNotificationsByUser(user);
+//            model.addAttribute("notifications", notifications);
+
             List<JobOfferEntity> jobOffers = jobOfferService.getAllJobOffers();
             model.addAttribute("jobOffers", jobOffers);
             return "candidate_portal";

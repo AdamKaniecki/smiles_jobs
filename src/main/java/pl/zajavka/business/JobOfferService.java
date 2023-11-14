@@ -35,14 +35,13 @@ public class JobOfferService {
 //        BigDecimal minSalary = (jobOffer.getSalaryMin() != null && jobOffer.getSalaryMin().compareTo(BigDecimal.ZERO) > 0) ? jobOffer.getSalaryMin() : null;
 //        BigDecimal maxSalary = (jobOffer.getSalaryMax() != null && jobOffer.getSalaryMax().compareTo(BigDecimal.ZERO) > 0) ? jobOffer.getSalaryMax() : null;
 
-
         JobOfferEntity newJobOfferEntity = JobOfferEntity.builder()
                 .companyName(jobOffer.getCompanyName())
                 .position(jobOffer.getPosition())
                 .responsibilities(jobOffer.getResponsibilities())
                 .requiredTechnologies(jobOffer.getRequiredTechnologies())
                 .benefits(jobOffer.getBenefits())
-//                .salaryMin(jobOffer.getSalaryMin())
+                .salaryMin(jobOffer.getSalaryMin())
 //                .salaryMax(jobOffer.getSalaryMax())
                 .jobOfferDateTime(currentDateTime)
                 .user(userMapper.map(user))
@@ -54,6 +53,16 @@ public class JobOfferService {
         jobOfferRepository.saveAndFlush(newJobOfferEntity);
         return jobOfferMapper.map(newJobOfferEntity);
 
+    }
+
+    private BigDecimal parseSalary(String salaryString) {
+        try {
+            // Spróbuj parsować wartość Salary jako BigDecimal
+            return new BigDecimal(salaryString);
+        } catch (NumberFormatException e) {
+            // Obsłuż błąd parsowania - możesz rzucić wyjątkiem lub zwrócić domyślną wartość
+            throw new IllegalArgumentException("Nieprawidłowa wartość Salary: " + salaryString, e);
+        }
     }
 
     public List<JobOfferEntity> getAllJobOffers() {

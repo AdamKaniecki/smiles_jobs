@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Business Card</title>
+</head>
+<body>
+<h2>Create Business Card</h2>
+
+<form action="/createBusinessCard" method="post" th:object="${businessCard}">
+    <!-- Pola BusinessCard -->
+    <label for="office">Office:</label>
+    <input type="text" id="office" name="office" required><br>
+
+    <label for="scopeOperations">Scope of Operations:</label>
+    <input type="text" id="scopeOperations" name="scopeOperations" required><br>
+
+    <label for="recruitmentEmail">Recruitment Email:</label>
+    <input type="email" id="recruitmentEmail" name="recruitmentEmail" required><br>
+
+    <label for="phoneNumber">Phone Number:</label>
+    <input type="tel" id="phoneNumber" name="phoneNumber" required><br>
+
+    <label for="companyDescription">Company Description:</label>
+    <textarea id="companyDescription" name="companyDescription" rows="4" required></textarea><br>
+
+    <label for="technologiesAndTools">Technologies and Tools:</label>
+    <input type="text" id="technologiesAndTools" name="technologiesAndTools" required><br>
+
+    <label for="certificatesAndAwards">Certificates and Awards:</label>
+    <input type="text" id="certificatesAndAwards" name="certificatesAndAwards" required><br>
+
+    <!-- Pola Address -->
+    <label for="country">Country:</label>
+    <input type="text" id="country" name="address.country" required><br>
+
+    <label for="city">City:</label>
+    <input type="text" id="city" name="address.city" required><br>
+
+    <label for="streetAndNumber">Street and Number:</label>
+    <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
+
+    <!-- Pole ukryte dla userId -->
+    <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+
+    <button type="submit">Create Business Card</button>
+</form>
+</body>
+</html>

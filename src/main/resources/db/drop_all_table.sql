@@ -4,4 +4,7 @@ DROP TABLE IF EXISTS role_table CASCADE;
 DROP TABLE IF EXISTS user_role_table CASCADE;
 DROP TABLE IF EXISTS advertisement_table CASCADE;
 DROP TABLE IF EXISTS job_offer_table CASCADE;
+DROP TABLE IF EXISTS notification_table CASCADE;
+DROP TABLE IF EXISTS address_table CASCADE;
+DROP TABLE IF EXISTS business_card_table CASCADE;
 DROP TABLE IF EXISTS flyway_schema_history CASCADE;
