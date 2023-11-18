@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create CV</title>
+</head>
+<body>
+
+<h2>Create CV</h2>
+
+<form th:action="@{/createCV}" th:object="${cv}" method="post">
+    <label>Name: </label>
+    <input type="text" th:field="*{cvName}" required/><br/>
+
+    <label>Surname: </label>
+    <input type="text" th:field="*{cvSurname}" required/><br/>
+
+    <label>sex </label>
+    <input type="text" th:field="*{sex}" required/><br/>
+
+    <label>dateOfBirth: </label>
+    <input type="text" th:field="*{dateOfBirth}" required/><br/>
+
+    <label>sex: </label>
+    <input type="text" th:field="*{maritalStatus}" required/><br/>
+
+    <label>phoneNumber: </label>
+    <input type="text" th:field="*{phoneNumber}" required/><br/>
+
+    <label>email: </label>
+    <input type="text" th:field="*{contactEmail}" required/><br/>
+
+    <label>education </label>
+    <input type="text" th:field="*{education}" required/><br/>
+
+    <label>Work Experience: </label>
+    <input type="text" th:field="*{cvWorkExperience}" required/><br/>
+
+    <label>skills: </label>
+    <input type="text" th:field="*{skills}" required/><br/>
+
+    <label>language: </label>
+    <input type="text" th:field="*{language}" required/><br/>
+
+    <label>languageLevel: </label>
+    <input type="text" th:field="*{languageLevel}" required/><br/>
+
+    <label>hobby: </label>
+    <input type="text" th:field="*{hobby}" required/><br/>
+
+    <label for="country">Country:</label>
+    <input type="text" id="country" name="address.country" required><br>
+
+    <label for="city">City:</label>
+    <input type="text" id="city" name="address.city" required><br>
+
+    <label for="streetAndNumber">Street and Number:</label>
+    <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
+
+    <!-- Pole ukryte dla userId -->
+    <input type="hidden" id="userId" name="userId" th:value="${user.id}">
+
+
+    <!-- Include other CV fields as needed -->
+
+    <input type="submit" value="Create CV"/>
+</form>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ CREATE TABLE user_table
     email     VARCHAR(32)   NOT NULL,
     password  VARCHAR(128)  NOT NULL,
     active    BOOLEAN       NOT NULL,
+    unique(email),
     PRIMARY KEY (user_id)
 
 );

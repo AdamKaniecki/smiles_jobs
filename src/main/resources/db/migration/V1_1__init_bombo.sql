@@ -65,17 +65,49 @@ company_description TEXT NOT NULL,
 technologies_and_tools TEXT NOT NULL,
 certificates_and_awards TEXT NOT NULL,
 address_id INT NOT NULL,
- user_id INT NOT NULL,
+user_id INT NOT NULL,
 PRIMARY KEY(business_card_id),
  CONSTRAINT fk_business_card_table_address_table
     FOREIGN KEY (address_id)
         REFERENCES address_table(address_id),
-  CONSTRAINT fk_business_card_table_user_table
-         FOREIGN KEY (user_id)
-             REFERENCES user_table(user_id)
+ CONSTRAINT fk_business_card_table_user_table
+    FOREIGN KEY (user_id)
+         REFERENCES user_table(user_id)
 
 );
 
+    CREATE TABLE CV(
+    cv_id SERIAL NOT NULL,
+    cv_name VARCHAR(32) NOT NULL,
+    cv_surname VARCHAR(32) NOT NULL,
+    date_of_birth VARCHAR(32) NOT NULl,
+    sex VARCHAR(32) NOT NULL,
+    marital_status VARCHAR(32) NOT NULL,
+    phone_number VARCHAR(32) NOT NULL,
+    contact_email VARCHAR(32) NOT NULL,
+    cv_work_experience VARCHAR(32) NOT NULL,
+    education VARCHAR(32) NOT NULL,
+    skills VARCHAR(32) NOT NULL,
+    language VARCHAR(32) NOT NULL,
+    language_level VARCHAR(32) NOT NULL,
+    hobby TEXT NOT NULL,
+    address_id INT ,
+    user_id INT NOT NULL,
+--    advertisement_id INT NOT NULL,
+    PRIMARY KEY(cv_id),
+    CONSTRAINT fk_CV_address_table
+        FOREIGN KEY (address_id)
+            REFERENCES address_table(address_id),
+    CONSTRAINT fk_CV_user_table
+        FOREIGN KEY (user_id)
+             REFERENCES user_table(user_id)
+--    CONSTRAINT fk_CV_advertisement_table
+--            FOREIGN KEY (advertisement_id)
+--                 REFERENCES advertisement_table(advertisement_id)
+
+
+
+    );
 
 
 

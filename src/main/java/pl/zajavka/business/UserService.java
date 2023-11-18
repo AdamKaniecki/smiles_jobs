@@ -122,4 +122,9 @@ public class  UserService {
         }
         return userMapper.map(userEntity);
     }
+
+    public boolean existsByEmail(String email) {
+        // Sprawdź, czy użytkownik o danym adresie e-mail już istnieje w bazie danych
+        return userRepository.existsByEmail(email);
+    }
 }

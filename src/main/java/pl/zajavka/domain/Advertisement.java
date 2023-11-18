@@ -1,14 +1,12 @@
 package pl.zajavka.domain;
 
-import jakarta.persistence.Column;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.With;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @With
 @Builder
 @EqualsAndHashCode(of = "id")
@@ -21,4 +19,7 @@ public class Advertisement {
     private String knowledgeOfTechnologies;
     private OffsetDateTime dateTime;
     private User user;
+
+//    private CV cv;
+
 }
