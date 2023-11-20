@@ -62,7 +62,7 @@ public String createCandidate(@ModelAttribute("user") User user, Model model, Ht
     // Dodaj użytkownika do modelu, jeśli to jest potrzebne
     model.addAttribute("user", user);
 
-    return "user_created_successfully";
+    return "candidate_created_successfully";
 }
 
     @PostMapping("/companyRegistry")
@@ -76,7 +76,7 @@ public String createCandidate(@ModelAttribute("user") User user, Model model, Ht
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("user", user);
 
-        return "user_created_successfully";
+        return "company_created_successfully";
     }
 
 

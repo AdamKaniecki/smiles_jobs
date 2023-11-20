@@ -12,13 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.business.AdvertisementService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
-import pl.zajavka.domain.Advertisement;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 @Slf4j
 @AllArgsConstructor
@@ -88,7 +85,7 @@ public class CompanyPortalController {
             model.addAttribute("jobOffer", jobOffer);
             model.addAttribute("user", loggedInUser);
 
-            return "user_created_successfully";
+            return "job_offer_created_successfully";
         } else {
             // Obsłuż brak zalogowanego użytkownika
             return "login";  // Przekieruj na stronę logowania
@@ -96,13 +93,7 @@ public class CompanyPortalController {
 
     }
 
-//    @GetMapping("/search")
-//    public String searchAdvertisements(@RequestParam("keyword") String keyword, Model model) {
-//        List<AdvertisementEntity> searchResults = advertisementService.searchAdvertisementsByKeyword(keyword);
-//        model.addAttribute("searchResults", searchResults);
-//        model.addAttribute("keyword", keyword);
-//        return "search_results"; // Twój widok do wyświetlania wyników wyszukiwania
-//    }
+
 @GetMapping("/search")
 public String searchAdvertisements(
         @RequestParam("keyword") String keyword,

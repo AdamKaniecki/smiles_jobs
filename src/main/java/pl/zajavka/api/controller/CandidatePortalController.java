@@ -42,40 +42,12 @@ public class CandidatePortalController {
 //    private NotificationService notificationService;
 
 
-//    private final UserSessionManager userSessionManager;
-
-//    @GetMapping("/candidate_portal")
-//    public String getCandidatePortalPage(HttpServletRequest request, Model model) {
-//        // Pobierz identyfikator sesji użytkownika
-//        String sessionId = request.getSession().getId();
-//
-//        // Pobierz informacje o zalogowanym użytkowniku z UserSessionManager
-//        User user = userSessionManager.getLoggedInUser(sessionId);
-//
-//        if (user != null) {
-//            model.addAttribute("user", user);
-//            return "candidate_portal";
-//        } else {
-//            // Obsłuż sytuację, gdy użytkownik nie jest zalogowany
-//            return "error";
-//        }
-//    }
-
-    //    @GetMapping(CANDIDATE_PORTAL)
-//    public String getCandidatePortalPage() {
-//        return "candidate_portal";
-//    }
     @GetMapping(CANDIDATE_PORTAL)
     public String getCandidatePortalPage(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user != null) {
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
-
-
-//            List<NotificationEntity> notifications = notificationService.getNotificationsByUser(user);
-//            model.addAttribute("notifications", notifications);
-
             List<JobOfferEntity> jobOffers = jobOfferService.getAllJobOffers();
             model.addAttribute("jobOffers", jobOffers);
             return "candidate_portal";
@@ -86,24 +58,6 @@ public class CandidatePortalController {
     }
 
 
-//        @GetMapping(CREATE_ADVERTISEMENT)
-//    public String getCreateAdvertisement(User user) {
-//        return "create_advertisement";
-//    }
-
-
-    //    @GetMapping(USER_ID)
-//    public String showUserDetails(
-//            @PathVariable Integer userId,
-//            Model model
-//    ) {
-//        System.out.println("test get by id - start");
-//
-//        User user = userService.findById(userId);
-//        model.addAttribute("user", user);
-//        System.out.println("test get by id");
-//        return "user_details";
-//    }
     @GetMapping(CREATE_ADVERTISEMENT)
     public String createAdvertisementForm(Model model) {
         String username = (String) httpSession.getAttribute("username");
@@ -115,14 +69,6 @@ public class CandidatePortalController {
             return "login";  // Przekieruj na stronę logowania
         }
     }
-
-//    @GetMapping(CREATE_ADVERTISEMENT)
-//    public String user(Model model){
-//        List<User> users = userService.findUsers();
-//        model.addAttribute("users", users);
-////        model.addAttribute("updateEmployeeDTO", new UpdateEmployeeDTO());
-//        return "create_advertisement";
-//    }
 
 
     @PostMapping("/createAdvertisement")
@@ -140,7 +86,7 @@ public class CandidatePortalController {
             model.addAttribute("advertisement", advertisement);
             model.addAttribute("user", loggedInUser);
 
-            return "user_created_successfully";
+            return "advertisement_created_successfully";
         } else {
             // Obsłuż brak zalogowanego użytkownika
             return "login";  // Przekieruj na stronę logowania

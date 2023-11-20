@@ -61,7 +61,7 @@ public class BusinessCardController {
             model.addAttribute("businessCard", businessCard);
             model.addAttribute("user", loggedInUser);
 
-            return "user_created_successfully";
+            return "business_card_created_successfully";
         } else {
             // Obsłuż brak zalogowanego użytkownika
             return "login";  // Przekieruj na stronę logowania

@@ -41,7 +41,7 @@ public class JobOfferService {
                 .responsibilities(jobOffer.getResponsibilities())
                 .requiredTechnologies(jobOffer.getRequiredTechnologies())
                 .benefits(jobOffer.getBenefits())
-                .salaryMin(jobOffer.getSalaryMin())
+//                .salaryMin(jobOffer.getSalaryMin())
 //                .salaryMax(jobOffer.getSalaryMax())
                 .jobOfferDateTime(currentDateTime)
                 .user(userMapper.map(user))

@@ -61,7 +61,7 @@ public class CvController {
             model.addAttribute("cv", cv);
             model.addAttribute("user", loggedInUser);
 
-            return "user_created_successfully";
+            return "cv_created_successfully";
         } else {
             // Obsłuż brak zalogowanego użytkownika
             return "login";  // Przekieruj na stronę logowania

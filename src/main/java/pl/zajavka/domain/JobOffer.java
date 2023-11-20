@@ -22,7 +22,7 @@ public class JobOffer {
     private String requiredTechnologies;
     private String benefits;
 //    @NumberFormat(style = NumberFormat.Style.NUMBER)
-    private BigDecimal salaryMin;
+//    private BigDecimal salaryMin;
 //    @NumberFormat(style = NumberFormat.Style.NUMBER)
 //    private BigDecimal salaryMax;
     private OffsetDateTime jobOfferDateTime;
