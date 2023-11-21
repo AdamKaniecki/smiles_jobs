@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.With;
-import pl.zajavka.domain.Advertisement;
 import pl.zajavka.infrastructure.security.Role;
 
 import java.util.Set;
@@ -19,5 +18,4 @@ public class UserDTO {
     private String password;
     private Boolean active;
     private Set<Role> roles;
-    private Set<Advertisement> advertisements;
 }

@@ -8,4 +8,7 @@ DROP TABLE IF EXISTS notification_table CASCADE;
 DROP TABLE IF EXISTS address_table CASCADE;
 DROP TABLE IF EXISTS business_card_table CASCADE;
 DROP TABLE IF EXISTS CV CASCADE;
+DROP TABLE IF EXISTS notification_table CASCADE;
+DROP TABLE IF EXISTS job_offer_notification_table CASCADE;
+DROP TABLE IF EXISTS advertisement_notification_table CASCADE;
 DROP TABLE IF EXISTS flyway_schema_history CASCADE;

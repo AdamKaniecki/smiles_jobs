@@ -16,8 +16,8 @@
             <th>Name</th>
             <th>Surname</th>
             <th>Work Experience</th>
-            <th>Knowledge of Technologies</th>
-            <th>Date Time</th>
+            <th>Skills</th>
+<!--            <th>Date Time</th>-->
         </tr>
         </thead>
         <tbody>
@@ -26,8 +26,8 @@
             <td th:text="${result.name}"></td>
             <td th:text="${result.surname}"></td>
             <td th:text="${result.workExperience}"></td>
-            <td th:text="${result.knowledgeOfTechnologies}"></td>
-            <td th:text="${#temporals.format(result.dateTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${result.skills}"></td>
+<!--            <td th:text="${#temporals.format(result.dateTime, 'yyyy-MM-dd HH:mm')}"></td>-->
         </tr>
         </tbody>
     </table>

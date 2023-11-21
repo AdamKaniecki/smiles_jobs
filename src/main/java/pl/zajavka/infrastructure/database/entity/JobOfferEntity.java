@@ -50,15 +50,8 @@ public class JobOfferEntity {
     private OffsetDateTime jobOfferDateTime;
 
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "job_offer_notification_table",
-//            joinColumns = @JoinColumn(name = "job_offer_id"),
-//            inverseJoinColumns = @JoinColumn(name = "notification_id"))
-//    private Set<NotificationEntity> notifications;
 }

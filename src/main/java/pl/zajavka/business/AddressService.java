@@ -19,21 +19,14 @@ public class AddressService {
     public Address createAddress(Address address, User user) {
         System.out.println("Tworzę adres");
 
-        // Utwórz nowy obiekt AddressEntity z danych z obiektu Address
         AddressEntity entity = AddressEntity.builder()
                 .country(address.getCountry())
                 .city(address.getCity())
                 .streetAndNumber(address.getStreetAndNumber())
                 .build();
 
-        // Ustaw użytkownika w encji, jeśli to konieczne
-        // (na przykład, jeśli adresy są przypisane do konkretnych użytkowników)
-        // entity.setUser(user);
-
-        // Zapisz nowy adres
         AddressEntity created = addressRepository.saveAndFlush(entity);
 
-        // Mapuj zapisaną encję na obiekt Address
         return addressMapper.map(created);
     }
 

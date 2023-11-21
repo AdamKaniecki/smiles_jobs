@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.AdvertisementEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
@@ -32,8 +31,6 @@ public class JobOfferService {
         System.out.println("twórz psie");
         log.info("Received job offer: {}", jobOffer);
         OffsetDateTime currentDateTime = OffsetDateTime.now();
-//        BigDecimal minSalary = (jobOffer.getSalaryMin() != null && jobOffer.getSalaryMin().compareTo(BigDecimal.ZERO) > 0) ? jobOffer.getSalaryMin() : null;
-//        BigDecimal maxSalary = (jobOffer.getSalaryMax() != null && jobOffer.getSalaryMax().compareTo(BigDecimal.ZERO) > 0) ? jobOffer.getSalaryMax() : null;
 
         JobOfferEntity newJobOfferEntity = JobOfferEntity.builder()
                 .companyName(jobOffer.getCompanyName())

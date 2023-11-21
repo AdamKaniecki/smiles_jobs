@@ -28,37 +28,35 @@
         <table class="table" id="sortable-table">
             <thead class="table-dark">
             <tr>
+                <th>Number</th>
                 <th>Name</th>
                 <th>Surname</th>
                 <th>Work experience</th>
-                <th>Knowledge of IT technologies</th>
-                <th>Date Time</th>
-                <th>Send offers job</th>
+                <th>Skills</th>
+<!--                <th>Date Time</th>-->
+<!--                <th>Send offers job</th>-->
             </tr>
             </thead>
             <tbody>
-            <tr th:each="advertisement : ${advertisements}">
-                <td th:text="${advertisement.name}"></td>
-                <td th:text="${advertisement.surname}"></td>
-                <td th:text="${advertisement.workExperience}"></td>
-                <td th:text="${advertisement.knowledgeOfTechnologies}"></td>
-                <td th:text="${#temporals.format(advertisement.dateTime, 'yyyy-MM-dd HH:mm')}"></td>
-                <td><button class="btn btn-primary">Send Offer</button></td>
+            <tr th:each="cv : ${cvList}">
+                <td th:text="${cv.id}"></td>
+                <td th:text="${cv.name}"></td>
+                <td th:text="${cv.surname}"></td>
+                <td th:text="${cv.workExperience}"></td>
+                <td th:text="${cv.skills}"></td>
+<!--                <td th:text="${#temporals.format(cv.dateTime, 'yyyy-MM-dd HH:mm')}"></td>-->
+<!--                <td>-->
+<!--                    <button class="send-offer-btn" th:data-advertisement-id="${cv.id}">-->
+<!--                        Send Offer-->
+<!--                    </button>-->
+<!--                </td>-->
             </tr>
             </tbody>
         </table>
     </div>
     <br>
     <br>
-    <!-- Dodaj formularz do wyszukiwania -->
-<!--    <form action="/search" method="get" class="mt-4">-->
-<!--        <div class="form-group">-->
-<!--            <label for="keyword">Search for job seekers:</label>-->
-<!--            <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
-<!--        </div>-->
-<!--        <button type="submit" class="btn btn-primary">Search</button>-->
-<!--    </form>-->
-    <!-- Dodaj formularz do wyszukiwania -->
+
     <form action="/search" method="get" class="mt-4">
         <div class="form-row">
 
@@ -68,7 +66,7 @@
                     <option value="name">Name</option>
                     <option value="surname">Surname</option>
                     <option value="workExperience">workExperience</option>
-                    <option value="knowledgeOfTechnologies">knowledgeOfTechnologies</option>
+                    <option value="skills">Skills</option>
                     <!-- Dodaj więcej opcji kategorii według potrzeb -->
                 </select>
             </div>
@@ -101,24 +99,24 @@
     <h4>
         "After sending offers you can wait for a response from candidates with CV and contact them"</h4>
     <br>
-    <h1>Notifications</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>Date</th>
-            <th>Message</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Example data from the model -->
-        <tr th:each="notification : ${notifications}">
-            <td th:text="${notification.date}">2023-08-01</td>
-            <td th:text="${notification.message}">New message</td>
-            <td th:text="${notification.status}">Pending</td>
-        </tr>
-        </tbody>
-    </table>
+<!--    <h1>Notifications</h1>-->
+<!--    <table>-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>Date</th>-->
+<!--            <th>Message</th>-->
+<!--            <th>Status</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        &lt;!&ndash; Example data from the model &ndash;&gt;-->
+<!--        <tr th:each="notification : ${notifications}">-->
+<!--            <td th:text="${notification.date}">2023-08-01</td>-->
+<!--            <td th:text="${notification.message}">New message</td>-->
+<!--            <td th:text="${notification.status}">Pending</td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
 
 
     <br>
@@ -127,6 +125,46 @@
 <div class="col-md-4">
     <a th:href="@{/}" class="btn btn-info" role="button">Go back to the main page</a>
 </div>
+
+<script>
+    // Pobierz wszystkie przyciski "Send Offer" na stronie
+    const sendOfferButtons = document.querySelectorAll('.send-offer-btn');
+
+    // Iteruj przez każdy przycisk i dodaj nasłuchiwanie zdarzenia na kliknięcie
+    sendOfferButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Pobierz identyfikator ogłoszenia z atrybutu "data-advertisement-id"
+            const advertisementId = button.getAttribute('data-advertisement-id');
+
+            // Pobierz identyfikator użytkownika ogłoszenia z atrybutu "data-advertisement-user-id"
+            const advertisementUserId = button.getAttribute('data-advertisement-user-id');
+
+            // Wysłanie zapytania AJAX do kontrolera
+            sendOffer(advertisementId, advertisementUserId);
+        });
+    });
+
+    function sendOffer(advertisementId, advertisementUserId) {
+        // Użyj Fetch API do wysłania żądania POST do kontrolera
+        fetch(`/api/job-offers/send-offer?advertisementId=${advertisementId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Offer sent successfully', data);
+
+            // Opcjonalnie: Dodaj kod do zaktualizowania widoku, jeśli to konieczne
+
+        })
+        .catch(error => {
+            console.error('Error sending offer:', error);
+            // Dodaj kod obsługi błędów, jeśli potrzebujesz
+        });
+    }
+</script>
 </body>
 
 </html>

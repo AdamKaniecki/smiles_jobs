@@ -8,8 +8,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.business.UserService;
-import pl.zajavka.infrastructure.database.repository.AdvertisementRepository;
-import pl.zajavka.infrastructure.database.repository.mapper.AdvertisementMapper;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
@@ -21,8 +19,7 @@ public class BootstrapApplicationComponent implements ApplicationListener<Contex
     private UserRepository userRepository;
     private UserMapper userMapper;
     private UserService userService;
-    private AdvertisementRepository advertisementRepository;
-    private AdvertisementMapper advertisementMapper;
+
 
 
     @Override

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.zajavka.api.dto.UserDTO;
-import pl.zajavka.api.dto.mapper.MapperDTO;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
 
@@ -21,7 +20,6 @@ public class RegistryController {
     public static final String CANDIDATE_REGISTRY = "/candidate_registry";
     public static final String COMPANY_REGISTRY = "/company_registry";
     private UserService userService;
-    private MapperDTO mapperDTO;
 
 
     @GetMapping(COMPANY_REGISTRY)
@@ -62,7 +60,7 @@ public String createCandidate(@ModelAttribute("user") User user, Model model, Ht
     // Dodaj użytkownika do modelu, jeśli to jest potrzebne
     model.addAttribute("user", user);
 
-    return "candidate_created_successfully";
+    return "redirect: /candidate_portal";
 }
 
     @PostMapping("/companyRegistry")

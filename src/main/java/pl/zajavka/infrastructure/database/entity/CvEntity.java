@@ -20,11 +20,11 @@ public class CvEntity {
     @Column(name = "cv_id")
     private Integer id;
 
-    @Column(name = "cv_name")
-    private String cvName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "cv_surname")
-    private String cvSurname;
+    @Column(name = "surname")
+    private String surname;
 
     @Column(name = "date_of_birth")
     private String dateOfBirth;
@@ -44,8 +44,8 @@ public class CvEntity {
     @Column(name = "education")
     private String education;
 
-    @Column(name = "cv_work_experience")
-    private String cvWorkExperience;
+    @Column(name = "work_experience")
+    private String workExperience;
 
     @Column(name = "skills")
     private String skills;
@@ -67,9 +67,7 @@ public class CvEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
-//    @OneToOne
-//    @JoinColumn(name = "advertisement_id")
-//    private AdvertisementEntity advertisement;
+
 
 
 }

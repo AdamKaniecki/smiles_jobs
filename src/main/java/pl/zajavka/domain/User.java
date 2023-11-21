@@ -19,9 +19,7 @@ public class User  {
     private String password;
     private Boolean active;
     private Set<Role> roles;
-    private Set<Advertisement>advertisements;
-    private Set<JobOffer>jobOffers;
-//    private Set<Notification>notifications;
+    private Set<JobOffer> jobOffers;
 
 
 }

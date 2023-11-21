@@ -10,10 +10,10 @@
 
 <form th:action="@{/createCV}" th:object="${cv}" method="post">
     <label>Name: </label>
-    <input type="text" th:field="*{cvName}" required/><br/>
+    <input type="text" th:field="*{name}" required/><br/>
 
     <label>Surname: </label>
-    <input type="text" th:field="*{cvSurname}" required/><br/>
+    <input type="text" th:field="*{surname}" required/><br/>
 
     <label>sex </label>
     <input type="text" th:field="*{sex}" required/><br/>
@@ -34,7 +34,7 @@
     <input type="text" th:field="*{education}" required/><br/>
 
     <label>Work Experience: </label>
-    <input type="text" th:field="*{cvWorkExperience}" required/><br/>
+    <input type="text" th:field="*{workExperience}" required/><br/>
 
     <label>skills: </label>
     <input type="text" th:field="*{skills}" required/><br/>
