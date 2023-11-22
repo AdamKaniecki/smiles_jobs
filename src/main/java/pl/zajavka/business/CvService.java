@@ -24,13 +24,9 @@ public class CvService {
     private AddressMapper addressMapper;
 
 
-
-
-
     @Transactional
     public CV createCV(CV cv, User user) {
         Address addressCV = cv.getAddress();
-
 
         CvEntity newEntity = CvEntity.builder()
                 .name(cv.getName())
@@ -55,13 +51,17 @@ public class CvService {
     }
 
 
-public List<CvEntity> findAll() {
-
-    return cvRepository.findAll();
+public List<CV> findAll() {
+    return     cvRepository.findAll().stream()
+                .map(cvMapper::map)
+                .toList();
 }
 
-    public List<CvEntity> searchCvByKeywordAndCategory(String keyword, String category) {
-        return cvRepository.findCvByKeywordAndCategory(keyword, category);
+    public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
+        cvRepository.findCvByKeywordAndCategory(keyword, category);
+        return cvRepository.findAll().stream()
+                .map(cvMapper::map)
+                .toList();
     }
 }
 

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.security.Role;
-import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
@@ -25,35 +24,29 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        return "login"; // Zwraca widok "login.html"
+        return "login";
     }
 
-    //    @PostMapping("/login")
-//    public String loginUser(Model model, String username, String password) {
-//        // Tutaj możesz zaimplementować logikę logowania użytkownika
-//        // Sprawdź, czy wprowadzone dane logowania są poprawne i zaloguj użytkownika
-//        if ("ABBBBBB".equals(username) && "totobak".equals(password)) {
-//            model.addAttribute("message", "Zalogowano pomyślnie.");
-//            return "candidate_portal";
-//        } else {
-//            model.addAttribute("error", "Nieprawidłowe dane logowania.");
-//            return "login";
-//        }
-//    }
+
     @PostMapping("/loginUser")
     public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
-        // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
 
         User user = userService.findByUserName(username);
 
-        if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username) && user.getRoles().contains(Role.CANDIDATE)) {
+        if (user != null
+                && user.getPassword().equals(password)
+                && user.getUserName().equals(username)
+                && user.getRoles().contains(Role.CANDIDATE)) {
             // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
             session.setAttribute("user", user); // Przechowaj użytkownika w sesji
             System.out.println("Zalogowano Kandydata pomyślnie");
             model.addAttribute("username", username);
             return "redirect: /candidate_portal";
         } else {
-            if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username) && user.getRoles().contains(Role.COMPANY)) {
+            if (user != null
+                    && user.getPassword().equals(password)
+                    && user.getUserName().equals(username)
+                    && user.getRoles().contains(Role.COMPANY)) {
                 // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
                 session.setAttribute("user", user); // Przechowaj użytkownika w sesji
                 System.out.println("Zalogowano Firmę pomyślnie");
@@ -66,18 +59,5 @@ public class LoginController {
 
         }
     }
-
-
-//}
-//
-//    @PostMapping("/login")
-//    public String login(@RequestParam("username") String username, Model model) {
-//        // Przykład: autentykacja użytkownika, jeśli poprawna, to ustawmy nazwę użytkownika w sesji
-//        model.addAttribute("username", username);
-//
-//        // Przekierowanie użytkownika na stronę główną
-//        return "redirect:/home";
-//    }
-
 
 }

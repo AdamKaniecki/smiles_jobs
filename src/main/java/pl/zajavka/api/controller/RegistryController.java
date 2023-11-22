@@ -34,34 +34,19 @@ public class RegistryController {
     }
 
 
-//    @PostMapping("/company_registry")
-//    public String createCompany (@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
-//       User user = mapperDTO.map(userDTO);
-//        userService.createCompany(user);
-//        model.addAttribute("userDTO", userDTO);
-//        return "user_created_successfully";
-//    }
+    @PostMapping("/candidateRegistry")
+    public String createCandidate(@ModelAttribute("user") User user, Model model, HttpSession session) {
+        // Utwórz kandydata w bazie danych
+        userService.createCandidate(user);
 
-//    @PostMapping("/candidate_registry")
-//    public String createCandidate (@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
-//        User user = mapperDTO.map(userDTO);
-//        userService.createCandidate(user);
-//        model.addAttribute("userDTO", userDTO);
-//        return "user_created_successfully";
-//    }
-@PostMapping("/candidateRegistry")
-public String createCandidate(@ModelAttribute("user") User user, Model model, HttpSession session) {
-    // Utwórz kandydata w bazie danych
-    userService.createCandidate(user);
+        // Zapisz użytkownika w sesji
+        session.setAttribute("user", user);
 
-    // Zapisz użytkownika w sesji
-    session.setAttribute("user", user);
+        // Dodaj użytkownika do modelu, jeśli to jest potrzebne
+        model.addAttribute("user", user);
 
-    // Dodaj użytkownika do modelu, jeśli to jest potrzebne
-    model.addAttribute("user", user);
-
-    return "redirect: /candidate_portal";
-}
+        return "redirect: /candidate_portal";
+    }
 
     @PostMapping("/companyRegistry")
     public String createCompany(@ModelAttribute("user") User user, Model model, HttpSession session) {
@@ -74,21 +59,8 @@ public String createCandidate(@ModelAttribute("user") User user, Model model, Ht
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("user", user);
 
-        return "company_created_successfully";
+        return "redirect: /company_portal";
     }
-
-
-//    @GetMapping("/companyRegistry")
-//    public String createCandidate(@ModelAttribute("user") User user, Model model, Authentication authentication) {
-//        // Możesz uzyskać dostęp do Principal w tym miejscu
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        String username = userDetails.getUsername();
-//
-//        // Teraz możesz użyć 'username' lub userDetails w zależności od swoich potrzeb
-//        userService.createCandidate(user,username);
-//        model.addAttribute("user", user);
-//        return "user_created_successfully";
-//    }
 
 
 }

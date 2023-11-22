@@ -62,12 +62,17 @@ public class JobOfferService {
         }
     }
 
-    public List<JobOfferEntity> getAllJobOffers() {
-        return jobOfferRepository.findAll();
+    public List<JobOffer> getAllJobOffers() {
+        return jobOfferRepository.findAll().stream()
+                .map(jobOfferMapper::map)
+                .toList();
     }
 
-    public List<JobOfferEntity> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-        return jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
+       jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+        return jobOfferRepository.findAll().stream()
+                .map(jobOfferMapper::map)
+                .toList();
     }
 
     private BigDecimal parseSalaryRange(String salaryRange) {
