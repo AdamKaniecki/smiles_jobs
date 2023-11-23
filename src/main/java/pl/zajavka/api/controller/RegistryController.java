@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
 
@@ -20,44 +21,48 @@ public class RegistryController {
     public static final String CANDIDATE_REGISTRY = "/candidate_registry";
     public static final String COMPANY_REGISTRY = "/company_registry";
     private UserService userService;
+    private UserMapperDTO userMapperDTO;
 
 
     @GetMapping(COMPANY_REGISTRY)
-    public String getCompanyRegistry(User user) {
+    public String getCompanyRegistry(UserDTO userDTO) {
         return "company_registry";
     }
 
 
     @GetMapping(CANDIDATE_REGISTRY)
-    public String getCandidateRegistry(User user) {
+    public String getCandidateRegistry(UserDTO userDTO) {
         return "candidate_registry";
     }
 
 
     @PostMapping("/candidateRegistry")
-    public String createCandidate(@ModelAttribute("user") User user, Model model, HttpSession session) {
+    public String createCandidate(@ModelAttribute("userDTO") UserDTO userDTO, Model model, HttpSession session) {
         // Utwórz kandydata w bazie danych
+        User user = userMapperDTO.map(userDTO);
         userService.createCandidate(user);
 
         // Zapisz użytkownika w sesji
-        session.setAttribute("user", user);
+        session.setAttribute("userDTO", userDTO);
 
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
-        model.addAttribute("user", user);
+        model.addAttribute("userDTO", userDTO);
 
         return "redirect: /candidate_portal";
     }
 
     @PostMapping("/companyRegistry")
-    public String createCompany(@ModelAttribute("user") User user, Model model, HttpSession session) {
+    public String createCompany(@ModelAttribute("userDTO") UserDTO userDTO, Model model, HttpSession session) {
         // Utwórz kandydata w bazie danych
+        User user = userMapperDTO.map(userDTO);
         userService.createCompany(user);
 
+
         // Zapisz użytkownika w sesji
-        session.setAttribute("user", user);
+        session.setAttribute("userDTO", userDTO);
 
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
-        model.addAttribute("user", user);
+        model.addAttribute("userDTO", userDTO);
 
         return "redirect: /company_portal";
     }

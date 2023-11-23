@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
+import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.CvService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
@@ -29,8 +33,9 @@ public class CompanyPortalController {
     private HttpSession httpSession;
     private JobOfferService jobOfferService;
     private UserService userService;
-    private UserMapper userMapper;
+    private UserMapperDTO userMapperDTO;
     private CvService cvService;
+    private JobOfferMapperDTO jobOfferMapperDTO;
 
 
     @GetMapping(COMPANY_PORTAL)
@@ -39,6 +44,9 @@ public class CompanyPortalController {
         if (user != null) {
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
+
+            UserDTO userDTO = userMapperDTO.map(user);
+            model.addAttribute("userDTO", userDTO);
 
             List<CV> cvList = cvService.findAll();
             model.addAttribute("cvList", cvList);
@@ -64,19 +72,22 @@ public class CompanyPortalController {
 
     @PostMapping("/createJobOffer")
     public String createdJobOffers(
-            @ModelAttribute("jobOffer") JobOffer jobOffer,
+            @ModelAttribute("jobOfferDTO") JobOfferDTO jobOfferDTO,
             Model model) {
-        log.info("Received job offer: {}", jobOffer);
+//        log.info("Received job offer: {}", jobOffer);
         String username = (String) httpSession.getAttribute("username");
 
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
 //            jobOffer.setDateTime(OffsetDateTime.now());
+            JobOffer jobOffer = jobOfferMapperDTO.map(jobOfferDTO);
+
             jobOffer.setUser(loggedInUser);
             jobOfferService.create(jobOffer, loggedInUser);
+//            jobOfferMapperDTO.map(jobOffer);
 
             // Dodaj reklamę do modelu, aby przekazać ją do widoku
-            model.addAttribute("jobOffer", jobOffer);
+            model.addAttribute("jobOfferDTO", jobOfferDTO);
             model.addAttribute("user", loggedInUser);
 
             return "job_offer_created_successfully";

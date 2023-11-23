@@ -6,16 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
+import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
-import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
 
@@ -29,20 +29,28 @@ public class CandidatePortalController {
     private HttpSession httpSession;
     private UserService userService;
     private UserRepository userRepository;
-    private UserMapper userMapper;
+    private UserMapperDTO userMapperDTO;
     private JobOfferService jobOfferService;
+    private JobOfferMapperDTO jobOfferMapperDTO;
+//    private
 
 
     @GetMapping(CANDIDATE_PORTAL)
     public String getCandidatePortalPage(HttpSession session, Model model) {
 //        log.info("No co tam:",session, model);
+//        User user = userMapperDTO.map(userDTO);
         User user = (User) session.getAttribute("user");
         if (user != null) {
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
+            UserDTO userDTO = userMapperDTO.map(user);
+            model.addAttribute("userDTO", userDTO);
 
-            List<JobOffer> jobOffers = jobOfferService.getAllJobOffers();
-            model.addAttribute("jobOffers", jobOffers);
+            List<JobOffer> jobOffers = jobOfferService.findAll();
+            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
+                    .map(jobOfferMapperDTO::map)
+                    .toList();
+            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
 
             return "candidate_portal";
         } else {

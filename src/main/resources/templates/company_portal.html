@@ -96,75 +96,13 @@
     <br>
     <br>
     <br>
-    <h4>
-        "After sending offers you can wait for a response from candidates with CV and contact them"</h4>
     <br>
-<!--    <h1>Notifications</h1>-->
-<!--    <table>-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>Date</th>-->
-<!--            <th>Message</th>-->
-<!--            <th>Status</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        &lt;!&ndash; Example data from the model &ndash;&gt;-->
-<!--        <tr th:each="notification : ${notifications}">-->
-<!--            <td th:text="${notification.date}">2023-08-01</td>-->
-<!--            <td th:text="${notification.message}">New message</td>-->
-<!--            <td th:text="${notification.status}">Pending</td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-
     <br>
     <br>
 </div>
 <div class="col-md-4">
     <a th:href="@{/}" class="btn btn-info" role="button">Go back to the main page</a>
 </div>
-
-<script>
-    // Pobierz wszystkie przyciski "Send Offer" na stronie
-    const sendOfferButtons = document.querySelectorAll('.send-offer-btn');
-
-    // Iteruj przez każdy przycisk i dodaj nasłuchiwanie zdarzenia na kliknięcie
-    sendOfferButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Pobierz identyfikator ogłoszenia z atrybutu "data-advertisement-id"
-            const advertisementId = button.getAttribute('data-advertisement-id');
-
-            // Pobierz identyfikator użytkownika ogłoszenia z atrybutu "data-advertisement-user-id"
-            const advertisementUserId = button.getAttribute('data-advertisement-user-id');
-
-            // Wysłanie zapytania AJAX do kontrolera
-            sendOffer(advertisementId, advertisementUserId);
-        });
-    });
-
-    function sendOffer(advertisementId, advertisementUserId) {
-        // Użyj Fetch API do wysłania żądania POST do kontrolera
-        fetch(`/api/job-offers/send-offer?advertisementId=${advertisementId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Offer sent successfully', data);
-
-            // Opcjonalnie: Dodaj kod do zaktualizowania widoku, jeśli to konieczne
-
-        })
-        .catch(error => {
-            console.error('Error sending offer:', error);
-            // Dodaj kod obsługi błędów, jeśli potrzebujesz
-        });
-    }
-</script>
 </body>
 
 </html>

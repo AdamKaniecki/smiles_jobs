@@ -6,7 +6,7 @@
 <body>
 <h2>Create User</h2>
 
-<form th:action="@{/candidateRegistry}" th:object="${user}" method="post">
+<form th:action="@{/candidateRegistry}" th:object="${userDTO}" method="post">
     <label for="userName">Username:</label>
     <input type="text" th:field="*{userName}" id="userName" name="userName" required>
 

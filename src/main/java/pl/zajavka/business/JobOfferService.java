@@ -62,15 +62,15 @@ public class JobOfferService {
         }
     }
 
-    public List<JobOffer> getAllJobOffers() {
+    public List<JobOffer> findAll() {
         return jobOfferRepository.findAll().stream()
                 .map(jobOfferMapper::map)
                 .toList();
     }
 
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-       jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
-        return jobOfferRepository.findAll().stream()
+     List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+        return searchJobOfferEntities.stream()
                 .map(jobOfferMapper::map)
                 .toList();
     }

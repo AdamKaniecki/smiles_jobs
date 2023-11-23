@@ -58,8 +58,8 @@ public List<CV> findAll() {
 }
 
     public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
-        cvRepository.findCvByKeywordAndCategory(keyword, category);
-        return cvRepository.findAll().stream()
+      List<CvEntity> searchResultEntities =  cvRepository.findCvByKeywordAndCategory(keyword, category);
+        return searchResultEntities.stream()
                 .map(cvMapper::map)
                 .toList();
     }
