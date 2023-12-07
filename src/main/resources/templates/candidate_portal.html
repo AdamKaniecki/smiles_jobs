@@ -21,9 +21,8 @@
             <th>Responsibilities</th>
             <th>Required Technologies</th>
             <th>Benefits</th>
-<!--            <th>Salary Range</th>-->
+            <!-- Wyświetl połączoną wartość Salary Range -->
             <th>Data i godzina</th>
-<!--            <th>Actions</th>-->
         </tr>
         </thead>
         <tbody>
@@ -34,19 +33,11 @@
             <td th:text="${jobOfferDTO.responsibilities}"></td>
             <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
             <td th:text="${jobOfferDTO.benefits}"></td>
-            <!-- Wyświetl połączoną wartość Salary Range -->
-<!--            <td th:if="${jobOffer.salaryMin != null and jobOffer.salaryMax != null}" th:text="${jobOffer.salaryMin + ' - ' + jobOffer.salaryMax}"></td>-->
-<!--            <td th:unless="${jobOffer.salaryMin != null and jobOffer.salaryMax != null}">N/A</td>-->
-<!--            <td th:text="${#temporals.format(jobOffer.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>-->
-<!--            <td>-->
-<!--                <a class="btn btn-primary" th:href="@{'/send-cv/' + ${jobOffer.id}}">Send CV</a>-->
-<!--            </td>-->
         </tr>
         </tbody>
     </table>
     <form action="/searchJobOffers" method="get" class="mt-4">
         <div class="form-row">
-
             <div class="col-md-4">
                 <label for="category">Search by category:</label>
                 <select id="category" name="category" class="form-control">
@@ -55,9 +46,6 @@
                     <option value="responsibilities">Responsibilities</option>
                     <option value="requiredTechnologies">Required Technologies</option>
                     <option value="benefits">Benefits</option>
-<!--                    <option value="salaryMin">Salary Min</option>-->
-<!--                    <option value="salaryMax">Salary Max</option>-->
-                    <!-- Dodaj więcej opcji kategorii według potrzeb -->
                 </select>
             </div>
             <div class="col-md-4">
@@ -71,10 +59,15 @@
     </form>
 
     <h2 class="mt-4">Stwórz swoje CV</h2>
-    <div class="col-md-4">
-        <a th:href="@{/CvForm}" method="GET" class="btn btn-info" role="button">Create CV</a>
-    </div>
+    <div class="d-flex">
+        <div class="col-md-4">
+            <a th:href="@{/CvForm}" method="GET" class="btn btn-info" role="button">Create CV</a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/redirectToShowMyCV}" method="GET" class="btn btn-info" role="button">Show CV</a>
+        </div>
 
+    </div>
 </div>
 <br>
 <br>

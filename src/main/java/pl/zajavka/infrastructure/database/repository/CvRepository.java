@@ -4,9 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.zajavka.domain.CV;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CvRepository extends JpaRepository<CvEntity, Integer> {
@@ -19,4 +22,18 @@ public interface CvRepository extends JpaRepository<CvEntity, Integer> {
     List<CvEntity> findCvByKeywordAndCategory(
             @Param("keyword") String keyword,
             @Param("category") String category);
+//
+//    @Query("SELECT cv FROM CvEntity cv WHERE cv.user = :user")
+//    Optional<CvEntity> findByUserId(@Param("id") Integer integer);
+
+    boolean existsByUserId(Integer userId);
+    Optional<CvEntity> findByUser(UserEntity user);
+    boolean existsByUser(UserEntity map);
+
+   Optional <CvEntity> findById(Integer id);
+
+
+
+
+
 }

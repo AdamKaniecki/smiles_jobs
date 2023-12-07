@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show CV</title>
+</head>
+<body>
+
+<h1>Show CV</h1>
+
+<div th:if="${cv}">
+  <h2 th:text="${cv.name + ' ' + cv.surname}"></h2>
+  <p th:text="'Date of Birth: ' + ${cv.dateOfBirth}"></p>
+  <!-- Dodaj resztę pól CV, które chcesz wyświetlić -->
+</div>
+
+<div th:unless="${cv}">
+  <p>CV not found</p>
+</div>
+
+</body>
+</html>

@@ -48,7 +48,7 @@ public class RegistryController {
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("userDTO", userDTO);
 
-        return "redirect: /candidate_portal";
+        return "candidate_portal";
     }
 
     @PostMapping("/companyRegistry")

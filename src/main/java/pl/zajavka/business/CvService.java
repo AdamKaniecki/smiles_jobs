@@ -1,6 +1,7 @@
 package pl.zajavka.business;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.domain.Address;
@@ -13,6 +14,8 @@ import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
+import java.util.Optional;
+@Slf4j
 
 @Service
 @AllArgsConstructor
@@ -26,9 +29,17 @@ public class CvService {
 
     @Transactional
     public CV createCV(CV cv, User user) {
+        // Sprawdź, czy użytkownik już ma CV
+        if (cvRepository.existsByUser(userMapper.map(user))) {
+            // Obsłuż przypadki, gdy użytkownik już ma CV
+            // Możesz rzucić odpowiednim wyjątkiem lub zwrócić odpowiedni wynik
+            // W tym przykładzie zwracam null, ale możesz dostosować to do swoich potrzeb
+            return null;
+        }
         Address addressCV = cv.getAddress();
 
         CvEntity newEntity = CvEntity.builder()
+                .id(cv.getId())
                 .name(cv.getName())
                 .surname(cv.getSurname())
                 .dateOfBirth(cv.getDateOfBirth())
@@ -51,17 +62,38 @@ public class CvService {
     }
 
 
-public List<CV> findAll() {
-    return     cvRepository.findAll().stream()
+    public List<CV> findAll() {
+        return cvRepository.findAll().stream()
                 .map(cvMapper::map)
                 .toList();
-}
+    }
 
     public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
-      List<CvEntity> searchResultEntities =  cvRepository.findCvByKeywordAndCategory(keyword, category);
+        List<CvEntity> searchResultEntities = cvRepository.findCvByKeywordAndCategory(keyword, category);
         return searchResultEntities.stream()
                 .map(cvMapper::map)
                 .toList();
+    }
+
+    public Optional<CV> getCVById(Integer cvId) {
+        return cvRepository.findById(cvId).map(cvMapper::map);
+    }
+//    public Optional<CV> findCvByUserId(Integer id) {
+//        return cvRepository.findByUserId(id);
+//    }
+
+    public boolean existByUser(User loggedInUser) {
+        return cvRepository.existsByUser(userMapper.map(loggedInUser));
+    }
+
+    public Optional<CV> findById(Integer id) {
+        log.debug("szukaj id w serwisie: w ", id);
+        return cvRepository.findById(id).map(cvMapper::map);
+    }
+
+    public Optional<CV> findByUser(User user) {
+        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
+        return cvEntityOptional.map(cvMapper::map);
     }
 }
 

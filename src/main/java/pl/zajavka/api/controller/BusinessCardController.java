@@ -68,7 +68,7 @@ public class BusinessCardController {
             businessCardService.createBusinessCard(businessCard, loggedInUser);
 
             model.addAttribute("businessCardDTO", businessCardDTO);
-            model.addAttribute("userDTO", loggedInUser);
+            model.addAttribute("userDTO", userDTO);
 
             return "business_card_created_successfully";
         } else {

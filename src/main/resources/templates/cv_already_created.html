@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>CV Already Created</title>
+    <!-- Dodaj link do pliku CSS Bootstrapa lub inny, jeśli używasz -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="alert alert-warning mt-4" role="alert">
+        <h4 class="alert-heading">Uwaga!</h4>
+        <p>Masz już utworzone CV. Nie możesz utworzyć więcej niż jednego CV.</p>
+        <hr>
+        <p class="mb-0">Jeśli chcesz zaktualizować swoje istniejące CV, skorzystaj z opcji edycji.</p>
+    </div>
+
+    <a th:href="@{/}" class="btn btn-primary mt-4" role="button">Powrót do strony głównej</a>
+</div>
+</body>
+</html>
