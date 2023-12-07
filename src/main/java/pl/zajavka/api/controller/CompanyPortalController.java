@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.mapper.CvMapperDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.CvService;
@@ -23,6 +21,8 @@ import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @AllArgsConstructor
 @Controller
@@ -36,6 +36,7 @@ public class CompanyPortalController {
     private UserMapperDTO userMapperDTO;
     private CvService cvService;
     private JobOfferMapperDTO jobOfferMapperDTO;
+    private CvMapperDTO cvMapperDTO;
 
 
     @GetMapping(COMPANY_PORTAL)
@@ -116,6 +117,30 @@ public String searchAdvertisements(
         List<CV> searchResults = cvService.searchCvByKeywordAndCategory(category,keyword);
         model.addAttribute("searchResults", searchResults);
         return "search_results";
+    }
+
+//    @GetMapping("/cv/{cvId}")
+//    public String showCvDetails(@PathVariable Integer cvId, Model model) {
+//        Optional<CV> cv = cvService.findById(cvId);
+//
+//        if (cv.isPresent()) {
+//            model.addAttribute("cv", cvMapperDTO.map(cv.get()));
+//            return "cv_details";  // Stwórz odpowiedni widok dla szczegółów CV
+//        } else {
+//            return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
+//        }
+//    }
+
+    @GetMapping("/cv/{cvId}")
+    public String showCvDetails(@PathVariable Integer cvId, Model model) {
+        Optional<CV> cv = cvService.findById(cvId);
+
+        if (cv.isPresent()) {
+            model.addAttribute("cv", cvMapperDTO.map(cv.get()));
+            return "show_cv";  // Użyj istniejącego widoku show_cv
+        } else {
+            return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
+        }
     }
 
 
