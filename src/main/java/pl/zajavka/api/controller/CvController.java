@@ -249,7 +249,7 @@ public class CvController {
         }
 
         // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanego CV lub wystąpił inny problem
-        return "redirect:/";  // Przekieruj na stronę główną lub obsłuż inaczej
+        return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
 
@@ -261,7 +261,7 @@ public class CvController {
             CV cv = myCV.get();
             model.addAttribute("cv", cvMapperDTO.map(cv));
             model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
-            return "show_cv";
+            return "show_my_cv";
         } else {
             return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
         }

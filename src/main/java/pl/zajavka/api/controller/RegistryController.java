@@ -48,7 +48,7 @@ public class RegistryController {
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("userDTO", userDTO);
 
-        return "candidate_portal";
+        return "candidate_created_successfully";
     }
 
     @PostMapping("/companyRegistry")
@@ -64,7 +64,7 @@ public class RegistryController {
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("userDTO", userDTO);
 
-        return "redirect: /company_portal";
+        return "company_created_successfully";
     }
 
 
