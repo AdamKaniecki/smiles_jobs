@@ -27,7 +27,7 @@ public interface CvRepository extends JpaRepository<CvEntity, Integer> {
 //    Optional<CvEntity> findByUserId(@Param("id") Integer integer);
 
     boolean existsByUserId(Integer userId);
-    Optional<CvEntity> findByUser(UserEntity user);
+    Optional<CvEntity> findByUser(UserEntity userEntity);
     boolean existsByUser(UserEntity map);
 
    Optional <CvEntity> findById(Integer id);

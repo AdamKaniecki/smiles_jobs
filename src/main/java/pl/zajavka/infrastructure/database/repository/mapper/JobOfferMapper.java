@@ -7,6 +7,7 @@ import pl.zajavka.domain.JobOffer;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface JobOfferMapper {
@@ -16,4 +17,5 @@ public interface JobOfferMapper {
     JobOfferEntity map(JobOffer jobOffer);
 
 
+    List<JobOffer> map(List<JobOfferEntity> jobOfferEntityList);
 }

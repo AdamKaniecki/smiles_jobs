@@ -4,9 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.zajavka.domain.JobOffer;
+import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Integer> {
@@ -21,4 +26,14 @@ public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Intege
             @Param("keyword") String keyword,
             @Param("category") String category);
 
+    Optional<JobOfferEntity> findByUser(UserEntity userEntity);
+
+    Optional<JobOfferEntity> findById(Integer id);
+
+    List<JobOfferEntity> findListByUser(UserEntity user);
+
+
+
+//    @Query("SELECT j FROM JobOffer j WHERE j.user = :user")
+//    List<JobOffer> findListByUser( User user);
 }
