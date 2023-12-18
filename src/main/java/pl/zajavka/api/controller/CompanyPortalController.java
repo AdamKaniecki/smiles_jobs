@@ -287,47 +287,6 @@ public class CompanyPortalController {
         }
     }
 
-//    @GetMapping(CREATE_JOB_OFFER)
-//    public String createJobOfferForm(Model model) {
-//        String username = (String) httpSession.getAttribute("username");
-//        if (username != null) {
-//            model.addAttribute("username", username);
-//            return "create_job_offer";
-//        } else {
-//            // Obsłuż brak zalogowanego użytkownika
-//            return "login";  // Przekieruj na stronę logowania
-//        }
-//    }
-
-
-//    @PostMapping("/createJobOffer")
-//    public String createdJobOffers(
-//            @ModelAttribute("jobOfferDTO") JobOfferDTO jobOfferDTO,
-//            Model model) {
-////        log.info("Received job offer: {}", jobOffer);
-//        String username = (String) httpSession.getAttribute("username");
-//
-//        if (username != null) {
-//            User loggedInUser = userService.findByUserName(username);
-////            jobOffer.setDateTime(OffsetDateTime.now());
-//            JobOffer jobOffer = jobOfferMapperDTO.map(jobOfferDTO);
-//
-//            jobOffer.setUser(loggedInUser);
-//            jobOfferService.create(jobOffer, loggedInUser);
-////            jobOfferMapperDTO.map(jobOffer);
-//
-//            // Dodaj reklamę do modelu, aby przekazać ją do widoku
-//            model.addAttribute("jobOfferDTO", jobOfferDTO);
-//            model.addAttribute("user", loggedInUser);
-//
-//            return "job_offer_created_successfully";
-//        } else {
-//            // Obsłuż brak zalogowanego użytkownika
-//            return "login";  // Przekieruj na stronę logowania
-//        }
-//
-//    }
-
 
     @GetMapping("/search")
     public String searchAdvertisements(

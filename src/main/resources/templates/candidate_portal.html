@@ -16,6 +16,7 @@
     <table class="table"  id="sortable-table">
         <thead class="table-dark">
         <tr>
+            <th>ID</th>
             <th>Company Name</th>
             <th>Position</th>
             <th>Responsibilities</th>
@@ -29,14 +30,19 @@
         <tbody>
         <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy -->
         <tr th:each="jobOfferDTO : ${jobOffersDTOs}">
+            <td th:text="${jobOfferDTO.id}"></td>
             <td th:text="${jobOfferDTO.companyName}"></td>
             <td th:text="${jobOfferDTO.position}"></td>
             <td th:text="${jobOfferDTO.responsibilities}"></td>
             <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
             <td th:text="${jobOfferDTO.benefits}"></td>
-<!--            <td>-->
-<!--                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOffer.id})}" class="btn btn-info" role="button">View Details</a>-->
-<!--            </td>-->
+
+<!--            <div class="col-md-4">-->
+<!--                <a th:href="@{/redirectToShowMyBusinessCard}" method="GET" class="btn btn-info" role="button">Show BCard</a>-->
+<!--            </div>-->
+            <td>
+                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
+            </td>
         </tr>
         </tbody>
     </table>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Offer Details</title>
+  <!-- Dodaj link do pliku CSS Bootstrapa -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-4">Job Offer Details</h1>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title" th:text="${jobOffer.companyName}"></h5>
+      <h6 class="card-subtitle mb-2 text-muted" th:text="${jobOffer.position}"></h6>
+
+      <p class="card-text">
+        <strong>Responsibilities:</strong> <span th:text="${jobOffer.responsibilities}"></span>
+      </p>
+
+      <p class="card-text">
+        <strong>Required Technologies:</strong> <span th:text="${jobOffer.requiredTechnologies}"></span>
+      </p>
+
+      <p class="card-text">
+        <strong>Benefits:</strong> <span th:text="${jobOffer.benefits}"></span>
+      </p>
+
+<!--      <p class="card-text">-->
+<!--        <strong>Posted by:</strong> <span th:text="${jobOffer.user.username}"></span>-->
+<!--      </p>-->
+
+<!--      <p class="card-text">-->
+<!--        <strong>Date and Time:</strong> <span th:text="${#dates.format(jobOffer.createdAt, 'yyyy-MM-dd HH:mm')}"></span>-->
+<!--      </p>-->
+
+      <!-- Dodaj inne informacje dotyczące oferty pracy -->
+
+      <!-- Przycisk powrotu do listy ofert pracy -->
+<!--      <a href="/showMyJobOffers" class="btn btn-primary">Inne Job Offers</a>-->
+      <a th:href="@{/businessCard/{userId}(userId=${jobOffer.user.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

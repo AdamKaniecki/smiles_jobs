@@ -16,6 +16,7 @@ public class JobOfferDTO {
     private String responsibilities;
     private String requiredTechnologies;
     private String benefits;
+
     //    @NumberFormat(style = NumberFormat.Style.NUMBER)
 //    private BigDecimal salaryMin;
 //    @NumberFormat(style = NumberFormat.Style.NUMBER)

@@ -199,10 +199,9 @@ public class CvController {
         String username = (String) httpSession.getAttribute("username");
 
         if (username != null) {
-
             User loggedInUser = userService.findByUserName(username);
             if (cvService.existByUser(loggedInUser)) {
-                log.info("co tu sie odwala?: ", loggedInUser);
+//                log.info("co tu sie odwala?: ", loggedInUser);
                 return "cv_already_created";
 
             }

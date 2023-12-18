@@ -93,21 +93,6 @@ public class  UserService {
 
 
 
-//    @Transactional
-//    public User createUser(User user) {
-//
-//        UserEntity userEntity = UserEntity.builder()
-//                .userName(user.getUserName())
-//                .email(user.getEmail())
-////                .password(encodedPassword)
-//                .password(user.getPassword())
-//                .active(true)
-//                .roles(Set.of(Role.COMPANY))
-//                .build();
-////    UserEntity userEntity = userMapper.map(user);
-//        UserEntity savedUserEntity = userRepository.save(userEntity);
-//        return userMapper.map(savedUserEntity);
-//    }
     @Transactional
     public User findByUserName(String userName) {
         UserEntity userEntity = userRepository.findByUserName(userName);

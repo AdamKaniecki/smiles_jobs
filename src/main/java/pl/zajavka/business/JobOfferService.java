@@ -106,13 +106,10 @@ package pl.zajavka.business;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;

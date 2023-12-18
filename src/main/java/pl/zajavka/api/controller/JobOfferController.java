@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
@@ -18,6 +19,7 @@ import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
@@ -106,29 +108,51 @@ public class JobOfferController {
         return "{user}/company_portal";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
-    @GetMapping("/redirectToShowMyJobOffer")
-    public String redirectToShowMyJobOffer(HttpSession httpSession) {
+//    @GetMapping("/redirectToShowMyJobOffer")
+//    public String redirectToShowMyJobOffer(HttpSession httpSession) {
+//        String username = (String) httpSession.getAttribute("username");
+//
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//
+//            if (loggedInUser != null) {
+//                // Sprawdź, czy użytkownik ma przypisane JobOffer
+//                List<JobOffer> userJobOffersList = jobOfferService.findListByUser(loggedInUser);
+//
+//
+//                if (!userJobOffersList.isEmpty()) {
+//                    // Pobierz identyfikator pierwszej oferty (możesz dostosować sposób wyboru)
+//                    Integer jobOfferId = userJobOffersList.get(0).getId();
+//
+//                    // Przekieruj na endpoint showJobOffer z odpowiednim identyfikatorem
+//                    return "redirect:/showMyJobOffer?id=" + jobOfferId;
+//                }
+//            }
+//        }
+//        return "redirect:/company_portal";
+
+    @GetMapping("/jobOffer/{jobOfferId}")
+    public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model, HttpSession httpSession) {
         String username = (String) httpSession.getAttribute("username");
 
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
 
-            if (loggedInUser != null) {
-                // Sprawdź, czy użytkownik ma przypisane JobOffer
-                List<JobOffer> userJobOffersList = jobOfferService.findListByUser(loggedInUser);
+            // Pobierz szczegóły oferty pracy jako Optional
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
 
+            if (optionalJobOffer.isPresent()) {
+                JobOffer jobOffer = optionalJobOffer.get();
 
-                if (!userJobOffersList.isEmpty()) {
-                    // Pobierz identyfikator pierwszej oferty (możesz dostosować sposób wyboru)
-                    Integer jobOfferId = userJobOffersList.get(0).getId();
-
-                    // Przekieruj na endpoint showJobOffer z odpowiednim identyfikatorem
-                    return "redirect:/showMyJobOffer?id=" + jobOfferId;
-                }
+                model.addAttribute("jobOffer", jobOffer);
+                return "job_offer_details";
             }
         }
-        return "redirect:/company_portal";
 
-
+        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany lub oferta pracy nie istnieje
+        return "redirect:/showMyJobOffers";  // Przekieruj na listę ofert pracy użytkownika
     }
-}
+    }
+
+
+

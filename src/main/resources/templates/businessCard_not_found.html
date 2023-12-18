@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Business Card Not Found</title>
+  <!-- Dodaj link do pliku CSS Bootstrapa lub inny, jeśli używasz -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+<!--<div class="container">-->
+<!--  <div th:if="${businessCard != null}" class="alert alert-success mt-4" role="alert">-->
+<!--    <h4 class="alert-heading">Szczegóły karty biznesowej</h4>-->
+<!--    <p>Nazwa: <span th:text="${businessCard.name}"></span></p>-->
+<!--    <p>Email: <span th:text="${userDTO.email}"></span></p>-->
+<!--    &lt;!&ndash; Dodaj inne informacje z karty biznesowej &ndash;&gt;-->
+<!--    <hr>-->
+<!--    <p class="mb-0">Dodatkowe informacje o karcie biznesowej.</p>-->
+<!--  </div>-->
+
+  <div th:unless="${businessCard != null}" class="alert alert-warning mt-4" role="alert">
+    <h4 class="alert-heading">Uwaga!</h4>
+    <p>Firma nie stworzyła jeszcze swojej wizytówki.</p>
+<!--    <hr>-->
+
+<!--  </div>-->
+
+<!--  <a th:href="@{{user}/candidate_portal}" class="btn btn-primary mt-4" role="button">Powrót do Candidate Portal</a>-->
+</div>
+</body>
+</html>
