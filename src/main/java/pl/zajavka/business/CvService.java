@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.User;
@@ -95,5 +96,41 @@ public class CvService {
         Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
         return cvEntityOptional.map(cvMapper::map);
     }
-}
+
+
+    public CV updateCV(CV updatedCv) {
+        if (updatedCv.getId() != null) {
+            CvEntity cvEntity = cvMapper.map(updatedCv);
+                    cvRepository.findById(cvEntity.getId());
+
+                cvEntity.setName(updatedCv.getName());
+                cvEntity.setSurname(updatedCv.getSurname());
+                cvEntity.setDateOfBirth(updatedCv.getDateOfBirth());
+                cvEntity.setSex(updatedCv.getSex());
+                cvEntity.setMaritalStatus(updatedCv.getMaritalStatus());
+                cvEntity.setContactEmail(updatedCv.getContactEmail());
+                cvEntity.setPhoneNumber(updatedCv.getPhoneNumber());
+                cvEntity.setEducation(updatedCv.getEducation());
+                cvEntity.setWorkExperience(updatedCv.getWorkExperience());
+                cvEntity.setSkills(updatedCv.getSkills());
+                cvEntity.setLanguage(updatedCv.getLanguage());
+                cvEntity.setLanguageLevel(updatedCv.getLanguageLevel());
+                cvEntity.setHobby(updatedCv.getHobby());
+
+
+                // Zapisz zaktualizowany obiekt CV w bazie danych
+
+
+                      CvEntity cvEntityUpdate =  cvRepository.save(cvEntity);
+            return cvMapper.map(cvEntityUpdate);
+
+            } else {
+                // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
+                throw new NotFoundException("CV with ID " + updatedCv.getId() + " not found");
+            }
+        }
+
+        }
+
+
 

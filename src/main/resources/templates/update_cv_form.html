@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update CV</title>
+</head>
+<body>
+
+<h2>Update CV</h2>
+
+<form action="#"
+      th:action="@{/updateCVDone}"
+      th:method="PUT"
+      th:object="${cvDTO}">
+
+  <label>Name: </label>
+  <input type="text" th:field="*{name}" required/><br/>
+
+  <label>Surname: </label>
+  <input type="text" th:field="*{surname}" required/><br/>
+
+  <label>sex </label>
+  <input type="text" th:field="*{sex}" required/><br/>
+
+  <label>dateOfBirth: </label>
+  <input type="text" th:field="*{dateOfBirth}" required/><br/>
+
+  <label>maritalStatus: </label>
+  <input type="text" th:field="*{maritalStatus}" required/><br/>
+
+  <label>phoneNumber: </label>
+  <input type="text" th:field="*{phoneNumber}" required/><br/>
+
+  <label>email: </label>
+  <input type="text" th:field="*{contactEmail}" required/><br/>
+
+  <label>education </label>
+  <input type="text" th:field="*{education}" required/><br/>
+
+  <label>Work Experience: </label>
+  <input type="text" th:field="*{workExperience}" required/><br/>
+
+  <label>skills: </label>
+  <input type="text" th:field="*{skills}" required/><br/>
+
+  <label>language: </label>
+  <input type="text" th:field="*{language}" required/><br/>
+
+  <label>languageLevel: </label>
+  <input type="text" th:field="*{languageLevel}" required/><br/>
+
+  <label>hobby: </label>
+  <input type="text" th:field="*{hobby}" required/><br/>
+
+  <label for="country">Country:</label>
+  <input type="text" id="country" name="address.country" required><br>
+
+  <label for="city">City:</label>
+  <input type="text" id="city" name="address.city" required><br>
+
+  <label for="streetAndNumber">Street and Number:</label>
+  <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
+
+  <!-- Pole ukryte dla userId -->
+  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+  <input type="hidden" id="cvId" name="id" th:value="${cvDTO.id}">
+
+  <!-- Include other CV fields as needed -->
+
+  <input type="submit" value="Update CV"/>
+</form>
+
+</body>
+</html>
