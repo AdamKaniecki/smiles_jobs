@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.BusinessCardDTO;
-import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.AddressService;
@@ -121,14 +121,6 @@ public class BusinessCardController {
         }
     }
 
-//    @GetMapping("/businessCard/{id}")
-//    public String showBusinessCard(@PathVariable Integer id, Model model) {
-//        businessCardService.findById(id).ifPresent(businessCard -> {
-//            model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
-//            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-//        });
-//        return "show_my_businessCard"; // Nazwa widoku Thymeleaf
-//    }
 
     @GetMapping("/businessCard/{id}")
     public String showBusinessCard(@PathVariable Integer id, Model model) {
@@ -137,13 +129,75 @@ public class BusinessCardController {
         if (businessCard != null) {
             model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
             model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+
             return "show_my_businessCard";
         } else {
-//            model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
-//            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+
             return "businessCard_not_found"; // Nazwa widoku Thymeleaf
         }
+    }
 
+
+    @GetMapping("/redirectToUpdateMyBusinessCard")
+    public String redirectToUpdateMyBusinessCard(HttpSession httpSession) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                // Sprawdź, czy użytkownik ma przypisane CV
+                Optional<BusinessCard> userBusinessCard = businessCardService.findByUser(loggedInUser);
+                if (userBusinessCard.isPresent()) {
+                    Integer cvId = userBusinessCard.get().getId();
+                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+                    return "redirect:/updateBusinessCardForm?id=" + cvId;
+                }
+            }
+        }
+        return "businessCard_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
+    }
+
+    @GetMapping("/updateBusinessCardForm")
+    public String updateMyBusinessCard(@RequestParam Integer id, Model model) {
+        Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
+        if (myBusinessCard.isPresent()) {
+            BusinessCard businessCard = myBusinessCard.get();
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+            model.addAttribute("address", businessCard.getAddress());
+            return "update_business_card_form";
+        } else {
+            return "businessCard_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
+        }
+    }
+
+    @PutMapping("/updateBusinessCardDone")
+    public String updateBusinessCard(
+
+            @ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
+//            @ModelAttribute("address") Address updateAddress,
+            Model model) {
+        Optional<BusinessCard> myBusinessCard = businessCardService.findById(updateBusinessCardDTO.getId());
+        if (myBusinessCard.isPresent()) {
+            BusinessCard businessCard = myBusinessCard.get();
+
+            businessCard.setOffice(updateBusinessCardDTO.getOffice());
+            businessCard.setScopeOperations(updateBusinessCardDTO.getScopeOperations());
+            businessCard.setRecruitmentEmail(updateBusinessCardDTO.getRecruitmentEmail());
+            businessCard.setPhoneNumber(updateBusinessCardDTO.getPhoneNumber());
+            businessCard.setCompanyDescription(updateBusinessCardDTO.getCompanyDescription());
+            businessCard.setTechnologiesAndTools(updateBusinessCardDTO.getTechnologiesAndTools());
+            businessCard.setCertificatesAndAwards(updateBusinessCardDTO.getCertificatesAndAwards());
+
+          businessCardService.updateBusinessCard(businessCard);
+
+
+
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+            return "cv_created_successfully";
+        } else {
+            return "cv_not_found";
+        }
 
     }
+
 }

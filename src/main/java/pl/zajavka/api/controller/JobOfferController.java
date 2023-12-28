@@ -27,7 +27,6 @@ public class JobOfferController {
     private JobOfferService jobOfferService;
     private UserService userService;
     private UserMapperDTO userMapperDTO;
-    private CvService cvService;
     private JobOfferMapperDTO jobOfferMapperDTO;
 
     @GetMapping(CREATE_JOB_OFFER)
@@ -110,13 +109,10 @@ public class JobOfferController {
 
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
-
             // Pobierz szczegóły oferty pracy jako Optional
             Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-
             if (optionalJobOffer.isPresent()) {
                 JobOffer jobOffer = optionalJobOffer.get();
-
                 model.addAttribute("jobOffer", jobOffer);
                 return "job_offer_details";
             }
@@ -173,7 +169,6 @@ public class JobOfferController {
             // Aktualizuj pola CV na podstawie danych z formularza
 
            jobOfferService.updateJobOffer(jobOffer);
-
 
             model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
             return "job_offer_created_successfully";

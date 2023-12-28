@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 import pl.zajavka.domain.Address;
 import pl.zajavka.domain.BusinessCard;
 import pl.zajavka.domain.CV;
@@ -69,4 +70,33 @@ public class BusinessCardService {
     public boolean existByUser(User loggedInUser) {
         return businessCardRepository.existsByUser(userMapper.map(loggedInUser));
     }
-}
+
+    @Transactional
+    public BusinessCard updateBusinessCard(BusinessCard updateBusinessCard) {
+        if (updateBusinessCard.getId() != null) {
+            // Sprawdź, czy CV istnieje w bazie danych
+            BusinessCardEntity businessCardEntity = businessCardRepository.findById(updateBusinessCard.getId())
+                    .orElseThrow(() -> new NotFoundException("Business Card with ID " + updateBusinessCard.getId() + " not found"));
+
+            businessCardEntity.setOffice(updateBusinessCard.getOffice());
+            businessCardEntity.setScopeOperations(updateBusinessCard.getScopeOperations());
+            businessCardEntity.setRecruitmentEmail(updateBusinessCard.getRecruitmentEmail());
+            businessCardEntity.setPhoneNumber(updateBusinessCard.getPhoneNumber());
+            businessCardEntity.setCompanyDescription(updateBusinessCard.getCompanyDescription());
+            businessCardEntity.setTechnologiesAndTools(updateBusinessCard.getTechnologiesAndTools());
+            businessCardEntity.setCertificatesAndAwards(updateBusinessCard.getCertificatesAndAwards());
+
+
+            // Zapisz zaktualizowany obiekt CV w bazie danych
+            BusinessCardEntity businessCardEntityUpdate = businessCardRepository.save(businessCardEntity);
+
+            return businessCardMapper.map(businessCardEntityUpdate);
+        } else {
+            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
+            throw new NotFoundException("Business Card ID cannot be null");
+        }
+    }
+
+    }
+
+

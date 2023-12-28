@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update CV</title>
+</head>
+<body>
+
+<h2>Update CV</h2>
+
+<form action="#"
+      th:action="@{/updateBusinessCardDone}"
+      th:method="PUT"
+      th:object="${businessCardDTO}">
+
+  <label>office: </label>
+  <input type="text" th:field="*{office}" required/><br/>
+
+  <label>scopeOperations: </label>
+  <input type="text" th:field="*{scopeOperations}" required/><br/>
+
+  <label>recruitmentEmail </label>
+  <input type="text" th:field="*{recruitmentEmail}" required/><br/>
+
+  <label>phoneNumber: </label>
+  <input type="text" th:field="*{phoneNumber}" required/><br/>
+
+  <label>companyDescription: </label>
+  <input type="text" th:field="*{companyDescription}" required/><br/>
+
+  <label>technologiesAndTools: </label>
+  <input type="text" th:field="*{technologiesAndTools}" required/><br/>
+
+  <label>certificatesAndAwards: </label>
+  <input type="text" th:field="*{certificatesAndAwards}" required/><br/>
+
+
+  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+  <input type="hidden" id="businessCardId" name="id" th:value="${businessCardDTO.id}">
+
+  <!-- Include other CV fields as needed -->
+
+  <input type="submit" value="Update Business Card"/>
+</form>
+
+<h2>Update Address</h2>
+
+<form
+        action="#"
+        th:action="@{/updateAddressDone}"
+        th:method="put"
+        th:object="${address}">
+
+  <!-- Tutaj znajdują się pola do aktualizacji CV -->
+
+  <label>Country:</label>
+  <input type="text" th:field="*{country}" required><br>
+
+  <label>City:</label>
+  <input type="text" th:field="*{city}" required><br>
+
+  <label>Street and Number:</label>
+  <input type="text" th:field="*{streetAndNumber}" required><br>
+
+
+  <!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
+  <input type="hidden" id="addressId" name="id" th:value="${address.id}">
+
+  <input type="submit" value="Update Address"/>
+</form>
+
+</body>
+</html>
