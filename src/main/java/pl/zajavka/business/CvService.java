@@ -8,7 +8,9 @@ import org.webjars.NotFoundException;
 import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
@@ -26,6 +28,8 @@ public class CvService {
     private CvRepository cvRepository;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
+    private AddressRepository addressRepository;
+    private AddressService addressService;
 
 
     @Transactional
@@ -98,37 +102,52 @@ public class CvService {
     }
 
 
+    @Transactional
     public CV updateCV(CV updatedCv) {
         if (updatedCv.getId() != null) {
-            CvEntity cvEntity = cvMapper.map(updatedCv);
-                    cvRepository.findById(cvEntity.getId());
+            // Sprawdź, czy CV istnieje w bazie danych
+            CvEntity cvEntity = cvRepository.findById(updatedCv.getId())
+                    .orElseThrow(() -> new NotFoundException("CV with ID " + updatedCv.getId() + " not found"));
 
-                cvEntity.setName(updatedCv.getName());
-                cvEntity.setSurname(updatedCv.getSurname());
-                cvEntity.setDateOfBirth(updatedCv.getDateOfBirth());
-                cvEntity.setSex(updatedCv.getSex());
-                cvEntity.setMaritalStatus(updatedCv.getMaritalStatus());
-                cvEntity.setContactEmail(updatedCv.getContactEmail());
-                cvEntity.setPhoneNumber(updatedCv.getPhoneNumber());
-                cvEntity.setEducation(updatedCv.getEducation());
-                cvEntity.setWorkExperience(updatedCv.getWorkExperience());
-                cvEntity.setSkills(updatedCv.getSkills());
-                cvEntity.setLanguage(updatedCv.getLanguage());
-                cvEntity.setLanguageLevel(updatedCv.getLanguageLevel());
-                cvEntity.setHobby(updatedCv.getHobby());
+            // Aktualizuj pola CV na podstawie danych z formularza
+            cvEntity.setName(updatedCv.getName());
+            cvEntity.setSurname(updatedCv.getSurname());
+            cvEntity.setDateOfBirth(updatedCv.getDateOfBirth());
+            cvEntity.setSex(updatedCv.getSex());
+            cvEntity.setMaritalStatus(updatedCv.getMaritalStatus());
+            cvEntity.setContactEmail(updatedCv.getContactEmail());
+            cvEntity.setPhoneNumber(updatedCv.getPhoneNumber());
+            cvEntity.setEducation(updatedCv.getEducation());
+            cvEntity.setWorkExperience(updatedCv.getWorkExperience());
+            cvEntity.setSkills(updatedCv.getSkills());
+            cvEntity.setLanguage(updatedCv.getLanguage());
+            cvEntity.setLanguageLevel(updatedCv.getLanguageLevel());
+            cvEntity.setHobby(updatedCv.getHobby());
 
+//            // Aktualizuj dane adresowe
+//            AddressEntity addressEntity = cvEntity.getAddress();
+//            if (addressEntity == null) {
+//                // Utwórz nowy obiekt adresu, jeśli nie istnieje
+//                addressEntity = new AddressEntity();
+//                cvEntity.setAddress(addressEntity);
+//            }
+//
+//            // Ustaw nowe wartości adresu i zaktualizuj go przy użyciu metody z AddressService
+//            addressEntity.setCountry(updatedCv.getAddress().getCountry());
+//            addressEntity.setCity(updatedCv.getAddress().getCity());
+//            addressEntity.setStreetAndNumber(updatedCv.getAddress().getStreetAndNumber());
 
-                // Zapisz zaktualizowany obiekt CV w bazie danych
+            // Zapisz zaktualizowany obiekt CV w bazie danych
+            CvEntity cvEntityUpdate = cvRepository.save(cvEntity);
 
-
-                      CvEntity cvEntityUpdate =  cvRepository.save(cvEntity);
             return cvMapper.map(cvEntityUpdate);
-
-            } else {
-                // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
-                throw new NotFoundException("CV with ID " + updatedCv.getId() + " not found");
-            }
+        } else {
+            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
+            throw new NotFoundException("CV ID cannot be null");
         }
+    }
+
+
 
         }
 

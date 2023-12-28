@@ -159,6 +159,7 @@ import pl.zajavka.business.AddressService;
 import pl.zajavka.business.CvService;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.*;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 
 import java.util.Optional;
 
@@ -174,6 +175,7 @@ public class CvController {
     private UserService userService;
     private CvMapperDTO cvMapperDTO;
     private UserMapperDTO userMapperDTO;
+    private AddressMapper addressMapper;
 
     @GetMapping("/CvForm")
     public String CvForm(
@@ -281,6 +283,7 @@ public class CvController {
             CV cv = myCV.get();
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
             model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
+            model.addAttribute("address", cv.getAddress());
             return "update_cv_form";
         } else {
             return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
@@ -289,8 +292,9 @@ public class CvController {
 
     @PutMapping("/updateCVDone")
     public String updateCv(
-//            @RequestParam Integer id,
+
             @ModelAttribute("cvDTO") CvDTO updateCvDTO,
+//            @ModelAttribute("address") Address updateAddress,
             Model model) {
         Optional<CV> myCV = cvService.findById(updateCvDTO.getId());
         if (myCV.isPresent()) {
@@ -311,15 +315,6 @@ public class CvController {
             cv.setLanguageLevel(updateCvDTO.getLanguageLevel());
             cv.setHobby(updateCvDTO.getHobby());
 
-            // Aktualizuj dane adresowe
-            Address address = cv.getAddress();
-            address.setCountry(updateCvDTO.getAddress().getCountry());
-            address.setCity(updateCvDTO.getAddress().getCity());
-            address.setStreetAndNumber(updateCvDTO.getAddress().getStreetAndNumber());
-//            address.setCountry(updateCvDTO.getAddress().getCountry());
-            // Aktualizuj inne pola adresu, jeśli są dostępne
-
-            // Zapisz zaktualizowane CV
             cvService.updateCV(cv);
 
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
@@ -327,32 +322,28 @@ public class CvController {
         } else {
             return "cv_not_found";
         }
+
     }
 
 
-//    @GetMapping("/updateCV/{id}")
-//    public String updateCvForm(@PathVariable Integer id, Model model) {
-//        Optional<CV> myCV = cvService.findById(id);
-//        if (myCV.isPresent()) {
-//            CV cv = myCV.get();
-//            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
-//            model.addAttribute("id", cv.getId());
-//            return "update_cv_form";
-//        } else {
-//            return "cv_not_found";
-//        }
-//    }
-
-//    @PutMapping("/updateCV")
-//    public String updateCV(
-//            @ModelAttribute("cvDTO") CvDTO cvDTO,
-//            @RequestParam(value = "id") String id,
-//            @RequestParam(value = "name") String name) {
-//        Optional<CV> cv = cvService.findById(cvDTO.getId());
-//        if (cv.isPresent()) {
-//
-//        }
-
+    @PutMapping("/updateAddressDone")
+    public String updateAddress(
+            @ModelAttribute("address") Address updateAddress,
+            Model model){
+        Optional<Address> myAddress = addressService.findById(updateAddress.getId());
+        if (myAddress.isPresent()) {
+            Address address = myAddress.get();
+            address.setCountry(updateAddress.getCountry());
+            address.setCity(updateAddress.getCity());
+            address.setStreetAndNumber(updateAddress.getStreetAndNumber());
+            addressService.updateAddress(address);
+            model.addAttribute("address", address);
+//            model.addAttribute("address"),addressMapper.map(address);
+            return "cv_created_successfully";
+        } else {
+            return "cv_not_found";
+        }
+    }
 
 
 }

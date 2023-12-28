@@ -52,22 +52,51 @@
   <label>hobby: </label>
   <input type="text" th:field="*{hobby}" required/><br/>
 
-  <label for="country">Country:</label>
-  <input type="text" id="country" name="address.country" required><br>
 
-  <label for="city">City:</label>
-  <input type="text" id="city" name="address.city" required><br>
 
-  <label for="streetAndNumber">Street and Number:</label>
-  <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
+<!--  <label for="country">Country:</label>-->
+<!--  <input type="text" id="country" th:field="*{address.country}" required><br>-->
+
+<!--  <label for="city">City:</label>-->
+<!--  <input type="text" id="city" th:field="*{address.city}" required><br>-->
+
+<!--  <label for="streetAndNumber">Street and Number:</label>-->
+<!--  <input type="text" id="streetAndNumber" th:field="*{address.streetAndNumber}" required><br>-->
 
   <!-- Pole ukryte dla userId -->
+
   <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
   <input type="hidden" id="cvId" name="id" th:value="${cvDTO.id}">
 
   <!-- Include other CV fields as needed -->
 
   <input type="submit" value="Update CV"/>
+</form>
+
+<h2>Update Address</h2>
+
+<form
+        action="#"
+        th:action="@{/updateAddressDone}"
+        th:method="put"
+        th:object="${address}">
+
+  <!-- Tutaj znajdują się pola do aktualizacji CV -->
+
+  <label>Country:</label>
+  <input type="text" th:field="*{country}" required><br>
+
+  <label>City:</label>
+  <input type="text" th:field="*{city}" required><br>
+
+  <label>Street and Number:</label>
+  <input type="text" th:field="*{streetAndNumber}" required><br>
+
+
+<!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
+  <input type="hidden" id="addressId" name="id" th:value="${address.id}">
+
+  <input type="submit" value="Update Address"/>
 </form>
 
 </body>
