@@ -108,8 +108,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
+import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
@@ -193,28 +196,48 @@ public class JobOfferService {
     }
 
     public Optional<JobOffer> findById(Integer id) {
-//        log.debug("szukaj id w serwisie: w ", id);
         return jobOfferRepository.findById(id).map(jobOfferMapper::map);
     }
 
-//    public Optional<JobOffer> findByUser(User user) {
-//        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(user));
-//        return jobOfferEntityOptional.map(jobOfferMapper::map);
-//    }
 
     public List<JobOffer> findListByUser(User user) {
-        // Zmieniłem metodę findListByUser, aby zwracała Listę, a nie pojedynczy wynik
         UserEntity userEntity = userMapper.map(user);
      List<JobOfferEntity> jobOfferEntityList = jobOfferRepository.findListByUser(userEntity);
      List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
      return jobOfferList;
     }
-//    public List<JobOffer> findByUser(User user) {
-//        UserEntity userEntity = userRepository.findByUserName(user.getUserName());
-//        return jobOfferRepository.findByUser(userEntity).stream()
-//                .map(jobOfferMapper::map)
-//                .toList();
+
+    public Optional<JobOffer> findByUser(User loggedInUser) {
+        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(loggedInUser));
+        return jobOfferEntityOptional.map(jobOfferMapper::map);
     }
+
+
+    @Transactional
+    public JobOffer updateJobOffer(JobOffer jobOffer){
+        if (jobOffer.getId() != null) {
+            // Sprawdź, czy CV istnieje w bazie danych
+            JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOffer.getId())
+                    .orElseThrow(() -> new NotFoundException("JobOffer with ID " + jobOffer.getId() + " not found"));
+
+
+            jobOfferEntity.setCompanyName(jobOffer.getCompanyName());
+            jobOfferEntity.setPosition(jobOffer.getPosition());
+            jobOfferEntity.setResponsibilities(jobOffer.getResponsibilities());
+            jobOfferEntity.setRequiredTechnologies(jobOffer.getRequiredTechnologies());
+            jobOfferEntity.setBenefits(jobOffer.getBenefits());
+
+
+            // Zapisz zaktualizowany obiekt CV w bazie danych
+            JobOfferEntity jobOfferEntityUpdate = jobOfferRepository.save(jobOfferEntity);
+
+            return jobOfferMapper.map(jobOfferEntityUpdate);
+        } else {
+            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
+            throw new NotFoundException("Job Offer ID cannot be null");
+        }
+    }
+}
 
 
 

@@ -124,19 +124,6 @@ public class CvService {
             cvEntity.setLanguageLevel(updatedCv.getLanguageLevel());
             cvEntity.setHobby(updatedCv.getHobby());
 
-//            // Aktualizuj dane adresowe
-//            AddressEntity addressEntity = cvEntity.getAddress();
-//            if (addressEntity == null) {
-//                // Utwórz nowy obiekt adresu, jeśli nie istnieje
-//                addressEntity = new AddressEntity();
-//                cvEntity.setAddress(addressEntity);
-//            }
-//
-//            // Ustaw nowe wartości adresu i zaktualizuj go przy użyciu metody z AddressService
-//            addressEntity.setCountry(updatedCv.getAddress().getCountry());
-//            addressEntity.setCity(updatedCv.getAddress().getCity());
-//            addressEntity.setStreetAndNumber(updatedCv.getAddress().getStreetAndNumber());
-
             // Zapisz zaktualizowany obiekt CV w bazie danych
             CvEntity cvEntityUpdate = cvRepository.save(cvEntity);
 

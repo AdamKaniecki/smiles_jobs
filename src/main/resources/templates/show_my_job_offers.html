@@ -23,6 +23,7 @@
         <th scope="col">Required Technologies</th>
         <th scope="col">Benefits</th>
         <th scope="col">Date and Time</th>
+        <th scope="col">Actions</th> <!-- Dodaj nową kolumnę dla przycisku "Update" -->
       </tr>
       </thead>
       <tbody>
@@ -34,6 +35,11 @@
         <td th:text="${jobOffer.requiredTechnologies}"></td>
         <td th:text="${jobOffer.benefits}"></td>
         <td th:text="${jobOffer.jobOfferDateTime}"></td>
+        <td>
+          <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
+          <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOffer.id}}">Update</a>
+        </td>
+
       </tr>
       </tbody>
     </table>

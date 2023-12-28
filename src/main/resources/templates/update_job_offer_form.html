@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Update CV</title>
+</head>
+<body>
+
+<h2>Update Job Offer</h2>
+
+<form action="#"
+      th:action="@{/updateJobOfferDone}"
+      th:method="PUT"
+      th:object="${jobOfferDTO}">
+
+  <label>companyName: </label>
+  <input type="text" th:field="*{companyName}" required/><br/>
+
+  <label>position: </label>
+  <input type="text" th:field="*{position}" required/><br/>
+
+  <label>responsibilities </label>
+  <input type="text" th:field="*{responsibilities}" required/><br/>
+
+  <label>requiredTechnologies: </label>
+  <input type="text" th:field="*{requiredTechnologies}" required/><br/>
+
+  <label>benefits: </label>
+  <input type="text" th:field="*{benefits}" required/><br/>
+
+
+  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+  <input type="hidden" id="jobOfferId" name="id" th:value="${jobOfferDTO.id}">
+
+  <!-- Include other CV fields as needed -->
+
+  <input type="submit" value="Update JobOffer"/>
+</form>
+
+
+</body>
+</html>
