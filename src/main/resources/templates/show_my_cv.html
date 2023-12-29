@@ -12,51 +12,51 @@
 <div class="container">
   <h1 class="mt-4">CV Details</h1>
 
-  <div th:if="${cv}">
+  <div th:if="${cvDTO}">
     <div class="row mt-4">
       <div class="col-md-12">
-        <h2 th:text="${cv.name + ' ' + cv.surname}"></h2>
+        <h2 th:text="${cvDTO.name + ' ' + cvDTO.surname}"></h2>
       </div>
     </div>
 
     <div class="row mt-4">
       <div class="col-md-6">
         <h3>Main Information</h3>
-        <p th:text="'Date of Birth: ' + ${cv.dateOfBirth}"></p>
-        <p th:text="'Sex: ' + ${cv.sex}"></p>
-        <p th:text="'Marital Status: ' + ${cv.maritalStatus}"></p>
-        <p th:text="'Contact Email: ' + ${cv.contactEmail}"></p>
-        <p th:text="'Phone Number: ' + ${cv.phoneNumber}"></p>
+        <p th:text="'Date of Birth: ' + ${cvDTO.dateOfBirth}"></p>
+        <p th:text="'Sex: ' + ${cvDTO.sex}"></p>
+        <p th:text="'Marital Status: ' + ${cvDTO.maritalStatus}"></p>
+        <p th:text="'Contact Email: ' + ${cvDTO.contactEmail}"></p>
+        <p th:text="'Phone Number: ' + ${cvDTO.phoneNumber}"></p>
       </div>
       <div class="col-md-6">
         <h3>Education</h3>
-        <p th:text="'Education: ' + ${cv.education}"></p>
+        <p th:text="'Education: ' + ${cvDTO.education}"></p>
       </div>
     </div>
 
     <div class="row mt-4">
       <div class="col-md-12">
         <h3>Work Experience</h3>
-        <p th:text="'Work Experience: ' + ${cv.workExperience}"></p>
+        <p th:text="'Work Experience: ' + ${cvDTO.workExperience}"></p>
       </div>
     </div>
 
     <div class="row mt-4">
       <div class="col-md-6">
         <h3>Skills</h3>
-        <p th:text="'Skills: ' + ${cv.skills}"></p>
+        <p th:text="'Skills: ' + ${cvDTO.skills}"></p>
       </div>
       <div class="col-md-6">
         <h3>Languages</h3>
-        <p th:text="'Language: ' + ${cv.language}"></p>
-        <p th:text="'Language Level: ' + ${cv.languageLevel}"></p>
+        <p th:text="'Language: ' + ${cvDTO.language}"></p>
+        <p th:text="'Language Level: ' + ${cvDTO.languageLevel}"></p>
       </div>
     </div>
 
     <div class="row mt-4">
       <div class="col-md-12">
         <h3>Hobbies</h3>
-        <p th:text="'Hobby: ' + ${cv.hobby}"></p>
+        <p th:text="'Hobby: ' + ${cvDTO.hobby}"></p>
       </div>
     </div>
   </div>
@@ -65,7 +65,16 @@
     <a th:href="@{/redirectToUpdateMyCV}" class="btn btn-info" role="button">Confirm your CV</a>
   </div>
 
-  <div th:unless="${cv}">
+  <form th:action="@{/deleteCV}" th:method="DELETE" th:object="${cvDTO}">
+    <input type="hidden" th:field="*{id}"/>
+    <p>Are you sure you want to delete this CV?</p>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
+  </form>
+
+
+
+  <div th:unless="${cvDTO}">
     <p>CV not found</p>
   </div>
 

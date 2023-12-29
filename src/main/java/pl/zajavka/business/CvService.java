@@ -135,8 +135,16 @@ public class CvService {
     }
 
 
-
+    public void deleteCV(CV cv) {
+        if (cv != null) {
+            // Mapuj CV na CvEntity przed usunięciem z bazy danych
+            CvEntity cvEntity = cvMapper.map(cv);
+            cvRepository.deleteById(cvEntity.getId());
+        } else {
+            throw new IllegalArgumentException("CV cannot be null");
         }
+    }
+}
 
 
 

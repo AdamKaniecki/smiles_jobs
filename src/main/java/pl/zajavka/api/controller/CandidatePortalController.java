@@ -83,6 +83,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
@@ -121,6 +122,7 @@ public class CandidatePortalController {
             model.addAttribute("user", user);
             UserDTO userDTO = userMapperDTO.map(user);
             model.addAttribute("userDTO", userDTO);
+            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
 
             List<JobOffer> jobOffers = jobOfferService.findAll();
             List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()

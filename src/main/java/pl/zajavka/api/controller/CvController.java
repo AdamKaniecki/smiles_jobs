@@ -249,8 +249,9 @@ public class CvController {
         Optional<CV> myCV = cvService.findById(id);
         if (myCV.isPresent()) {
             CV cv = myCV.get();
-            model.addAttribute("cv", cvMapperDTO.map(cv));
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
             model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
+
             return "show_my_cv";
         } else {
             return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
@@ -284,6 +285,7 @@ public class CvController {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
             model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
             model.addAttribute("address", cv.getAddress());
+
             return "update_cv_form";
         } else {
             return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
@@ -291,11 +293,7 @@ public class CvController {
     }
 
     @PutMapping("/updateCVDone")
-    public String updateCv(
-
-            @ModelAttribute("cvDTO") CvDTO updateCvDTO,
-//            @ModelAttribute("address") Address updateAddress,
-            Model model) {
+    public String updateCv(@ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
         Optional<CV> myCV = cvService.findById(updateCvDTO.getId());
         if (myCV.isPresent()) {
             CV cv = myCV.get();
@@ -323,6 +321,7 @@ public class CvController {
             return "cv_not_found";
         }
 
+
     }
 
 
@@ -345,6 +344,18 @@ public class CvController {
         }
     }
 
+    @DeleteMapping("/deleteCV")
+    public String deleteCV(@ModelAttribute("cvDTO") CvDTO deleteCvDTO, Model model) {
+        Optional<CV> myCV = cvService.findById(deleteCvDTO.getId());
+        if (myCV.isPresent()) {
+            CV cv = myCV.get();
+            cvService.deleteCV(cv);
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
+            return "cv_created_successfully";
+        } else {
+            return "cv_not_found";
+        }
+    }
 
 }
 
