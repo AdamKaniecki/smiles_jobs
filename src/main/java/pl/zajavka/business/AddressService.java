@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import pl.zajavka.domain.Address;
+import pl.zajavka.domain.CV;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 
@@ -64,4 +66,23 @@ public class AddressService {
     public Optional<Address> findById(Integer id) {
         return addressRepository.findById(id).map(addressMapper::map);
     }
+
+    public void deleteAddress(Address address) {
+        if(address != null){
+            AddressEntity addressEntity = addressMapper.map(address);
+            addressRepository.deleteById(addressEntity.getId());
+        } else {
+            throw new IllegalArgumentException("Address cannot be null");
+        }
+    }
+
+//    public void deleteCV(CV cv) {
+//        if (cv != null) {
+//            // Mapuj CV na CvEntity przed usunięciem z bazy danych
+//            CvEntity cvEntity = cvMapper.map(cv);
+//            cvRepository.deleteById(cvEntity.getId());
+//        } else {
+//            throw new IllegalArgumentException("CV cannot be null");
+//        }
+//    }
 }

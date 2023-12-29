@@ -349,8 +349,12 @@ public class CvController {
         Optional<CV> myCV = cvService.findById(deleteCvDTO.getId());
         if (myCV.isPresent()) {
             CV cv = myCV.get();
+            Address address = cv.getAddress();
+
             cvService.deleteCV(cv);
+            addressService.deleteAddress(address);
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
+
             return "cv_created_successfully";
         } else {
             return "cv_not_found";
