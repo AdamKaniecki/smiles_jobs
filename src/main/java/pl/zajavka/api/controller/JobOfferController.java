@@ -177,7 +177,22 @@ public class JobOfferController {
         }
 
     }
+    @DeleteMapping("/deleteJobOffer/{jobOfferId}")
+    public String deleteJobOffer(@PathVariable Integer jobOfferId, Model model, HttpSession httpSession) {
+        String username = (String) httpSession.getAttribute("username");
 
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+                if (optionalJobOffer.isPresent() && optionalJobOffer.get().getUser().equals(loggedInUser)) {
+                    jobOfferService.deleteJobOffer(jobOfferId);
+                    return "redirect:/showMyJobOffers";
+                }
+            }
+        }
+        return "redirect:/showMyJobOffers";
+    }
 
     }
 

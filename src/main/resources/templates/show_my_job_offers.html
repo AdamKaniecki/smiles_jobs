@@ -38,7 +38,13 @@
         <td>
           <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
           <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOffer.id}}">Update</a>
+
+          <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
+          <form th:action="@{'/deleteJobOffer/' + ${jobOffer.id}}" th:method="DELETE" >
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
         </td>
+<!--        <button type="submit" class="btn btn-danger">Delete</button>-->
 
       </tr>
       </tbody>

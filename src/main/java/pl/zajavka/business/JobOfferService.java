@@ -237,6 +237,17 @@ public class JobOfferService {
             throw new NotFoundException("Job Offer ID cannot be null");
         }
     }
+
+    public void deleteJobOffer(Integer jobOfferId) {
+        // Pobierz ofertę pracy na podstawie jej identyfikatora
+        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOfferId)
+                .orElseThrow(() -> new IllegalArgumentException("Oferta pracy o identyfikatorze " + jobOfferId + " nie została znaleziona."));
+
+        // Mapuj encję na domenową klasę JobOffer
+        JobOffer jobOffer = jobOfferMapper.map(jobOfferEntity);
+        // Usuń ofertę pracy
+        jobOfferRepository.delete(jobOfferEntity);
+    }
 }
 
 
