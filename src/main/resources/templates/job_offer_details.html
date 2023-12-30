@@ -27,18 +27,6 @@
         <strong>Benefits:</strong> <span th:text="${jobOffer.benefits}"></span>
       </p>
 
-<!--      <p class="card-text">-->
-<!--        <strong>Posted by:</strong> <span th:text="${jobOffer.user.username}"></span>-->
-<!--      </p>-->
-
-<!--      <p class="card-text">-->
-<!--        <strong>Date and Time:</strong> <span th:text="${#dates.format(jobOffer.createdAt, 'yyyy-MM-dd HH:mm')}"></span>-->
-<!--      </p>-->
-
-      <!-- Dodaj inne informacje dotyczące oferty pracy -->
-
-      <!-- Przycisk powrotu do listy ofert pracy -->
-<!--      <a href="/showMyJobOffers" class="btn btn-primary">Inne Job Offers</a>-->
       <a th:href="@{/businessCard/{userId}(userId=${jobOffer.user.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
 
     </div>

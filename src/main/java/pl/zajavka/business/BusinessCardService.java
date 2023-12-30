@@ -17,20 +17,21 @@ import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class BusinessCardService {
     private BusinessCardRepository businessCardRepository;
     private BusinessCardMapper businessCardMapper;
-    AddressService addressService;
+    private AddressService addressService;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
 
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
 
-        if(businessCardRepository.existsByUser(userMapper.map(user))){
+        if (businessCardRepository.existsByUser(userMapper.map(user))) {
             return null;
         }
 
@@ -49,7 +50,7 @@ public class BusinessCardService {
                 .address(addressMapper.map(address))
                 .build();
 
-       businessCardRepository.saveAndFlush(businessCardEntity);
+        businessCardRepository.saveAndFlush(businessCardEntity);
         return businessCardMapper.map(businessCardEntity);
     }
 
@@ -58,7 +59,7 @@ public class BusinessCardService {
         return businessCardRepository.findById(id).map(businessCardMapper::map);
     }
 
-   {
+    {
 
     }
 
@@ -97,6 +98,18 @@ public class BusinessCardService {
         }
     }
 
+
+    public void deleteBusinessCard(BusinessCard businessCard) {
+
+        if (businessCard != null){
+            BusinessCardEntity businessCardEntity = businessCardMapper.map(businessCard);
+            businessCardRepository.deleteById(businessCardEntity.getId());
+        }   else {
+        throw new IllegalArgumentException("Business Card cannot be null");
     }
+    }
+
+
+}
 
 

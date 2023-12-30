@@ -24,10 +24,24 @@
             <p><strong>Company Description:</strong> <span th:text="${businessCard.companyDescription}"></span></p>
             <p><strong>Technologies and Tools:</strong> <span th:text="${businessCard.technologiesAndTools}"></span></p>
             <p><strong>Certificates and Awards:</strong> <span th:text="${businessCard.certificatesAndAwards}"></span></p>
+            <p><strong>Address:</strong> <span th:text="${businessCard.address}"></span></p>
         </div>
+
+        <div class="col-md-4">
+            <a th:href="@{/redirectToUpdateMyBusinessCard}" method="GET" class="btn btn-info" role="button">Update my Business Card</a>
+        </div>
+        <br>
+            <form action="#"
+                  th:action="@{/deleteBusinessCard}"
+                  th:method="DELETE"
+                  th:object="${businessCard}">
+                <input type="hidden" th:field="*{id}"/>
+
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
     </div>
 
-    <a th:href="@{/{user}/candidate_portal}" class="btn btn-primary mt-4">Back to Candidate Portal</a>
+    <a th:href="@{/{user}/company_portal}" class="btn btn-primary mt-4">Back to Company Portal</a>
 </div>
 </body>
 </html>

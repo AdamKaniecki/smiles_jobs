@@ -235,14 +235,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.zajavka.api.dto.BusinessCardDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.UserDTO;
+import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.api.dto.mapper.CvMapperDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
+import pl.zajavka.business.BusinessCardService;
 import pl.zajavka.business.CvService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
+import pl.zajavka.domain.BusinessCard;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
@@ -266,6 +270,8 @@ public class CompanyPortalController {
     private CvService cvService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private CvMapperDTO cvMapperDTO;
+    private BusinessCardService businessCardService;
+    private BusinessCardMapperDTO businessCardMapperDTO;
 
 
     @GetMapping(COMPANY_PORTAL)
@@ -280,6 +286,14 @@ public class CompanyPortalController {
 
             List<CV> cvList = cvService.findAll();
             model.addAttribute("cvList", cvList);
+
+//            Optional<BusinessCard> businessCardOptional = businessCardService.findByUser(user);
+//            BusinessCardDTO businessCardDTO = businessCardOptional
+//                    .map(businessCardMapperDTO::map)
+//                    .orElseGet(BusinessCardDTO::new);
+//
+//            model.addAttribute("businessCardDTO", businessCardDTO);
+
             return "company_portal";
         } else {
             // Użytkownik nie jest zalogowany, przekieruj na stronę logowania

@@ -125,12 +125,10 @@ public class BusinessCardController {
     @GetMapping("/businessCard/{id}")
     public String showBusinessCard(@PathVariable Integer id, Model model) {
         BusinessCard businessCard = businessCardService.findById(id).orElse(null);
-
         if (businessCard != null) {
             model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
             model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-
-            return "show_my_businessCard";
+            return "show_businessCard";
         } else {
 
             return "businessCard_not_found"; // Nazwa widoku Thymeleaf
@@ -174,7 +172,6 @@ public class BusinessCardController {
     public String updateBusinessCard(
 
             @ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
-//            @ModelAttribute("address") Address updateAddress,
             Model model) {
         Optional<BusinessCard> myBusinessCard = businessCardService.findById(updateBusinessCardDTO.getId());
         if (myBusinessCard.isPresent()) {
@@ -199,5 +196,26 @@ public class BusinessCardController {
         }
 
     }
+
+    @DeleteMapping("/deleteBusinessCard")
+    public String deleteBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
+    Model model) {
+
+        Optional<BusinessCard> myBusinessCard = businessCardService.findById(updateBusinessCardDTO.getId());
+        if (myBusinessCard.isPresent()) {
+            BusinessCard businessCard = myBusinessCard.get();
+            Address address = businessCard.getAddress();
+
+            businessCardService.deleteBusinessCard(businessCard);
+            addressService.deleteAddress(address);
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+
+                        return "redirect: /company_portal";
+                    }
+
+        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanej BusinessCard lub wystąpił inny problem
+        return "redirect:/redirectToShowMyBusinessCard";
+    }
+
 
 }
