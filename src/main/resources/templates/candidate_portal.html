@@ -23,6 +23,8 @@
             <th>Required Technologies</th>
             <th>Benefits</th>
             <th>Details</th>
+            <th>Send CV</th>
+
             <!-- Wyświetl połączoną wartość Salary Range -->
             <th>Data i godzina</th>
         </tr>
@@ -36,13 +38,15 @@
             <td th:text="${jobOfferDTO.responsibilities}"></td>
             <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
             <td th:text="${jobOfferDTO.benefits}"></td>
-
-<!--            <div class="col-md-4">-->
-<!--                <a th:href="@{/redirectToShowMyBusinessCard}" method="GET" class="btn btn-info" role="button">Show BCard</a>-->
-<!--            </div>-->
             <td>
                 <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
+<!--            <td>-->
+<!--                <form th:action="@{/sendCv}" method="post">-->
+<!--                    <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">-->
+<!--                    <button type="submit" class="btn btn-primary">Send CV</button>-->
+<!--                </form>-->
+<!--            </td>-->
         </tr>
         </tbody>
     </table>

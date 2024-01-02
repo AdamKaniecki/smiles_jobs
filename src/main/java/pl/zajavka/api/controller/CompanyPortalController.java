@@ -287,13 +287,6 @@ public class CompanyPortalController {
             List<CV> cvList = cvService.findAll();
             model.addAttribute("cvList", cvList);
 
-//            Optional<BusinessCard> businessCardOptional = businessCardService.findByUser(user);
-//            BusinessCardDTO businessCardDTO = businessCardOptional
-//                    .map(businessCardMapperDTO::map)
-//                    .orElseGet(BusinessCardDTO::new);
-//
-//            model.addAttribute("businessCardDTO", businessCardDTO);
-
             return "company_portal";
         } else {
             // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
@@ -328,7 +321,7 @@ public class CompanyPortalController {
         Optional<CV> cv = cvService.findById(cvId);
 
         if (cv.isPresent()) {
-            model.addAttribute("cv", cvMapperDTO.map(cv.get()));
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
             return "show_cv";  // Użyj istniejącego widoku show_cv
         } else {
             return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione

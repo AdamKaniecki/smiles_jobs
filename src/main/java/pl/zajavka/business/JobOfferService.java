@@ -248,6 +248,8 @@ public class JobOfferService {
         // Usuń ofertę pracy
         jobOfferRepository.delete(jobOfferEntity);
     }
+
+
 }
 
 

@@ -12,7 +12,7 @@
 <div class="container">
   <h1 class="mt-4">My Job Offers</h1>
 
-  <div th:if="${jobOffers}">
+  <div th:if="${jobOffersDTO}">
     <table class="table">
       <thead>
       <tr>
@@ -24,26 +24,32 @@
         <th scope="col">Benefits</th>
         <th scope="col">Date and Time</th>
         <th scope="col">Actions</th> <!-- Dodaj nową kolumnę dla przycisku "Update" -->
+        <th>Received CVs</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="jobOffer : ${jobOffers}">
-        <td th:text="${jobOffer.id}"></td>
-        <td th:text="${jobOffer.companyName}"></td>
-        <td th:text="${jobOffer.position}"></td>
-        <td th:text="${jobOffer.responsibilities}"></td>
-        <td th:text="${jobOffer.requiredTechnologies}"></td>
-        <td th:text="${jobOffer.benefits}"></td>
-        <td th:text="${jobOffer.jobOfferDateTime}"></td>
+      <tr th:each="jobOfferDTO : ${jobOffers}">
+        <td th:text="${jobOfferDTO.id}"></td>
+        <td th:text="${jobOfferDTO.companyName}"></td>
+        <td th:text="${jobOfferDTO.position}"></td>
+        <td th:text="${jobOfferDTO.responsibilities}"></td>
+        <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
+        <td th:text="${jobOfferDTO.benefits}"></td>
+        <td th:text="${jobOfferDTO.jobOfferDTODateTime}"></td>
         <td>
           <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
-          <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOffer.id}}">Update</a>
+          <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOfferDTO.id}}">Update</a>
 
           <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
-          <form th:action="@{'/deleteJobOffer/' + ${jobOffer.id}}" th:method="DELETE" >
+          <form th:action="@{'/deleteJobOffer/' + ${jobOfferDTO.id}}" th:method="DELETE" >
             <button type="submit" class="btn btn-danger">Delete</button>
           </form>
         </td>
+<!--        <td>-->
+<!--          <a th:href="@{/showReceivedCvs/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View CVs</a>-->
+<!--        </td>-->
+
+
 <!--        <button type="submit" class="btn btn-danger">Delete</button>-->
 
       </tr>

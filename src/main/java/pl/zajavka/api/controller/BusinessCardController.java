@@ -113,7 +113,7 @@ public class BusinessCardController {
 
         if (myBusinessCard.isPresent()) {
             BusinessCard businessCard = myBusinessCard.get();
-            model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
             model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
             return "show_my_businessCard";
         } else {
@@ -126,7 +126,7 @@ public class BusinessCardController {
     public String showBusinessCard(@PathVariable Integer id, Model model) {
         BusinessCard businessCard = businessCardService.findById(id).orElse(null);
         if (businessCard != null) {
-            model.addAttribute("businessCard", businessCardMapperDTO.map(businessCard));
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
             model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
             return "show_businessCard";
         } else {

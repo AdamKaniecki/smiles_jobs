@@ -1,5 +1,6 @@
 package pl.zajavka.business;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,17 +8,26 @@ import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
+import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
+import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
+import pl.zajavka.infrastructure.security.UserEntity;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Slf4j
 
 @Service
@@ -28,6 +38,9 @@ public class CvService {
     private CvRepository cvRepository;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
+    private UserRepository userRepository;
+    private final JobOfferRepository jobOfferRepository;
+    private final JobOfferMapper jobOfferMapper;
     private AddressRepository addressRepository;
     private AddressService addressService;
 
@@ -144,6 +157,33 @@ public class CvService {
             throw new IllegalArgumentException("CV cannot be null");
         }
     }
+
+    // Przyjmowanie identyfikatora użytkownika, do którego ma być wysłane CV
+    public void sendCv(User sender, Integer recipientUserId) {
+        // Pobierz CV użytkownika wysyłającego
+        CV cvToSend = sender.getCv();
+
+        // Pobierz użytkownika odbierającego
+        UserEntity recipientUserEntity = userRepository.findById(recipientUserId)
+                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o id: " + recipientUserId));
+        userRepository.save(recipientUserEntity);
+        User recipientUser = userMapper.map(recipientUserEntity);
+        // Przypisz CV do użytkownika odbierającego
+        recipientUser.setCv(cvToSend);
+
+        // Poniżej to jest przykładowe logowanie do konsoli
+        System.out.println("CV wysłane od " + sender.getUserName() + " do " + recipientUser.getUserName());
+    }
+
+//    public List<CV> getReceivedCvs(Integer jobOfferId) {
+//        // Pobierz ofertę pracy
+//        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
+//                .map(jobOfferMapper::map)
+//                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono oferty pracy o id: " + jobOfferId));
+//        // Pobierz przesłane CV dla danej oferty pracy
+//        ArrayList<CV> cvs = new ArrayList<>(jobOffer.getReceivedCvs());
+//        return cvs;
+//    }
 }
 
 

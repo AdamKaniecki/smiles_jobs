@@ -12,24 +12,30 @@
 
   <div class="card mt-4">
     <div class="card-body">
-      <h5 class="card-title" th:text="${jobOffer.companyName}"></h5>
-      <h6 class="card-subtitle mb-2 text-muted" th:text="${jobOffer.position}"></h6>
+      <h5 class="card-title" th:text="${jobOfferDTO.companyName}"></h5>
+      <h6 class="card-subtitle mb-2 text-muted" th:text="${jobOfferDTO.position}"></h6>
 
       <p class="card-text">
-        <strong>Responsibilities:</strong> <span th:text="${jobOffer.responsibilities}"></span>
+        <strong>Responsibilities:</strong> <span th:text="${jobOfferDTO.responsibilities}"></span>
       </p>
 
       <p class="card-text">
-        <strong>Required Technologies:</strong> <span th:text="${jobOffer.requiredTechnologies}"></span>
+        <strong>Required Technologies:</strong> <span th:text="${jobOfferDTO.requiredTechnologies}"></span>
       </p>
 
       <p class="card-text">
-        <strong>Benefits:</strong> <span th:text="${jobOffer.benefits}"></span>
+        <strong>Benefits:</strong> <span th:text="${jobOfferDTO.benefits}"></span>
       </p>
 
-      <a th:href="@{/businessCard/{userId}(userId=${jobOffer.user.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
+      <a th:href="@{/businessCard/{userId}(userId=${jobOfferDTO.user.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
 
+
+<!--      <form th:action="@{/sendCv}" method="post">-->
+<!--        <input type="hidden" name="jobOfferDTOId" th:value="${jobOffer.id}">-->
+<!--        <button type="submit" class="btn btn-primary">Send CV</button>-->
+<!--      </form>-->
     </div>
+
   </div>
 </div>
 </body>

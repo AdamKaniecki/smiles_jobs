@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.CvService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
+import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 import java.util.List;
@@ -28,6 +30,7 @@ public class JobOfferController {
     private UserService userService;
     private UserMapperDTO userMapperDTO;
     private JobOfferMapperDTO jobOfferMapperDTO;
+    private CvService cvService;
 
     @GetMapping(CREATE_JOB_OFFER)
     public String createJobOfferForm(Model model) {
@@ -113,7 +116,7 @@ public class JobOfferController {
             Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
             if (optionalJobOffer.isPresent()) {
                 JobOffer jobOffer = optionalJobOffer.get();
-                model.addAttribute("jobOffer", jobOffer);
+                model.addAttribute("jobOfferDTO", jobOffer);
                 return "job_offer_details";
             }
         }
@@ -193,6 +196,16 @@ public class JobOfferController {
         }
         return "redirect:/showMyJobOffers";
     }
+
+//    @GetMapping("/showReceivedCvs/{jobOfferId}")
+//    public String showReceivedCvs(@PathVariable Integer jobOfferId, Model model) {
+//        // Pobierz listę przesłanych CVs dla danej oferty pracy
+//        List<CV> receivedCvs = cvService.getReceivedCvs(jobOfferId);
+//        // Przekaż listę do widoku
+//        model.addAttribute("receivedCvs", receivedCvs);
+//
+//        return "showReceivedCvs"; // Zastąp "showReceivedCvs" nazwą odpowiedniego widoku
+//    }
 
     }
 

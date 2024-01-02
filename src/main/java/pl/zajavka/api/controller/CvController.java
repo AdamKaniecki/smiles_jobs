@@ -361,5 +361,26 @@ public class CvController {
         }
     }
 
+//    @PostMapping("/sendCv")
+//    public String sendCv(@RequestParam Integer jobOfferId, Model model) {
+//        // Pobierz informacje o użytkowniku z HttpSession
+//        User loggedInUser = (User) httpSession.getAttribute("username");
+//
+//        // Sprawdź, czy użytkownik jest zalogowany
+//        if (loggedInUser != null) {
+//            // Zakładając, że metoda cvService.sendCv przyjmuje użytkownika i identyfikator oferty pracy
+//            cvService.sendCv(loggedInUser, jobOfferId);
+//
+//            // Możesz dodać dodatkową logikę lub atrybuty do modelu, jeśli to konieczne
+//            model.addAttribute("successMessage", "CV wysłane pomyślnie!");
+//        } else {
+//            // Obsłuż przypadki, gdy użytkownik nie jest zalogowany
+//            model.addAttribute("errorMessage", "Użytkownik niezalogowany. Proszę się zalogować.");
+//        }
+//
+//        // Przekieruj z powrotem do portalu kandydata lub innej odpowiedniej strony
+//        return "redirect:/candidate_portal";
+//    }
+
 }
 

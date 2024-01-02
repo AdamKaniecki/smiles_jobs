@@ -20,6 +20,7 @@ public class User  {
     private Boolean active;
     private Set<Role> roles;
     private Set<JobOffer> jobOffers;
+    private CV cv;
 
 
 }
