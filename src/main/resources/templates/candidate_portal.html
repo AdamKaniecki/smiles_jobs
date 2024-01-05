@@ -13,7 +13,7 @@
     <h1 class="mt-4">Welcome to Smiles Jobs</h1>
 
     <h2 class="mt-4">Job Offers</h2>
-    <table class="table"  id="sortable-table">
+    <table class="table"  id="sortable-table-job-offers">
         <thead class="table-dark">
         <tr>
             <th>ID</th>
@@ -90,6 +90,26 @@
 <br>
 <br>
 <br>
+<h2 class="mt-4">Notifications</h2>
+<table class="table" id="sortable-table">
+    <thead class="table-dark">
+    <tr>
+        <th>ID</th>
+        <th>Message</th>
+<!--        <th>Created At</th>-->
+        <!-- Dodaj inne kolumny w zależności od struktury NotificationDTO -->
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
+    <tr th:each="notificationDTO : ${notifications}">
+        <td th:text="${notificationDTO.id}"></td>
+        <td th:text="${notificationDTO.message}"></td>
+<!--        <td th:text="${notificationDTO.createdAt}"></td>-->
+        <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
+    </tr>
+    </tbody>
+</table>
 <br>
 <br>
 <br>

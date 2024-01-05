@@ -107,4 +107,9 @@ public class  UserService {
         // Sprawdź, czy użytkownik o danym adresie e-mail już istnieje w bazie danych
         return userRepository.existsByEmail(email);
     }
+
+    public void save(User user) {
+        UserEntity userEntity = userMapper.map(user);
+        userRepository.save(userEntity);
+    }
 }

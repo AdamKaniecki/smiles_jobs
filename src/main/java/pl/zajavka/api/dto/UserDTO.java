@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.With;
+import pl.zajavka.domain.Notification;
 import pl.zajavka.infrastructure.security.Role;
 
+import java.util.List;
 import java.util.Set;
 @Data
 @With
@@ -18,4 +20,5 @@ public class UserDTO {
     private String password;
     private Boolean active;
     private Set<Role> roles;
+    private List<Notification> notifications;
 }

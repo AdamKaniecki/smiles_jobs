@@ -6,7 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.zajavka.domain.JobOffer;
 import pl.zajavka.infrastructure.security.UserEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -67,6 +71,13 @@ public class CvEntity {
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "notifications",
+//            joinColumns = @JoinColumn(name = "cv_id"),
+//            inverseJoinColumns = @JoinColumn(name = "job_offer_id"))
+//    private List<JobOffer> jobOffers;
 
 
 

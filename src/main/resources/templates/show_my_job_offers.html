@@ -28,14 +28,14 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="jobOfferDTO : ${jobOffers}">
+      <tr th:each="jobOfferDTO : ${jobOffersDTO}">
         <td th:text="${jobOfferDTO.id}"></td>
         <td th:text="${jobOfferDTO.companyName}"></td>
         <td th:text="${jobOfferDTO.position}"></td>
         <td th:text="${jobOfferDTO.responsibilities}"></td>
         <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
         <td th:text="${jobOfferDTO.benefits}"></td>
-        <td th:text="${jobOfferDTO.jobOfferDTODateTime}"></td>
+<!--        <td th:text="${jobOfferDTO.jobOfferDTODateTime}"></td>-->
         <td>
           <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
           <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOfferDTO.id}}">Update</a>

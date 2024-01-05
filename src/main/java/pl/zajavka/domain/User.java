@@ -1,9 +1,11 @@
 package pl.zajavka.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import pl.zajavka.infrastructure.security.Role ;
 import pl.zajavka.infrastructure.security.UserEntity;
 
+import java.util.List;
 import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class User  {
     private Set<Role> roles;
     private Set<JobOffer> jobOffers;
     private CV cv;
+    private Set<Notification> notifications;
 
 
 }

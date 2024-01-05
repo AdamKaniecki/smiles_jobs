@@ -74,6 +74,25 @@ PRIMARY KEY(business_card_id),
              );
 
 
+CREATE TABLE notification_table (
+    notification_id SERIAL NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    user_id INT,
+    cv_id INT, -- Dodajemy kolumnę cv_id
+    job_offer_id INT,
+    PRIMARY KEY (notification_id),
+    CONSTRAINT fk_notification_table_user_table
+        FOREIGN KEY (user_id)
+            REFERENCES user_table (user_id),
+    CONSTRAINT fk_notification_table_cv_table
+        FOREIGN KEY (cv_id)
+            REFERENCES cv (cv_id),
+    CONSTRAINT fk_notification_table_job_offer_table
+        FOREIGN KEY (job_offer_id)
+            REFERENCES job_offer_table (job_offer_id)
+);
+
+
 
 
 

@@ -237,24 +237,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.BusinessCardDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
-import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
-import pl.zajavka.api.dto.mapper.CvMapperDTO;
-import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
-import pl.zajavka.api.dto.mapper.UserMapperDTO;
-import pl.zajavka.business.BusinessCardService;
-import pl.zajavka.business.CvService;
-import pl.zajavka.business.JobOfferService;
-import pl.zajavka.business.UserService;
-import pl.zajavka.domain.BusinessCard;
-import pl.zajavka.domain.CV;
-import pl.zajavka.domain.JobOffer;
-import pl.zajavka.domain.User;
+import pl.zajavka.api.dto.mapper.*;
+import pl.zajavka.business.*;
+import pl.zajavka.domain.*;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -263,6 +256,7 @@ public class CompanyPortalController {
 
     public static final String COMPANY_PORTAL = "{user}/company_portal";
     public static final String CREATE_JOB_OFFER = "/create_job_offer";
+
     private HttpSession httpSession;
     private JobOfferService jobOfferService;
     private UserService userService;
@@ -272,7 +266,8 @@ public class CompanyPortalController {
     private CvMapperDTO cvMapperDTO;
     private BusinessCardService businessCardService;
     private BusinessCardMapperDTO businessCardMapperDTO;
-
+    private NotificationService notificationService;
+    private NotificationMapperDTO notificationMapperDTO;
 
     @GetMapping(COMPANY_PORTAL)
     public String getCompanyPortalPage(HttpSession session, Model model) {
@@ -286,6 +281,12 @@ public class CompanyPortalController {
 
             List<CV> cvList = cvService.findAll();
             model.addAttribute("cvList", cvList);
+
+
+            List<NotificationDTO> notifications = notificationService.findByUser(user).stream()
+                    .map(notificationMapperDTO::map)  // Mapuj pojedynczą notyfikację na DTO
+                    .collect(Collectors.toList()); //Colector to taki zbieracz tego co przemapowane
+            model.addAttribute("notifications", notifications);
 
             return "company_portal";
         } else {

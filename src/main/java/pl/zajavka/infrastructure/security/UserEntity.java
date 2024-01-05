@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 
 import java.util.Set;
 
@@ -50,8 +52,10 @@ public class  UserEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<JobOfferEntity> jobOffers;
 
-//    @ManyToMany(mappedBy = "users")
-//    private Set<NotificationEntity> notifications;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<NotificationEntity> notifications;
+
+
 }
 
 

@@ -10,6 +10,8 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -53,5 +55,8 @@ public class JobOfferEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "jobOffers")
+//    private List<CvEntity> cvs;
 
 }
