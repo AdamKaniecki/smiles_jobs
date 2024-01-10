@@ -82,19 +82,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
+import pl.zajavka.api.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.JobOfferService;
+import pl.zajavka.business.NotificationService;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.JobOffer;
+import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Controller
@@ -109,6 +116,8 @@ public class CandidatePortalController {
     private UserMapperDTO userMapperDTO;
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
+    private NotificationService notificationService;
+    private NotificationMapperDTO notificationMapperDTO;
 //    private
 
 
@@ -129,6 +138,12 @@ public class CandidatePortalController {
                     .map(jobOfferMapperDTO::map)
                     .toList();
             model.addAttribute("jobOffersDTOs", jobOfferDTOs);
+
+            List<Notification> userNotifications = notificationService.findByUser(user);
+            List<NotificationDTO> notificationDTOs = userNotifications.stream()
+                    .map(notificationMapperDTO::map)
+                    .collect(Collectors.toList());
+            model.addAttribute("notifications", notificationDTOs);
 
             return "candidate_portal";
         } else {
@@ -156,5 +171,17 @@ public class CandidatePortalController {
         List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(category,keyword);
         model.addAttribute("searchResults", searchResults);
         return "search_job_offers_results";
+    }
+    @PostMapping("/acceptNotification")
+    public String acceptNotification(@RequestParam("notificationId") Integer notificationId, JobOffer jobOffer) {
+        Notification notification = notificationService.findById(notificationId);
+
+        if (notification != null) {
+            notification.setStatus(Status.WAITING_FOR_INTERVIEW);
+
+            notificationService.save(notification);
+        }
+
+        return "redirect:/"; // Przekierowanie na główną stronę
     }
 }

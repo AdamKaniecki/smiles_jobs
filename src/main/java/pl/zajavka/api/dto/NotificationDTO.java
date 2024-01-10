@@ -4,6 +4,11 @@ import lombok.*;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.Status;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @With
 @Data
@@ -12,8 +17,13 @@ import pl.zajavka.domain.User;
 @AllArgsConstructor
 public class NotificationDTO {
     private Integer id;
-    private String message;
+    private String candidateMessage;
+    private String companyMessage;
+    private User sender;
+    private User receiver;
+    private Status status;
+    private LocalDateTime dateTime;
     private CV cv;
     private JobOffer jobOffer;
-    private User user;
+
 }

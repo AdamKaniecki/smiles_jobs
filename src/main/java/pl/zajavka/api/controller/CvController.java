@@ -224,7 +224,6 @@ public class CvController {
         }
     }
 
-
     @GetMapping("/redirectToShowMyCV")
     public String redirectToShowMyCV(HttpSession httpSession) {
         String username = (String) httpSession.getAttribute("username");
@@ -243,20 +242,32 @@ public class CvController {
         return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
-
     @GetMapping("/showCV")
-    public String showMyCV(@RequestParam Integer id, Model model) {
-        Optional<CV> myCV = cvService.findById(id);
-        if (myCV.isPresent()) {
-            CV cv = myCV.get();
-            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
-            model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
-
-            return "show_my_cv";
-        } else {
-            return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
+    public String showMyCV(@RequestParam Integer id, Model model, HttpSession httpSession) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                Optional<CV> myCV = cvService.findById(id);
+                if (myCV.isPresent()) {
+                    CV cv = myCV.get();
+                    // Sprawdź, czy CV należy do zalogowanego użytkownika
+                    if (cv.getUser().equals(loggedInUser)) {
+                        model.addAttribute("cvDTO", cvMapperDTO.map(cv));
+                        model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
+                        return "show_my_cv";
+                    } else {
+                        // CV nie należy do zalogowanego użytkownika
+                        return "cv_not_found";  // Możesz utworzyć osobny widok dla tego przypadku
+                    }
+                } else {
+                    return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
+                }
+            }
         }
+        return "redirect:/";  // Przekieruj na stronę główną w przypadku problemu
     }
+
 
 
     @GetMapping("/redirectToUpdateMyCV")

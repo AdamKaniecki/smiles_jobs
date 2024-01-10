@@ -7,6 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.zajavka.infrastructure.security.UserEntity;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Entity
 @Data
 @Builder
@@ -20,10 +25,18 @@ public class NotificationEntity {
     @Column(name = "notification_id")
     private Integer id;
 
-    @Column(name = "message")
-    private String message;
+    @Column(name = "candidate_message")
+    private String candidateMessage;
 
+    @Column(name = "company_message")
+    private String companyMessage;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status status;
+
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
 
     @ManyToOne
     @JoinColumn(name = "cv_id")
@@ -33,8 +46,12 @@ public class NotificationEntity {
     @JoinColumn(name = "job_offer_id")
     private JobOfferEntity jobOffer;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "sender_user_id")
+    private UserEntity senderUser;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_user_id")
+    private UserEntity receiverUser;
 }
 

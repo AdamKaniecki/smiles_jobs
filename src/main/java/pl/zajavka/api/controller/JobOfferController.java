@@ -3,12 +3,14 @@ package pl.zajavka.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.CvService;
@@ -23,6 +25,7 @@ import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
@@ -51,7 +54,6 @@ public class JobOfferController {
             return "login";  // Przekieruj na stronę logowania
         }
     }
-
 
 
     @PostMapping("/createJobOffer")
@@ -179,7 +181,7 @@ public class JobOfferController {
             jobOffer.setBenefits(updateJobOfferDTO.getBenefits());
             // Aktualizuj pola CV na podstawie danych z formularza
 
-           jobOfferService.updateJobOffer(jobOffer);
+            jobOfferService.updateJobOffer(jobOffer);
 
             model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
             return "job_offer_created_successfully";
@@ -188,6 +190,7 @@ public class JobOfferController {
         }
 
     }
+
     @DeleteMapping("/deleteJobOffer/{jobOfferId}")
     public String deleteJobOffer(@PathVariable Integer jobOfferId, Model model, HttpSession httpSession) {
         String username = (String) httpSession.getAttribute("username");
@@ -205,57 +208,7 @@ public class JobOfferController {
         return "redirect:/showMyJobOffers";
     }
 
-//    @GetMapping("/showReceivedCvs/{jobOfferId}")
-//    public String showReceivedCvs(@PathVariable Integer jobOfferId, Model model) {
-//        // Pobierz listę przesłanych CVs dla danej oferty pracy
-//        List<CV> receivedCvs = cvService.getReceivedCvs(jobOfferId);
-//        // Przekaż listę do widoku
-//        model.addAttribute("receivedCvs", receivedCvs);
-//
-//        return "showReceivedCvs"; // Zastąp "showReceivedCvs" nazwą odpowiedniego widoku
-//    }
 
-//    @PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("cvFile") MultipartFile cvFile,
-//                         @RequestParam("jobOfferId") Integer jobOfferId,
-//                         Model model, HttpSession httpSession) {
-//        String username = (String) httpSession.getAttribute("username");
-//
-//        if (username != null) {
-//            User loggedInUser = userService.findByUserName(username);
-//
-//            if (loggedInUser != null) {
-//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-//
-//                if (optionalJobOffer.isPresent()) {
-//                    JobOffer jobOffer = optionalJobOffer.get();
-//
-////                    // Pobierz dane z pliku CV i zapisz je do bazy danych (tutaj załóżmy, że masz odpowiedni serwis i repozytorium do obsługi CV)
-////                    byte[] cvData = cvFile.getBytes();
-////                    CV cv = cvService.saveCvData(cvData);
-//
-//                    // Utwórz obiekt Notification
-//                    Notification notification = notificationService.createNotification();
-//                    notification.setMessage("New CV sent for job offer: " + jobOffer.getPosition());
-//                    notification.setCv(loggedInUser.getCv());
-//                    notification.setJobOffer(jobOffer);
-//
-//                    // Dodaj powiadomienie do listy użytkownika
-//                    loggedInUser.getNotifications().add(notification);
-//
-//                    // Zapisz zmiany w użytkowniku
-//                    userService.save(loggedInUser);
-//
-//                    // Utwórz obiekt NotificationEntity i zapisz go w bazie danych
-////                    NotificationEntity newNotificationEntity = notificationService.createNotification(notification);
-//
-//                    return "cv_submission_success";
-//                }
-//            }
-//        }
-//
-//        return "redirect:/"; // Przekieruj w przypadku problemu
-//    }
 
     @PostMapping("/sendCV")
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
@@ -279,24 +232,11 @@ public class JobOfferController {
                         // Utwórz obiekt Notification
                         System.out.println("czy ty tu wchodzisz?6");
                         User adresat = jobOffer.getUser();
-                        Notification notification = notificationService.createNotification(jobOffer, cv, adresat);
-
-                        // Sprawdź, czy lista notyfikacji użytkownika jest null
-//                        Set<Notification> notifications = jobOffer.getUser().getNotifications();
-//
-//                        if (notifications == null) {
-//                            // Jeśli null, utwórz nową listę
-//                            notifications = new HashSet<>();
-//                            // Ustaw listę notyfikacji w obiekcie użytkownika
-//                            User adresat  = jobOffer.getUser();
-//                            adresat.setNotifications(notifications);
-//                        }
-//
-////                        // Dodaj powiadomienie do listy użytkownika
-//                      User adresat = jobOffer.getUser().getNotifications().add(notification);
+                        Notification notification = notificationService.createNotification(jobOffer, cv,loggedInUser, adresat);
 
                         // Zapisz zmiany w użytkowniku
                         userService.save(loggedInUser);
+                        userService.save(adresat);
 
                         return "candidate_created_successfully";
                     } else {
@@ -312,10 +252,52 @@ public class JobOfferController {
 
 
 
+    @PostMapping("/arrangeInterview")
+    public String arrangeInterview(@RequestParam("jobOfferId") Integer jobOfferId,
+                                   @RequestParam("cvId") Integer cvId,
+                                   @RequestParam("notificationId") Integer notificationId,
+                                   @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+                                   HttpSession httpSession
+                                  ) {
+
+        String username = (String) httpSession.getAttribute("username");
+
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Optional<CV> myCV = cvService.findById(cvId);
+                    if (myCV.isPresent()) {
+                        CV cv = myCV.get();
+                        // Utwórz obiekt Notification
+                        User adresat = cv.getUser();
+                        String message2 = "robisz czy nie?";
+                        Notification notification = notificationService.findById(notificationId);
+
+                        // Ustaw propozycję daty i wiadomość w NotificationEntity
+                        notification.setDateTime(proposedDateTime);
+                        notification.setCompanyMessage("proponujemy spotkanie");
+
+//                        notification.setMessage(message2);
+                        userService.save(cv.getUser());
+
+                        // Zapisz zmodyfikowaną NotificationEntity
+                        notificationService.save(notification);
 
 
-
+                        return "job_offer_created_successfully";
+                    }
+                }
+            }
+        }
+        return "home";
+    }
 }
+
 
 
 

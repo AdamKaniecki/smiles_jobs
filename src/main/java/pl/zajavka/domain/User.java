@@ -23,7 +23,8 @@ public class User  {
     private Set<Role> roles;
     private Set<JobOffer> jobOffers;
     private CV cv;
-    private Set<Notification> notifications;
+    private Set<Notification> notificationsSend;
+    private Set<Notification> notificationsReceive;
 
 
 }

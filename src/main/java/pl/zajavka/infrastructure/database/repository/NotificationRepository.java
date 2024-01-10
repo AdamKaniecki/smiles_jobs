@@ -1,6 +1,7 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
@@ -13,5 +14,8 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<NotificationEntity,Integer> {
 
 
-    List<NotificationEntity> findByUser(UserEntity userEntity);
+    List<NotificationEntity> findBySenderUser(UserEntity user);
+    List<NotificationEntity> findByReceiverUser(UserEntity user);
+    @Query("SELECT n FROM NotificationEntity n WHERE n.senderUser = :user OR n.receiverUser = :user")
+    List<NotificationEntity> findByUser(UserEntity user);
 }

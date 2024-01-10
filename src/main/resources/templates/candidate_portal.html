@@ -96,6 +96,9 @@
     <tr>
         <th>ID</th>
         <th>Message</th>
+        <th>Dotyczy oferty</th>
+        <th>Proponowany termin
+            rozmowy</th>
 <!--        <th>Created At</th>-->
         <!-- Dodaj inne kolumny w zależności od struktury NotificationDTO -->
     </tr>
@@ -104,9 +107,28 @@
     <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
     <tr th:each="notificationDTO : ${notifications}">
         <td th:text="${notificationDTO.id}"></td>
-        <td th:text="${notificationDTO.message}"></td>
+        <td th:text="${notificationDTO.companyMessage}"></td>
+        <td>
+            <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">
+                View JobOffer
+            </a>
+        <td>
+            <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
+            <div class="mt-2">
+                <form th:action="@{/acceptNotification}" method="post" class="d-inline">
+                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                    <button type="submit" class="btn btn-success">ACCEPT</button>
+                </form>
+                <form th:action="@{/changeNotification}" method="post" class="d-inline">
+                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                    <button type="submit" class="btn btn-warning">CHANGE</button>
+                </form>
+            </div>
+        </td>
 <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
+
         <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
+
     </tr>
     </tbody>
 </table>

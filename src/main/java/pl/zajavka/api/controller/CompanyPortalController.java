@@ -235,15 +235,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.zajavka.api.dto.BusinessCardDTO;
-import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.*;
 import pl.zajavka.business.*;
 import pl.zajavka.domain.*;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -329,5 +325,22 @@ public class CompanyPortalController {
         }
     }
 
+//    @PostMapping("/acceptCV")
+//    public String acceptJobOffer(@RequestParam("jobOfferId") Integer jobOfferId, @RequestParam("cvId") Integer cvId) {
+//        // Pobierz ofertę pracy i CV na podstawie przekazanych identyfikatorów
+//        Optional<JobOffer> jobOffer = jobOfferService.findById(jobOfferId);
+//        Optional<CV> cv = cvService.findById(cvId);
+//
+//        // Implementuj logikę akceptacji oferty pracy, np. zaktualizuj status oferty pracy
+//        // i powiąż ją z właścicielem CV
+//        jobOffer.setStatus(JobOfferStatus.ACCEPTED);
+//        jobOffer.setCv(cv);
+//
+//        // Zapisz zmiany w bazie danych
+//        jobOfferService.save(jobOffer);
+//
+//        // Przekieruj użytkownika na stronę z notyfikacjami lub inną stronę
+//        return "redirect:/notifications";
+//    }
 
 }

@@ -116,8 +116,11 @@
         <thead class="table-dark">
         <tr>
             <th>ID</th>
+            <th>Dotyczy Oferty</th>
             <th>Message</th>
             <th>CV</th>
+            <th>ARRANGE A JOB INTERVIEW</th>
+            <th>STATUS</th>
             <!--        <th>Created At</th>-->
             <!-- Dodaj inne kolumny w zależności od struktury NotificationDTO -->
         </tr>
@@ -126,8 +129,32 @@
         <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
         <tr th:each="notificationDTO : ${notifications}">
             <td th:text="${notificationDTO.id}"></td>
-            <td th:text="${notificationDTO.message}"></td>
-            <td th:text="${notificationDTO.cv}"></td>
+            <td th:text="${notificationDTO.jobOffer.id}"></td>
+            <td th:text="${notificationDTO.candidateMessage}"></td>
+
+            <!--            <td th:text="${notificationDTO.messages[]}"></td>-->
+            <td>
+                <!-- Dodaj link do widoku szczegółów CV -->
+                <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">View Details</a>
+            </td>
+            <td>
+                <!-- Dodaj formularz do akceptacji oferty pracy -->
+                <form th:action="@{/arrangeInterview}" method="post">
+                    <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+                    <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+
+                    <div class="form-row">
+                        <div class="col-md-8">
+                            <label for="proposedDateTime">Proposed Date and Time:</label>
+                            <input type="datetime-local" id="proposedDateTime" name="proposedDateTime" th:datetime="${#dates.format(proposedDateTime, 'yyyy-MM-ddTHH:mm')}" class="form-control">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">ARRANGE</button>
+                </form>
+            </td>
+            <td th:text="${notificationDTO.status}"></td>
             <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
             <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
         </tr>

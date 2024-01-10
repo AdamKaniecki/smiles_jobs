@@ -20,5 +20,6 @@ public class UserDTO {
     private String password;
     private Boolean active;
     private Set<Role> roles;
-    private List<Notification> notifications;
+    private Set<Notification> notificationsSend;
+    private Set<Notification> notificationsReceive;
 }
