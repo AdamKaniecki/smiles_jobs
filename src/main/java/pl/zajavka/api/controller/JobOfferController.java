@@ -5,12 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
-import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.CvService;
@@ -21,8 +19,6 @@ import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 
 import java.time.LocalDateTime;
@@ -209,7 +205,6 @@ public class JobOfferController {
     }
 
 
-
     @PostMapping("/sendCV")
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
         System.out.println("czy ty tu wchodzisz?");
@@ -232,7 +227,7 @@ public class JobOfferController {
                         // Utwórz obiekt Notification
                         System.out.println("czy ty tu wchodzisz?6");
                         User adresat = jobOffer.getUser();
-                        Notification notification = notificationService.createNotification(jobOffer, cv,loggedInUser, adresat);
+                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
 
                         // Zapisz zmiany w użytkowniku
                         userService.save(loggedInUser);
@@ -252,19 +247,18 @@ public class JobOfferController {
 
 
 
+
     @PostMapping("/arrangeInterview")
-    public String arrangeInterview(@RequestParam("jobOfferId") Integer jobOfferId,
-                                   @RequestParam("cvId") Integer cvId,
-                                   @RequestParam("notificationId") Integer notificationId,
-                                   @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
-                                   HttpSession httpSession
-                                  ) {
-
+    public String arrangeInterview(
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            @RequestParam("cvId") Integer cvId,
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+            HttpSession httpSession
+    ) {
         String username = (String) httpSession.getAttribute("username");
-
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
-
             if (loggedInUser != null) {
                 Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
 
@@ -273,21 +267,11 @@ public class JobOfferController {
                     Optional<CV> myCV = cvService.findById(cvId);
                     if (myCV.isPresent()) {
                         CV cv = myCV.get();
-                        // Utwórz obiekt Notification
-                        User adresat = cv.getUser();
-                        String message2 = "robisz czy nie?";
+                        // Pobierz encję Notification
                         Notification notification = notificationService.findById(notificationId);
 
-                        // Ustaw propozycję daty i wiadomość w NotificationEntity
-                        notification.setDateTime(proposedDateTime);
-                        notification.setCompanyMessage("proponujemy spotkanie");
-
-//                        notification.setMessage(message2);
-                        userService.save(cv.getUser());
-
-                        // Zapisz zmodyfikowaną NotificationEntity
-                        notificationService.save(notification);
-
+                        // Zaktualizuj encję Notification i zapisz zmiany
+                        notificationService.updateNotificationAndUsers(notification, loggedInUser, cv.getUser(), proposedDateTime);
 
                         return "job_offer_created_successfully";
                     }
@@ -296,7 +280,10 @@ public class JobOfferController {
         }
         return "home";
     }
+
 }
+
+
 
 
 

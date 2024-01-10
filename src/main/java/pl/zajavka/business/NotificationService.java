@@ -17,6 +17,7 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,8 @@ public class NotificationService {
 //                    .build();
 
         NotificationEntity notificationEntity= NotificationEntity.builder()
-                .candidateMessage("narazie nic")
+                .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
+                .companyMessage("chcę u was pracować")
                 .jobOffer(jobOfferMapper.map(jobOffer))
                 .cv(cvMapper.map(cv))
                 .senderUser(userMapper.map(loggedInUser))
@@ -82,8 +84,25 @@ public class NotificationService {
         return notificationMapper.map(notificationEntity);
 
     }
+    @Transactional
+    public void updateNotificationAndUsers(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
+        NotificationEntity notificationEntity = notificationMapper.map(notification);
+        log.info("Updating Notification: {}", notificationEntity);
 
+        // Ustaw propozycję daty i wiadomość w NotificationEntity
+        notificationEntity.setDateTime(proposedDateTime);
+        notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
+        notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(adresat));
 
+        // Zapisz zmodyfikowaną NotificationEntity
+        notificationRepository.save(notificationEntity);
+
+        // Dodaj zapis do encji User w razie potrzeby
+        userService.save(loggedInUser);
+        userService.save(adresat);
+    }
 //    public Optional<Notification> findById(Integer jobOfferId) {
 //    }
 }

@@ -107,7 +107,7 @@
     <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
     <tr th:each="notificationDTO : ${notifications}">
         <td th:text="${notificationDTO.id}"></td>
-        <td th:text="${notificationDTO.companyMessage}"></td>
+        <td th:text="${notificationDTO.candidateMessage}"></td>
         <td>
             <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">
                 View JobOffer
