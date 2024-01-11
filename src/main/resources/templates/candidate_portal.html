@@ -13,7 +13,7 @@
     <h1 class="mt-4">Welcome to Smiles Jobs</h1>
 
     <h2 class="mt-4">Job Offers</h2>
-    <table class="table"  id="sortable-table-job-offers">
+    <table class="table" id="sortable-table-job-offers">
         <thead class="table-dark">
         <tr>
             <th>ID</th>
@@ -39,14 +39,15 @@
             <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
             <td th:text="${jobOfferDTO.benefits}"></td>
             <td>
-                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
+                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View
+                    Details</a>
             </td>
-<!--            <td>-->
-<!--                <form th:action="@{/sendCv}" method="post">-->
-<!--                    <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">-->
-<!--                    <button type="submit" class="btn btn-primary">Send CV</button>-->
-<!--                </form>-->
-<!--            </td>-->
+            <!--            <td>-->
+            <!--                <form th:action="@{/sendCv}" method="post">-->
+            <!--                    <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">-->
+            <!--                    <button type="submit" class="btn btn-primary">Send CV</button>-->
+            <!--                </form>-->
+            <!--            </td>-->
         </tr>
         </tbody>
     </table>
@@ -73,7 +74,6 @@
     </form>
 
 
-
     <h2 class="mt-4">Stwórz swoje CV</h2>
     <div class="d-flex">
         <div class="col-md-4">
@@ -98,8 +98,10 @@
         <th>Message</th>
         <th>Dotyczy oferty</th>
         <th>Proponowany termin
-            rozmowy</th>
-<!--        <th>Created At</th>-->
+            rozmowy
+        </th>
+        <th>STATUS</th>
+        <!--        <th>Created At</th>-->
         <!-- Dodaj inne kolumny w zależności od struktury NotificationDTO -->
     </tr>
     </thead>
@@ -108,6 +110,7 @@
     <tr th:each="notificationDTO : ${notifications}">
         <td th:text="${notificationDTO.id}"></td>
         <td th:text="${notificationDTO.candidateMessage}"></td>
+
         <td>
             <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">
                 View JobOffer
@@ -115,20 +118,27 @@
         <td>
             <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
             <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
-                <form th:action="@{/acceptNotification}" method="post" class="d-inline">
-                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
-                    <button type="submit" class="btn btn-success">ACCEPT</button>
+                <form th:action="@{/acceptMeetingDate}" method="post" class="d-inline">
+                    <div class="mt-2" th:if="${notificationDTO.status == 'WAITING_FOR_INTERVIEW'}">
+                        <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+                        <button type="submit" class="btn btn-success">ACCEPT</button>
+                    </div>
                 </form>
-                <form th:action="@{/meetingDate}" method="post" class="d-inline">
-
-                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
-                    <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
-                    <button type="submit" class="btn btn-warning">CHANGE</button>
+                <form th:action="@{/changeMeetingDate}" method="post" class="d-inline">
+                    <div class="mt-2" th:if="${notificationDTO.status == 'WAITING_FOR_INTERVIEW'}">
+                        <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+                        <button type="submit" class="btn btn-warning">CHANGE</button>
+                    </div>
                 </form>
             </div>
         </td>
+
+
         </td>
-<!--        <td th:text="${notificationDTO.createdAt}"></td>-->
+        <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>
+        <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
 
         <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
 

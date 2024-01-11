@@ -101,6 +101,7 @@ import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -153,7 +154,6 @@ public class CandidatePortalController {
     }
 
 
-
     @GetMapping("/searchJobOffers")
     public String searchJobOffers(
             @RequestParam("keyword") String keyword,
@@ -168,20 +168,34 @@ public class CandidatePortalController {
 
     @GetMapping("/search_job_offers_results")
     public String showSearchResults(@RequestParam String keyword, String category, Model model) {
-        List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(category,keyword);
+        List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(category, keyword);
         model.addAttribute("searchResults", searchResults);
         return "search_job_offers_results";
     }
-    @PostMapping("/acceptNotification")
-    public String acceptNotification(@RequestParam("notificationId") Integer notificationId, JobOffer jobOffer) {
-        Notification notification = notificationService.findById(notificationId);
 
-        if (notification != null) {
-            notification.setStatus(Status.WAITING_FOR_INTERVIEW);
-
-            notificationService.save(notification);
+    @PostMapping("/acceptMeetingDate")
+    public String acceptNotification(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            HttpSession httpSession
+    ) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            System.out.println("czy ty tu wchodzisz?2");
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+                if (optionalJobOffer.isPresent()) {
+                    System.out.println("czy ty tu wchodzisz?3");
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Notification notification = notificationService.findById(notificationId);
+                    User adresat = jobOffer.getUser();
+                    notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
+                    return "cv_created_successfully";
+                }
+            }
         }
-
-        return "redirect:/"; // Przekierowanie na główną stronę
+        return "home";
     }
+
 }

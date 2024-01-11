@@ -156,7 +156,8 @@
                     <button type="submit" class="btn btn-success">ARRANGE</button>
                 </form>
             </td>
-            <td th:text="${notificationDTO.status}"></td>
+            <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>
+
             <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
             <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
         </tr>

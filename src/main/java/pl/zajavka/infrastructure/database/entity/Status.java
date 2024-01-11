@@ -1,11 +1,20 @@
 package pl.zajavka.infrastructure.database.entity;
 
 public enum Status {
+    UNDER_REVIEW("Under Review"),
+    WAITING_FOR_INTERVIEW("Waiting for Interview"),
+    MEETING_SCHEDULING("Meeting scheduling"),
+    PENDING_DECISION("Pending Decision"),
+    REJECT("Reject"),
+    HIRED("Hired");
 
-    WAITING_FOR_INTERVIEW,
-    ACCEPT,
-    CHOOSE_OTHER,
-    PENDING; // Dodajemy stan oczekiwania (opcjonalnie)
+    private final String displayName;
 
-    // Tutaj możesz dodać dodatkowe metody, jeśli są potrzebne
+    Status(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

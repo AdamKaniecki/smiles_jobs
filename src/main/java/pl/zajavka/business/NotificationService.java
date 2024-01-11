@@ -9,6 +9,7 @@ import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
+import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
@@ -22,6 +23,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
+import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
+import static pl.zajavka.infrastructure.database.entity.Status.UNDER_REVIEW;
 
 @Slf4j
 @Service
@@ -46,14 +50,8 @@ public class NotificationService {
 
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
 
-//            Notification newNotification = Notification.builder()
-//                    .message("narazie nic")
-//                    .jobOffer(jobOffer)
-//                    .cv(cv)
-//                    .user(loggedInUser)
-//                    .build();
-
         NotificationEntity notificationEntity= NotificationEntity.builder()
+                .status(Status.UNDER_REVIEW)
                 .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
                 .companyMessage("chcę u was pracować")
                 .jobOffer(jobOfferMapper.map(jobOffer))
@@ -85,11 +83,12 @@ public class NotificationService {
 
     }
     @Transactional
-    public void updateNotificationAndUsers(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
+    public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
 //        log.info("Updating Notification: {}", notificationEntity);
 
         // Ustaw propozycję daty i wiadomość w NotificationEntity
+        notificationEntity.setStatus(Status.MEETING_SCHEDULING);
         notificationEntity.setDateTime(proposedDateTime);
         notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
         notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
@@ -116,7 +115,19 @@ public class NotificationService {
         userService.save(loggedInUser);
         userService.save(adresat);
     }
+
+    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat){
+        NotificationEntity notificationEntity = notificationMapper.map(notification);
+        notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
+        notificationEntity.setCompanyMessage("zaakceptowano termin");
+        notificationEntity.setCandidateMessage("wysłano akceptację terminu");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(adresat));
+        notificationRepository.save(notificationEntity);
+        userService.save(loggedInUser);
+        userService.save(adresat);
     }
+}
 
 
 //    public Optional<Notification> findById(Integer jobOfferId) {

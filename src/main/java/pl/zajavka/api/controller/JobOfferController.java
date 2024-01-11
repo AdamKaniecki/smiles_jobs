@@ -233,7 +233,7 @@ public class JobOfferController {
                         userService.save(loggedInUser);
                         userService.save(adresat);
 
-                        return "candidate_created_successfully";
+                        return "cv_created_successfully";
                     } else {
                         // Obsłuż sytuację, gdy użytkownik nie ma przypisanego CV
                         return "cv_not_found"; // Przekieruj na stronę główną lub obsłuż inaczej
@@ -267,11 +267,10 @@ public class JobOfferController {
                     Optional<CV> myCV = cvService.findById(cvId);
                     if (myCV.isPresent()) {
                         CV cv = myCV.get();
-                        // Pobierz encję Notification
+
                         Notification notification = notificationService.findById(notificationId);
 
-                        // Zaktualizuj encję Notification i zapisz zmiany
-                        notificationService.updateNotificationAndUsers(notification, loggedInUser, cv.getUser(), proposedDateTime);
+                        notificationService.arrangeInterview(notification, loggedInUser, cv.getUser(), proposedDateTime);
 
                         return "job_offer_created_successfully";
                     }
@@ -286,7 +285,7 @@ public class JobOfferController {
 //        notificationService.changeCompanyMessage(notificationId, "Proszę o wybranie innego terminu");
 //        return "redirect:/candidate_portal"; // Dodaj odpowiednią ścieżkę przekierowania
 //    }
-@PostMapping("/meetingDate")
+@PostMapping("/changeMeetingDate")
 public String changeTermin(
         @RequestParam("notificationId") Integer notificationId,
         @RequestParam("jobOfferId") Integer jobOfferId,
@@ -306,7 +305,7 @@ public String changeTermin(
                 User adresat = jobOffer.getUser();
                 // Tutaj możesz dodać kod do zmiany pola companyMessage
                 notificationService.changeMeetingDate(notification, loggedInUser, adresat);
-                return "candidate_created_successfully";
+                return "cv_created_successfully";
             }
         }
     }
