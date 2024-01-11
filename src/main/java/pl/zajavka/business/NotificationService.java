@@ -87,7 +87,7 @@ public class NotificationService {
     @Transactional
     public void updateNotificationAndUsers(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
-        log.info("Updating Notification: {}", notificationEntity);
+//        log.info("Updating Notification: {}", notificationEntity);
 
         // Ustaw propozycję daty i wiadomość w NotificationEntity
         notificationEntity.setDateTime(proposedDateTime);
@@ -103,8 +103,23 @@ public class NotificationService {
         userService.save(loggedInUser);
         userService.save(adresat);
     }
+
+    @Transactional
+    public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
+        NotificationEntity notificationEntity = notificationMapper.map(notification);
+        notificationEntity.setDateTime(null);
+        notificationEntity.setCompanyMessage("proszę o zmianę terminu");
+        notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(adresat));
+        notificationRepository.save(notificationEntity);
+        userService.save(loggedInUser);
+        userService.save(adresat);
+    }
+    }
+
+
 //    public Optional<Notification> findById(Integer jobOfferId) {
 //    }
-}
 
 

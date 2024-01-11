@@ -281,6 +281,40 @@ public class JobOfferController {
         return "home";
     }
 
+//    @PostMapping("/changeDateTime")
+//    public String changeDateTime(@RequestParam Integer notificationId) {
+//        notificationService.changeCompanyMessage(notificationId, "Proszę o wybranie innego terminu");
+//        return "redirect:/candidate_portal"; // Dodaj odpowiednią ścieżkę przekierowania
+//    }
+@PostMapping("/meetingDate")
+public String changeTermin(
+        @RequestParam("notificationId") Integer notificationId,
+        @RequestParam("jobOfferId") Integer jobOfferId,
+//        @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+        HttpSession httpSession
+) {
+    String username = (String) httpSession.getAttribute("username");
+    if (username != null) {
+        User loggedInUser = userService.findByUserName(username);
+        System.out.println("czy ty tu wchodzisz?2");
+        if (loggedInUser != null) {
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+            if (optionalJobOffer.isPresent()) {
+                System.out.println("czy ty tu wchodzisz?3");
+                JobOffer jobOffer = optionalJobOffer.get();
+                Notification notification = notificationService.findById(notificationId);
+                User adresat = jobOffer.getUser();
+                // Tutaj możesz dodać kod do zmiany pola companyMessage
+                notificationService.changeMeetingDate(notification, loggedInUser, adresat);
+                return "candidate_created_successfully";
+            }
+        }
+    }
+    return "home";
+}
+
+
+
 }
 
 

@@ -114,16 +114,19 @@
             </a>
         <td>
             <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
-            <div class="mt-2">
+            <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
                 <form th:action="@{/acceptNotification}" method="post" class="d-inline">
                     <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                     <button type="submit" class="btn btn-success">ACCEPT</button>
                 </form>
-                <form th:action="@{/changeNotification}" method="post" class="d-inline">
+                <form th:action="@{/meetingDate}" method="post" class="d-inline">
+
                     <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                    <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
                     <button type="submit" class="btn btn-warning">CHANGE</button>
                 </form>
             </div>
+        </td>
         </td>
 <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
 
