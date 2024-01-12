@@ -91,9 +91,11 @@ import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
+import pl.zajavka.business.CvService;
 import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.NotificationService;
 import pl.zajavka.business.UserService;
+import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
@@ -119,13 +121,12 @@ public class CandidatePortalController {
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
     private NotificationMapperDTO notificationMapperDTO;
+    private CvService cvService;
 //    private
 
 
     @GetMapping(CANDIDATE_PORTAL)
     public String getCandidatePortalPage(HttpSession session, Model model) {
-//        log.info("No co tam:",session, model);
-//        User user = userMapperDTO.map(userDTO);
         User user = (User) session.getAttribute("user");
         if (user != null) {
             // Użytkownik jest zalogowany
@@ -196,6 +197,71 @@ public class CandidatePortalController {
             }
         }
         return "home";
+    }
+
+    @PostMapping("/changeMeetingDate")
+    public String changeTermin(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("jobOfferId") Integer jobOfferId,
+//        @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+            HttpSession httpSession
+    ) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            System.out.println("czy ty tu wchodzisz?2");
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+                if (optionalJobOffer.isPresent()) {
+                    System.out.println("czy ty tu wchodzisz?3");
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Notification notification = notificationService.findById(notificationId);
+                    User adresat = jobOffer.getUser();
+                    // Tutaj możesz dodać kod do zmiany pola companyMessage
+                    notificationService.changeMeetingDate(notification, loggedInUser, adresat);
+                    return "cv_created_successfully";
+                }
+            }
+        }
+        return "home";
+    }
+
+    @PostMapping("/sendCV")
+    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
+        System.out.println("czy ty tu wchodzisz?");
+        String username = (String) httpSession.getAttribute("username");
+
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            System.out.println("czy ty tu wchodzisz?2");
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+                if (optionalJobOffer.isPresent()) {
+                    System.out.println("czy ty tu wchodzisz?3");
+                    JobOffer jobOffer = optionalJobOffer.get();
+
+                    System.out.println("czy ty tu wchodzisz?4");
+                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
+                    if (myCV.isPresent()) {
+                        System.out.println("czy ty tu wchodzisz?5");
+                        CV cv = myCV.get();
+                        // Utwórz obiekt Notification
+                        System.out.println("czy ty tu wchodzisz?6");
+                        User adresat = jobOffer.getUser();
+                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+
+                        userService.save(loggedInUser);
+                        userService.save(adresat);
+                        return "cv_created_successfully";
+                    } else {
+
+                        return "cv_not_found";
+                    }
+                }
+            }
+        }
+
+        return "redirect:/"; // Przekieruj w przypadku problemu
     }
 
 }

@@ -19,13 +19,10 @@ import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
-import static pl.zajavka.infrastructure.database.entity.Status.UNDER_REVIEW;
+
 
 @Slf4j
 @Service
@@ -60,13 +57,9 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-        // Ustaw null, aby uniknąć rekurencji
-//        loggedInUser.setNotifications(null);
-        notificationRepository.save(notificationEntity);
-//            NotificationEntity savedNotificationEntity = notificationMapper.map(newNotification);
 
-        // Przemapuj NotificationEntity na Notification
-//            Notification notification = notificationMapper.map(savedNotificationEntity);
+        notificationRepository.save(notificationEntity);
+
 
         return notificationMapper.map(notificationEntity);
     }
@@ -86,9 +79,7 @@ public class NotificationService {
     @Transactional
     public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
-//        log.info("Updating Notification: {}", notificationEntity);
 
-        // Ustaw propozycję daty i wiadomość w NotificationEntity
         notificationEntity.setStatus(Status.MEETING_SCHEDULING);
         notificationEntity.setDateTime(proposedDateTime);
         notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
@@ -96,10 +87,8 @@ public class NotificationService {
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
 
-        // Zapisz zmodyfikowaną NotificationEntity
         notificationRepository.save(notificationEntity);
 
-        // Dodaj zapis do encji User w razie potrzeby
         userService.save(loggedInUser);
         userService.save(adresat);
     }
@@ -150,23 +139,17 @@ public class NotificationService {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
         notificationEntity.setStatus(HIRED);
         notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
-        notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony");
+        notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
         notificationRepository.save(notificationEntity);
 
-        User user = userService.findById(adresat.getId());
-        UserEntity userEntity = userMapper.map(user);
-
-        // Zapisz zmiany w bazie danych dla notyfikacji i użytkowników
+        UserEntity userEntity = userMapper.map(adresat);
+        userEntity.setActive(false);
         userService.save(loggedInUser);
         userService.save(adresat);
 
-        // Ustaw flagę active na false
-        userEntity.setActive(false);
 
-        // Zapisz zmiany w bazie danych dla użytkownika
-        userRepository.save(userEntity);
     }
 
 }

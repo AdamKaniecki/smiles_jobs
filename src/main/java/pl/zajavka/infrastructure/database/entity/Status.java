@@ -2,8 +2,9 @@ package pl.zajavka.infrastructure.database.entity;
 
 public enum Status {
     UNDER_REVIEW("Under Review"),
-    WAITING_FOR_INTERVIEW("Waiting for Interview"),
     MEETING_SCHEDULING("Meeting scheduling"),
+    WAITING_FOR_INTERVIEW("Waiting for Interview"),
+
     PENDING_DECISION("Pending Decision"),
     REJECT("Reject"),
     HIRED("Hired");

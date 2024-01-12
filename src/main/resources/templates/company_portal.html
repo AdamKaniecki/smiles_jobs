@@ -141,8 +141,7 @@
             <td>
                 <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
                     <div>
-<!--                            th:if="${#temporals.dateTime(notificationDTO.dateTime).isBefore(#temporals.createNow())}"-->
-
+                        <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Waiting for Interview'}">
                         <form th:action="@{/decline}" method="post" class="d-inline">
                             <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                             <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
@@ -153,6 +152,7 @@
                             <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                             <button type="submit" class="btn btn-success">Hired</button>
                         </form>
+                    </div>
                     </div>
                 </div>
             </td>

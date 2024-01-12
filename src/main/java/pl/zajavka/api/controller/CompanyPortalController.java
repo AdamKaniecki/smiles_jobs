@@ -232,6 +232,7 @@ package pl.zajavka.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -240,8 +241,9 @@ import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.*;
 import pl.zajavka.business.*;
 import pl.zajavka.domain.*;
-import pl.zajavka.infrastructure.database.entity.Status;
 
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -324,6 +326,40 @@ public class CompanyPortalController {
         } else {
             return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
         }
+    }
+
+
+
+    @PostMapping("/arrangeInterview")
+    public String arrangeInterview(
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            @RequestParam("cvId") Integer cvId,
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+            HttpSession httpSession
+    ) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Optional<CV> myCV = cvService.findById(cvId);
+                    if (myCV.isPresent()) {
+                        CV cv = myCV.get();
+
+                        Notification notification = notificationService.findById(notificationId);
+
+                        notificationService.arrangeInterview(notification, loggedInUser, cv.getUser(), proposedDateTime);
+
+                        return "job_offer_created_successfully";
+                    }
+                }
+            }
+        }
+        return "home";
     }
 
 

@@ -372,57 +372,5 @@ public class CvController {
         }
     }
 
-//    @PostMapping("/sendCv")
-//    public String sendCv(@RequestParam Integer jobOfferId, Model model) {
-//        // Pobierz informacje o użytkowniku z HttpSession
-//        String username = (String) httpSession.getAttribute("username");
-//
-//        // Sprawdź, czy użytkownik jest zalogowany
-//        if (username != null) {
-//            // Pobierz zalogowanego użytkownika
-//            User loggedInUser = userService.findByUserName(username);
-//
-//            // Sprawdź, czy użytkownik ma przypisane CV
-//            Optional<CV> userCV = cvService.findByUser(loggedInUser);
-//
-//            // Sprawdź, czy oferta pracy istnieje
-//            Optional<JobOffer> jobOffer = jobOfferService.findById(jobOfferId);
-//
-//            if (userCV.isPresent() && jobOffer.isPresent()) {
-//                CV cv = userCV.get();
-//                JobOffer offer = jobOffer.get();
-//
-////                // Sprawdź, czy CV jest już przypisane do oferty pracy
-////                if (!cv.getJobOffers().contains(offer)) {
-////                    // Dodaj ofertę pracy do CV
-////                    cv.addJobOffer(offer);
-////                    cvService.updateCV(cv);
-//
-//                    // Utwórz powiadomienie za pomocą Buildera
-//                    Notification notification = Notification.builder()
-//                            .message("CV sent successfully to the job offer")
-//                            .jobOffer(offer)
-//                            .cv(cv)
-//                            .build();
-//
-//                    notificationService.createNotification(notification);
-//
-//                    // Możesz dodać dodatkową logikę lub atrybuty do modelu, jeśli to konieczne
-//                    model.addAttribute("successMessage", "CV sent successfully to the job offer!");
-//                } else {
-//                    model.addAttribute("errorMessage", "CV is already sent to this job offer!");
-//                }
-//            } else {
-//                model.addAttribute("errorMessage", "User does not have a CV or the job offer does not exist.");
-//            }
-////        } else {
-////            // Obsłuż przypadki, gdy użytkownik nie jest zalogowany
-////            model.addAttribute("errorMessage", "User not logged in. Please log in.");
-////        }
-//
-//        // Przekieruj z powrotem do portalu kandydata lub innej odpowiedniej strony
-//        return "redirect:/candidate_portal";
-//    }
-
 }
 
