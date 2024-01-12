@@ -118,15 +118,13 @@
         <td>
             <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
             <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
+                <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Meeting scheduling'}">
                 <form th:action="@{/acceptMeetingDate}" method="post" class="d-inline">
-                    <div class="mt-2" th:if="${notificationDTO.status == 'WAITING_FOR_INTERVIEW'}">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                         <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
                         <button type="submit" class="btn btn-success">ACCEPT</button>
-                    </div>
                 </form>
                 <form th:action="@{/changeMeetingDate}" method="post" class="d-inline">
-                    <div class="mt-2" th:if="${notificationDTO.status == 'WAITING_FOR_INTERVIEW'}">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                         <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
                         <button type="submit" class="btn btn-warning">CHANGE</button>

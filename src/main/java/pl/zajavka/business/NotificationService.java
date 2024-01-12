@@ -50,7 +50,7 @@ public class NotificationService {
 
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
 
-        NotificationEntity notificationEntity= NotificationEntity.builder()
+        NotificationEntity notificationEntity = NotificationEntity.builder()
                 .status(Status.UNDER_REVIEW)
                 .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
                 .companyMessage("chcę u was pracować")
@@ -82,6 +82,7 @@ public class NotificationService {
         return notificationMapper.map(notificationEntity);
 
     }
+
     @Transactional
     public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
@@ -116,7 +117,7 @@ public class NotificationService {
         userService.save(adresat);
     }
 
-    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat){
+    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
         notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
         notificationEntity.setCompanyMessage("zaakceptowano termin");
@@ -127,10 +128,50 @@ public class NotificationService {
         userService.save(loggedInUser);
         userService.save(adresat);
     }
+
+    public boolean isNotificationDateTimeAfterNow(Notification notification) {
+        LocalDateTime notificationDateTime = notification.getDateTime();
+        return notificationDateTime != null && LocalDateTime.now().isAfter(notificationDateTime);
+    }
+
+    public void declineCandidate(Notification notification, User loggedInUser, User adresat) {
+        NotificationEntity notificationEntity = notificationMapper.map(notification);
+        notificationEntity.setStatus(Status.REJECT);
+        notificationEntity.setCompanyMessage("wysłano odpowiedź odmowną ");
+        notificationEntity.setCandidateMessage("niestety nie zostałeś zatrudniony");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(adresat));
+        notificationRepository.save(notificationEntity);
+        userService.save(loggedInUser);
+        userService.save(adresat);
+    }
+
+    public void hiredCandidate(Notification notification, User loggedInUser, User adresat) {
+        NotificationEntity notificationEntity = notificationMapper.map(notification);
+        notificationEntity.setStatus(HIRED);
+        notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
+        notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(adresat));
+        notificationRepository.save(notificationEntity);
+
+        User user = userService.findById(adresat.getId());
+        UserEntity userEntity = userMapper.map(user);
+
+        // Zapisz zmiany w bazie danych dla notyfikacji i użytkowników
+        userService.save(loggedInUser);
+        userService.save(adresat);
+
+        // Ustaw flagę active na false
+        userEntity.setActive(false);
+
+        // Zapisz zmiany w bazie danych dla użytkownika
+        userRepository.save(userEntity);
+    }
+
 }
 
 
-//    public Optional<Notification> findById(Integer jobOfferId) {
-//    }
+
 
 

@@ -280,11 +280,6 @@ public class JobOfferController {
         return "home";
     }
 
-//    @PostMapping("/changeDateTime")
-//    public String changeDateTime(@RequestParam Integer notificationId) {
-//        notificationService.changeCompanyMessage(notificationId, "Proszę o wybranie innego terminu");
-//        return "redirect:/candidate_portal"; // Dodaj odpowiednią ścieżkę przekierowania
-//    }
 @PostMapping("/changeMeetingDate")
 public String changeTermin(
         @RequestParam("notificationId") Integer notificationId,

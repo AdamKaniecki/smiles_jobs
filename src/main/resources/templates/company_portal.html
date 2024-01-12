@@ -34,9 +34,6 @@
                 <th>Work experience</th>
                 <th>Skills</th>
                 <th>Details</th>
-
-<!--                <th>Date Time</th>-->
-<!--                <th>Send offers job</th>-->
             </tr>
             </thead>
             <tbody>
@@ -49,22 +46,15 @@
                 <td>
                     <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
                 </td>
-<!--                <td th:text="${#temporals.format(cv.dateTime, 'yyyy-MM-dd HH:mm')}"></td>-->
-<!--                <td>-->
-<!--                    <button class="send-offer-btn" th:data-advertisement-id="${cv.id}">-->
-<!--                        Send Offer-->
-<!--                    </button>-->
-<!--                </td>-->
             </tr>
             </tbody>
         </table>
     </div>
-    <br>
+
     <br>
 
     <form action="/search" method="get" class="mt-4">
         <div class="form-row">
-
             <div class="col-md-4">
                 <label for="category">Search by category:</label>
                 <select id="category" name="category" class="form-control">
@@ -72,7 +62,6 @@
                     <option value="surname">Surname</option>
                     <option value="workExperience">workExperience</option>
                     <option value="skills">Skills</option>
-                    <!-- Dodaj więcej opcji kategorii według potrzeb -->
                 </select>
             </div>
             <div class="col-md-4">
@@ -91,17 +80,15 @@
         <a th:href="@{/create_job_offer}" method="GET" class="btn btn-info" role="button">Create Job Offer</a>
     </div>
     <br>
-    <br>
+
     <div class="col-md-4">
         <a th:href="@{/showMyJobOffers}" method="GET" class="btn btn-info" role="button">Show My Job Offer</a>
     </div>
-
-
     <br>
+
     <h2 class="mt-4">Create your Business Card</h2>
 
     <div class="col-md-4">
-        <!-- Dodaj odnośnik do formularza tworzenia BusinessCard -->
         <a th:href="@{/BusinessCardForm}" class="btn btn-success" role="button">Create Business Card</a>
     </div>
     <br>
@@ -121,49 +108,57 @@
             <th>CV</th>
             <th>ARRANGE A JOB INTERVIEW</th>
             <th>STATUS</th>
-            <!--        <th>Created At</th>-->
-            <!-- Dodaj inne kolumny w zależności od struktury NotificationDTO -->
+            <th>Decision</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
         <tr th:each="notificationDTO : ${notifications}">
             <td th:text="${notificationDTO.id}"></td>
             <td th:text="${notificationDTO.jobOffer.id}"></td>
             <td th:text="${notificationDTO.companyMessage}"></td>
-
-            <!--            <td th:text="${notificationDTO.messages[]}"></td>-->
             <td>
-                <!-- Dodaj link do widoku szczegółów CV -->
                 <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
             <td>
                 <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
                 <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
-                <!-- Dodaj formularz do akceptacji oferty pracy -->
-                <form th:action="@{/arrangeInterview}" method="post">
-                    <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
-                    <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
-                    <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
 
-                    <div class="form-row">
-                        <div class="col-md-8">
-                            <label for="proposedDateTime">Proposed Date and Time:</label>
-                            <input type="datetime-local" id="proposedDateTime" name="proposedDateTime" th:datetime="${#dates.format(proposedDateTime, 'yyyy-MM-ddTHH:mm')}" class="form-control">
+                    <form th:action="@{/arrangeInterview}" method="post">
+                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+                        <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+                        <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <label for="proposedDateTime">Proposed Date and Time:</label>
+                                <input type="datetime-local" id="proposedDateTime" name="proposedDateTime" th:value="${#temporals.format(proposedDateTime, 'yyyy-MM-ddTHH:mm')}" class="form-control">
+                            </div>
                         </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-success">ARRANGE</button>
-                </form>
+                        <button type="submit" class="btn btn-success">ARRANGE</button>
+                    </form>
+                </div>
             </td>
             <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>
+            <td>
+                <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
+                    <div>
+<!--                            th:if="${#temporals.dateTime(notificationDTO.dateTime).isBefore(#temporals.createNow())}"-->
 
-            <!--        <td th:text="${notificationDTO.createdAt}"></td>-->
-            <!-- Dodaj inne komórki w zależności od struktury NotificationDTO -->
+                        <form th:action="@{/decline}" method="post" class="d-inline">
+                            <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                            <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+                            <button type="submit" class="btn btn-danger">Decline</button>
+                        </form>
+                        <form th:action="@{/hired}" method="post" class="d-inline">
+                            <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+                            <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+                            <button type="submit" class="btn btn-success">Hired</button>
+                        </form>
+                    </div>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>
-
 
     <br>
     <br>

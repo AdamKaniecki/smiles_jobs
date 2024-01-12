@@ -240,6 +240,7 @@ import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.*;
 import pl.zajavka.business.*;
 import pl.zajavka.domain.*;
+import pl.zajavka.infrastructure.database.entity.Status;
 
 import java.util.List;
 import java.util.Optional;
@@ -326,6 +327,59 @@ public class CompanyPortalController {
     }
 
 
+    @PostMapping("/decline")
+    public String declineNotification(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("cvId") Integer cvId,
+            HttpSession httpSession
+    ) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
 
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Optional<CV> myCV = cvService.findById(cvId);
+                    if (myCV.isPresent()) {
+                        CV cv = myCV.get();
+                        Notification notification = notificationService.findById(notificationId);
+
+                        notificationService.declineCandidate(notification, loggedInUser, cv.getUser());
+                        return "job_offer_created_successfully";
+                    }
+                }
+            }
+        }
+        return "home";
+    }
+    @PostMapping("/hired")
+    public String hiredCandidate(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("cvId") Integer cvId,
+            HttpSession httpSession
+    ) {
+        String username = (String) httpSession.getAttribute("username");
+        if (username != null) {
+            User loggedInUser = userService.findByUserName(username);
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Optional<CV> myCV = cvService.findById(cvId);
+                    if (myCV.isPresent()) {
+                        CV cv = myCV.get();
+                        Notification notification = notificationService.findById(notificationId);
+
+                        notificationService.hiredCandidate(notification, loggedInUser, cv.getUser());
+                        return "job_offer_created_successfully";
+                    }
+                }
+            }
+        }
+        return "home";
+    }
 
 }
