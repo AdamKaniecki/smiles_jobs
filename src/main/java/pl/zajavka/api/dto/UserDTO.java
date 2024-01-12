@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.With;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.infrastructure.security.Role;
+import pl.zajavka.infrastructure.security.RoleEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class UserDTO {
     private String email;
     private String password;
     private Boolean active;
-    private Set<Role> roles;
+    private Set<RoleEntity> roles;
     private Set<Notification> notificationsSend;
     private Set<Notification> notificationsReceive;
 }

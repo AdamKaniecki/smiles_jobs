@@ -100,16 +100,7 @@ CREATE TABLE notification_table (
  );
 
 
---CREATE TABLE notification_messages (
---    notification_id INT,
---    cv_id INT,
---    job_offer_id INT,
---    message VARCHAR(255),
---    PRIMARY KEY (notification_id, cv_id, job_offer_id),
---    CONSTRAINT fk_notification_messages_notification_table
---        FOREIGN KEY (notification_id)
---            REFERENCES notification_table (notification_id)
---);
+
 
 
 
