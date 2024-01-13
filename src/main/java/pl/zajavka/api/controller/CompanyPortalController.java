@@ -233,6 +233,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -269,9 +272,14 @@ public class CompanyPortalController {
     private NotificationMapperDTO notificationMapperDTO;
 
     @GetMapping(COMPANY_PORTAL)
-    public String getCompanyPortalPage(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
+//    @PreAuthorize("hasAuthority('ROLE_COMPANY')")
+    public String getCompanyPortalPage(Authentication authentication, Model model) {
+        System.out.println("i co?");
+        // Pobierz informacje o zalogowanym użytkowniku z obiektu Authentication
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = userService.findByUserName(userDetails.getUsername());
+
             // Użytkownik jest zalogowany
             model.addAttribute("user", user);
 
@@ -281,141 +289,139 @@ public class CompanyPortalController {
             List<CV> cvList = cvService.findAll();
             model.addAttribute("cvList", cvList);
 
-
             List<NotificationDTO> notifications = notificationService.findByUser(user).stream()
-                    .map(notificationMapperDTO::map)  // Mapuj pojedynczą notyfikację na DTO
-                    .collect(Collectors.toList()); //Colector to taki zbieracz tego co przemapowane
+                    .map(notificationMapperDTO::map)
+                    .collect(Collectors.toList());
             model.addAttribute("notifications", notifications);
 
             return "company_portal";
         } else {
             // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-            return "redirect:/login";
+            return "home";
         }
-    }
-
-
-    @GetMapping("/search")
-    public String searchAdvertisements(
-            @RequestParam("keyword") String keyword,
-            @RequestParam("category") String category,
-            Model model) {
-        List<CV> searchResults = cvService.searchCvByKeywordAndCategory(keyword, category);
-        model.addAttribute("searchResults", searchResults);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("category", category);
-        return "search_results";
-    }
-
-    @GetMapping("/search_results")
-    public String showSearchResults(@RequestParam String keyword, String category, Model model) {
-        List<CV> searchResults = cvService.searchCvByKeywordAndCategory(category,keyword);
-        model.addAttribute("searchResults", searchResults);
-        return "search_results";
-    }
-
-
-
-    @GetMapping("/cv/{cvId}")
-    public String showCvDetails(@PathVariable Integer cvId, Model model) {
-        Optional<CV> cv = cvService.findById(cvId);
-
-        if (cv.isPresent()) {
-            model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
-            return "show_cv";  // Użyj istniejącego widoku show_cv
-        } else {
-            return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
         }
-    }
 
 
+        @GetMapping("/search")
+        public String searchAdvertisements (
+                @RequestParam("keyword") String keyword,
+                @RequestParam("category") String category,
+                Model model){
+            List<CV> searchResults = cvService.searchCvByKeywordAndCategory(keyword, category);
+            model.addAttribute("searchResults", searchResults);
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("category", category);
+            return "search_results";
+        }
 
-    @PostMapping("/arrangeInterview")
-    public String arrangeInterview(
-            @RequestParam("jobOfferId") Integer jobOfferId,
-            @RequestParam("cvId") Integer cvId,
-            @RequestParam("notificationId") Integer notificationId,
-            @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
-            HttpSession httpSession
-    ) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+        @GetMapping("/search_results")
+        public String showSearchResults (@RequestParam String keyword, String category, Model model){
+            List<CV> searchResults = cvService.searchCvByKeywordAndCategory(category, keyword);
+            model.addAttribute("searchResults", searchResults);
+            return "search_results";
+        }
 
-                if (optionalJobOffer.isPresent()) {
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Optional<CV> myCV = cvService.findById(cvId);
-                    if (myCV.isPresent()) {
-                        CV cv = myCV.get();
 
-                        Notification notification = notificationService.findById(notificationId);
+        @GetMapping("/cv/{cvId}")
+        public String showCvDetails (@PathVariable Integer cvId, Model model){
+            Optional<CV> cv = cvService.findById(cvId);
 
-                        notificationService.arrangeInterview(notification, loggedInUser, cv.getUser(), proposedDateTime);
+            if (cv.isPresent()) {
+                model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
+                return "show_cv";  // Użyj istniejącego widoku show_cv
+            } else {
+                return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
+            }
+        }
 
-                        return "job_offer_created_successfully";
+
+        @PostMapping("/arrangeInterview")
+        public String arrangeInterview (
+                @RequestParam("jobOfferId") Integer jobOfferId,
+                @RequestParam("cvId") Integer cvId,
+                @RequestParam("notificationId") Integer notificationId,
+                @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime
+        proposedDateTime,
+                HttpSession httpSession
+    ){
+            String username = (String) httpSession.getAttribute("username");
+            if (username != null) {
+                User loggedInUser = userService.findByUserName(username);
+                if (loggedInUser != null) {
+                    Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+
+                    if (optionalJobOffer.isPresent()) {
+                        JobOffer jobOffer = optionalJobOffer.get();
+                        Optional<CV> myCV = cvService.findById(cvId);
+                        if (myCV.isPresent()) {
+                            CV cv = myCV.get();
+
+                            Notification notification = notificationService.findById(notificationId);
+
+                            notificationService.arrangeInterview(notification, loggedInUser, cv.getUser(), proposedDateTime);
+
+                            return "job_offer_created_successfully";
+                        }
                     }
                 }
             }
+            return "home";
         }
-        return "home";
-    }
 
 
-    @PostMapping("/decline")
-    public String declineNotification(
-            @RequestParam("notificationId") Integer notificationId,
-            @RequestParam("cvId") Integer cvId,
-            HttpSession httpSession
-    ) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+        @PostMapping("/decline")
+        public String declineNotification (
+                @RequestParam("notificationId") Integer notificationId,
+                @RequestParam("cvId") Integer cvId,
+                HttpSession httpSession
+    ){
+            String username = (String) httpSession.getAttribute("username");
+            if (username != null) {
+                User loggedInUser = userService.findByUserName(username);
+                if (loggedInUser != null) {
+                    Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
 
-                if (optionalJobOffer.isPresent()) {
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Optional<CV> myCV = cvService.findById(cvId);
-                    if (myCV.isPresent()) {
-                        CV cv = myCV.get();
-                        Notification notification = notificationService.findById(notificationId);
+                    if (optionalJobOffer.isPresent()) {
+                        JobOffer jobOffer = optionalJobOffer.get();
+                        Optional<CV> myCV = cvService.findById(cvId);
+                        if (myCV.isPresent()) {
+                            CV cv = myCV.get();
+                            Notification notification = notificationService.findById(notificationId);
 
-                        notificationService.declineCandidate(notification, loggedInUser, cv.getUser());
-                        return "job_offer_created_successfully";
+                            notificationService.declineCandidate(notification, loggedInUser, cv.getUser());
+                            return "job_offer_created_successfully";
+                        }
                     }
                 }
             }
+            return "home";
         }
-        return "home";
-    }
-    @PostMapping("/hired")
-    public String hiredCandidate(
-            @RequestParam("notificationId") Integer notificationId,
-            @RequestParam("cvId") Integer cvId,
-            HttpSession httpSession
-    ) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+        @PostMapping("/hired")
+        public String hiredCandidate (
+                @RequestParam("notificationId") Integer notificationId,
+                @RequestParam("cvId") Integer cvId,
+                HttpSession httpSession
+    ){
+            String username = (String) httpSession.getAttribute("username");
+            if (username != null) {
+                User loggedInUser = userService.findByUserName(username);
+                if (loggedInUser != null) {
+                    Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
 
-                if (optionalJobOffer.isPresent()) {
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Optional<CV> myCV = cvService.findById(cvId);
-                    if (myCV.isPresent()) {
-                        CV cv = myCV.get();
-                        Notification notification = notificationService.findById(notificationId);
+                    if (optionalJobOffer.isPresent()) {
+                        JobOffer jobOffer = optionalJobOffer.get();
+                        Optional<CV> myCV = cvService.findById(cvId);
+                        if (myCV.isPresent()) {
+                            CV cv = myCV.get();
+                            Notification notification = notificationService.findById(notificationId);
 
-                        notificationService.hiredCandidate(notification, loggedInUser, cv.getUser());
-                        return "job_offer_created_successfully";
+                            notificationService.hiredCandidate(notification, loggedInUser, cv.getUser());
+                            return "job_offer_created_successfully";
+                        }
                     }
                 }
             }
+            return "home";
         }
-        return "home";
-    }
 
-}
+    }

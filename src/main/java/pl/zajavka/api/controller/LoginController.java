@@ -14,6 +14,26 @@ public class LoginController {
         return "login";
     }
 
+//    @GetMapping("/loginUser")
+//    public String loginUser(Model model) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = auth.getName();
+//
+//        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CANDIDATE"))) {
+//            // Zalogowano Kandydata pomyślnie
+//            System.out.println("Zalogowano Kandydata pomyślnie");
+//            model.addAttribute("username", username);
+//            return "redirect:/candidate_portal";
+//        } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
+//            // Zalogowano Firmę pomyślnie
+//            System.out.println("Zalogowano Firmę pomyślnie");
+//            model.addAttribute("username", username);
+//            return "redirect:/company_portal";
+//        } else {
+//            System.out.println("Nieprawidłowe dane logowania.");
+//            return "login";
+//        }
+//    }
     @GetMapping("/loginUser")
     public String loginUser(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -34,5 +54,6 @@ public class LoginController {
             return "login";
         }
     }
+
 
 }

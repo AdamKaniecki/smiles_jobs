@@ -4,6 +4,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,6 +26,7 @@ import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @AllArgsConstructor
@@ -40,9 +44,12 @@ public class JobOfferController {
     private CvMapper cvMapper;
 
     @GetMapping(CREATE_JOB_OFFER)
-    public String createJobOfferForm(Model model) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
+    public String createJobOfferForm(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Pobierz informacje o zalogowanym użytkowniku z obiektu Authentication
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+
             model.addAttribute("username", username);
             return "create_job_offer";
         } else {
@@ -52,17 +59,17 @@ public class JobOfferController {
     }
 
 
+
     @PostMapping("/createJobOffer")
     public String createdJobOffers(
             @ModelAttribute("jobOfferDTO") JobOfferDTO jobOfferDTO,
-            Model model) {
+            Model model,
+            Authentication authentication) {
 
-        String username = (String) httpSession.getAttribute("username");
-
-        if (username != null) {
-            // Uzyskaj informacje o użytkowniku, takie jak jego identyfikator
-            User loggedInUser = userService.findByUserName(username);
-//            Integer userId = loggedInUser.getId(); // Załóżmy, że masz dostęp do identyfikatora użytkownika
+        if (authentication != null && authentication.isAuthenticated()) {
+            // Pobierz informacje o zalogowanym użytkowniku z obiektu Authentication
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User loggedInUser = userService.findByUserName(userDetails.getUsername());
 
             if (loggedInUser != null) {
                 JobOffer jobOffer = jobOfferMapperDTO.map(jobOfferDTO);
@@ -85,50 +92,37 @@ public class JobOfferController {
         }
     }
 
-
-    @GetMapping("/showMyJobOffers")
-    public String showMyJobOffers(Model model, HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
-
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-
-            if (loggedInUser != null) {
-                List<JobOffer> userJobOffers = jobOfferService.findListByUser(loggedInUser);
-
-                if (userJobOffers != null && !userJobOffers.isEmpty()) {
-                    model.addAttribute("jobOffersDTO", userJobOffers);
-                } else {
-                    model.addAttribute("jobOffersDTO", List.of()); // Pusta lista, jeśli brak ofert
-                }
-
-                model.addAttribute("userDTO", userMapperDTO.map(loggedInUser));
-
-                return "show_my_job_offers";
-            }
+    @GetMapping("/jobOffer/{jobOfferId}")
+    public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
+        Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+        if (optionalJobOffer.isPresent()) {
+            JobOffer jobOffer = optionalJobOffer.get();
+            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
+            return "job_offer_details";
+        } else {
+            // Oferta pracy nie należy do zalogowanego użytkownika
+            return "redirect:/showMyJobOffers";
         }
-
-        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanej oferty pracy lub wystąpił inny problem
-        return "{user}/company_portal";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
-    @GetMapping("/jobOffer/{jobOfferId}")
-    public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model, HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
 
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            // Pobierz szczegóły oferty pracy jako Optional
-            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-            if (optionalJobOffer.isPresent()) {
-                JobOffer jobOffer = optionalJobOffer.get();
-                model.addAttribute("jobOfferDTO", jobOffer);
-                return "job_offer_details";
-            }
+    @GetMapping("/showMyJobOffers")
+    public String showMyJobOffers(Model model, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User loggedInUser = userService.findByUserName(userDetails.getUsername());
+
+        if (loggedInUser != null) {
+            List<JobOfferDTO> jobOffersDTO = jobOfferService.findByUser(loggedInUser).stream()
+                    .map(jobOfferMapperDTO::map)
+                    .collect(Collectors.toList());
+
+            model.addAttribute("jobOffersDTO", jobOffersDTO);
+
+            return "show_my_job_offers";
+        } else {
+            // Użytkownik nie jest zalogowany, obsłuż tę sytuację
+            return "redirect:/login";  // Przekieruj na stronę logowania
         }
-
-        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany lub oferta pracy nie istnieje
-        return "redirect:/showMyJobOffers";  // Przekieruj na listę ofert pracy użytkownika
     }
 
     @GetMapping("/redirectToUpdateMyJobOffer")
@@ -188,19 +182,18 @@ public class JobOfferController {
     }
 
     @DeleteMapping("/deleteJobOffer/{jobOfferId}")
-    public String deleteJobOffer(@PathVariable Integer jobOfferId, Model model, HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
+    public String deleteJobOffer(@PathVariable Integer jobOfferId, Model model, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User loggedInUser = userService.findByUserName(userDetails.getUsername());
 
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-                if (optionalJobOffer.isPresent() && optionalJobOffer.get().getUser().equals(loggedInUser)) {
-                    jobOfferService.deleteJobOffer(jobOfferId);
-                    return "redirect:/showMyJobOffers";
-                }
+        if (loggedInUser != null) {
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+            if (optionalJobOffer.isPresent() && optionalJobOffer.get().getUser().equals(loggedInUser)) {
+                jobOfferService.deleteJobOffer(jobOfferId);
+                return "redirect:/showMyJobOffers";
             }
         }
+
         return "redirect:/showMyJobOffers";
     }
 

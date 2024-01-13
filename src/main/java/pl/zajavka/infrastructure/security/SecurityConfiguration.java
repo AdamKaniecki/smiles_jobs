@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -40,13 +41,22 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**", "/{user}/candidate_portal").permitAll()
+                .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
+                                                         "/company_registry","/companyRegistry/**"  ).permitAll()
+                .requestMatchers("/createCV").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/{user}/candidate_portal").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/{user}/company_portal").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/redirectToShowMyCV").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/redirectToUpdateMyCV").hasAuthority("ROLE_CANDIDATE")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/loginUser")
-                .defaultSuccessUrl("/{user}/candidate_portal", true) // Tu dodaj przekierowanie po udanym zalogowaniu
+                .successHandler(authenticationSuccessHandler())
+//                .defaultSuccessUrl("/{user}/candidate_portal", true)
+//                .defaultSuccessUrl("/{user}/company_portal", true)// Tu dodaj przekierowanie po udanym zalogowaniu
                 .permitAll()
                 .and()
                 .logout()
@@ -55,7 +65,14 @@ public class SecurityConfiguration {
                 .deleteCookies("JSESSIONID")
                 .permitAll();
 
+
+
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
     }
 
     @Bean

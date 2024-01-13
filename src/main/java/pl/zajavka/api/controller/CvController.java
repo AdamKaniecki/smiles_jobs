@@ -148,6 +148,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -177,11 +181,31 @@ public class CvController {
     private JobOfferService jobOfferService;
     private NotificationService notificationService;
 
+//    @GetMapping("/CvForm")
+//    public String CvForm(
+//            @ModelAttribute("cvDTO") CvDTO cvDTO,
+//            Model model) {
+//        System.out.println("tyyujikiooo");
+//        String username = (String) httpSession.getAttribute("username");
+//        if (username != null) {
+//            User user = userService.findByUserName(username);
+//            userMapperDTO.map(user);
+//            model.addAttribute("userDTO", user);
+//            model.addAttribute("cvDTO", cvDTO);
+//            return "create_cv";
+//        } else {
+//            // Obsłuż brak zalogowanego użytkownika
+//            return "login";  // Przekieruj na stronę logowania
+//        }
+//    }
+
     @GetMapping("/CvForm")
-    public String CvForm(
-            @ModelAttribute("cvDTO") CvDTO cvDTO,
-            Model model) {
-        String username = (String) httpSession.getAttribute("username");
+    public String CvForm(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model, Authentication authentication) {
+        System.out.println("tyyujikiooo");
+
+        // Pobierz zalogowanego użytkownika z obiektu Authentication
+        String username = authentication.getName();
+
         if (username != null) {
             User user = userService.findByUserName(username);
             userMapperDTO.map(user);
@@ -194,97 +218,165 @@ public class CvController {
         }
     }
 
+
+    //    @PostMapping("/createCV")
+//    public String createCV(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model) {
+////        log.info("Received CV: {}", cv);
+//        System.out.println("czy ty tu wchodzisz 4?");
+//        String username = (String) httpSession.getAttribute("username");
+//
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            if (cvService.existByUser(loggedInUser)) {
+////                log.info("co tu sie odwala?: ", loggedInUser);
+//                return "cv_already_created";
+//
+//            }
+//            CV cv = cvMapperDTO.map(cvDTO);
+////             Adres
+//            Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
+//            // CV
+//            cv.setAddress(createdAddress);
+//            cv.setUser(loggedInUser);
+//            cvService.createCV(cv, loggedInUser);
+//
+//            model.addAttribute("cvDTO", cv);
+//            model.addAttribute("userDTO", loggedInUser);
+//
+//            return "cv_created_successfully";
+//        } else {
+//            // Obsłuż brak zalogowanego użytkownika
+//            return "login";  // Przekieruj na stronę logowania
+//        }
+//    }
     @PostMapping("/createCV")
-    public String createCV(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model) {
-//        log.info("Received CV: {}", cv);
-        String username = (String) httpSession.getAttribute("username");
-
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (cvService.existByUser(loggedInUser)) {
-//                log.info("co tu sie odwala?: ", loggedInUser);
-                return "cv_already_created";
-
-            }
-            CV cv = cvMapperDTO.map(cvDTO);
-//             Adres
-            Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
-            // CV
-            cv.setAddress(createdAddress);
-            cv.setUser(loggedInUser);
-            cvService.createCV(cv, loggedInUser);
-
-            model.addAttribute("cvDTO", cv);
-            model.addAttribute("userDTO", loggedInUser);
-
-            return "cv_created_successfully";
-        } else {
-            // Obsłuż brak zalogowanego użytkownika
-            return "login";  // Przekieruj na stronę logowania
+    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+public String createCV(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model, Authentication authentication) {
+    System.out.println("czt ty tu wchodzisz 4");
+    // Pobierz zalogowanego użytkownika z obiektu Authentication
+    String username = authentication.getName();
+    System.out.println("czt ty tu wchodzisz 5");
+    if (username != null) {
+        User loggedInUser = userService.findByUserName(username);
+        if (cvService.existByUser(loggedInUser)) {
+            return "cv_already_created";
         }
+        System.out.println("czt ty tu wchodzisz 6");
+        CV cv = cvMapperDTO.map(cvDTO);
+        Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
+        System.out.println("czt ty tu wchodzisz 7");
+        cv.setAddress(createdAddress);
+        cv.setUser(loggedInUser);
+        cvService.createCV(cv, loggedInUser);
+
+        System.out.println("czt ty tu wchodzisz 8");
+        model.addAttribute("cvDTO", cv);
+        model.addAttribute("userDTO", loggedInUser);
+
+        return "cv_created_successfully";
+    } else {
+        System.out.println("czt ty tu wchodzisz 9");
+        // Obsłuż brak zalogowanego użytkownika
+        return "login";  // Przekieruj na stronę logowania
     }
+}
+
+
+//    @GetMapping("/redirectToShowMyCV")
+//    public String redirectToShowMyCV(HttpSession httpSession) {
+//        String username = (String) httpSession.getAttribute("username");
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            if (loggedInUser != null) {
+//                // Sprawdź, czy użytkownik ma przypisane CV
+//                Optional<CV> userCV = cvService.findByUser(loggedInUser);
+//                if (userCV.isPresent()) {
+//                    Integer cvId = userCV.get().getId();
+//                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+//                    return "redirect:/showCV?id=" + cvId;
+//                }
+//            }
+//        }
+//        return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
+//    }
 
     @GetMapping("/redirectToShowMyCV")
-    public String redirectToShowMyCV(HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                // Sprawdź, czy użytkownik ma przypisane CV
-                Optional<CV> userCV = cvService.findByUser(loggedInUser);
-                if (userCV.isPresent()) {
-                    Integer cvId = userCV.get().getId();
-                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
-                    return "redirect:/showCV?id=" + cvId;
-                }
+//    @PreAuthorize("hasRole('ROLE_CANDIDATE')"
+    public String redirectToShowMyCV() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User loggedInUser = userService.findByUserName(username);
+
+        if (loggedInUser != null) {
+            // Sprawdź, czy użytkownik ma przypisane CV
+            Optional<CV> userCV = cvService.findByUser(loggedInUser);
+
+            if (userCV.isPresent()) {
+                Integer cvId = userCV.get().getId();
+                // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+                return "redirect:/showCV?id=" + cvId;
             }
         }
+
         return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
+
     @GetMapping("/showCV")
-    public String showMyCV(@RequestParam Integer id, Model model, HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            if (loggedInUser != null) {
-                Optional<CV> myCV = cvService.findById(id);
-                if (myCV.isPresent()) {
-                    CV cv = myCV.get();
-                    // Sprawdź, czy CV należy do zalogowanego użytkownika
-                    if (cv.getUser().equals(loggedInUser)) {
-                        model.addAttribute("cvDTO", cvMapperDTO.map(cv));
-                        model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
-                        return "show_my_cv";
-                    } else {
-                        // CV nie należy do zalogowanego użytkownika
-                        return "cv_not_found";  // Możesz utworzyć osobny widok dla tego przypadku
-                    }
-                } else {
-                    return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
-                }
-            }
+    public String showMyCV(@RequestParam Integer id, Model model) {
+        Optional<CV> myCV = cvService.findById(id);
+
+        if (myCV.isPresent()) {
+            CV cv = myCV.get();
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
+            model.addAttribute("userDTO", userMapperDTO.map(cv.getUser()));
+            return "show_my_cv";
+        } else {
+            return "cv_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
         }
-        return "redirect:/";  // Przekieruj na stronę główną w przypadku problemu
     }
 
 
 
+//    @GetMapping("/redirectToUpdateMyCV")
+//    public String redirectToUpdateMyCV(HttpSession httpSession) {
+//        String username = (String) httpSession.getAttribute("username");
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            if (loggedInUser != null) {
+//                // Sprawdź, czy użytkownik ma przypisane CV
+//                Optional<CV> userCV = cvService.findByUser(loggedInUser);
+//                if (userCV.isPresent()) {
+//                    Integer cvId = userCV.get().getId();
+//                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+//                    return "redirect:/updateCvForm?id=" + cvId;
+//                }
+//            }
+//        }
+//        return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
+//    }
     @GetMapping("/redirectToUpdateMyCV")
-    public String redirectToUpdateMyCV(HttpSession httpSession) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
+    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+    public String redirectToUpdateMyCV() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("co tu sie");
+        if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            System.out.println("co tu sie2");
+
+            String username = userDetails.getUsername();
+
             User loggedInUser = userService.findByUserName(username);
             if (loggedInUser != null) {
-                // Sprawdź, czy użytkownik ma przypisane CV
                 Optional<CV> userCV = cvService.findByUser(loggedInUser);
                 if (userCV.isPresent()) {
                     Integer cvId = userCV.get().getId();
-                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+                    // Przekieruj na endpoint updateCvForm z odpowiednim identyfikatorem
                     return "redirect:/updateCvForm?id=" + cvId;
                 }
             }
         }
+
         return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
@@ -303,6 +395,7 @@ public class CvController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     @PutMapping("/updateCVDone")
     public String updateCv(@ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
         Optional<CV> myCV = cvService.findById(updateCvDTO.getId());
@@ -335,8 +428,8 @@ public class CvController {
 
     }
 
-
     @PutMapping("/updateAddressDone")
+    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public String updateAddress(
             @ModelAttribute("address") Address updateAddress,
             Model model){
@@ -356,6 +449,7 @@ public class CvController {
     }
 
     @DeleteMapping("/deleteCV")
+    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public String deleteCV(@ModelAttribute("cvDTO") CvDTO deleteCvDTO, Model model) {
         Optional<CV> myCV = cvService.findById(deleteCvDTO.getId());
         if (myCV.isPresent()) {

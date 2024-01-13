@@ -79,6 +79,7 @@ package pl.zajavka.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -157,6 +158,7 @@ public class CandidatePortalController {
 //        }
 //    }
 @GetMapping(CANDIDATE_PORTAL)
+//@PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
 public String getCandidatePortalPage(Model model, Authentication authentication) {
     System.out.println("czy ty tu wchodzisz 3?");
 

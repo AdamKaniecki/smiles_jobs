@@ -116,7 +116,7 @@ public class CvService {
 
 
     @Transactional
-    public CV updateCV(CV updatedCv) {
+    public void updateCV(CV updatedCv) {
         if (updatedCv.getId() != null) {
             // Sprawdź, czy CV istnieje w bazie danych
             CvEntity cvEntity = cvRepository.findById(updatedCv.getId())
@@ -140,7 +140,7 @@ public class CvService {
             // Zapisz zaktualizowany obiekt CV w bazie danych
             CvEntity cvEntityUpdate = cvRepository.save(cvEntity);
 
-            return cvMapper.map(cvEntityUpdate);
+//            return cvMapper.map(cvEntityUpdate);
         } else {
             // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
             throw new NotFoundException("CV ID cannot be null");

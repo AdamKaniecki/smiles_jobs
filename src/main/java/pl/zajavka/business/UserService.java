@@ -22,11 +22,11 @@ public class  UserService {
 
     @Transactional
     public User createCandidate(User user) {
-        System.out.println("czy tu wchodzisz?");
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
-        // Poniżej utworzenie zestawu ról, możesz dostosować do swoich potrzeb
+
         Set<RoleEntity> roles = new HashSet<>();
         RoleEntity candidateRole = roleRepository.findByRole("ROLE_CANDIDATE");
         roles.add(candidateRole);
@@ -49,14 +49,18 @@ public class  UserService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
+        Set<RoleEntity> roles = new HashSet<>();
+        RoleEntity companyRole = roleRepository.findByRole("ROLE_COMPANY");
+        roles.add(companyRole);
+
         UserEntity userEntity = UserEntity.builder()
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(encodedPassword)
-//                .password(user.getPassword())
                 .active(true)
-//                .roles(Set.of(Role.COMPANY))
+                .roles(roles)
                 .build();
+
        userRepository.save(userEntity);
        return userMapper.map(userEntity);
     }
