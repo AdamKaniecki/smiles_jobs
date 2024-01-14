@@ -27,7 +27,7 @@
         <strong>Benefits:</strong> <span th:text="${jobOfferDTO.benefits}"></span>
       </p>
 
-      <a th:href="@{/businessCard/{userId}(userId=${jobOfferDTO.user.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
+      <a th:href="@{/businessCard/{businessCardId}(businessCardId=${businessCardDTO.id})}" class="btn btn-info" role="button">Owner's Business Card</a>
 
 
 <!--      <form th:action="@{/sendCv}" method="post">-->

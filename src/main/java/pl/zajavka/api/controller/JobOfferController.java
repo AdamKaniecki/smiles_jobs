@@ -12,16 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.JobOfferDTO;
+import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
-import pl.zajavka.business.CvService;
-import pl.zajavka.business.JobOfferService;
-import pl.zajavka.business.NotificationService;
-import pl.zajavka.business.UserService;
-import pl.zajavka.domain.CV;
-import pl.zajavka.domain.JobOffer;
-import pl.zajavka.domain.Notification;
-import pl.zajavka.domain.User;
+import pl.zajavka.business.*;
+import pl.zajavka.domain.*;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 
 import java.time.LocalDateTime;
@@ -42,6 +37,8 @@ public class JobOfferController {
     private CvService cvService;
     private NotificationService notificationService;
     private CvMapper cvMapper;
+    private BusinessCardService businessCardService;
+    private BusinessCardMapperDTO businessCardMapperDTO;
 
     @GetMapping(CREATE_JOB_OFFER)
     public String createJobOfferForm(Model model, Authentication authentication) {
@@ -92,12 +89,35 @@ public class JobOfferController {
         }
     }
 
+//    @GetMapping("/jobOffer/{jobOfferId}")
+//    public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
+//        Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+//        if (optionalJobOffer.isPresent()) {
+//            JobOffer jobOffer = optionalJobOffer.get();
+//            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
+//            return "job_offer_details";
+//        } else {
+//            // Oferta pracy nie należy do zalogowanego użytkownika
+//            return "redirect:/showMyJobOffers";
+//        }
+//    }
+
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
         Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+
         if (optionalJobOffer.isPresent()) {
             JobOffer jobOffer = optionalJobOffer.get();
             model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
+
+            // Pobierz wizytówkę przypisaną do oferty pracy
+            Optional<BusinessCard> businessCard = businessCardService.findByUser(jobOffer.getUser());
+
+            // Jeśli wizytówka istnieje, przekaz ją do modelu
+            if (businessCard.isPresent()) {
+                model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
+            }
+
             return "job_offer_details";
         } else {
             // Oferta pracy nie należy do zalogowanego użytkownika

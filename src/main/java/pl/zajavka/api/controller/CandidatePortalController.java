@@ -211,94 +211,189 @@ public String getCandidatePortalPage(Model model, Authentication authentication)
         return "search_job_offers_results";
     }
 
+//    @PostMapping("/acceptMeetingDate")
+//    public String acceptNotification(
+//            @RequestParam("notificationId") Integer notificationId,
+//            @RequestParam("jobOfferId") Integer jobOfferId,
+//            HttpSession httpSession
+//    ) {
+//        String username = (String) httpSession.getAttribute("username");
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            System.out.println("czy ty tu wchodzisz?2");
+//            if (loggedInUser != null) {
+//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+//                if (optionalJobOffer.isPresent()) {
+//                    System.out.println("czy ty tu wchodzisz?3");
+//                    JobOffer jobOffer = optionalJobOffer.get();
+//                    Notification notification = notificationService.findById(notificationId);
+//                    User adresat = jobOffer.getUser();
+//                    notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
+//                    return "cv_created_successfully";
+//                }
+//            }
+//        }
+//        return "home";
+//    }
+
+//    @PostMapping("/changeMeetingDate")
+//    public String changeTermin(
+//            @RequestParam("notificationId") Integer notificationId,
+//            @RequestParam("jobOfferId") Integer jobOfferId,
+////        @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
+//            HttpSession httpSession
+//    ) {
+//        String username = (String) httpSession.getAttribute("username");
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            System.out.println("czy ty tu wchodzisz?2");
+//            if (loggedInUser != null) {
+//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+//                if (optionalJobOffer.isPresent()) {
+//                    System.out.println("czy ty tu wchodzisz?3");
+//                    JobOffer jobOffer = optionalJobOffer.get();
+//                    Notification notification = notificationService.findById(notificationId);
+//                    User adresat = jobOffer.getUser();
+//                    // Tutaj możesz dodać kod do zmiany pola companyMessage
+//                    notificationService.changeMeetingDate(notification, loggedInUser, adresat);
+//                    return "cv_created_successfully";
+//                }
+//            }
+//        }
+//        return "home";
+//    }
+
+//    @PostMapping("/sendCV")
+//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
+//        System.out.println("czy ty tu wchodzisz?");
+//        String username = (String) httpSession.getAttribute("username");
+//
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            System.out.println("czy ty tu wchodzisz?2");
+//            if (loggedInUser != null) {
+//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+//                if (optionalJobOffer.isPresent()) {
+//                    System.out.println("czy ty tu wchodzisz?3");
+//                    JobOffer jobOffer = optionalJobOffer.get();
+//
+//                    System.out.println("czy ty tu wchodzisz?4");
+//                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
+//                    if (myCV.isPresent()) {
+//                        System.out.println("czy ty tu wchodzisz?5");
+//                        CV cv = myCV.get();
+//                        // Utwórz obiekt Notification
+//                        System.out.println("czy ty tu wchodzisz?6");
+//                        User adresat = jobOffer.getUser();
+//                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+//
+//                        userService.save(loggedInUser);
+//                        userService.save(adresat);
+//                        return "cv_created_successfully";
+//                    } else {
+//
+//                        return "cv_not_found";
+//                    }
+//                }
+//            }
+//        }
+//
+//        return "redirect:/"; // Przekieruj w przypadku problemu
+//    }
+@PostMapping("/sendCV")
+public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication) {
+    System.out.println("czy ty tu wchodzisz?");
+
+    if (authentication != null && authentication.isAuthenticated()) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User loggedInUser = userService.findByUserName(userDetails.getUsername());
+
+        System.out.println("czy ty tu wchodzisz?2");
+        if (loggedInUser != null) {
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+            if (optionalJobOffer.isPresent()) {
+                System.out.println("czy ty tu wchodzisz?3");
+                JobOffer jobOffer = optionalJobOffer.get();
+
+                System.out.println("czy ty tu wchodzisz?4");
+                Optional<CV> myCV = cvService.findByUser(loggedInUser);
+                if (myCV.isPresent()) {
+                    System.out.println("czy ty tu wchodzisz?5");
+                    CV cv = myCV.get();
+                    // Utwórz obiekt Notification
+                    System.out.println("czy ty tu wchodzisz?6");
+                    User adresat = jobOffer.getUser();
+                    Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+
+                    userService.save(loggedInUser);
+                    userService.save(adresat);
+                    return "cv_created_successfully";
+                } else {
+                    return "cv_not_found";
+                }
+            }
+        }
+    }
+
+    return "redirect:/"; // Przekieruj w przypadku problemu
+}
+    @PostMapping("/changeMeetingDate")
+    public String changeMeetingDate(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            Authentication authentication
+    ) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
+                    Notification notification = notificationService.findById(notificationId);
+                    User adresat = jobOffer.getUser();
+
+                    // Tutaj możesz dodać kod do zmiany pola companyMessage
+                    notificationService.changeMeetingDate(notification, loggedInUser, adresat);
+
+                    return "cv_created_successfully";
+                }
+            }
+        }
+
+        return "redirect:/home"; // Przekieruj w przypadku problemu
+    }
+
     @PostMapping("/acceptMeetingDate")
     public String acceptNotification(
             @RequestParam("notificationId") Integer notificationId,
             @RequestParam("jobOfferId") Integer jobOfferId,
-            HttpSession httpSession
+            Authentication authentication
     ) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            System.out.println("czy ty tu wchodzisz?2");
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+
             if (loggedInUser != null) {
                 Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+
                 if (optionalJobOffer.isPresent()) {
-                    System.out.println("czy ty tu wchodzisz?3");
                     JobOffer jobOffer = optionalJobOffer.get();
                     Notification notification = notificationService.findById(notificationId);
                     User adresat = jobOffer.getUser();
+
                     notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
+
                     return "cv_created_successfully";
                 }
             }
         }
-        return "home";
+
+        return "redirect:/home"; // Przekieruj w przypadku problemu
     }
 
-    @PostMapping("/changeMeetingDate")
-    public String changeTermin(
-            @RequestParam("notificationId") Integer notificationId,
-            @RequestParam("jobOfferId") Integer jobOfferId,
-//        @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
-            HttpSession httpSession
-    ) {
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            System.out.println("czy ty tu wchodzisz?2");
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-                if (optionalJobOffer.isPresent()) {
-                    System.out.println("czy ty tu wchodzisz?3");
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Notification notification = notificationService.findById(notificationId);
-                    User adresat = jobOffer.getUser();
-                    // Tutaj możesz dodać kod do zmiany pola companyMessage
-                    notificationService.changeMeetingDate(notification, loggedInUser, adresat);
-                    return "cv_created_successfully";
-                }
-            }
-        }
-        return "home";
-    }
 
-    @PostMapping("/sendCV")
-    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
-        System.out.println("czy ty tu wchodzisz?");
-        String username = (String) httpSession.getAttribute("username");
-
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            System.out.println("czy ty tu wchodzisz?2");
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-                if (optionalJobOffer.isPresent()) {
-                    System.out.println("czy ty tu wchodzisz?3");
-                    JobOffer jobOffer = optionalJobOffer.get();
-
-                    System.out.println("czy ty tu wchodzisz?4");
-                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
-                    if (myCV.isPresent()) {
-                        System.out.println("czy ty tu wchodzisz?5");
-                        CV cv = myCV.get();
-                        // Utwórz obiekt Notification
-                        System.out.println("czy ty tu wchodzisz?6");
-                        User adresat = jobOffer.getUser();
-                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-
-                        userService.save(loggedInUser);
-                        userService.save(adresat);
-                        return "cv_created_successfully";
-                    } else {
-
-                        return "cv_not_found";
-                    }
-                }
-            }
-        }
-
-        return "redirect:/"; // Przekieruj w przypadku problemu
-    }
 
 }
