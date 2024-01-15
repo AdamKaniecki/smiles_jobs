@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.*;
@@ -51,17 +52,15 @@ public class CompanyPortalController {
 
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
-//    @PreAuthorize("hasAuthority('ROLE_COMPANY')")
     public String getCompanyPortalPage(Authentication authentication, Model model) {
 
         User loggedInUser = getLoggedInUser((authentication));
-
-        model.addAttribute("user", loggedInUser);
-
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
-        List<CV> cvList = cvService.findAll();
+        List<CvDTO> cvList = cvService.findAll().stream()
+                        .map(cvMapperDTO::map)
+                                .collect(Collectors.toList());
         model.addAttribute("cvList", cvList);
 
         List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
@@ -97,7 +96,6 @@ public class CompanyPortalController {
     @GetMapping("/cv/{cvId}")
     public String showCvDetails(@PathVariable Integer cvId, Model model) {
         Optional<CV> cv = cvService.findById(cvId);
-
         if (cv.isPresent()) {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
             return "show_cv";  // Użyj istniejącego widoku show_cv
@@ -108,7 +106,6 @@ public class CompanyPortalController {
 
     @PostMapping("/arrangeInterview")
     public String arrangeInterview(
-            @RequestParam("jobOfferId") Integer jobOfferId,
             @RequestParam("cvId") Integer cvId,
             @RequestParam("notificationId") Integer notificationId,
             @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
@@ -117,10 +114,10 @@ public class CompanyPortalController {
 
         try {
             User loggedInUser = getLoggedInUser(authentication);
-            JobOffer jobOffer = getJobOfferByUser(loggedInUser);
             User cvUser = getUserByCv(cvId);
             Notification notification = notificationService.findById(notificationId);
-            notificationService.arrangeInterview(notification, jobOffer.getUser(), cvUser, proposedDateTime);
+
+            notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
             return "job_offer_created_successfully";
         } catch (AccessDeniedException e) {
@@ -129,33 +126,6 @@ public class CompanyPortalController {
         }
     }
 
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            User loggedInUser = userService.findByUserName(userDetails.getUsername());
-//
-//            if (loggedInUser != null) {
-//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-//
-//                if (optionalJobOffer.isPresent()) {
-//                    JobOffer jobOffer = optionalJobOffer.get();
-//                    Optional<CV> myCV = cvService.findById(cvId);
-//
-//                    if (myCV.isPresent()) {
-//                        CV cv = myCV.get();
-
-//                        Notification notification = notificationService.findById(notificationId);
-//
-//                        notificationService.arrangeInterview(notification, loggedInUser, cv.getUser(), proposedDateTime);
-//
-//                        return "job_offer_created_successfully";
-//                    }
-//                }
-//            }
-//        }
-//
-//        return "redirect:/home"; // Przekieruj w przypadku problemu
-
-
 
     @PostMapping("/decline")
     public String declineNotification(
@@ -163,29 +133,18 @@ public class CompanyPortalController {
             @RequestParam("cvId") Integer cvId,
             Authentication authentication
     ) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+        try {
+            User loggedInUser = getLoggedInUser(authentication);
+            User cvUser = getUserByCv(cvId);
+            Notification notification = notificationService.findById(notificationId);
 
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+            notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
-                if (optionalJobOffer.isPresent()) {
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Optional<CV> myCV = cvService.findById(cvId);
-
-                    if (myCV.isPresent()) {
-                        CV cv = myCV.get();
-                        Notification notification = notificationService.findById(notificationId);
-
-                        notificationService.declineCandidate(notification, loggedInUser, cv.getUser());
-                        return "job_offer_created_successfully";
-                    }
-                }
-            }
+            return "job_offer_created_successfully";
+        } catch (AccessDeniedException e) {
+            log.error("Błąd dostępu: {}", e.getMessage());
+            return "redirect:/home";
         }
-
-        return "redirect:/home"; // Przekieruj w przypadku problemu
     }
 
     @PostMapping("/hired")
@@ -194,29 +153,18 @@ public class CompanyPortalController {
             @RequestParam("cvId") Integer cvId,
             Authentication authentication
     ) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+        try {
+            User loggedInUser = getLoggedInUser(authentication);
+            User cvUser = getUserByCv(cvId);
+            Notification notification = notificationService.findById(notificationId);
 
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+            notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 
-                if (optionalJobOffer.isPresent()) {
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    Optional<CV> myCV = cvService.findById(cvId);
-
-                    if (myCV.isPresent()) {
-                        CV cv = myCV.get();
-                        Notification notification = notificationService.findById(notificationId);
-
-                        notificationService.hiredCandidate(notification, loggedInUser, cv.getUser());
-                        return "job_offer_created_successfully";
-                    }
-                }
-            }
+            return "job_offer_created_successfully";
+        } catch (AccessDeniedException e) {
+            log.error("Błąd dostępu: {}", e.getMessage());
+            return "redirect:/home";
         }
-
-        return "redirect:/home"; // Przekieruj w przypadku problemu
     }
 
 
@@ -238,16 +186,6 @@ public class CompanyPortalController {
     }
 
 
-    @SneakyThrows
-    private JobOffer getJobOfferByUser(User loggedInUser) {
-        Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
-
-        if (optionalJobOffer.isEmpty()) {
-            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
-        }
-
-        return optionalJobOffer.get();
-    }
     @SneakyThrows
     private User getUserByCv(Integer cvId) {
         Optional<CV> myCV = cvService.findById(cvId);

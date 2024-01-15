@@ -133,20 +133,32 @@ public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDT
     }
 
 
-@GetMapping("/businessCard/{id}")
-public String showBusinessCard(@PathVariable Integer id, Model model) {
+//@GetMapping("/businessCard/{id}")
+//public String showBusinessCard(@PathVariable Integer id, Model model) {
+//
+//    Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
+//    if (myBusinessCard.isPresent()) {
+//        BusinessCard businessCard = myBusinessCard.get();
+//        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+//        model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+//        return "show_businessCard";
+//    } else {
+//        System.out.println("5");
+//        return "businessCard_not_found";
+//    }
+//}
 
-    Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
-    if (myBusinessCard.isPresent()) {
-        BusinessCard businessCard = myBusinessCard.get();
-        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-        model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-        return "show_businessCard";
-    } else {
-        System.out.println("5");
-        return "businessCard_not_found";
+    @GetMapping("/businessCard/{businessCardId}")
+    public String showBusinessCard(@PathVariable Integer businessCardId, Model model) {
+        Optional<BusinessCard> businessCard = businessCardService.findById(businessCardId);
+        if (businessCard.isPresent()) {
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
+//            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+            return "show_businessCard";
+        } else {
+            return "businessCard_not_found";
+        }
     }
-}
 
 
 //    @GetMapping("/redirectToUpdateMyBusinessCard")
