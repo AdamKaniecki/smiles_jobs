@@ -25,4 +25,9 @@ public class CV {
     private String hobby;
     private User user;
     private Address address;
+
+
+
+
+
 }

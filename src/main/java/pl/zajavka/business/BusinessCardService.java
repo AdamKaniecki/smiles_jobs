@@ -55,7 +55,7 @@ public class BusinessCardService {
     }
 
     public Optional<BusinessCard> findById(Integer id) {
-        log.debug("szukaj id w serwisie: w ", id);
+
         return businessCardRepository.findById(id).map(businessCardMapper::map);
     }
 

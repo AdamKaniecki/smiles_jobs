@@ -10,12 +10,11 @@ import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.AddressEntity;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.database.entity.*;
 import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
@@ -23,10 +22,8 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 
@@ -43,15 +40,14 @@ public class CvService {
     private final JobOfferMapper jobOfferMapper;
     private AddressRepository addressRepository;
     private AddressService addressService;
+    private JobOfferService jobOfferService;
+    private NotificationRepository notificationRepository;
 
 
     @Transactional
     public CV createCV(CV cv, User user) {
         // Sprawdź, czy użytkownik już ma CV
         if (cvRepository.existsByUser(userMapper.map(user))) {
-            // Obsłuż przypadki, gdy użytkownik już ma CV
-            // Możesz rzucić odpowiednim wyjątkiem lub zwrócić odpowiedni wynik
-            // W tym przykładzie zwracam null, ale możesz dostosować to do swoich potrzeb
             return null;
         }
         Address addressCV = cv.getAddress();
@@ -105,7 +101,7 @@ public class CvService {
     }
 
     public Optional<CV> findById(Integer id) {
-        log.debug("szukaj id w serwisie: w ", id);
+      ;
         return cvRepository.findById(id).map(cvMapper::map);
     }
 
@@ -148,43 +144,64 @@ public class CvService {
     }
 
 
+    @Transactional
     public void deleteCV(CV cv) {
+        System.out.println("Deleting CV: " + cv);
+
         if (cv != null) {
-            // Mapuj CV na CvEntity przed usunięciem z bazy danych
             CvEntity cvEntity = cvMapper.map(cv);
+            System.out.println("Mapped CV to CVEntity: " + cvEntity);
+    log.debug("co tu sie odjaniepawla: ",cvEntity);
+            cvRepository.deleteById(cvEntity.getId());
+            log.debug("co tu sie odjaniepawla2: ",cvEntity.getId());
+            System.out.println("Deleted CV with ID: " + cvEntity.getId());
+        } else {
+            throw new IllegalArgumentException("CV cannot be null");
+        }
+    }
+
+//
+//    // Przyjmowanie identyfikatora użytkownika, do którego ma być wysłane CV
+//    public void sendCv(User sender, Integer recipientUserId) {
+//        // Pobierz CV użytkownika wysyłającego
+//        CV cvToSend = sender.getCv();
+//
+//        // Pobierz użytkownika odbierającego
+//        UserEntity recipientUserEntity = userRepository.findById(recipientUserId)
+//                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o id: " + recipientUserId));
+//        userRepository.save(recipientUserEntity);
+//        User recipientUser = userMapper.map(recipientUserEntity);
+//        // Przypisz CV do użytkownika odbierającego
+//        recipientUser.setCv(cvToSend);
+//
+//        // Poniżej to jest przykładowe logowanie do konsoli
+//        System.out.println("CV wysłane od " + sender.getUserName() + " do " + recipientUser.getUserName());
+//    }
+
+    @Transactional
+    public void deleteCVAndSetNullInNotifications(CV cv) {
+        if (cv != null) {
+            CvEntity cvEntity = cvMapper.map(cv);
+
+            // Pobierz wszystkie powiązane notyfikacje z tym CV
+            List<NotificationEntity> notifications = notificationRepository.findByCvId(cvEntity.getId());
+
+            // Ustaw CV na null we wszystkich powiązanych notyfikacjach
+            for (NotificationEntity notification : notifications) {
+                notification.setCv(null);
+                notification.setCompanyMessage("użytkownik usunął swoje CV");
+                notification.setStatus(Status.REJECT);
+            }
+
+            // Usuń CV
             cvRepository.deleteById(cvEntity.getId());
         } else {
             throw new IllegalArgumentException("CV cannot be null");
         }
     }
 
-    // Przyjmowanie identyfikatora użytkownika, do którego ma być wysłane CV
-    public void sendCv(User sender, Integer recipientUserId) {
-        // Pobierz CV użytkownika wysyłającego
-        CV cvToSend = sender.getCv();
-
-        // Pobierz użytkownika odbierającego
-        UserEntity recipientUserEntity = userRepository.findById(recipientUserId)
-                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o id: " + recipientUserId));
-        userRepository.save(recipientUserEntity);
-        User recipientUser = userMapper.map(recipientUserEntity);
-        // Przypisz CV do użytkownika odbierającego
-        recipientUser.setCv(cvToSend);
-
-        // Poniżej to jest przykładowe logowanie do konsoli
-        System.out.println("CV wysłane od " + sender.getUserName() + " do " + recipientUser.getUserName());
-    }
-
-//    public List<CV> getReceivedCvs(Integer jobOfferId) {
-//        // Pobierz ofertę pracy
-//        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId)
-//                .map(jobOfferMapper::map)
-//                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono oferty pracy o id: " + jobOfferId));
-//        // Pobierz przesłane CV dla danej oferty pracy
-//        ArrayList<CV> cvs = new ArrayList<>(jobOffer.getReceivedCvs());
-//        return cvs;
-//    }
 }
+
 
 
 

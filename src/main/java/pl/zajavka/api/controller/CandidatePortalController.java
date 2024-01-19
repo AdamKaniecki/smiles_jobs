@@ -133,7 +133,7 @@ public class CandidatePortalController {
     public String getCandidatePortalPage(Model model, Authentication authentication) {
         System.out.println("czy ty tu wchodzisz 3?");
 
-        User loggedInUser = getLoggedInUser((authentication));
+        User loggedInUser = userService.getLoggedInUser((authentication));
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
@@ -171,27 +171,108 @@ public class CandidatePortalController {
     }
 
 
+//    @PostMapping("/sendCV")
+//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication) {
+//
+//        try {
+//            User loggedInUser = getLoggedInUser(authentication);
+//            User adresat = getJobOfferByUser(jobOfferId);
+//            JobOffer jobOffer =  getJobOfferByUser(adresat);
+//            CV cv = getCvByUser(loggedInUser.getId());
+//            Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+//
+//            userService.save(loggedInUser);
+//            userService.save(adresat);
+//
+//            return "cv_created_successfully";
+//        } catch (AccessDeniedException e) {
+//            log.error("Błąd dostępu: {}", e.getMessage());
+//            return "redirect:/home";
+//        }
+//
+//
+//    }
+
+
+//    @PostMapping("/sendCV")
+//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
+//        System.out.println("czy ty tu wchodzisz?");
+//        String username = (String) httpSession.getAttribute("username");
+//
+//        if (username != null) {
+//            User loggedInUser = userService.findByUserName(username);
+//            System.out.println("czy ty tu wchodzisz?2");
+//            if (loggedInUser != null) {
+//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
+//                if (optionalJobOffer.isPresent()) {
+//                    System.out.println("czy ty tu wchodzisz?3");
+//                    JobOffer jobOffer = optionalJobOffer.get();
+//
+//                    System.out.println("czy ty tu wchodzisz?4");
+//                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
+//                    if (myCV.isPresent()) {
+//                        System.out.println("czy ty tu wchodzisz?5");
+//                        CV cv = myCV.get();
+//                        // Utwórz obiekt Notification
+//                        System.out.println("czy ty tu wchodzisz?6");
+//                        User adresat = jobOffer.getUser();
+//                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+//
+//                        userService.save(loggedInUser);
+//                        userService.save(adresat);
+//
+//                    } else {
+//
+//                        return "cv_not_found";
+//                    }
+//                }
+//            }
+//        }
+//        return "cv_created_successfully";
+//
+//    }
+
     @PostMapping("/sendCV")
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication) {
+        if (authentication != null) {
+            User loggedInUser = userService.getLoggedInUser(authentication);
 
-        try {
-            User loggedInUser = getLoggedInUser(authentication);
-            User adresat = getJobOfferByUser(jobOfferId);
-            JobOffer jobOffer =  getJobOfferByUser(adresat);
-            CV cv = getCvByUser(loggedInUser);
-            Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
 
-            userService.save(loggedInUser);
-            userService.save(adresat);
+                if (optionalJobOffer.isPresent()) {
+                    JobOffer jobOffer = optionalJobOffer.get();
 
-            return "cv_created_successfully";
-        } catch (AccessDeniedException e) {
-            log.error("Błąd dostępu: {}", e.getMessage());
-            return "redirect:/home";
+                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
+
+                    if (myCV.isPresent()) {
+                        CV cv = myCV.get();
+
+                        try {
+                            // Utwórz obiekt Notification
+                            Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, jobOffer.getUser());
+
+                            // Zapisz encje w odpowiedniej kolejności
+//                            userService.save(loggedInUser);
+//                            notificationService.save(notification);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // Obsłuż błąd zapisu
+                            return "error_while_saving";
+                        }
+
+                    } else {
+                        return "cv_not_found";
+                    }
+                }
+            }
         }
-
-
+        return "cv_created_successfully";
     }
+
+
+
+
 
 
     @PostMapping("/changeMeetingDate")
@@ -249,54 +330,6 @@ public class CandidatePortalController {
         }
 
         return "redirect:/home"; // Przekieruj w przypadku problemu
-    }
-
-
-    private User getLoggedInUser(Authentication authentication) throws AccessDeniedException {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AccessDeniedException("Użytkownik nie jest uwierzytelniony");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User loggedInUser = userService.findByUserName(userDetails.getUsername());
-
-        if (loggedInUser == null) {
-            throw new AccessDeniedException("Użytkownik nie znaleziony");
-        }
-
-        return loggedInUser;
-    }
-
-    @SneakyThrows
-    private User getJobOfferByUser(Integer jobOfferId) {
-        Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-
-        if (optionalJobOffer.isEmpty()) {
-            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
-        }
-
-        return optionalJobOffer.get().getUser();
-    }
-
-    @SneakyThrows
-    private CV getCvByUser(User cvOwner) {
-        Optional<CV> optionalCV = cvService.findByUser(cvOwner);
-        if (optionalCV.isEmpty()) {
-            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
-        }
-
-        return optionalCV.get();
-    }
-
-    @SneakyThrows
-    private JobOffer getJobOfferByUser(User jobOfferOwner) {
-        Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(jobOfferOwner);
-
-        if (!optionalJobOffer.isPresent()) {
-            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
-        }
-
-        return optionalJobOffer.get();
     }
 
 

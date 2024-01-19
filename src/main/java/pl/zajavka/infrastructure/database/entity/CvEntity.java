@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.infrastructure.security.UserEntity;
 
@@ -67,7 +68,7 @@ public class CvEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
 

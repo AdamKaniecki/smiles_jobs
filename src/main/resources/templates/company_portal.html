@@ -24,32 +24,32 @@
     <p>The best place to find an employee is SmilesJobs!</p>
     <p>Please take a look at job seekers</p>
 
-    <div>
-        <table class="table" id="sortable-table-cv">
-            <thead class="table-dark">
-            <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Work experience</th>
-                <th>Skills</th>
-                <th>Details</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="cvDTO : ${cvList}">
-                <td th:text="${cvDTO.id}"></td>
-                <td th:text="${cvDTO.name}"></td>
-                <td th:text="${cvDTO.surname}"></td>
-                <td th:text="${cvDTO.workExperience}"></td>
-                <td th:text="${cvDTO.skills}"></td>
-                <td>
-                    <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<!--    <div>-->
+<!--        <table class="table" id="sortable-table-cv">-->
+<!--            <thead class="table-dark">-->
+<!--            <tr>-->
+<!--                <th>Number</th>-->
+<!--                <th>Name</th>-->
+<!--                <th>Surname</th>-->
+<!--                <th>Work experience</th>-->
+<!--                <th>Skills</th>-->
+<!--                <th>Details</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="cvDTO : ${cvList}">-->
+<!--                <td th:text="${cvDTO.id}"></td>-->
+<!--                <td th:text="${cvDTO.name}"></td>-->
+<!--                <td th:text="${cvDTO.surname}"></td>-->
+<!--                <td th:text="${cvDTO.workExperience}"></td>-->
+<!--                <td th:text="${cvDTO.skills}"></td>-->
+<!--                <td>-->
+<!--                    <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
 
     <br>
 
@@ -116,14 +116,16 @@
             <td th:text="${notificationDTO.id}"></td>
             <td th:text="${notificationDTO.jobOffer.id}"></td>
             <td th:text="${notificationDTO.companyMessage}"></td>
-            <td>
-                <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">View Details</a>
+            <td th:if="${notificationDTO.cv != null}">
+                <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">Zobacz szczegóły</a>
+
             </td>
+            <td th:if="${notificationDTO.cv == null}">-</td>
             <td>
                 <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
                 <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
 
-                    <form th:action="@{/arrangeInterview}" method="post">
+                    <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null}">
                         <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
                         <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
@@ -132,7 +134,7 @@
                                 <label for="proposedDateTime">Proposed Date and Time:</label>
                                 <input type="datetime-local"
                                        id="proposedDateTime"
-                                       name="proposedDateTime"5
+                                       name="proposedDateTime"
                                        th:value="${proposedDateTime != null} ? ${#temporals.format(proposedDateTime, 'yyyy-MM-ddTHH:mm')} : ''"
                                        th:onload="this.dispatchEvent(new Event('input'))">
                             </div>
@@ -146,12 +148,12 @@
                 <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
                     <div>
                         <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Waiting for Interview'}">
-                        <form th:action="@{/decline}" method="post" class="d-inline">
+                        <form th:action="@{/decline}" method="post" class="d-inline" th:if="${notificationDTO.cv != null}">
                             <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                             <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                             <button type="submit" class="btn btn-danger">Decline</button>
                         </form>
-                        <form th:action="@{/hired}" method="post" class="d-inline">
+                        <form th:action="@{/hired}" method="post" class="d-inline"  th:if="${notificationDTO.cv != null}">
                             <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                             <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                             <button type="submit" class="btn btn-success">Hired</button>

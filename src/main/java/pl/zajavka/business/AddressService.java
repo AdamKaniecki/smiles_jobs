@@ -67,6 +67,7 @@ public class AddressService {
         return addressRepository.findById(id).map(addressMapper::map);
     }
 
+    @Transactional
     public void deleteAddress(Address address) {
         if(address != null){
             AddressEntity addressEntity = addressMapper.map(address);

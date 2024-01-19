@@ -1,7 +1,9 @@
 package pl.zajavka.business;
 
+import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.domain.CV;
@@ -37,6 +39,7 @@ public class NotificationService {
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
     private UserRepository userRepository;
+    private EntityManager entityManager;
 
 
     public List<Notification> findByUser(User user) {
@@ -44,9 +47,28 @@ public class NotificationService {
         List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
         return notificationMapper.mapToList(notificationEntities);
     }
+//@Transactional
+//    public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
+//
+//        NotificationEntity notificationEntity = NotificationEntity.builder()
+//                .status(Status.UNDER_REVIEW)
+//                .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
+//                .companyMessage("chcę u was pracować")
+//                .jobOffer(jobOfferMapper.map(jobOffer))
+//                .cv(cvMapper.map(cv))
+//                .senderUser(userMapper.map(loggedInUser))
+//                .receiverUser(userMapper.map(adresat))
+//                .build();
+//
+//
+//        notificationRepository.save(notificationEntity);
+//
+//
+//        return notificationMapper.map(notificationEntity);
+//    }
 
+    @Transactional
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
-
         NotificationEntity notificationEntity = NotificationEntity.builder()
                 .status(Status.UNDER_REVIEW)
                 .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
@@ -57,12 +79,11 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-
-        notificationRepository.save(notificationEntity);
-
+                 entityManager.merge(notificationEntity);
 
         return notificationMapper.map(notificationEntity);
     }
+
 
     public void save(Notification notification) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
@@ -150,6 +171,9 @@ public class NotificationService {
         userService.save(adresat);
 
 
+    }
+    public void deleteNotificationsByCvId(Integer cvId) {
+        notificationRepository.deleteByCvId(cvId);
     }
 
 }

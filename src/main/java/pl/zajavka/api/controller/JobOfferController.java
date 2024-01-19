@@ -90,46 +90,27 @@ public class JobOfferController {
         }
     }
 
-//    @GetMapping("/jobOffer/{jobOfferId}")
-//    public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
-//        Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-//        if (optionalJobOffer.isPresent()) {
-//            JobOffer jobOffer = optionalJobOffer.get();
-//            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
-//            return "job_offer_details";
-//        } else {
-//            // Oferta pracy nie należy do zalogowanego użytkownika
-//            return "redirect:/showMyJobOffers";
-//        }
-//    }
+
 
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
-        System.out.println("czy tu wchodzisz wogole?");
+
         Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-        System.out.println("czy tu wchodzisz wogole?2");
         if (optionalJobOffer.isPresent()) {
-            System.out.println("czy tu wchodzisz wogole3?");
             JobOffer jobOffer = optionalJobOffer.get();
-            System.out.println("czy tu wchodzisz wogole4?");
             model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
-            System.out.println("czy tu wchodzisz wogole?5");
-            // Pobierz wizytówkę przypisaną do oferty pracy
+
+
             Optional<BusinessCard> businessCard = businessCardService.findByUser(jobOffer.getUser());
-            System.out.println("czy tu wchodzisz wogole?6");
             if (businessCard.isPresent()) {
-                System.out.println("czy tu wchodzisz wogole?7");
                 model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
             } else {
-                System.out.println("czy tu wchodzisz wogole8?");
                 model.addAttribute("businessCardDTO", new BusinessCardDTO());
             }
-            // Jeśli wizytówka istnieje, przekaz ją do modelu
-            System.out.println("czy tu wchodzisz wogole?9");
-            return "job_offer_details";
+            return "job_offer_details" ;
         }
 
-        return null;
+        return "job_offer_details";
     }
 
 
@@ -142,7 +123,6 @@ public class JobOfferController {
             List<JobOfferDTO> jobOffersDTO = jobOfferService.findByUser(loggedInUser).stream()
                     .map(jobOfferMapperDTO::map)
                     .collect(Collectors.toList());
-
             model.addAttribute("jobOffersDTO", jobOffersDTO);
 
             return "show_my_job_offers";
@@ -188,6 +168,7 @@ public class JobOfferController {
     public String updateJobOffer(
             @ModelAttribute("jobOfferDTO") JobOfferDTO updateJobOfferDTO,
             Model model) {
+
         Optional<JobOffer> myJobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
         if (myJobOffer.isPresent()) {
             JobOffer jobOffer = myJobOffer.get();

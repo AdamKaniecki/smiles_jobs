@@ -2,6 +2,8 @@ package pl.zajavka.business;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ public class  UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private RoleRepository roleRepository;
+    private SmilesJobsUserDetailsService smilesJobsUserDetailsService;
 
     @Transactional
     public User createCandidate(User user) {
@@ -122,6 +125,14 @@ public class  UserService {
         UserEntity userEntity = userMapper.map(user);
         userRepository.save(userEntity);
     }
+    public User getLoggedInUser(Authentication authentication) {
+        UserEntity userEntity = userRepository.findByUserName(authentication.getName());
+        if (userEntity == null) {
+            System.out.println("i co ?34");
+            return null;
 
+        }
+       return userMapper.map(userEntity);
 
+}
 }

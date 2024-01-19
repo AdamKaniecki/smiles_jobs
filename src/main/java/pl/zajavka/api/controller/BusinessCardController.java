@@ -250,12 +250,11 @@ public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDT
         if (myBusinessCard.isPresent()) {
             BusinessCard businessCard = myBusinessCard.get();
             Address address = businessCard.getAddress();
-
             businessCardService.deleteBusinessCard(businessCard);
             addressService.deleteAddress(address);
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
 
-                        return "redirect: /company_portal";
+            return "redirect: /company_portal";
                     }
 
         // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanej BusinessCard lub wystąpił inny problem
