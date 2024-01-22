@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +55,10 @@ public class CompanyPortalController {
     @GetMapping(COMPANY_PORTAL)
     public String getCompanyPortalPage(Authentication authentication, Model model) {
 
-        User loggedInUser = getLoggedInUser((authentication));
+        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = userAuth.getName();
+
+        User loggedInUser = getLoggedInUser((userAuth));
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 

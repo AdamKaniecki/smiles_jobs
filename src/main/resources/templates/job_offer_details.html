@@ -37,6 +37,7 @@
 
             <form th:action="@{/sendCV}" method="post">
                 <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">
+<!--                <input type="hidden" name="cvId" th:if="${cvrDTO.id == null}">-->
                 <button type="submit" class="btn btn-primary">Send CV</button>
             </form>
         </div>

@@ -109,12 +109,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
+import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.database.entity.NotificationEntity;
+import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
@@ -134,6 +138,7 @@ public class JobOfferService {
     private UserMapper userMapper;
     private JobOfferMapper jobOfferMapper;
     private UserService userService;
+    private NotificationRepository notificationRepository;
 
     @Transactional
     public JobOffer create(JobOffer jobOffer, User user) {
@@ -195,8 +200,14 @@ public class JobOfferService {
         }
     }
 
-    public Optional<JobOffer> findById(Integer id) {
-        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
+//    public Optional<JobOffer> findById(Integer id) {
+//        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
+//    }
+
+    public JobOffer findById(Integer id) {
+        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Not found JobOffer with ID: " + id));
+        return jobOfferMapper.map(jobOfferEntity);
     }
 
 
@@ -238,14 +249,21 @@ public class JobOfferService {
         }
     }
 
-    public void deleteJobOffer(Integer jobOfferId) {
+    public void deleteJobOfferAndSetNullInNotifications(Integer jobOfferId) {
         // Pobierz ofertę pracy na podstawie jej identyfikatora
         JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOfferId)
                 .orElseThrow(() -> new IllegalArgumentException("Oferta pracy o identyfikatorze " + jobOfferId + " nie została znaleziona."));
 
-        // Mapuj encję na domenową klasę JobOffer
-        JobOffer jobOffer = jobOfferMapper.map(jobOfferEntity);
-        // Usuń ofertę pracy
+        // Pobierz wszystkie powiązane notyfikacje z tym CV
+        List<NotificationEntity> notifications = notificationRepository.findByCvId(jobOfferEntity.getId());
+
+        // Ustaw CV na null we wszystkich powiązanych notyfikacjach
+        for (NotificationEntity notification : notifications) {
+            notification.setJobOffer(null);
+            notification.setCandidateMessage("użytkownik usunął ofertę pracy");
+            notification.setStatus(Status.REJECT);
+        }
+
         jobOfferRepository.delete(jobOfferEntity);
     }
 

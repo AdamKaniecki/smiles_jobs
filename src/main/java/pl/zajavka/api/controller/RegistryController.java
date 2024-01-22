@@ -3,6 +3,8 @@ package pl.zajavka.api.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,10 +43,8 @@ public class RegistryController {
         // Utwórz kandydata w bazie danych
         User user = userMapperDTO.map(userDTO);
         userService.createCandidate(user);
-
         // Zapisz użytkownika w sesji
         session.setAttribute("userDTO", userDTO);
-
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("userDTO", userDTO);
 
@@ -58,7 +58,7 @@ public class RegistryController {
         userService.createCompany(user);
 
 
-        // Zapisz użytkownika w sesji
+//         Zapisz użytkownika w sesji
         session.setAttribute("userDTO", userDTO);
 
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne

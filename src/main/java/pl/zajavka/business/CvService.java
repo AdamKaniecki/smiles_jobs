@@ -101,7 +101,7 @@ public class CvService {
     }
 
     public Optional<CV> findById(Integer id) {
-      ;
+        ;
         return cvRepository.findById(id).map(cvMapper::map);
     }
 
@@ -151,7 +151,7 @@ public class CvService {
         if (cv != null) {
             CvEntity cvEntity = cvMapper.map(cv);
             System.out.println("Mapped CV to CVEntity: " + cvEntity);
-    log.debug("co tu sie odjaniepawla: ",cvEntity);
+            log.debug("co tu sie odjaniepawla: ",cvEntity);
             cvRepository.deleteById(cvEntity.getId());
             log.debug("co tu sie odjaniepawla2: ",cvEntity.getId());
             System.out.println("Deleted CV with ID: " + cvEntity.getId());
@@ -179,7 +179,7 @@ public class CvService {
 //    }
 
     @Transactional
-    public void deleteCVAndSetNullInNotifications(CV cv) {
+    public void deleteCVAndSetNullInNotifications(CV cv, Address address) {
         if (cv != null) {
             CvEntity cvEntity = cvMapper.map(cv);
 
@@ -201,7 +201,3 @@ public class CvService {
     }
 
 }
-
-
-
-

@@ -278,8 +278,8 @@ public class CvController {
 //        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanego CV lub wystąpił inny problem
 //        return "redirect:/";  // Przekieruj na stronę główną lub obsłuż inaczej
 //    }
-//
-//
+
+
 
 
     @GetMapping("/showCV")
@@ -397,10 +397,9 @@ public class CvController {
         Optional<CV> optionalCV = cvService.findById(cvToDelete.getId());
         if (optionalCV.isPresent()) {
             CV cv = optionalCV.get();
-
             Address address = cv.getAddress();
-            addressService.deleteAddress(address);
-            cvService.deleteCVAndSetNullInNotifications(cvToDelete);
+
+            cvService.deleteCVAndSetNullInNotifications(cvToDelete, address);
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
             return "cv_created_successfully";
         }

@@ -1,18 +1,28 @@
 package pl.zajavka.business;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.webjars.NotFoundException;
+import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
+import pl.zajavka.domain.CV;
+import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.*;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -22,6 +32,7 @@ public class  UserService {
     private final UserMapper userMapper;
     private RoleRepository roleRepository;
     private SmilesJobsUserDetailsService smilesJobsUserDetailsService;
+    private CvMapper cvMapper;
 
     @Transactional
     public User createCandidate(User user) {
@@ -123,7 +134,7 @@ public class  UserService {
 
     public void save(User user) {
         UserEntity userEntity = userMapper.map(user);
-        userRepository.save(userEntity);
+        userRepository.saveAndFlush(userEntity);
     }
     public User getLoggedInUser(Authentication authentication) {
         UserEntity userEntity = userRepository.findByUserName(authentication.getName());
@@ -135,4 +146,37 @@ public class  UserService {
        return userMapper.map(userEntity);
 
 }
+
+    @SneakyThrows
+    public String loginUser(Model model,  Authentication auth) {
+        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
+        String username = userAuth.getName();
+
+
+
+        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CANDIDATE"))) {
+            // Zalogowano Kandydata pomyślnie
+            System.out.println("Zalogowano Kandydata pomyślnie");
+            model.addAttribute("username", username);
+            return "redirect:/candidate_portal";
+        } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
+            // Zalogowano Firmę pomyślnie
+            System.out.println("Zalogowano Firmę pomyślnie");
+            model.addAttribute("username", username);
+            return "redirect:/company_portal";
+        } else {
+            // Nieprawidłowe dane logowania
+            System.out.println("Nieprawidłowe dane logowania.");
+            model.addAttribute("error", "Invalid credentials");
+            return "login";
+        }
+    }
+
+//    public User getUserByJobOffer(JobOffer jobOffer) {
+//        Integer jobOfferId = jobOffer.getId();
+//        UserEntity userEntity = userRepository.findById(jobOfferId)
+//                .orElseThrow(() -> new NotFoundException("User not found for JobOffer with ID: " + jobOfferId));
+//        return userMapper.map(userEntity);
+//    }
+
 }

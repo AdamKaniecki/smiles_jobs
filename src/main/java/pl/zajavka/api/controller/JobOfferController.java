@@ -57,7 +57,6 @@ public class JobOfferController {
     }
 
 
-
     @PostMapping("/createJobOffer")
     public String createdJobOffers(
             @ModelAttribute("jobOfferDTO") JobOfferDTO jobOfferDTO,
@@ -91,23 +90,17 @@ public class JobOfferController {
     }
 
 
-
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
 
-        Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-        if (optionalJobOffer.isPresent()) {
-            JobOffer jobOffer = optionalJobOffer.get();
-            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+        model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
 
-
-            Optional<BusinessCard> businessCard = businessCardService.findByUser(jobOffer.getUser());
-            if (businessCard.isPresent()) {
-                model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
-            } else {
-                model.addAttribute("businessCardDTO", new BusinessCardDTO());
-            }
-            return "job_offer_details" ;
+        Optional<BusinessCard> businessCard = businessCardService.findByUser(jobOffer.getUser());
+        if (businessCard.isPresent()) {
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
+        } else {
+            model.addAttribute("businessCardDTO", new BusinessCardDTO());
         }
 
         return "job_offer_details";
@@ -150,28 +143,25 @@ public class JobOfferController {
         return "jobOffer_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
+
     @GetMapping("/updateJobOfferForm")
     public String updateMyJobOffer(@RequestParam Integer id, Model model) {
-        Optional<JobOffer> myJobOffer = jobOfferService.findById(id);
-        if (myJobOffer.isPresent()) {
-            JobOffer jobOffer = myJobOffer.get();
-            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
-            model.addAttribute("userDTO", userMapperDTO.map(jobOffer.getUser()));
-//            model.addAttribute("address", cv.getAddress());
+            JobOffer myJobOffer = jobOfferService.findById(id);
+
+            model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(myJobOffer));
+            model.addAttribute("userDTO", userMapperDTO.map(myJobOffer.getUser()));
+            // model.addAttribute("address", cv.getAddress());
             return "update_job_offer_form";
-        } else {
-            return "job_offer_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
         }
-    }
+
+
 
     @PutMapping("/updateJobOfferDone")
     public String updateJobOffer(
             @ModelAttribute("jobOfferDTO") JobOfferDTO updateJobOfferDTO,
             Model model) {
 
-        Optional<JobOffer> myJobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
-        if (myJobOffer.isPresent()) {
-            JobOffer jobOffer = myJobOffer.get();
+       JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
             jobOffer.setCompanyName(updateJobOfferDTO.getCompanyName());
             jobOffer.setPosition(updateJobOfferDTO.getPosition());
             jobOffer.setResponsibilities(updateJobOfferDTO.getResponsibilities());
@@ -182,25 +172,21 @@ public class JobOfferController {
             jobOfferService.updateJobOffer(jobOffer);
 
             model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
+
             return "job_offer_created_successfully";
-        } else {
-            return "job_offer_not_found";
         }
 
-    }
+
+
 
     @DeleteMapping("/deleteJobOffer/{jobOfferId}")
     public String deleteJobOffer(@PathVariable Integer jobOfferId, Model model, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User loggedInUser = userService.findByUserName(userDetails.getUsername());
-
         if (loggedInUser != null) {
-            Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-            if (optionalJobOffer.isPresent() && optionalJobOffer.get().getUser().equals(loggedInUser)) {
-                jobOfferService.deleteJobOffer(jobOfferId);
-                return "redirect:/showMyJobOffers";
+
+                jobOfferService.deleteJobOfferAndSetNullInNotifications(jobOfferId);
             }
-        }
 
         return "redirect:/showMyJobOffers";
     }

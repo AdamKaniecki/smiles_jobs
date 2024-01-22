@@ -67,7 +67,7 @@ public class NotificationService {
 //        return notificationMapper.map(notificationEntity);
 //    }
 
-    @Transactional
+
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
         NotificationEntity notificationEntity = NotificationEntity.builder()
                 .status(Status.UNDER_REVIEW)
@@ -79,7 +79,7 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-                 entityManager.merge(notificationEntity);
+                 notificationRepository.saveAndFlush(notificationEntity);
 
         return notificationMapper.map(notificationEntity);
     }
