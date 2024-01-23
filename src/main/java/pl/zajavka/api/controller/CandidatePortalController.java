@@ -527,7 +527,7 @@ public class CandidatePortalController {
 //
 
 
-//    @GetMapping(CANDIDATE_PORTAL)
+    //    @GetMapping(CANDIDATE_PORTAL)
 //    public String getCandidatePortalPage(Model model, Authentication authentication) {
 //        System.out.println("czy ty tu wchodzisz 3?");
 //        if (authentication != null && authentication.isAuthenticated()) {
@@ -556,59 +556,39 @@ public class CandidatePortalController {
 //            return "home";
 //        }
 //    }
-
-
-    @PostMapping("/sendCV")
-    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
-        System.out.println("czy ty tu wchodzisz?");
-        String username = (String) httpSession.getAttribute("username");
-        if (username != null) {
-            User loggedInUser = userService.findByUserName(username);
-            System.out.println("czy ty tu wchodzisz?2");
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
-                if (optionalJobOffer.isPresent()) {
-                    System.out.println("czy ty tu wchodzisz?3");
-                    JobOffer jobOffer = optionalJobOffer.get();
-                    System.out.println("czy ty tu wchodzisz?4");
-                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
-                    if (myCV.isPresent()) {
-                        System.out.println("czy ty tu wchodzisz?5");
-                        CV cv = myCV.get();
-                        // Utwórz obiekt Notification
-                        System.out.println("czy ty tu wchodzisz?6");
-                        User adresat = jobOffer.getUser();
-                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-
-                        // Zapisz zmiany w użytkowniku
-                        userService.save(loggedInUser);
-                        userService.save(adresat);
-
-                        return "candidate_created_successfully";
-                    } else {
-                        // Obsłuż sytuację, gdy użytkownik nie ma przypisanego CV
-                        return "cv_not_found"; // Przekieruj na stronę główną lub obsłuż inaczej
-                    }
-                }
-            }
-        }
-        return "redirect:/"; // Przekieruj w przypadku problemu
-    }
-
-
     @GetMapping(CANDIDATE_PORTAL)
-    public String getCandidatePortalPage(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
+    public String getCandidatePortalPage(Model model, Authentication authentication) {
+        System.out.println("czy ty tu wchodzisz 3?");
+        if (authentication != null && authentication.isAuthenticated()) {
             // Użytkownik jest zalogowany
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = userService.findByUserName(userDetails.getUsername());
             model.addAttribute("user", user);
+            UserDTO userDTO = userMapperDTO.map(user);
+            model.addAttribute("userDTO", userDTO);
+            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
+            List<JobOffer> jobOffers = jobOfferService.findAll();
+            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
+                    .map(jobOfferMapperDTO::map)
+                    .toList();
+            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
+
+            List<Notification> userNotifications = notificationService.findByUser(user);
+            List<NotificationDTO> notificationDTOs = userNotifications.stream()
+                    .map(notificationMapperDTO::map)
+                    .collect(Collectors.toList());
+            model.addAttribute("notifications", notificationDTOs);
+
             return "candidate_portal";
         } else {
             // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-            return "redirect:/login";
+            return "home";
         }
     }
 }
+
+
+
 
 
 

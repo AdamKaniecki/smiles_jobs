@@ -1,7 +1,12 @@
 package pl.zajavka.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,10 +20,13 @@ import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.RoleRepository;
 
+import java.util.Collection;
+
 @Controller
 public class LoginController {
     private UserService userService;
     private RoleRepository roleRepository;
+    private AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
     public String login() {
@@ -248,6 +256,25 @@ public class LoginController {
 //            return "login";
 //        }
 //    }
+
+//    nie kasować
+//    @PostMapping("/loginUser")
+//    public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
+//        // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
+//        User user = userService.findByUserName(username);
+//        if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username)) {
+//            // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
+//            session.setAttribute("user", user); // Przechowaj użytkownika w sesji
+//            System.out.println("Zalogowano pomyślnie");
+//            model.addAttribute("username", username);
+//            return "candidate_portal";
+//        } else {
+//            model.addAttribute("error", "Nieprawidłowe dane logowania.");
+//            return "login";
+//        }
+//    }
+
+
     @PostMapping("/loginUser")
     public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
         // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
@@ -259,11 +286,17 @@ public class LoginController {
             model.addAttribute("username", username);
             return "candidate_portal";
         } else {
+            System.out.println("Nieprawidłowe dane logowania.");
             model.addAttribute("error", "Nieprawidłowe dane logowania.");
             return "login";
         }
     }
 }
+
+
+
+
+
 
 
 

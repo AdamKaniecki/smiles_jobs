@@ -108,13 +108,13 @@ public class RegistryController {
 //    return "candidate_created_successfully";
 //}
 
-    @PostMapping("/company_registry")
-    public String createCompany(@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
-        User user = userMapperDTO.map(userDTO);
-        userService.createCompany(user);
-        model.addAttribute("userDTO", userDTO);
-        return "company_created_successfully";
-    }
+//    @PostMapping("/company_registry")
+//    public String createCompany(@ModelAttribute("userDTO") UserDTO userDTO, Model model) {
+//        User user = userMapperDTO.map(userDTO);
+//        userService.createCompany(user);
+//        model.addAttribute("userDTO", userDTO);
+//        return "company_created_successfully";
+//    }
 
 //    @PostMapping("/candidateRegistry")
 //    public String createCandidate(@ModelAttribute("userDTO") UserDTO userDTO, Model model, HttpSession session) {
@@ -147,6 +147,20 @@ public class RegistryController {
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("user", user);
 
-        return "user_created_successfully";
+        return "candidate_created_successfully";
+    }
+
+    @PostMapping("/companyRegistry")
+    public String createCompany(@ModelAttribute("username") User user, Model model, HttpSession session) {
+        // Utwórz kandydata w bazie danych
+        userService.createCompany(user);
+
+        // Zapisz użytkownika w sesji
+        session.setAttribute("user", user);
+
+        // Dodaj użytkownika do modelu, jeśli to jest potrzebne
+        model.addAttribute("user", user);
+
+        return "company_created_successfully";
     }
 }
