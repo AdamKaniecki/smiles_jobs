@@ -172,11 +172,21 @@ public class  UserService {
         }
     }
 
-//    public User getUserByJobOffer(JobOffer jobOffer) {
-//        Integer jobOfferId = jobOffer.getId();
-//        UserEntity userEntity = userRepository.findById(jobOfferId)
-//                .orElseThrow(() -> new NotFoundException("User not found for JobOffer with ID: " + jobOfferId));
-//        return userMapper.map(userEntity);
-//    }
+    public User getUserByJobOffer(JobOffer jobOffer) {
+        Integer jobOfferId = jobOffer.getId();
+        UserEntity userEntity = userRepository.findById(jobOfferId)
+                .orElseThrow(() -> new NotFoundException("User not found for JobOffer with ID: " + jobOfferId));
+        return userMapper.map(userEntity);
+    }
 
+//    public RoleEntity getUserRole(User user) {
+//        // Pobierz rolę użytkownika na podstawie jego nazwy użytkownika
+//        UserEntity userEntity = userRepository.findByUserName(user.getUserName());
+//
+//        if (userEntity != null) {
+//            return roleRepository.findByUsersContaining(userEntity);
+//        }
+//
+//        return null;
+//    }
 }

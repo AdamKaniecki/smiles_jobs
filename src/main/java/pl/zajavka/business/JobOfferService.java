@@ -200,9 +200,9 @@ public class JobOfferService {
         }
     }
 
-//    public Optional<JobOffer> findById(Integer id) {
-//        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
-//    }
+    public Optional<JobOffer> findById2(Integer id) {
+        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
+    }
 
     public JobOffer findById(Integer id) {
         JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)

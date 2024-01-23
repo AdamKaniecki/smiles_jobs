@@ -89,8 +89,10 @@ public class CvService {
                 .toList();
     }
 
-    public Optional<CV> getCVById(Integer cvId) {
-        return cvRepository.findById(cvId).map(cvMapper::map);
+    public CV getCVById(Integer cvId) {
+        CvEntity cvEntity = cvRepository.findById(cvId).orElseThrow(()-> new NotFoundException("Not found CV with ID: " + cvId));
+
+        return cvMapper.map(cvEntity);
     }
 //    public Optional<CV> findCvByUserId(Integer id) {
 //        return cvRepository.findByUserId(id);
@@ -160,7 +162,7 @@ public class CvService {
         }
     }
 
-//
+
 //    // Przyjmowanie identyfikatora użytkownika, do którego ma być wysłane CV
 //    public void sendCv(User sender, Integer recipientUserId) {
 //        // Pobierz CV użytkownika wysyłającego
@@ -199,5 +201,6 @@ public class CvService {
             throw new IllegalArgumentException("CV cannot be null");
         }
     }
+
 
 }

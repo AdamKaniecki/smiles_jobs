@@ -23,9 +23,9 @@ public class SmilesJobsUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByUserName(userName);
-        List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-        return buildUserForAuthentication(user, authorities);
+        UserEntity userEntity = userRepository.findByUserName(userName);
+        List<GrantedAuthority> authorities = getUserAuthority(userEntity.getRoles());
+        return buildUserForAuthentication(userEntity, authorities);
     }
 
     private List<GrantedAuthority> getUserAuthority(Set<RoleEntity> userRoles) {
@@ -40,6 +40,7 @@ public class SmilesJobsUserDetailsService implements UserDetailsService {
                 user.getUserName(),
                 user.getPassword(),
                 user.getActive(),
+
                 true,
                 true,
                 true,
