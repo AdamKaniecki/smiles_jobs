@@ -92,6 +92,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.NotificationDTO;
@@ -114,7 +115,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+//@SessionAttributes("userSession")
 @AllArgsConstructor
 @Controller
 @Slf4j
@@ -133,155 +134,38 @@ public class CandidatePortalController {
     private CvService cvService;
     private EntityManager entityManager;
 
-//    @SneakyThrows
-//    @GetMapping(CANDIDATE_PORTAL)
-//    public String getCandidatePortalPage(Model model, Authentication authentication, HttpSession session) {
-//
-//        User user = (User) session.getAttribute("username");
-//
-//
-//        User loggedInUser = userService.getLoggedInUser((authentication));
-//        UserDTO userDTO = userMapperDTO.map(loggedInUser);
-//        model.addAttribute("userDTO", userDTO);
-//
-//        List<JobOfferDTO> jobOfferDTOs = jobOfferService.findAll().stream()
-//                .map(jobOfferMapperDTO::map)
-//                .collect(Collectors.toList());
-//        model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//        List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
-//                .map(notificationMapperDTO::map)
-//                .collect(Collectors.toList());
-//        model.addAttribute("notifications", notifications);
-//
-//        return "candidate_portal";
-//    }
+    @SneakyThrows
+    @GetMapping(CANDIDATE_PORTAL)
+    public String getCandidatePortalPage(Model model, Authentication authentication, HttpSession httpSession) {
 
 
-//    @GetMapping(CANDIDATE_PORTAL)
-//    public String getCandidatePortalPage(HttpSession session, Model model) {
-//        System.out.println("czy ty tu wchodzisz 3?");
-//        User user = (User) session.getAttribute("user");
-//        if (user != null) {
-//            // Użytkownik jest zalogowany
-//            model.addAttribute("user", user);
-//            UserDTO userDTO = userMapperDTO.map(user);
-//            model.addAttribute("userDTO", userDTO);
-//            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-//
-//            List<JobOffer> jobOffers = jobOfferService.findAll();
-//            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-//                    .map(jobOfferMapperDTO::map)
-//                    .toList();
-//            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//            List<Notification> userNotifications = notificationService.findByUser(user);
-//            List<NotificationDTO> notificationDTOs = userNotifications.stream()
-//                    .map(notificationMapperDTO::map)
-//                    .collect(Collectors.toList());
-//            model.addAttribute("notifications", notificationDTOs);
-//
-//            return "candidate_portal";
-//        } else {
-//            // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-//            return "home";
-//        }
-//    }
-//@GetMapping(CANDIDATE_PORTAL)
-//public String getCandidatePortalPage(HttpSession session, Model model) {
-//    System.out.println("czy ty tu wchodzisz 3?");
-//    User user = (User) session.getAttribute("username"); // Używamy tego samego klucza "loggedInUser"
-//    if (user != null) {
-//        // Użytkownik jest zalogowany
-//        model.addAttribute("username", user);
-//        UserDTO userDTO = userMapperDTO.map(user);
-//        model.addAttribute("userDTO", userDTO);
-//        model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-//
-//        List<JobOffer> jobOffers = jobOfferService.findAll();
-//        List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-//                .map(jobOfferMapperDTO::map)
-//                .toList();
-//        model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//        List<Notification> userNotifications = notificationService.findByUser(user);
-//        List<NotificationDTO> notificationDTOs = userNotifications.stream()
-//                .map(notificationMapperDTO::map)
-//                .collect(Collectors.toList());
-//        model.addAttribute("notifications", notificationDTOs);
-//
-//        return "candidate_portal";
-//    } else {
-//        // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-//        return "home";
-//    }
-//}
+
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        httpSession.setAttribute("user", loggedInUser);
+        UserDTO userDTO = userMapperDTO.map(loggedInUser);
+
+        model.addAttribute("userDTO", userDTO);
+
+        List<JobOfferDTO> jobOfferDTOs = jobOfferService.findAll().stream()
+                .map(jobOfferMapperDTO::map)
+                .collect(Collectors.toList());
+        model.addAttribute("jobOffersDTOs", jobOfferDTOs);
+
+        List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
+                .map(notificationMapperDTO::map)
+                .collect(Collectors.toList());
+        model.addAttribute("notifications", notifications);
+
+        return "candidate_portal";
+    }
 
 
-//    @GetMapping(CANDIDATE_PORTAL)
-//    public String getCandidatePortalPage(Model model, HttpSession session) {
-//        session.getServletContext();
-//        System.out.println("czy ty tu wchodzisz 3?");
-//
-//        {
-//
-//            User user = userService.findByUserName(session.getAttribute());
-//            model.addAttribute("user", user);
-//            UserDTO userDTO = userMapperDTO.map(user);
-//            model.addAttribute("userDTO", userDTO);
-//            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-//            List<JobOffer> jobOffers = jobOfferService.findAll();
-//            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-//                    .map(jobOfferMapperDTO::map)
-//                    .toList();
-//            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//            List<Notification> userNotifications = notificationService.findByUser(user);
-//            List<NotificationDTO> notificationDTOs = userNotifications.stream()
-//                    .map(notificationMapperDTO::map)
-//                    .collect(Collectors.toList());
-//            model.addAttribute("notifications", notificationDTOs);
-//
-//            return "candidate_portal";
-//        } else {
-//            // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-//            return "home";
-//        }
-//    }
 
 
-//19:20
 
 
-//@GetMapping(CANDIDATE_PORTAL)
-//public String getCandidatePortalPage(Model model, HttpSession session) {
-//    System.out.println("czy ty tu wchodzisz 3?");
-//    User user = (User) session.getAttribute("loggedInUser"); // Używamy tego samego klucza "loggedInUser"
-//    if (user != null) {
-//        // Użytkownik jest zalogowany
-//        model.addAttribute("username", user);
-//        UserDTO userDTO = userMapperDTO.map(user);
-//        model.addAttribute("userDTO", userDTO);
-//        model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-//
-//        List<JobOffer> jobOffers = jobOfferService.findAll();
-//        List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-//                .map(jobOfferMapperDTO::map)
-//                .toList();
-//        model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//        List<Notification> userNotifications = notificationService.findByUser(user);
-//        List<NotificationDTO> notificationDTOs = userNotifications.stream()
-//                .map(notificationMapperDTO::map)
-//                .collect(Collectors.toList());
-//        model.addAttribute("notifications", notificationDTOs);
-//
-//        return "candidate_portal";
-//    } else {
-//        // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-//        return "home";
-//    }
-//}
+
+
 
 
     @GetMapping("/searchJobOffers")
@@ -487,104 +371,54 @@ public class CandidatePortalController {
 //    }
 
 
-//@PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, HttpSession httpSession) {
-//        System.out.println("czy ty tu wchodzisz?");
-//        String username = (String) httpSession.getAttribute("username");
-//
-//        if (username != null) {
-//            User loggedInUser = userService.findByUserName(username);
-//            System.out.println("czy ty tu wchodzisz?2");
-//            if (loggedInUser != null) {
-//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
-//                if (optionalJobOffer.isPresent()) {
-//                    System.out.println("czy ty tu wchodzisz?3");
-//                    JobOffer jobOffer = optionalJobOffer.get();
-//
-//                    System.out.println("czy ty tu wchodzisz?4");
-//                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
-//                    if (myCV.isPresent()) {
-//                        System.out.println("czy ty tu wchodzisz?5");
-//                        CV cv = myCV.get();
-//                        // Utwórz obiekt Notification
-//                        System.out.println("czy ty tu wchodzisz?6");
-//                        User adresat = jobOffer.getUser();
-//                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-//
-//                        userService.save(loggedInUser);
-//                        userService.save(adresat);
-//                        return "cv_created_successfully";
-//                    } else {
-//
-//                        return "cv_not_found";
-//                    }
-//                }
-//            }
-//        }
-//
-//        return "redirect:/"; // Przekieruj w przypadku problemu
-//    }
+@PostMapping("/sendCV")
+@Transactional
+    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model,Authentication authentication, HttpSession httpSession) {
+    User loggedInUser = userService.getLoggedInUser((authentication));
+//    UserDTO userDTO = userMapperDTO.map(loggedInUser);
+    httpSession.setAttribute("user", loggedInUser);
+            System.out.println("czy ty tu wchodzisz?2");
+            if (loggedInUser != null) {
+                Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
+                if (optionalJobOffer.isPresent()) {
+                    System.out.println("czy ty tu wchodzisz?3");
+                    JobOffer jobOffer = optionalJobOffer.get();
+
+                    System.out.println("czy ty tu wchodzisz?4");
+                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
+                    if (myCV.isPresent()) {
+                        System.out.println("czy ty tu wchodzisz?5");
+                        CV cv = myCV.get();
+                        // Utwórz obiekt Notification
+                        System.out.println("czy ty tu wchodzisz?6");
+                        User adresat = jobOffer.getUser();
+
 //
 
+//                        entityManager.refresh(loggedInUser);
+//                        entityManager.refresh(adresat);
+                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+                       userService.save(loggedInUser);
+                       userService.save(adresat);
 
-    //    @GetMapping(CANDIDATE_PORTAL)
-//    public String getCandidatePortalPage(Model model, Authentication authentication) {
-//        System.out.println("czy ty tu wchodzisz 3?");
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            // Użytkownik jest zalogowany
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            User user = userService.findByUserName(userDetails.getUsername());
-//            model.addAttribute("user", user);
-//            UserDTO userDTO = userMapperDTO.map(user);
-//            model.addAttribute("userDTO", userDTO);
-//            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-//            List<JobOffer> jobOffers = jobOfferService.findAll();
-//            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-//                    .map(jobOfferMapperDTO::map)
-//                    .toList();
-//            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
-//
-//            List<Notification> userNotifications = notificationService.findByUser(user);
-//            List<NotificationDTO> notificationDTOs = userNotifications.stream()
-//                    .map(notificationMapperDTO::map)
-//                    .collect(Collectors.toList());
-//            model.addAttribute("notifications", notificationDTOs);
-//
-//            return "candidate_portal";
-//        } else {
-//            // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-//            return "home";
-//        }
-//    }
-    @GetMapping(CANDIDATE_PORTAL)
-    public String getCandidatePortalPage(Model model, Authentication authentication) {
-        System.out.println("czy ty tu wchodzisz 3?");
-        if (authentication != null && authentication.isAuthenticated()) {
-            // Użytkownik jest zalogowany
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.findByUserName(userDetails.getUsername());
-            model.addAttribute("user", user);
-            UserDTO userDTO = userMapperDTO.map(user);
-            model.addAttribute("userDTO", userDTO);
-            model.addAttribute("cvDTO", new CvDTO());  // Dodaj obiekt cvDTO do modelu, może być pusty, jeśli nie ma jeszcze CV
-            List<JobOffer> jobOffers = jobOfferService.findAll();
-            List<JobOfferDTO> jobOfferDTOs = jobOffers.stream()
-                    .map(jobOfferMapperDTO::map)
-                    .toList();
-            model.addAttribute("jobOffersDTOs", jobOfferDTOs);
 
-            List<Notification> userNotifications = notificationService.findByUser(user);
-            List<NotificationDTO> notificationDTOs = userNotifications.stream()
-                    .map(notificationMapperDTO::map)
-                    .collect(Collectors.toList());
-            model.addAttribute("notifications", notificationDTOs);
+                        return "cv_created_successfully";
+                    } else {
 
-            return "candidate_portal";
-        } else {
-            // Użytkownik nie jest zalogowany, przekieruj na stronę logowania
-            return "home";
-        }
+                        return "cv_not_found";
+                    }
+                }
+            }
+
+
+        return "redirect:/"; // Przekieruj w przypadku problemu
     }
+
+
+
+
+
+
 }
 
 

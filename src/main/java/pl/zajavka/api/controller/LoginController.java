@@ -1,28 +1,20 @@
 package pl.zajavka.api.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.RoleRepository;
 
-import java.util.Collection;
-
 @Controller
+@SessionAttributes("username")
 public class LoginController {
     private UserService userService;
     private RoleRepository roleRepository;
@@ -279,19 +271,43 @@ public class LoginController {
     public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
         // Sprawdź, czy użytkownik o podanej nazwie istnieje w bazie danych
         User user = userService.findByUserName(username);
+
         if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username)) {
-            // Jeśli użytkownik istnieje i hasło jest poprawne, zaloguj użytkownika
-            session.setAttribute("user", user); // Przechowaj użytkownika w sesji
-            System.out.println("Zalogowano pomyślnie");
-            model.addAttribute("username", username);
-            return "candidate_portal";
+            // Sprawdź, czy użytkownik posiada rolę "ROLE_CANDIDATE"
+            if (hasCandidateRole(user)) {
+                // Jeśli użytkownik istnieje, hasło jest poprawne, i ma rolę "ROLE_CANDIDATE", zaloguj użytkownika
+                session.setAttribute("user", user); // Przechowaj użytkownika w sesji
+                System.out.println("Zalogowano pomyślnie");
+                model.addAttribute("username", username);
+                return "candidate_portal";
+            } else {
+                System.out.println("Użytkownik nie posiada wymaganej roli.");
+                model.addAttribute("error", "Użytkownik nie posiada wymaganej roli.");
+                return "login";
+            }
         } else {
             System.out.println("Nieprawidłowe dane logowania.");
             model.addAttribute("error", "Nieprawidłowe dane logowania.");
             return "login";
         }
     }
+
+    private boolean hasCandidateRole(User user) {
+        for (RoleEntity role : user.getRoles()) {
+            if (role.getRole().equals("ROLE_CANDIDATE")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
+
+
+
+
+
+
+
 
 
 

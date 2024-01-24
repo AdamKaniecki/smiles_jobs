@@ -271,7 +271,7 @@ public class CvController {
 //
 //                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
 //                    return "redirect:/showCV?id=" + cvId;
-//                }
+//                 }
 //            }
 //        }
 //

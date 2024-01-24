@@ -6,5 +6,4 @@ import pl.zajavka.infrastructure.database.entity.AddressEntity;
 @Repository
 public interface AddressRepository extends JpaRepository<AddressEntity, Integer> {
 
-
 }

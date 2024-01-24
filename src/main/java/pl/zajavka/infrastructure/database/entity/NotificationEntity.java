@@ -38,35 +38,37 @@ public class NotificationEntity {
     @Column(name = "date_time")
     private LocalDateTime dateTime;
 
-//    @ManyToOne
-//    @JoinColumn(name = "cv_id")
-//    private CvEntity cv;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "job_offer_id")
-//    private JobOfferEntity jobOffer;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "sender_user_id")
-//    private UserEntity senderUser;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "receiver_user_id")
-//    private UserEntity receiverUser;
-    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+    @ManyToOne
     @JoinColumn(name = "cv_id")
     private CvEntity cv;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+    @ManyToOne
     @JoinColumn(name = "job_offer_id")
     private JobOfferEntity jobOffer;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+    @ManyToOne
     @JoinColumn(name = "sender_user_id")
     private UserEntity senderUser;
 
-    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+    @ManyToOne
     @JoinColumn(name = "receiver_user_id")
     private UserEntity receiverUser;
+
+
+//    @ManyToOne() // Dodaj cascade = CascadeType.ALL
+//    @JoinColumn(name = "cv_id")
+//    private CvEntity cv;
+//
+//    @ManyToOne() // Dodaj cascade = CascadeType.ALL
+//    @JoinColumn(name = "job_offer_id")
+//    private JobOfferEntity jobOffer;
+//
+//    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+//    @JoinColumn(name = "sender_user_id")
+//    private UserEntity senderUser;
+//
+//    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
+//    @JoinColumn(name = "receiver_user_id")
+//    private UserEntity receiverUser;
 }
 

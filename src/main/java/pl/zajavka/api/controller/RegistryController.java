@@ -7,15 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
-
+//@SessionAttributes("username")
 @AllArgsConstructor
 @Controller
 public class RegistryController {
@@ -142,7 +139,7 @@ public class RegistryController {
         userService.createCandidate(user);
 
         // Zapisz użytkownika w sesji
-        session.setAttribute("user", user);
+        session.setAttribute("userSession", user);
 
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("user", user);
@@ -156,7 +153,7 @@ public class RegistryController {
         userService.createCompany(user);
 
         // Zapisz użytkownika w sesji
-        session.setAttribute("user", user);
+        session.setAttribute("userSession", user);
 
         // Dodaj użytkownika do modelu, jeśli to jest potrzebne
         model.addAttribute("user", user);
