@@ -115,6 +115,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 //@SessionAttributes("userSession")
 @AllArgsConstructor
 @Controller
@@ -139,11 +140,10 @@ public class CandidatePortalController {
     public String getCandidatePortalPage(Model model, Authentication authentication, HttpSession httpSession) {
 
 
-
         User loggedInUser = userService.getLoggedInUser((authentication));
         httpSession.setAttribute("user", loggedInUser);
-        UserDTO userDTO = userMapperDTO.map(loggedInUser);
 
+        UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
         List<JobOfferDTO> jobOfferDTOs = jobOfferService.findAll().stream()
@@ -158,14 +158,6 @@ public class CandidatePortalController {
 
         return "candidate_portal";
     }
-
-
-
-
-
-
-
-
 
 
     @GetMapping("/searchJobOffers")
@@ -188,235 +180,61 @@ public class CandidatePortalController {
     }
 
 
-//    @PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication) {
-//
-//        try {
-//            User loggedInUser = getLoggedInUser(authentication);
-//            User adresat = getJobOfferByUser(jobOfferId);
-//            JobOffer jobOffer =  getJobOfferByUser(adresat);
-//            CV cv = getCvByUser(loggedInUser.getId());
-//            Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-//
-//            userService.save(loggedInUser);
-//            userService.save(adresat);
-//
-//            return "cv_created_successfully";
-//        } catch (AccessDeniedException e) {
-//            log.error("Błąd dostępu: {}", e.getMessage());
-//            return "redirect:/home";
-//        }
+    @PostMapping("/changeMeetingDate")
+    public String changeMeetingDate(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            Authentication authentication
+    ) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        httpSession.setAttribute("user", loggedInUser);
 
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+        Notification notification = notificationService.findById(notificationId);
+        User adresat = jobOffer.getUser();
 
-//    @PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, HttpSession httpSession) {
-//
-//
-//
-//        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//        log.info("job offer id: "+ jobOfferId);
-//        CV cv = cvService.findCvByJobOffer(jobOffer);
-//
-//
-//                    // Utwórz obiekt Notification
-//                    Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, jobOffer.getUser());
-//
-//
-//
-//                return "cv_not_found";
-//            }
-//
-//        }
-//        return "cv_created_successfully";
-//    }
-//}
+        notificationService.changeMeetingDate(notification, loggedInUser, adresat);
 
-
-//    @PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication) {
-//        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = userAuth.getName();
-//
-//                    JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//
-//                    System.out.println("czy ty tu wchodzisz?3");
-//
-//                    System.out.println("czy ty tu wchodzisz?4");
-//                    Optional<CV> myCV = cvService.);
-//                    if (myCV.isPresent()) {
-//                        System.out.println("czy ty tu wchodzisz?5");
-//                        CV cv = myCV.get();
-////                        cv = entityManager.merge(cv);
-//                        // Utwórz obiekt Notification
-//                        System.out.println("czy ty tu wchodzisz?6");
-//                        User adresat = jobOffer.getUser();
-//                        Notification notification = notificationService.createNotification(jobOffer, cv,loggedInUser, adresat);
-//
-//                        // Zapisz zmiany w użytkowniku
-////                        userService.save(loggedInUser);
-////                        userService.save(adresat);
-//
-//                        return "candidate_created_successfully";
-//                    } else {
-//                        // Obsłuż sytuację, gdy użytkownik nie ma przypisanego CV
-//                        return "cv_not_found"; // Przekieruj na stronę główną lub obsłuż inaczej
-//                    }
-//                }
-//
-//       // Przekieruj w przypadku problemu
-//    }
-
-//    @PostMapping("/sendCV")
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId,
-////                         @RequestParam("cvId")Integer cvId,
-//                         Authentication authentication, HttpSession session) {
-//        session.getServletContext();
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        User user = userService.findByUserName(userDetails.getUsername());
-//
-////            User sender = userService.getLoggedInUser(authentication);
-//            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//            CV cvToSend = cvService.getCVById(user.getCv().getId());
-//            User recipientUser = userService.getUserByJobOffer(jobOffer);
-//
-//            Notification notification = notificationService.createNotification(jobOffer, cvToSend, user, recipientUser);
-//
-//        return "cv_created_successfully";
-//    }
-
-
-//    @PostMapping("/changeMeetingDate")
-//    public String changeMeetingDate(
-//            @RequestParam("notificationId") Integer notificationId,
-//            @RequestParam("jobOfferId") Integer jobOfferId,
-//            Authentication authentication
-//    ) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            User loggedInUser = userService.findByUserName(userDetails.getUsername());
-//
-//            if (loggedInUser != null) {
-//                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-//
-//                if (optionalJobOffer.isPresent()) {
-//                    JobOffer jobOffer = optionalJobOffer.get();
-//                    Notification notification = notificationService.findById(notificationId);
-//                    User adresat = jobOffer.getUser();
-//
-//                    // Tutaj możesz dodać kod do zmiany pola companyMessage
-//                    notificationService.changeMeetingDate(notification, loggedInUser, adresat);
-//
-//                    return "cv_created_successfully";
-//                }
-//            }
-//        }
-//
-//        return "redirect:/home"; // Przekieruj w przypadku problemu
-//    }
-
-//    @PostMapping("/acceptMeetingDate")
-//    public String acceptNotification(
-//            @RequestParam("notificationId") Integer notificationId,
-//            @RequestParam("jobOfferId") Integer jobOfferId,
-//            Authentication authentication
-//    ) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            User loggedInUser = userService.findByUserName(userDetails.getUsername());
-//
-//            if (loggedInUser != null) {
-////                Optional<JobOffer> optionalJobOffer = jobOfferService.findById(jobOfferId);
-//
-//                if (optionalJobOffer.isPresent()) {
-//                    JobOffer jobOffer = optionalJobOffer.get();
-//                    Notification notification = notificationService.findById(notificationId);
-//                    User adresat = jobOffer.getUser();
-//
-//                    notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
-//
-//                    return "cv_created_successfully";
-//                }
-//            }
-//        }
-//
-//        return "redirect:/home"; // Przekieruj w przypadku problemu
-//    }
-
-
-//    @PostMapping("/sendCV")
-//    public String sendCv(@RequestParam Integer jobOfferId, Model model, HttpSession httpSession) {
-//        // Pobierz informacje o użytkowniku z HttpSession
-//        //        User loggedInUser = (User) httpSession.getAttribute("username");
-//        String username = (String) httpSession.getAttribute("username");
-//        if (username != null) {
-//            // Pobierz zalogowanego użytkownika
-//            User loggedInUser = userService.findByUserName(username);
-//
-////             Sprawdź, czy użytkownik ma przypisane CV
-//            Optional<CV> userCV = cvService.findByUser(loggedInUser);
-//
-//            // Sprawdź, czy oferta pracy istnieje
-//            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//
-//            if (userCV.isPresent() && jobOffer != null) {
-//                CV cv = userCV.get();
-//                User adresat = jobOffer.getUser();
-//
-//
-//                notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-//
-//            }
-//        }
-//        return "candidate_portal";
-//    }
-
-
-@PostMapping("/sendCV")
-@Transactional
-    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model,Authentication authentication, HttpSession httpSession) {
-    User loggedInUser = userService.getLoggedInUser((authentication));
-//    UserDTO userDTO = userMapperDTO.map(loggedInUser);
-    httpSession.setAttribute("user", loggedInUser);
-            System.out.println("czy ty tu wchodzisz?2");
-            if (loggedInUser != null) {
-                Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
-                if (optionalJobOffer.isPresent()) {
-                    System.out.println("czy ty tu wchodzisz?3");
-                    JobOffer jobOffer = optionalJobOffer.get();
-
-                    System.out.println("czy ty tu wchodzisz?4");
-                    Optional<CV> myCV = cvService.findByUser(loggedInUser);
-                    if (myCV.isPresent()) {
-                        System.out.println("czy ty tu wchodzisz?5");
-                        CV cv = myCV.get();
-                        // Utwórz obiekt Notification
-                        System.out.println("czy ty tu wchodzisz?6");
-                        User adresat = jobOffer.getUser();
-
-//
-
-//                        entityManager.refresh(loggedInUser);
-//                        entityManager.refresh(adresat);
-                        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-                       userService.save(loggedInUser);
-                       userService.save(adresat);
-
-
-                        return "cv_created_successfully";
-                    } else {
-
-                        return "cv_not_found";
-                    }
-                }
-            }
-
-
-        return "redirect:/"; // Przekieruj w przypadku problemu
+        return "cv_created_successfully";
     }
 
 
+    @PostMapping("/acceptMeetingDate")
+    public String acceptNotification(
+            @RequestParam("notificationId") Integer notificationId,
+            @RequestParam("jobOfferId") Integer jobOfferId,
+            Authentication authentication
+    ) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        httpSession.setAttribute("user", loggedInUser);
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+
+        Notification notification = notificationService.findById(notificationId);
+        User adresat = jobOffer.getUser();
+
+        notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
+
+        return "cv_created_successfully";
+    }
 
 
+    @PostMapping("/sendCV")
+    @Transactional
+    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Model model, Authentication authentication, HttpSession httpSession) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        httpSession.setAttribute("user", loggedInUser);
+
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+        CV cv = cvService.findByUser2(loggedInUser);
+        User adresat = jobOffer.getUser();
+
+        Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+        userService.save(loggedInUser);
+        userService.save(adresat);
+
+        return "cv_created_successfully";
+    }
 
 
 }

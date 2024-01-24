@@ -112,6 +112,12 @@ public class CvService {
         return cvEntityOptional.map(cvMapper::map);
     }
 
+    public CV findByUser2(User user){
+        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
+                .orElseThrow(()-> new NotFoundException("Not found CV from user: " + user));
+        return cvMapper.map(cvEntity);
+    }
+
 
     @Transactional
     public void updateCV(CV updatedCv) {
