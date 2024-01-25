@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 @Data
 @Builder
@@ -27,4 +28,12 @@ public class AddressEntity {
 
     @Column(name = "street_and_number")
     private String streetAndNumber;
+
+
+
+
+//nie wiem czy to jest konieczne
+//    @OneToOne
+//    @JoinColumn(name = "user_id")  // To jest klucz obcy wskazujący na user_id w tabeli user_table
+//    private UserEntity user;;
 }

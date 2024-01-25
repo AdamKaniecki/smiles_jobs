@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 
@@ -26,4 +28,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
 
     List<NotificationEntity> findByCvId(Integer id);
+
+    boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntiyOffer);
 }

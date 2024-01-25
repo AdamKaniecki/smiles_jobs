@@ -12,14 +12,18 @@ import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
+import pl.zajavka.infrastructure.security.RoleEntity;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class AddressService {
     private AddressRepository addressRepository;
     private AddressMapper addressMapper;
+    private UserService userService;
 
     @Transactional
     public Address createAddress(Address address, User user) {
@@ -63,8 +67,15 @@ public class AddressService {
         }
     }
 
-    public Optional<Address> findById(Integer id) {
-        return addressRepository.findById(id).map(addressMapper::map);
+//    public Optional<Address> findById(Integer id) {
+//        return addressRepository.findById(id).map(addressMapper::map);
+//    }
+
+    public Address findById(Integer addressId){
+        AddressEntity addressEntity = addressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException("Not found address with ID: " + addressId));
+        return addressMapper.map(addressEntity);
+
     }
 
     @Transactional
@@ -77,13 +88,27 @@ public class AddressService {
         }
     }
 
-//    public void deleteCV(CV cv) {
-//        if (cv != null) {
-//            // Mapuj CV na CvEntity przed usunięciem z bazy danych
-//            CvEntity cvEntity = cvMapper.map(cv);
-//            cvRepository.deleteById(cvEntity.getId());
-//        } else {
-//            throw new IllegalArgumentException("CV cannot be null");
-//        }
-//    }
+
+
+
+
+
+    public String determineRoleSpecificString(User loggedInUser) {
+
+        if (loggedInUser != null) {
+            Set<String> roles = loggedInUser.getRoles().stream()
+                    .map(RoleEntity::getRole)
+                    .collect(Collectors.toSet());
+
+            if (roles.contains("ROLE_CANDIDATE")) {
+                return "cv_created_successfully";
+            } else if (roles.contains("ROLE_COMPANY")) {
+                return "job_offer_created_successfully";
+            }
+        }
+
+        // Domyślny wynik, jeśli rola nie jest określona lub użytkownik nie istnieje
+        return "home";
+    }
+
 }

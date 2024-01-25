@@ -1,5 +1,5 @@
 package pl.zajavka.infrastructure.database.entity;
-
+//
 public enum Status {
     UNDER_REVIEW("Under Review"),
     MEETING_SCHEDULING("Meeting scheduling"),

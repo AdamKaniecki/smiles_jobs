@@ -13,13 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.webjars.NotFoundException;
 import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
+import pl.zajavka.domain.Address;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.database.repository.AddressRepository;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.*;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +40,9 @@ public class  UserService {
     private RoleRepository roleRepository;
     private SmilesJobsUserDetailsService smilesJobsUserDetailsService;
     private CvMapper cvMapper;
+    private CvRepository cvRepository;
+    private AddressMapper addressMapper;
+    private AddressRepository addressRepository;
 
     @Transactional
     public User createCandidate(User user) {
@@ -136,6 +146,8 @@ public class  UserService {
         UserEntity userEntity = userMapper.map(user);
         userRepository.saveAndFlush(userEntity);
     }
+
+
     public User getLoggedInUser(Authentication authentication) {
         UserEntity userEntity = userRepository.findByUserName(authentication.getName());
         if (userEntity == null) {
@@ -144,6 +156,8 @@ public class  UserService {
 
         }
        return userMapper.map(userEntity);
+
+
 
 }
 
@@ -179,14 +193,22 @@ public class  UserService {
         return userMapper.map(userEntity);
     }
 
-//    public RoleEntity getUserRole(User user) {
-//        // Pobierz rolę użytkownika na podstawie jego nazwy użytkownika
-//        UserEntity userEntity = userRepository.findByUserName(user.getUserName());
+
+    public User getUserByCv(Integer cvId) {
+        CvEntity cvEntity = cvRepository.findById(cvId)
+                .orElseThrow(()-> new NotFoundException("Not found for CV with ID: " + cvId));
+        CV cv = cvMapper.map(cvEntity);
+        return cv.getUser();
+    }
+
+
+//    public User findByAddress(Address address, Integer userId) {
+//        AddressEntity addressEntity = addressRepository.findById(address.getId())
+//                .orElseThrow(()-> new NotFoundException("Not found Address with ID: " + address.getId()));
 //
-//        if (userEntity != null) {
-//            return roleRepository.findByUsersContaining(userEntity);
-//        }
+//        UserEntity userEntity = userRepository.findById(userId)
+//                .orElseThrow(()-> new NotFoundException("Not Found User with ID: " + userId));
 //
-//        return null;
+//        return userMapper.map(userEntity);
 //    }
 }

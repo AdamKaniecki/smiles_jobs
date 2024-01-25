@@ -45,7 +45,7 @@ public class NotificationEntity {
     @ManyToOne
     @JoinColumn(name = "job_offer_id")
     private JobOfferEntity jobOffer;
-
+//
     @ManyToOne
     @JoinColumn(name = "sender_user_id")
     private UserEntity senderUser;

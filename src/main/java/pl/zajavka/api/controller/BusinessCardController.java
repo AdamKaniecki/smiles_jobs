@@ -1,5 +1,5 @@
 package pl.zajavka.api.controller;
-
+//
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class BusinessCardController {
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
 
-//    @GetMapping("/BusinessCardForm")
+    //    @GetMapping("/BusinessCardForm")
 //    public String BusinessCardForm(@ModelAttribute ("businessCardDTO") BusinessCardDTO businessCardDTO,  Model model) {
 //        String username = (String) httpSession.getAttribute("username");
 //        if (username != null) {
@@ -49,108 +49,82 @@ public class BusinessCardController {
 //            return "login";  // Przekieruj na stronę logowania
 //        }
 //    }
-@GetMapping("/BusinessCardForm")
-public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model, Authentication authentication) {
-    if (authentication != null && authentication.isAuthenticated()) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByUserName(userDetails.getUsername());
-
-        if (user != null) {
-            UserDTO userDTO = userMapperDTO.map(user);
-            model.addAttribute("userDTO", userDTO);
-            model.addAttribute("businessCardDTO", businessCardDTO);
-            return "create_business_card";
-        }
+    @GetMapping("/BusinessCardForm")
+    public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model,
+                                   Authentication authentication) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        UserDTO userDTO = userMapperDTO.map(loggedInUser);
+        model.addAttribute("userDTO", userDTO);
+        model.addAttribute("businessCardDTO", businessCardDTO);
+        return "create_business_card";
     }
-
-    // Obsłuż brak zalogowanego użytkownika
-    return "login";  // Przekieruj na stronę logowania
-}
 
 
     @PostMapping("/createBusinessCard")
-    public String createBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+    public String createBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model,
+                                     Authentication authentication) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
 
-            if (loggedInUser != null) {
-                if (businessCardService.existByUser(loggedInUser)) {
-                    return "cv_already_created";
-                }
-
-                BusinessCard businessCard = businessCardMapperDTO.map(businessCardDTO);
-                Address createdAddress = addressService.createAddress(businessCard.getAddress(), loggedInUser);
-
-                businessCard.setAddress(createdAddress);
-                businessCard.setUser(loggedInUser);
-                businessCardService.createBusinessCard(businessCard, loggedInUser);
-
-                model.addAttribute("businessCardDTO", businessCard);
-                model.addAttribute("userDTO", loggedInUser);
-
-                return "business_card_created_successfully";
-            }
+        if (businessCardService.existByUser(loggedInUser)) {
+            return "cv_already_created";
         }
-        return "login";  // Przekieruj na stronę logowania
+
+        BusinessCard businessCard = businessCardMapperDTO.map(businessCardDTO);
+        Address createdAddress = addressService.createAddress(businessCard.getAddress(), loggedInUser);
+
+        businessCard.setAddress(createdAddress);
+        businessCard.setUser(loggedInUser);
+        businessCardService.createBusinessCard(businessCard, loggedInUser);
+
+        model.addAttribute("businessCardDTO", businessCard);
+        model.addAttribute("userDTO", loggedInUser);
+
+        return "business_card_created_successfully";
     }
 
 
+//    @GetMapping("/redirectToShowMyBusinessCard")
+//    public String redirectToShowMyBusinessCard(Authentication authentication) {
+//
+//        User loggedInUser = userService.getLoggedInUser((authentication));
+//
+//            BusinessCard userBusinessCard = businessCardService.findByUser(loggedInUser);
+//            if (userBusinessCard != null) {
+//            Integer businessCardId = businessCardService.findById(userBusinessCard.getId()).getId();
+//            // Przekieruj na endpoint showBusinessCard z odpowiednim identyfikatorem
+//            return "redirect:/showBusinessCard?id=" + businessCardId;
+//        } else {
+//            return "businessCard_not_found";
+//        }
+//    }
+@GetMapping("/redirectToShowMyBusinessCard")
+public String redirectToShowMyBusinessCard(Authentication authentication) {
+    User loggedInUser = userService.getLoggedInUser((authentication));
 
-    @GetMapping("/redirectToShowMyBusinessCard")
-    public String redirectToShowMyBusinessCard(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User loggedInUser = userService.findByUserName(userDetails.getUsername());
-
-            if (loggedInUser != null) {
-                // Sprawdź, czy użytkownik ma przypisane BusinessCard
-                Optional<BusinessCard> userBusinessCard = businessCardService.findByUser(loggedInUser);
-                if (userBusinessCard.isPresent()) {
-                    Integer businessCardId = userBusinessCard.get().getId();
-                    // Przekieruj na endpoint showBusinessCard z odpowiednim identyfikatorem
-                    return "redirect:/showBusinessCard?id=" + businessCardId;
-                }
+            Optional<BusinessCard> userBusinessCard = businessCardService.findByUser2(loggedInUser);
+            if (userBusinessCard.isPresent()) {
+                Integer businessCardId = userBusinessCard.get().getId();
+                // Przekieruj na endpoint showBusinessCard z odpowiednim identyfikatorem
+                return "redirect:/showBusinessCard?id=" + businessCardId;
             }
-        }
+    return "businessCard_not_found";
+}
 
-        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanego CV lub wystąpił inny problem
-        return "businessCard_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
-    }
 
     @GetMapping("/showBusinessCard")
     public String showMyBusinessCard(@RequestParam Integer id, Model model) {
-        Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
+        BusinessCard businessCard = businessCardService.findById(id);
 
-        if (myBusinessCard.isPresent()) {
-            BusinessCard businessCard = myBusinessCard.get();
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-            return "show_my_businessCard";
-        } else {
-            return "businessCard_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy BusinessCard nie zostało znalezione
-        }
+        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+        model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+        return "show_my_businessCard";
+
     }
 
 
-//@GetMapping("/businessCard/{id}")
-//public String showBusinessCard(@PathVariable Integer id, Model model) {
-//
-//    Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
-//    if (myBusinessCard.isPresent()) {
-//        BusinessCard businessCard = myBusinessCard.get();
-//        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-//        model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-//        return "show_businessCard";
-//    } else {
-//        System.out.println("5");
-//        return "businessCard_not_found";
-//    }
-//}
-
     @GetMapping("/businessCard/{businessCardId}")
     public String showBusinessCard(@PathVariable Integer businessCardId, Model model) {
-        Optional<BusinessCard> businessCard = businessCardService.findById(businessCardId);
+        Optional<BusinessCard> businessCard = businessCardService.findById2(businessCardId);
         if (businessCard.isPresent()) {
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
 //            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
@@ -159,6 +133,18 @@ public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDT
             return "businessCard_not_found";
         }
     }
+
+
+
+//    @GetMapping("/businessCard/{businessCardId}")
+//    public String showBusinessCard(@PathVariable Integer businessCardId, Model model) {
+//        BusinessCard businessCard = businessCardService.findById(businessCardId);
+//
+//        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+////            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+//        return "show_businessCard";
+//
+//    }
 
 
 //    @GetMapping("/redirectToUpdateMyBusinessCard")
@@ -181,85 +167,63 @@ public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDT
 
     @GetMapping("/redirectToUpdateMyBusinessCard")
     public String redirectToUpdateMyBusinessCard(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User loggedInUser = userService.findByUserName(userDetails.getUsername());
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        // Sprawdź, czy użytkownik ma przypisane CV
+        BusinessCard userBusinessCard = businessCardService.findByUser(loggedInUser);
 
-            if (loggedInUser != null) {
-                // Sprawdź, czy użytkownik ma przypisane CV
-                Optional<BusinessCard> userBusinessCard = businessCardService.findByUser(loggedInUser);
-
-                if (userBusinessCard.isPresent()) {
-                    Integer cvId = userBusinessCard.get().getId();
-                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
-                    return "redirect:/updateBusinessCardForm?id=" + cvId;
-                }
-            }
-        }
-        return "businessCard_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
+        Integer cvId = userBusinessCard.getId();
+        // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
+        return "redirect:/updateBusinessCardForm?id=" + cvId;
     }
 
 
     @GetMapping("/updateBusinessCardForm")
     public String updateMyBusinessCard(@RequestParam Integer id, Model model) {
-        Optional<BusinessCard> myBusinessCard = businessCardService.findById(id);
-        if (myBusinessCard.isPresent()) {
-            BusinessCard businessCard = myBusinessCard.get();
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-            model.addAttribute("address", businessCard.getAddress());
-            return "update_business_card_form";
-        } else {
-            return "businessCard_not_found";  // Możesz utworzyć osobny widok dla przypadku, gdy CV nie zostało znalezione
-        }
+        BusinessCard businessCard = businessCardService.findById(id);
+
+        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+        model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
+        model.addAttribute("address", businessCard.getAddress());
+        return "update_business_card_form";
     }
+
 
     @PutMapping("/updateBusinessCardDone")
     public String updateBusinessCard(
             @ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
             Model model) {
-        Optional<BusinessCard> myBusinessCard = businessCardService.findById(updateBusinessCardDTO.getId());
-        if (myBusinessCard.isPresent()) {
-            BusinessCard businessCard = myBusinessCard.get();
-
-            businessCard.setOffice(updateBusinessCardDTO.getOffice());
-            businessCard.setScopeOperations(updateBusinessCardDTO.getScopeOperations());
-            businessCard.setRecruitmentEmail(updateBusinessCardDTO.getRecruitmentEmail());
-            businessCard.setPhoneNumber(updateBusinessCardDTO.getPhoneNumber());
-            businessCard.setCompanyDescription(updateBusinessCardDTO.getCompanyDescription());
-            businessCard.setTechnologiesAndTools(updateBusinessCardDTO.getTechnologiesAndTools());
-            businessCard.setCertificatesAndAwards(updateBusinessCardDTO.getCertificatesAndAwards());
-
-          businessCardService.updateBusinessCard(businessCard);
+        BusinessCard businessCard = businessCardService.findById(updateBusinessCardDTO.getId());
 
 
+        businessCard.setOffice(updateBusinessCardDTO.getOffice());
+        businessCard.setScopeOperations(updateBusinessCardDTO.getScopeOperations());
+        businessCard.setRecruitmentEmail(updateBusinessCardDTO.getRecruitmentEmail());
+        businessCard.setPhoneNumber(updateBusinessCardDTO.getPhoneNumber());
+        businessCard.setCompanyDescription(updateBusinessCardDTO.getCompanyDescription());
+        businessCard.setTechnologiesAndTools(updateBusinessCardDTO.getTechnologiesAndTools());
+        businessCard.setCertificatesAndAwards(updateBusinessCardDTO.getCertificatesAndAwards());
 
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-            return "job_offer_created_successfully";
-        } else {
-            return "cv_not_found";
-        }
+        businessCardService.updateBusinessCard(businessCard);
 
+
+        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+        return "business_card_created_successfully";
     }
+
 
     @DeleteMapping("/deleteBusinessCard")
     public String deleteBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
-    Model model) {
+                                     Model model) {
 
-        Optional<BusinessCard> myBusinessCard = businessCardService.findById(updateBusinessCardDTO.getId());
-        if (myBusinessCard.isPresent()) {
-            BusinessCard businessCard = myBusinessCard.get();
-            Address address = businessCard.getAddress();
-            businessCardService.deleteBusinessCard(businessCard);
-            addressService.deleteAddress(address);
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+        BusinessCard businessCard = businessCardService.findById(updateBusinessCardDTO.getId());
+        Address address = businessCard.getAddress();
+        businessCardService.deleteBusinessCard(businessCard);
+        addressService.deleteAddress(address);
+        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
 
-            return "redirect: /company_portal";
-                    }
 
-        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanej BusinessCard lub wystąpił inny problem
-        return "redirect:/redirectToShowMyBusinessCard";
-    }
+        return"redirect:/redirectToShowMyBusinessCard";
+}
 
 
 }

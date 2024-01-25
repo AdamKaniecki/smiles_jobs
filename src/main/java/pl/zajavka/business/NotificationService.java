@@ -10,6 +10,7 @@ import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.NotificationRepository;
@@ -176,6 +177,11 @@ public class NotificationService {
         notificationRepository.deleteByCvId(cvId);
     }
 
+    public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
+        UserEntity userEntity= userMapper.map(loggedInUser);
+        JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
+        return notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
+    }
 }
 
 

@@ -24,32 +24,32 @@
     <p>The best place to find an employee is SmilesJobs!</p>
     <p>Please take a look at job seekers</p>
 
-<!--    <div>-->
-<!--        <table class="table" id="sortable-table-cv">-->
-<!--            <thead class="table-dark">-->
-<!--            <tr>-->
-<!--                <th>Number</th>-->
-<!--                <th>Name</th>-->
-<!--                <th>Surname</th>-->
-<!--                <th>Work experience</th>-->
-<!--                <th>Skills</th>-->
-<!--                <th>Details</th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="cvDTO : ${cvList}">-->
-<!--                <td th:text="${cvDTO.id}"></td>-->
-<!--                <td th:text="${cvDTO.name}"></td>-->
-<!--                <td th:text="${cvDTO.surname}"></td>-->
-<!--                <td th:text="${cvDTO.workExperience}"></td>-->
-<!--                <td th:text="${cvDTO.skills}"></td>-->
-<!--                <td>-->
-<!--                    <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
-<!--    </div>-->
+    <div>
+        <table class="table" id="sortable-table-cv">
+            <thead class="table-dark">
+            <tr>
+                <th>Number</th>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Work experience</th>
+                <th>Skills</th>
+                <th>Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="cvDTO : ${cvList}">
+                <td th:text="${cvDTO.id}"></td>
+                <td th:text="${cvDTO.name}"></td>
+                <td th:text="${cvDTO.surname}"></td>
+                <td th:text="${cvDTO.workExperience}"></td>
+                <td th:text="${cvDTO.skills}"></td>
+                <td>
+                    <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <br>
 

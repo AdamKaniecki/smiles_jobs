@@ -82,18 +82,12 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
@@ -108,12 +102,9 @@ import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.UserRepository;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 //@SessionAttributes("userSession")
@@ -228,6 +219,11 @@ public class CandidatePortalController {
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         CV cv = cvService.findByUser2(loggedInUser);
         User adresat = jobOffer.getUser();
+
+        if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
+            // Dodaj odpowiedni komunikat lub przekierowanie w przypadku powtórnego wysłania CV
+            return "cv_already_sent";
+        }
 
         Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
         userService.save(loggedInUser);

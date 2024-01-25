@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "job_offer_table")
 public class JobOfferEntity {
-
+//
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "job_offer_id")

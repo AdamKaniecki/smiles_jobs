@@ -12,7 +12,7 @@ import pl.zajavka.business.UserService;
 import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.RoleRepository;
-
+//
 @Controller
 @SessionAttributes("username")
 public class LoginController {

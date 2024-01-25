@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -58,6 +59,11 @@ public class  UserEntity {
 
 
 
+
+
+    //nie wiem czy to jest konieczne
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+//    private AddressEntity address;
 }
 
 

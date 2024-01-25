@@ -16,7 +16,7 @@ import pl.zajavka.domain.User;
 @AllArgsConstructor
 @Controller
 public class RegistryController {
-
+//
 
     public static final String CANDIDATE_REGISTRY = "/candidate_registry";
     public static final String COMPANY_REGISTRY = "/company_registry";

@@ -1,5 +1,5 @@
 package pl.zajavka.infrastructure.database.entity;
-
+//
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

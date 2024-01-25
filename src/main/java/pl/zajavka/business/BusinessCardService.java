@@ -14,6 +14,7 @@ import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
+import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.Optional;
@@ -37,7 +38,6 @@ public class BusinessCardService {
 
         Address address = businessCard.getAddress();
 
-
         BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
                 .office(businessCard.getOffice())
                 .scopeOperations(businessCard.getScopeOperations())
@@ -54,19 +54,29 @@ public class BusinessCardService {
         return businessCardMapper.map(businessCardEntity);
     }
 
-    public Optional<BusinessCard> findById(Integer id) {
+    public Optional<BusinessCard> findById2(Integer id) {
 
         return businessCardRepository.findById(id).map(businessCardMapper::map);
     }
 
-    {
+   public BusinessCard findById(Integer businessCardId){
+        BusinessCardEntity businessCardEntity = businessCardRepository.findById(businessCardId)
+                .orElseThrow(()-> new NotFoundException("Not found Business Card with ID: " + businessCardId));
+        return businessCardMapper.map(businessCardEntity);
+   }
 
-    }
-
-    public Optional<BusinessCard> findByUser(User loggedInUser) {
+    public Optional<BusinessCard> findByUser2(User loggedInUser) {
         Optional<BusinessCardEntity> businessCardEntityOptional = businessCardRepository.findByUser(userMapper.map(loggedInUser));
         return businessCardEntityOptional.map(businessCardMapper::map);
     }
+    public BusinessCard findByUser(User loggedInUser){
+        UserEntity userEntity = userMapper.map(loggedInUser);
+        BusinessCardEntity businessCardEntity = businessCardRepository.findByUser(userEntity)
+                .orElseThrow(()-> new NotFoundException("Not found Business Card from User: " + userEntity));
+        return businessCardMapper.map(businessCardEntity);
+    }
+
+
 
     public boolean existByUser(User loggedInUser) {
         return businessCardRepository.existsByUser(userMapper.map(loggedInUser));

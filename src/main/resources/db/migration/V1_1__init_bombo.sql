@@ -21,7 +21,12 @@ address_id SERIAL NOT NULL,
 country  VARCHAR(32) NOT NULL,
 city  VARCHAR(32) NOT NULL,
 street_and_number  VARCHAR(32) NOT NULL,
+--user_id INT,
 PRIMARY KEY(address_id)
+--,
+--CONSTRAINT fk_address_table_user_table
+--FOREIGN KEY (user_id)
+--REFERENCES user_table(user_id)
 );
 
 

@@ -214,7 +214,7 @@ public class CvController {
             }
             System.out.println("czt ty tu wchodzisz 6");
             CV cv = cvMapperDTO.map(cvDTO);
-            Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
+//            Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
             System.out.println("czt ty tu wchodzisz 7");
 //            cv.setAddress(createdAddress);
 //            cv.setUser(loggedInUser);
@@ -369,23 +369,24 @@ public class CvController {
     }
 
     @PutMapping("/updateAddressDone")
-    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+//    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public String updateAddress(
-            @ModelAttribute("address") Address updateAddress,
-            Model model) {
-        Optional<Address> myAddress = addressService.findById(updateAddress.getId());
-        if (myAddress.isPresent()) {
-            Address address = myAddress.get();
-            address.setCountry(updateAddress.getCountry());
-            address.setCity(updateAddress.getCity());
-            address.setStreetAndNumber(updateAddress.getStreetAndNumber());
-            addressService.updateAddress(address);
-            model.addAttribute("address", address);
-//            model.addAttribute("address"),addressMapper.map(address);
-            return "cv_created_successfully";
-        } else {
-            return "cv_not_found";
-        }
+            @ModelAttribute("address") Address updateAddress, Model model,Authentication authentication
+    ) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        httpSession.setAttribute("user", loggedInUser);
+
+        Address address = addressService.findById(updateAddress.getId());
+
+
+        address.setCountry(updateAddress.getCountry());
+        address.setCity(updateAddress.getCity());
+        address.setStreetAndNumber(updateAddress.getStreetAndNumber());
+        addressService.updateAddress(address);
+
+        model.addAttribute("address", address);
+
+        return addressService.determineRoleSpecificString(loggedInUser);
     }
 
     @DeleteMapping("/deleteCV")

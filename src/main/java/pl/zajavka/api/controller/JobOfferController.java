@@ -89,14 +89,14 @@ public class JobOfferController {
         }
     }
 
-
+// TUTAJ POPRAWIĆ NIE KASOWAĆ
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
 
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
 
-        Optional<BusinessCard> businessCard = businessCardService.findByUser(jobOffer.getUser());
+        Optional<BusinessCard> businessCard = businessCardService.findByUser2(jobOffer.getUser());
         if (businessCard.isPresent()) {
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
         } else {

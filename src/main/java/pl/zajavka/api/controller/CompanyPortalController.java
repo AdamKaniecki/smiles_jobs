@@ -56,15 +56,15 @@ public class CompanyPortalController {
     public String getCompanyPortalPage(Authentication authentication, Model model) {
 
         Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = userAuth.getName();
+//
 
-        User loggedInUser = getLoggedInUser((userAuth));
+        User loggedInUser = userService.getLoggedInUser((userAuth));
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
         List<CvDTO> cvList = cvService.findAll().stream()
-                        .map(cvMapperDTO::map)
-                                .collect(Collectors.toList());
+                .map(cvMapperDTO::map)
+                .collect(Collectors.toList());
         model.addAttribute("cvList", cvList);
 
         List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
@@ -115,19 +115,14 @@ public class CompanyPortalController {
             @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
             Authentication authentication
     ) {
+        User loggedInUser = userService.getLoggedInUser((authentication));
+        User cvUser = userService.getUserByCv(cvId);
+        Notification notification = notificationService.findById(notificationId);
 
-        try {
-            User loggedInUser = getLoggedInUser(authentication);
-            User cvUser = getUserByCv(cvId);
-            Notification notification = notificationService.findById(notificationId);
+        notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
-            notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
+        return "job_offer_created_successfully";
 
-            return "job_offer_created_successfully";
-        } catch (AccessDeniedException e) {
-            log.error("Błąd dostępu: {}", e.getMessage());
-            return "redirect:/home";
-        }
     }
 
 
@@ -137,18 +132,15 @@ public class CompanyPortalController {
             @RequestParam("cvId") Integer cvId,
             Authentication authentication
     ) {
-        try {
-            User loggedInUser = getLoggedInUser(authentication);
-            User cvUser = getUserByCv(cvId);
-            Notification notification = notificationService.findById(notificationId);
 
-            notificationService.declineCandidate(notification, loggedInUser, cvUser);
+        User loggedInUser = userService.getLoggedInUser(authentication);
+        User cvUser = userService.getUserByCv(cvId);
+        Notification notification = notificationService.findById(notificationId);
 
-            return "job_offer_created_successfully";
-        } catch (AccessDeniedException e) {
-            log.error("Błąd dostępu: {}", e.getMessage());
-            return "redirect:/home";
-        }
+        notificationService.declineCandidate(notification, loggedInUser, cvUser);
+
+        return "job_offer_created_successfully";
+
     }
 
     @PostMapping("/hired")
@@ -157,47 +149,41 @@ public class CompanyPortalController {
             @RequestParam("cvId") Integer cvId,
             Authentication authentication
     ) {
-        try {
-            User loggedInUser = getLoggedInUser(authentication);
-            User cvUser = getUserByCv(cvId);
-            Notification notification = notificationService.findById(notificationId);
 
-            notificationService.hiredCandidate(notification, loggedInUser, cvUser);
+        User loggedInUser = userService.getLoggedInUser(authentication);
+        User cvUser = userService.getUserByCv(cvId);
+        Notification notification = notificationService.findById(notificationId);
 
-            return "job_offer_created_successfully";
-        } catch (AccessDeniedException e) {
-            log.error("Błąd dostępu: {}", e.getMessage());
-            return "redirect:/home";
-        }
+        notificationService.hiredCandidate(notification, loggedInUser, cvUser);
+
+        return "job_offer_created_successfully";
     }
 
 
+//    private User getLoggedInUser(Authentication authentication) throws AccessDeniedException {
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            throw new AccessDeniedException("Użytkownik nie jest uwierzytelniony");
+//        }
+//
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        User loggedInUser = userService.findByUserName(userDetails.getUsername());
+//
+//        if (loggedInUser == null) {
+//            throw new AccessDeniedException("Użytkownik nie znaleziony");
+//        }
+//
+//        return loggedInUser;
+//    }
 
 
-    private User getLoggedInUser(Authentication authentication) throws AccessDeniedException {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AccessDeniedException("Użytkownik nie jest uwierzytelniony");
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User loggedInUser = userService.findByUserName(userDetails.getUsername());
-
-        if (loggedInUser == null) {
-            throw new AccessDeniedException("Użytkownik nie znaleziony");
-        }
-
-        return loggedInUser;
-    }
-
-
-    @SneakyThrows
-    private User getUserByCv(Integer cvId) {
-        Optional<CV> myCV = cvService.findById(cvId);
-        if (myCV.isEmpty()) {
-            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
-        }
-
-        return myCV.get().getUser();
-    }
+//    @SneakyThrows
+//    private User getUserByCv(Integer cvId) {
+//        Optional<CV> myCV = cvService.findById(cvId);
+//        if (myCV.isEmpty()) {
+//            throw new AccessDeniedException("Użytkownik nie posiada oferty pracy");
+//        }
+//
+//        return myCV.get().getUser();
+//    }
 
 }
