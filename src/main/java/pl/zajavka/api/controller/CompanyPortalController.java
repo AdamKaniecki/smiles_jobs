@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Controller
 public class CompanyPortalController {
 
-    public static final String COMPANY_PORTAL = "{user}/company_portal";
+    public static final String COMPANY_PORTAL = "/company_portal";
     public static final String CREATE_JOB_OFFER = "/create_job_offer";
 
     private HttpSession httpSession;

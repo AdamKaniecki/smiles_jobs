@@ -28,9 +28,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
             if (authority.getAuthority().equals("ROLE_CANDIDATE")) {
-                return "/{user}/candidate_portal";
+                return "/candidate_portal";
             } else if (authority.getAuthority().equals("ROLE_COMPANY")) {
-                return "/{user}/company_portal";
+                return "/company_portal";
             }
         }
         // Domyślny URL, jeśli rola nie jest ani "ROLE_CANDIDATE" ani "ROLE_COMPANY"

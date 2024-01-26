@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Controller
 @Slf4j
 public class CandidatePortalController {
-    public static final String CANDIDATE_PORTAL = "{user}/candidate_portal";
+    public static final String CANDIDATE_PORTAL = "/candidate_portal";
     public static final String USER_ID = "/show";
 
     private HttpSession httpSession;
@@ -80,10 +80,10 @@ public class CandidatePortalController {
         model.addAttribute("totalItems", jobOfferDTOPage.getTotalElements());
 
         // Sortowanie dla ofert pracy
-        sortingService.sortJobOfferById();
+//        sortingService.sortJobOfferById();
 
-        int previousPage = Math.max(jobOfferDTOPage.getNumber(), 0);
-        int nextPage = Math.min(jobOfferDTOPage.getNumber() + 1, jobOfferDTOPage.getTotalPages());
+        int previousPage = Math.max(jobOfferDTOPage.getNumber(),0);
+        int nextPage = Math.min(jobOfferDTOPage.getNumber() + 2, jobOfferDTOPage.getTotalPages());
 
         model.addAttribute("previousPage", previousPage + 1);
         model.addAttribute("nextPage", nextPage);
