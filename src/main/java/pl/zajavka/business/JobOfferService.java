@@ -106,6 +106,8 @@ package pl.zajavka.business;
 //
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -267,7 +269,10 @@ public class JobOfferService {
         jobOfferRepository.delete(jobOfferEntity);
     }
 
-
+    public Page<JobOffer> findAll(Pageable pageable) {
+        Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
+        return jobOfferEntities.map(jobOfferMapper::map);
+    }
 }
 
 

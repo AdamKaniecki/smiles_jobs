@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.domain.CV;
@@ -181,6 +183,13 @@ public class NotificationService {
         UserEntity userEntity= userMapper.map(loggedInUser);
         JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
         return notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
+    }
+
+
+
+    public Page<Notification> findAll(Pageable pageable) {
+        Page<NotificationEntity> notificationEntities = notificationRepository.findAll(pageable);
+        return notificationEntities.map(notificationMapper::map);
     }
 }
 

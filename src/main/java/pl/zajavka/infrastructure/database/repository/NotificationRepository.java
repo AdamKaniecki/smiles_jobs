@@ -2,6 +2,8 @@ package pl.zajavka.infrastructure.database.repository;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,5 +31,7 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     List<NotificationEntity> findByCvId(Integer id);
 
-    boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntiyOffer);
+    boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntityOffer);
+
+    Page<NotificationEntity> findAll(Pageable pageable);
 }
