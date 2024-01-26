@@ -181,7 +181,7 @@
         </thead>
         <tbody>
         <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy -->
-        <tr th:each="jobOfferDTO : ${jobOffersDTOs}">
+        <tr th:each="jobOfferDTO : ${jobOfferDTOs}">
             <td th:text="${jobOfferDTO.id}"></td>
             <td th:text="${jobOfferDTO.companyName}"></td>
             <td th:text="${jobOfferDTO.position}"></td>

@@ -74,8 +74,8 @@ public class CandidatePortalController {
         Page<JobOfferDTO> jobOfferDTOPage = jobOfferService.findAll(pageable)
                 .map(jobOfferMapperDTO::map);
 
-        model.addAttribute("jobOffersDTOs", jobOfferDTOPage.getContent());
-        model.addAttribute("currentPage", jobOfferDTOPage.getNumber()); // Page numbers start from 1
+        model.addAttribute("jobOfferDTOs", jobOfferDTOPage.getContent());
+        model.addAttribute("currentPage", jobOfferDTOPage.getNumber()) ; // Page numbers start from 1
         model.addAttribute("totalPages", jobOfferDTOPage.getTotalPages());
         model.addAttribute("totalItems", jobOfferDTOPage.getTotalElements());
 

@@ -3,6 +3,8 @@ package pl.zajavka.business;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -209,6 +211,10 @@ public class CvService {
     }
 
 
+    public Page<CV> findAll(Pageable pageable) {
+        Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
+        return cvEntities.map(cvMapper::map);
+    }
 
 
 }

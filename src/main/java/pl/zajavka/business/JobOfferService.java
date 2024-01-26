@@ -273,6 +273,10 @@ public class JobOfferService {
         Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
         return jobOfferEntities.map(jobOfferMapper::map);
     }
+
+
+
+
 }
 
 

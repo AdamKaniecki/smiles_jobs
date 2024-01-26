@@ -5,6 +5,10 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,32 +54,44 @@ public class CompanyPortalController {
     private BusinessCardMapperDTO businessCardMapperDTO;
     private NotificationService notificationService;
     private NotificationMapperDTO notificationMapperDTO;
+    private PaginationService paginationService;
 
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
-    public String getCompanyPortalPage(Authentication authentication, Model model) {
+    public String getCompanyPortalPage(Authentication authentication, Model model, HttpSession httpSession,
+     @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
+    {
 
-        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
+        User loggedInUser = userService.getLoggedInUser(authentication);
+        httpSession.setAttribute("user", loggedInUser);
 //
-
-        User loggedInUser = userService.getLoggedInUser((userAuth));
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
-        List<CvDTO> cvList = cvService.findAll().stream()
-                .map(cvMapperDTO::map)
-                .collect(Collectors.toList());
-        model.addAttribute("cvList", cvList);
+        Page<CvDTO> cvDTOPage = cvService.findAll(pageable)
+                .map(cvMapperDTO::map);
+//                .collect(Collectors.toList());
 
-        List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
-                .map(notificationMapperDTO::map)
-                .collect(Collectors.toList());
-        model.addAttribute("notifications", notifications);
+
+        model.addAttribute("cvDTOs", cvDTOPage.getContent());
+        model.addAttribute("currentPage", cvDTOPage.getNumber()) ; // Page numbers start from 1
+        model.addAttribute("totalPages", cvDTOPage.getTotalPages());
+        model.addAttribute("totalItems", cvDTOPage.getTotalElements());
+
+        int previousPage = Math.max(cvDTOPage.getNumber(),0);
+        int nextPage = Math.min(cvDTOPage.getNumber() + 2, cvDTOPage.getTotalPages());
+
+        model.addAttribute("previousPage", previousPage + 1);
+        model.addAttribute("nextPage", nextPage);
 
         return "company_portal";
 
     }
 
+//        List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
+//                .map(notificationMapperDTO::map)
+//                .collect(Collectors.toList());
+//        model.addAttribute("notifications", notifications);
 
     @GetMapping("/search")
     public String searchAdvertisements(
