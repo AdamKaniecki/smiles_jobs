@@ -34,4 +34,8 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
     boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntityOffer);
 
     Page<NotificationEntity> findAll(Pageable pageable);
+
+
+
+//    Page<NotificationEntity> findByUser(UserEntity userEntity, Pageable pageable);
 }

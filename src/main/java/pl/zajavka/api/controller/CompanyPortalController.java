@@ -78,11 +78,22 @@ public class CompanyPortalController {
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
 
-        int previousPage = Math.max(cvDTOPage.getNumber(),0);
-        int nextPage = Math.min(cvDTOPage.getNumber() + 2, cvDTOPage.getTotalPages());
+//        int previousPage = Math.max(cvDTOPage.getNumber(),0);
+//        int nextPage = Math.min(cvDTOPage.getNumber() + 2, cvDTOPage.getTotalPages());
+//
+//        model.addAttribute("previousPage", previousPage + 1);
+//        model.addAttribute("nextPage", nextPage);
 
-        model.addAttribute("previousPage", previousPage + 1);
-        model.addAttribute("nextPage", nextPage);
+        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
+                .map(notificationMapperDTO::map).toList();
+        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
+
+
+
+        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
+        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
+        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
+        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
 
         return "company_portal";
 

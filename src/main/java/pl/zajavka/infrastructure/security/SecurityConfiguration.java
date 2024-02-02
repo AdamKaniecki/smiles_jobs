@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/candidate_portal").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("/company_portal").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/redirectToShowMyCV").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/showCV").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("/redirectToUpdateMyCV").hasAuthority("ROLE_CANDIDATE")
                 .anyRequest().authenticated()
                 .and()

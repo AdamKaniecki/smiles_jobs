@@ -2,6 +2,7 @@ package pl.zajavka.api.dto.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -18,4 +19,8 @@ public interface NotificationMapperDTO {
     List<NotificationDTO> mapToDTOList(List<Notification> notifications);
 
     List<Notification> mapToList(List<NotificationDTO> notificationDTOs);
+
+//   Page<NotificationDTO> mapToDTOPage(Page<Notification> notifications);
+//
+//   Page<Notification> mapToPage(Page<NotificationDTO> notificationDTOs);
 }

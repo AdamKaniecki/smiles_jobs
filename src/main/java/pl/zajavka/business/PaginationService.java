@@ -1,11 +1,9 @@
 package pl.zajavka.business;
 
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
@@ -30,5 +28,17 @@ public class PaginationService {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return jobOfferRepository.findAll(pageable);
+    }
+
+    public Page<NotificationDTO> createNotificationPage(List<NotificationDTO> notifications, Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), notifications.size());
+
+        if (start < 0 || start >= notifications.size() || end < start) {
+            // Jeśli start jest poza zakresem listy lub end jest mniejszy niż start, zwróć pustą stronę
+            return Page.empty(pageable);
+        }
+
+        return new PageImpl<>(notifications.subList(start, end), pageable, notifications.size());
     }
 }

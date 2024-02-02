@@ -4,6 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -27,4 +29,9 @@ public interface NotificationMapper {
     List<NotificationEntity> mapToEntityList(List<Notification> notifications);
 
     List<Notification> mapToList(List<NotificationEntity> notificationEntities);
+
+
+//    Page<Notification> mapToPage(Page<NotificationEntity> notificationEntities, Pageable pageable);
+//    Page<NotificationEntity> mapToEntityPage(Page<Notification> notifications, Pageable pageable);
+
 }

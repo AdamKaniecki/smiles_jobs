@@ -1,154 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Welcome to Smiles Jobs</title>-->
-<!--    &lt;!&ndash; Dodaj link do pliku CSS Bootstrapa &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">-->
-<!--    &lt;!&ndash; Dodaj link do pliku CSS DataTables &ndash;&gt;-->
-<!--    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container">-->
-<!--    <h1 class="mt-4">Welcome to Smiles Jobs</h1>-->
-
-<!--    <h2 class="mt-4">Job Offers</h2>-->
-<!--    <table class="table" id="sortable-table-job-offers">-->
-<!--        <thead class="table-dark">-->
-<!--        <tr>-->
-<!--            <th>ID</th>-->
-<!--            <th>Company Name</th>-->
-<!--            <th>Position</th>-->
-<!--            <th>Responsibilities</th>-->
-<!--            <th>Required Technologies</th>-->
-<!--            <th>Benefits</th>-->
-<!--            <th>Details</th>-->
-<!--            <th>Send CV</th>-->
-
-<!--            &lt;!&ndash; Wyświetl połączoną wartość Salary Range &ndash;&gt;-->
-<!--            <th>Data i godzina</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        &lt;!&ndash; Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy &ndash;&gt;-->
-<!--        <tr th:each="jobOfferDTO : ${jobOffersDTOs}">-->
-<!--            <td th:text="${jobOfferDTO.id}"></td>-->
-<!--            <td th:text="${jobOfferDTO.companyName}"></td>-->
-<!--            <td th:text="${jobOfferDTO.position}"></td>-->
-<!--            <td th:text="${jobOfferDTO.responsibilities}"></td>-->
-<!--            <td th:text="${jobOfferDTO.requiredTechnologies}"></td>-->
-<!--            <td th:text="${jobOfferDTO.benefits}"></td>-->
-<!--            <td>-->
-<!--                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View-->
-<!--                    Details</a>-->
-<!--            </td>-->
-<!--            &lt;!&ndash;            <td>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <form th:action="@{/sendCv}" method="post">&ndash;&gt;-->
-<!--            &lt;!&ndash;                    <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">&ndash;&gt;-->
-<!--            &lt;!&ndash;                    <button type="submit" class="btn btn-primary">Send CV</button>&ndash;&gt;-->
-<!--            &lt;!&ndash;                </form>&ndash;&gt;-->
-<!--            &lt;!&ndash;            </td>&ndash;&gt;-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--    <form action="/searchJobOffers" method="get" class="mt-4">-->
-<!--        <div class="form-row">-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="category">Search by category:</label>-->
-<!--                <select id="category" name="category" class="form-control">-->
-<!--                    <option value="companyName">Company Name</option>-->
-<!--                    <option value="position">Position</option>-->
-<!--                    <option value="responsibilities">Responsibilities</option>-->
-<!--                    <option value="requiredTechnologies">Required Technologies</option>-->
-<!--                    <option value="benefits">Benefits</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="keyword">Search by keywords:</label>-->
-<!--                <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--                <button type="submit" class="btn btn-primary">Search</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </form>-->
-
-
-<!--    <h2 class="mt-4">Stwórz swoje CV</h2>-->
-<!--    <div class="d-flex">-->
-<!--        <div class="col-md-4">-->
-<!--            <a th:href="@{/CvForm}" method="GET" class="btn btn-info" role="button">Create CV</a>-->
-<!--        </div>-->
-<!--        <div class="col-md-4">-->
-<!--            <a th:href="@{/redirectToShowMyCV}" method="GET" class="btn btn-info" role="button">Show my CV</a>-->
-<!--        </div>-->
-
-
-<!--    </div>-->
-
-<!--</div>-->
-<!--<br>-->
-<!--<br>-->
-<!--<br>-->
-<!--<h2 class="mt-4">Notifications</h2>-->
-<!--<table class="table" id="sortable-table">-->
-<!--    <thead class="table-dark">-->
-<!--    <tr>-->
-<!--        <th>ID</th>-->
-<!--        <th>Message</th>-->
-<!--        <th>Dotyczy oferty</th>-->
-<!--        <th>Proponowany termin-->
-<!--            rozmowy-->
-<!--        </th>-->
-<!--        <th>STATUS</th>-->
-<!--        &lt;!&ndash;        <th>Created At</th>&ndash;&gt;-->
-<!--        &lt;!&ndash; Dodaj inne kolumny w zależności od struktury NotificationDTO &ndash;&gt;-->
-<!--    </tr>-->
-<!--    </thead>-->
-<!--    <tbody>-->
-<!--    &lt;!&ndash; Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia &ndash;&gt;-->
-<!--    <tr th:each="notificationDTO : ${notifications}">-->
-<!--        <td th:text="${notificationDTO.id}"></td>-->
-<!--        <td th:text="${notificationDTO.candidateMessage}"></td>-->
-
-<!--        <td>-->
-<!--            <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">-->
-<!--                View JobOffer-->
-<!--            </a>-->
-<!--        <td>-->
-<!--            <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>-->
-<!--            <div class="mt-2" th:if="${notificationDTO.dateTime != null}">-->
-<!--                <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Meeting scheduling'}">-->
-<!--                <form th:action="@{/acceptMeetingDate}" method="post" class="d-inline">-->
-<!--                        <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">-->
-<!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
-<!--                        <button type="submit" class="btn btn-success">ACCEPT</button>-->
-<!--                </form>-->
-<!--                <form th:action="@{/changeMeetingDate}" method="post" class="d-inline">-->
-<!--                        <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">-->
-<!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
-<!--                        <button type="submit" class="btn btn-warning">CHANGE</button>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </td>-->
-
-
-<!--        </td>-->
-<!--        <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>-->
-<!--        &lt;!&ndash;        <td th:text="${notificationDTO.createdAt}"></td>&ndash;&gt;-->
-
-<!--        &lt;!&ndash; Dodaj inne komórki w zależności od struktury NotificationDTO &ndash;&gt;-->
-
-<!--    </tr>-->
-<!--    </tbody>-->
-<!--</table>-->
-<!--<br>-->
-<!--<br>-->
-<!--<br>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -176,12 +25,13 @@
             <th>Details</th>
             <th>Send CV</th>
             <!-- Wyświetl połączoną wartość Salary Range -->
-            <th>Data i godzina</th>
+            <th>Date and Time</th>
         </tr>
         </thead>
         <tbody>
-        <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać oferty pracy -->
+        <!-- Thymeleaf loop to display job offers -->
         <tr th:each="jobOfferDTO : ${jobOfferDTOs}">
+            <!-- Display job offer details -->
             <td th:text="${jobOfferDTO.id}"></td>
             <td th:text="${jobOfferDTO.companyName}"></td>
             <td th:text="${jobOfferDTO.position}"></td>
@@ -189,42 +39,38 @@
             <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
             <td th:text="${jobOfferDTO.benefits}"></td>
             <td>
-                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View
-                    Details</a>
+                <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
             <!-- Tu przywróć formularz dla "Send CV" po dodaniu odpowiednich endpointów -->
         </tr>
         </tbody>
     </table>
 
-    <!-- Paginacja -->
-    <div th:if="${totalPages > 1}">
-        <nav aria-label="Page navigation">
-            <ul class="pagination">
-                <!-- logika przycisku Previous -->
-                <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
-                    <a class="page-link" th:href="@{${currentPage == 0 ? '#': '/candidate_portal?page=' + (currentPage - 1)}}" aria-label="Previous">
+    <!-- Pagination for job offers -->
+    <div th:if="${totalJobOfferPages > 1}">
+        <nav aria-label="Job Offers Page Navigation">
+            <!-- Pagination controls for job offers -->
+            <ul class="pagination" id="job-offer-pagination">
+                <li th:class="${currentJobOfferPage == 0 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{${currentJobOfferPage == 0 ? '#': '/candidate_portal?page=' + (currentJobOfferPage - 1)}}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-
-<!--                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage ? 'page-item active' : 'page-item'}">-->
-<!--                    <a class="page-link" th:href="@{'/candidate_portal?page=' + i}" th:text="${i + 1}"></a>-->
-<!--                </li>-->
-
-                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage ? 'page-item active' : 'page-item'}">
+                <li th:each="i : ${#numbers.sequence(0, totalJobOfferPages - 1)}" th:class="${i == currentJobOfferPage ? 'page-item active' : 'page-item'}">
                     <a class="page-link" th:href="@{'/candidate_portal?page=' + ${i}}" th:text="${i + 1}"></a>
                 </li>
-
-                <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
-                    <a class="page-link" th:href="@{${currentPage == totalPages - 1 ? '#': '/candidate_portal?page=' + (currentPage + 1)}}" aria-label="Next">
+                <li th:class="${currentJobOfferPage == totalJobOfferPages - 1 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link" th:href="@{${currentJobOfferPage == totalJobOfferPages - 1 ? '#': '/candidate_portal?page=' + (currentJobOfferPage + 1)}}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             </ul>
         </nav>
     </div>
+
+    <!-- Form to search for job offers -->
     <form action="/searchJobOffers" method="get" class="mt-4">
+        <!-- Search form elements -->
         <div class="form-row">
             <div class="col-md-4">
                 <label for="category">Search by category:</label>
@@ -246,7 +92,8 @@
         </div>
     </form>
 
-    <h2 class="mt-4">Stwórz swoje CV</h2>
+    <!-- Links to create and view CV -->
+    <h2 class="mt-4">Create Your CV</h2>
     <div class="d-flex">
         <div class="col-md-4">
             <a th:href="@{/CvForm}" class="btn btn-info" role="button">Create CV</a>
@@ -255,31 +102,31 @@
             <a th:href="@{/redirectToShowMyCV}" class="btn btn-info" role="button">Show my CV</a>
         </div>
     </div>
-
 </div>
+
 <br>
 <br>
 <br>
+
 <h2 class="mt-4">Notifications</h2>
 <table class="table" id="sortable-table">
     <thead class="table-dark">
     <tr>
         <th>ID</th>
         <th>Message</th>
-        <th>Dotyczy oferty</th>
-        <th>Proponowany termin rozmowy</th>
-        <th>STATUS</th>
+        <th>Related Job Offer</th>
+        <th>Proposed Meeting Time</th>
+        <th>Status</th>
     </tr>
     </thead>
     <tbody>
-    <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać powiadomienia -->
-    <tr th:each="notificationDTO : ${notifications}">
+    <!-- Thymeleaf loop to display notifications -->
+    <tr th:each="notificationDTO : ${notificationDTOs}">
+        <!-- Display notification details -->
         <td th:text="${notificationDTO.id}"></td>
         <td th:text="${notificationDTO.candidateMessage}"></td>
         <td>
-            <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">
-                View JobOffer
-            </a>
+            <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">View JobOffer</a>
         </td>
         <td>
             <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
@@ -301,10 +148,34 @@
         <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>
     </tr>
     </tbody>
+
+
 </table>
+
+<!-- Pagination for notifications -->
+<div th:if="${totalNotificationPages > 1}">
+    <nav aria-label="Notification Page Navigation">
+        <!-- Pagination controls for notifications -->
+        <ul class="pagination" id="notification-pagination">
+            <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">
+                <a class="page-link" th:href="@{'/candidate_portal?page=' + ${j}}" th:text="${j + 1}"></a>
+            </li>
+            <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">
+                <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
 <br>
 <br>
 <br>
 </body>
 </html>
-

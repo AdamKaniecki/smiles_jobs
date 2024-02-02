@@ -5,9 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
@@ -25,6 +27,7 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 
@@ -45,11 +48,7 @@ public class NotificationService {
     private EntityManager entityManager;
 
 
-    public List<Notification> findByUser(User user) {
-        UserEntity userEntity = userMapper.map(user);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
-        return notificationMapper.mapToList(notificationEntities);
-    }
+
 //@Transactional
 //    public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
 //
@@ -82,7 +81,7 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-            notificationRepository.save(notificationEntity);
+        notificationRepository.save(notificationEntity);
 
         return notificationMapper.map(notificationEntity);
     }
@@ -175,23 +174,64 @@ public class NotificationService {
 
 
     }
+
     public void deleteNotificationsByCvId(Integer cvId) {
         notificationRepository.deleteByCvId(cvId);
     }
 
     public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
-        UserEntity userEntity= userMapper.map(loggedInUser);
+        UserEntity userEntity = userMapper.map(loggedInUser);
         JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
         return notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
     }
-
 
 
     public Page<Notification> findAll(Pageable pageable) {
         Page<NotificationEntity> notificationEntities = notificationRepository.findAll(pageable);
         return notificationEntities.map(notificationMapper::map);
     }
-}
+
+
+
+    public List<Notification> findByUser(User user) {
+        UserEntity userEntity = userMapper.map(user);
+        List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
+        return notificationMapper.mapToList(notificationEntities);
+    }
+
+//    public Notification findUserRorPagination(User user){
+//        UserEntity userEntity = userMapper.map(user);
+//        NotificationEntity notificationEntity = notificationRepository.findUserRorPagination(userEntity);
+//        return notificationMapper.map(notificationEntity);
+//    }
+
+
+
+//    @Transactional
+//    public Page<Notification> findByUser(User user, Pageable pageable) {
+//        // Pobierz stronę powiadomień z bazy danych
+//        UserEntity userEntity = userMapper.map(user);
+//        Page<NotificationEntity> notificationEntitiesPage = notificationRepository.findByUser(userEntity, pageable);
+//        return notificationMapper.mapToPage(notificationEntitiesPage,pageable);
+
+//        // Mapuj powiadomienia na DTO
+//        List<NotificationDTO> notificationDTOs = notificationEntityPage.getContent().stream()
+//                .map(notificationMapper::map)
+//                .collect(Collectors.toList());
+
+        // Zwróć stronę paginacji z zmapowanymi obiektami DTO
+
+    }
+
+
+
+
+
+//    public Page<Notification> findByUser(User user, Pageable pageable ) {
+//        UserEntity userEntity = userMapper.map(user);
+//      List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
+//        return notificationMapper.mapToList(notificationEntities);
+//}
 
 
 

@@ -71,26 +71,63 @@ public class CandidatePortalController {
         model.addAttribute("userDTO", userDTO);
 
         // Paginacja dla ofert pracy
-        Page<JobOfferDTO> jobOfferDTOPage = jobOfferService.findAll(pageable)
+        Page<JobOfferDTO> jobOfferDTOsPage = jobOfferService.findAll(pageable)
                 .map(jobOfferMapperDTO::map);
 
-        model.addAttribute("jobOfferDTOs", jobOfferDTOPage.getContent());
-        model.addAttribute("currentPage", jobOfferDTOPage.getNumber()) ; // Page numbers start from 1
-        model.addAttribute("totalPages", jobOfferDTOPage.getTotalPages());
-        model.addAttribute("totalItems", jobOfferDTOPage.getTotalElements());
 
-        // Sortowanie dla ofert pracy
-//        sortingService.sortJobOfferById();
+        model.addAttribute("jobOfferDTOs", jobOfferDTOsPage.getContent());
+        model.addAttribute("currentJobOfferPage", jobOfferDTOsPage.getNumber()); // Page numbers start from 1
+        model.addAttribute("totalJobOfferPages", jobOfferDTOsPage.getTotalPages());
+        model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
-        int previousPage = Math.max(jobOfferDTOPage.getNumber(),0);
-        int nextPage = Math.min(jobOfferDTOPage.getNumber() + 2, jobOfferDTOPage.getTotalPages());
 
-        model.addAttribute("previousPage", previousPage + 1);
-        model.addAttribute("nextPage", nextPage);
+        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
+                .map(notificationMapperDTO::map).toList();
+        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
 
+
+
+        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
+        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
+        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
+        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
+//
         return "candidate_portal";
+
     }
 
+//        int previousPage = Math.max(jobOfferDTOsPage.getNumber(),0);
+//        int nextPage = Math.min(jobOfferDTOsPage.getNumber() + 2, jobOfferDTOsPage.getTotalPages());
+
+//        model.addAttribute("previousPage", previousPage + 1);
+//        model.addAttribute("nextPage", nextPage);
+
+//        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
+//        model.addAttribute("currentPage", notificationDTOsPage.getNumber() + 1);
+//        model.addAttribute("totalPages", notificationDTOsPage.getTotalPages());
+//        model.addAttribute("totalItems", notificationDTOsPage.getTotalElements());
+//        model.addAttribute("previousPage", notificationDTOsPage.getNumber() > 0 ? notificationDTOsPage.getNumber() : null);
+//
+
+
+//        model.addAttribute("previousPage", notificationDTOsPage.getNumber() > 0 ? notificationDTOsPage.getNumber() : null);
+//        model.addAttribute("nextPage", notificationDTOsPage.getNumber() < notificationDTOsPage.getTotalPages() - 1 ? notificationDTOsPage.getNumber() + 2 : null);
+
+//     model.addAttribute("nextPage", notificationDTOsPage.getNumber() < notificationDTOsPage.getTotalPages() - 1 ? notificationDTOsPage.getNumber() + 2 : null);
+
+
+
+//     model.addAttribute("jobOfferDTOs", jobOfferDTOsPage.getContent());
+//        model.addAttribute("currentPageJobOffer", jobOfferDTOsPage.getNumber() +1); // Page numbers start from 1
+//        model.addAttribute("totalPagesJobOffer", jobOfferDTOsPage.getTotalPages());
+//        model.addAttribute("totalItemsJobOffer", jobOfferDTOsPage.getTotalElements());
+//
+//
+//        int previousPage = Math.max(jobOfferDTOsPage.getNumber(),0);
+//        int nextPage = Math.min(jobOfferDTOsPage.getNumber() + 1, jobOfferDTOsPage.getTotalPages());
+//
+//        model.addAttribute("previousPage", previousPage + 1);
+//        model.addAttribute("nextPage", nextPage);
 
 
     //        model.addAttribute("jobOffersDTOs", jobOfferDTOPage.getContent());
@@ -100,10 +137,7 @@ public class CandidatePortalController {
 //        model.addAttribute("totalPages", jobOfferDTOPage.getTotalPages());
 //        model.addAttribute("totalItems", jobOfferDTOPage.getTotalElements());
 
-//        Page<NotificationDTO> notificationDTOPage = notificationService.findByUser(loggedInUser, pageable)
-//                .map(notificationMapperDTO::map);
-//        model.addAttribute("notifications", notificationDTOPage.getContent());
-
+    ;
 
 
     @GetMapping("/searchJobOffers")
@@ -179,6 +213,10 @@ public class CandidatePortalController {
             // Dodaj odpowiedni komunikat lub przekierowanie w przypadku powtórnego wysłania CV
             return "cv_already_sent";
         }
+        if(cv == null){
+
+        }
+
 
         Notification notification = notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
         userService.save(loggedInUser);
@@ -186,8 +224,6 @@ public class CandidatePortalController {
 
         return "cv_created_successfully";
     }
-
-
 
 
 }

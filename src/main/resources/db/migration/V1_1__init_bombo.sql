@@ -51,24 +51,31 @@ PRIMARY KEY(business_card_id),
 
 );
 
+
+
     CREATE TABLE CV(
     cv_id SERIAL NOT NULL,
     name VARCHAR(32) NOT NULL,
     surname VARCHAR(32) NOT NULL,
-    date_of_birth VARCHAR(32) NOT NULl,
+    date_of_birth VARCHAR(32) NOT NULL,
     sex VARCHAR(32) NOT NULL,
     marital_status VARCHAR(32) NOT NULL,
     phone_number VARCHAR(32) NOT NULL,
     contact_email VARCHAR(32) NOT NULL,
-    work_experience VARCHAR(32) NOT NULL,
-    education VARCHAR(32) NOT NULL,
+    work_experience text NOT NULL,
+    education text NOT NULL,
     skills VARCHAR(32) NOT NULL,
+
+    tools VARCHAR(128) ,
+    IT_specializations VARCHAR(128),
+    years_of_experience INT,
     language VARCHAR(32) NOT NULL,
     language_level VARCHAR(32) NOT NULL,
     hobby TEXT NOT NULL,
     address_id INT ,
     user_id INT NOT NULL,
---    advertisement_id INT NOT NULL,
+    unique(contact_email),
+
     PRIMARY KEY(cv_id),
     CONSTRAINT fk_CV_address_table
         FOREIGN KEY (address_id)
@@ -102,6 +109,13 @@ CREATE TABLE notification_table (
      CONSTRAINT fk_notification_table_job_offer
          FOREIGN KEY (job_offer_id)
              REFERENCES job_offer_table (job_offer_id)
+ );
+
+ CREATE TABLE cv_programming_languages (
+     cv_id INT,
+     programming_language VARCHAR(32),
+     PRIMARY KEY (cv_id, programming_language),
+     FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
  );
 
 

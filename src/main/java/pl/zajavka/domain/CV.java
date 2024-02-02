@@ -1,6 +1,9 @@
 package pl.zajavka.domain;
 
 import lombok.*;
+import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
+
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,11 +18,15 @@ public class CV {
     private String dateOfBirth;
     private String sex;
     private String maritalStatus;
-    private String contactEmail;
     private String phoneNumber;
-    private String education;
+    private String contactEmail;
     private String workExperience;
+    private String education;
     private String skills;
+    private Set<ProgrammingLanguage> programmingLanguages;
+    private String tools;
+    private String ITSpecializations;
+    private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;

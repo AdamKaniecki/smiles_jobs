@@ -24,8 +24,10 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 
@@ -46,36 +48,76 @@ public class CvService {
     private NotificationRepository notificationRepository;
 
 
-    @Transactional
-    public CV createCV(CV cv, User user) {
-        // Sprawdź, czy użytkownik już ma CV
-        if (cvRepository.existsByUser(userMapper.map(user))) {
-            return null;
-        }
-        Address addressCV = cv.getAddress();
-
-        CvEntity newEntity = CvEntity.builder()
-                .id(cv.getId())
-                .name(cv.getName())
-                .surname(cv.getSurname())
-                .dateOfBirth(cv.getDateOfBirth())
-                .sex(cv.getSex())
-                .maritalStatus(cv.getMaritalStatus())
-                .contactEmail(cv.getContactEmail())
-                .phoneNumber(cv.getPhoneNumber())
-                .education(cv.getEducation())
-                .workExperience(cv.getWorkExperience())
-                .skills(cv.getSkills())
-                .language(cv.getLanguage())
-                .languageLevel(cv.getLanguageLevel())
-                .hobby(cv.getHobby())
-                .user(userMapper.map(user))
-                .address(addressMapper.map(addressCV))
-                .build();
-
-        cvRepository.saveAndFlush(newEntity);
-        return cvMapper.map(newEntity);
+//    @Transactional
+//    public CV createCV(CV cv, User user) {
+//        // Sprawdź, czy użytkownik już ma CV
+//        if (cvRepository.existsByUser(userMapper.map(user))) {
+//            return null;
+//        }
+//        Address addressCV = cv.getAddress();
+//
+//        CvEntity newEntity = CvEntity.builder()
+//                .id(cv.getId())
+//                .name(cv.getName())
+//                .surname(cv.getSurname())
+//                .dateOfBirth(cv.getDateOfBirth())
+//                .sex(cv.getSex())
+//                .maritalStatus(cv.getMaritalStatus())
+//                .contactEmail(userMapper.map(user).getEmail())
+//                .phoneNumber(cv.getPhoneNumber())
+//                .education(cv.getEducation())
+//                .workExperience(cv.getWorkExperience())
+//                .programmingLanguages()
+//                .skills(cv.getSkills())
+//                .language(cv.getLanguage())
+//                .languageLevel(cv.getLanguageLevel())
+//                .hobby(cv.getHobby())
+//                .user(userMapper.map(user))
+//                .address(addressMapper.map(addressCV))
+//                .build();
+//
+//        cvRepository.saveAndFlush(newEntity);
+//        return cvMapper.map(newEntity);
+//    }
+@Transactional
+public CV createCV(CV cv, User user, Set<String> programmingLanguagesNames) {
+    if (cvRepository.existsByUser(userMapper.map(user))) {
+        return null;
     }
+
+    Address addressCV = cv.getAddress();
+    CvEntity newEntity = CvEntity.builder()
+            .id(cv.getId())
+            .name(cv.getName())
+            .surname(cv.getSurname())
+            .dateOfBirth(cv.getDateOfBirth())
+            .sex(cv.getSex())
+            .maritalStatus(cv.getMaritalStatus())
+            .contactEmail(userMapper.map(user).getEmail())
+            .phoneNumber(cv.getPhoneNumber())
+            .education(cv.getEducation())
+            .workExperience(cv.getWorkExperience())
+            .skills(cv.getSkills())
+            .language(cv.getLanguage())
+            .languageLevel(cv.getLanguageLevel())
+            .hobby(cv.getHobby())
+            .user(userMapper.map(user))
+            .address(addressMapper.map(addressCV))
+            .build();
+
+    // Ustawienie wybranych języków programowania
+    Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
+    if (programmingLanguagesNames != null) {
+        for (String languageName : programmingLanguagesNames) {
+            ProgrammingLanguage language = ProgrammingLanguage.valueOf(languageName);
+            programmingLanguages.add(language);
+        }
+    }
+    newEntity.setProgrammingLanguages(programmingLanguages);
+
+    cvRepository.saveAndFlush(newEntity);
+    return cvMapper.map(newEntity);
+}
 
 
     public List<CV> findAll() {
@@ -116,7 +158,7 @@ public class CvService {
 
     public CV findByUser2(User user){
         CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
-                .orElseThrow(()-> new NotFoundException("Not found CV from user: " + user));
+                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
         return cvMapper.map(cvEntity);
     }
 

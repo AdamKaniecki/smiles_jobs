@@ -15,37 +15,42 @@
     <label>Surname: </label>
     <input type="text" th:field="*{surname}" required/><br/>
 
-    <label>sex </label>
+    <label>Sex: </label>
     <input type="text" th:field="*{sex}" required/><br/>
 
-    <label>dateOfBirth: </label>
+    <label>Date of Birth: </label>
     <input type="text" th:field="*{dateOfBirth}" required/><br/>
 
-    <label>maritalStatus: </label>
+    <label>Marital Status: </label>
     <input type="text" th:field="*{maritalStatus}" required/><br/>
 
-    <label>phoneNumber: </label>
+    <label>Phone Number: </label>
     <input type="text" th:field="*{phoneNumber}" required/><br/>
 
-    <label>email: </label>
+    <label>Email: </label>
     <input type="text" th:field="*{contactEmail}" required/><br/>
 
-    <label>education </label>
+    <label for="programmingLanguages">Programming Languages:</label>
+    <select id="programmingLanguages" name="programmingLanguages" multiple>
+        <option th:each="language : ${programmingLanguages}" th:value="${language.name}" th:text="${language.displayName}"></option>
+    </select><br/>
+
+    <label>Education: </label>
     <input type="text" th:field="*{education}" required/><br/>
 
     <label>Work Experience: </label>
     <input type="text" th:field="*{workExperience}" required/><br/>
 
-    <label>skills: </label>
+    <label>Skills: </label>
     <input type="text" th:field="*{skills}" required/><br/>
 
-    <label>language: </label>
+    <label>Language: </label>
     <input type="text" th:field="*{language}" required/><br/>
 
-    <label>languageLevel: </label>
+    <label>Language Level: </label>
     <input type="text" th:field="*{languageLevel}" required/><br/>
 
-    <label>hobby: </label>
+    <label>Hobby: </label>
     <input type="text" th:field="*{hobby}" required/><br/>
 
     <label for="country">Country:</label>
@@ -57,9 +62,8 @@
     <label for="streetAndNumber">Street and Number:</label>
     <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
 
-    <!-- Pole ukryte dla userId -->
+    <!-- Hidden field for userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
-
 
     <!-- Include other CV fields as needed -->
 

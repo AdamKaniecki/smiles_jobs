@@ -11,7 +11,9 @@ import pl.zajavka.domain.JobOffer;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -34,30 +36,50 @@ public class CvEntity {
     @Column(name = "date_of_birth")
     private String dateOfBirth;
 
+//    @Enumerated(EnumType.STRING)
     @Column(name = "sex")
     private String sex;
 
+//    @Enumerated(EnumType.STRING)
     @Column(name = "marital_status")
     private String maritalStatus;
-
-    @Column(name = "contact_email")
-    private String contactEmail;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "education")
-    private String education;
+    @Column(name = "contact_email")
+    private String contactEmail;
 
     @Column(name = "work_experience")
     private String workExperience;
 
+    @Column(name = "education")
+    private String education;
+
     @Column(name = "skills")
     private String skills;
+
+
+    @ElementCollection(targetClass = ProgrammingLanguage.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "cv_programming_languages", joinColumns = @JoinColumn(name = "cv_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "programming_language")
+    private Set<ProgrammingLanguage> programmingLanguages;
+
+    @Column(name = "tools")
+    private String tools;
+
+//    @Enumerated(EnumType.STRING)
+    @Column(name = "IT_specializations")
+    private String ITSpecializations;
+
+    @Column(name = "years_of_experience")
+    private Integer yearsOfExperience;
 
     @Column(name = "language")
     private String language;
 
+//    @Enumerated(EnumType.STRING)
     @Column(name = "language_level")
     private String languageLevel;
 

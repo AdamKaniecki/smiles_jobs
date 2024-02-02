@@ -146,6 +146,7 @@ package pl.zajavka.api.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -154,6 +155,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.UpdateCvDTO;
@@ -161,9 +163,12 @@ import pl.zajavka.api.dto.mapper.CvMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.*;
 import pl.zajavka.domain.*;
+import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -180,10 +185,20 @@ public class CvController {
     private AddressMapper addressMapper;
     private JobOfferService jobOfferService;
     private NotificationService notificationService;
+    private EnumService enumService;
 
     @GetMapping("/CvForm")
-    public String CvForm(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model, Authentication authentication) {
-        System.out.println("tyyujikiooo");
+    public String cvForm(
+            @ModelAttribute("cvDTO") CvDTO cvDTO,
+            Model model,
+            BindingResult bindingResult,
+            Authentication authentication,
+            @RequestParam(name = "programmingLanguage", required = false) String programmingLanguageName
+    ) {
+        if (bindingResult.hasErrors()) {
+            // Jeśli wystąpiły błędy walidacji, zwróć użytkownika z powrotem do formularza
+            return "error";
+        }
 
         // Pobierz zalogowanego użytkownika z obiektu Authentication
         String username = authentication.getName();
@@ -193,6 +208,20 @@ public class CvController {
             userMapperDTO.map(user);
             model.addAttribute("userDTO", user);
             model.addAttribute("cvDTO", cvDTO);
+
+            // Pobierz listę wszystkich języków programowania
+            Set<ProgrammingLanguage> programmingLanguages = enumService.getAllProgrammingLanguages();
+            model.addAttribute("programmingLanguages", programmingLanguages);
+
+            // Sprawdź, czy przekazano wybrany język programowania
+            if (programmingLanguageName != null && !programmingLanguageName.isEmpty()) {
+                // Znajdź obiekt ProgrammingLanguage na podstawie nazwy
+                Optional<ProgrammingLanguage> optionalProgrammingLanguage = programmingLanguages.stream()
+                        .filter(language -> language.name().equals(programmingLanguageName))
+                        .findFirst();
+                optionalProgrammingLanguage.ifPresent(language -> model.addAttribute("selectedProgrammingLanguage", language));
+            }
+
             return "create_cv";
         } else {
             // Obsłuż brak zalogowanego użytkownika
@@ -200,37 +229,44 @@ public class CvController {
         }
     }
 
+
     @PostMapping("/createCV")
     @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
-    public String createCV(@ModelAttribute("cvDTO") CvDTO cvDTO, Model model, Authentication authentication) {
-        System.out.println("czt ty tu wchodzisz 4");
-        // Pobierz zalogowanego użytkownika z obiektu Authentication
+    public String createCV(@Valid @ModelAttribute("cvDTO") CvDTO cvDTO, Model model,
+                           BindingResult bindingResult, Authentication authentication,
+                           @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames) {
+        if (bindingResult.hasErrors()) {
+            return "error";
+        }
+
         String username = authentication.getName();
-        System.out.println("czt ty tu wchodzisz 5");
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
             if (cvService.existByUser(loggedInUser)) {
                 return "cv_already_created";
             }
-            System.out.println("czt ty tu wchodzisz 6");
-            CV cv = cvMapperDTO.map(cvDTO);
-//            Address createdAddress = addressService.createAddress(cv.getAddress(), loggedInUser);
-            System.out.println("czt ty tu wchodzisz 7");
-//            cv.setAddress(createdAddress);
-//            cv.setUser(loggedInUser);
-            cvService.createCV(cv, loggedInUser);
 
-            System.out.println("czt ty tu wchodzisz 8");
+            // Tworzenie CV z wybranymi językami programowania
+            CV cv = cvMapperDTO.map(cvDTO);
+            cvService.createCV(cv, loggedInUser, programmingLanguagesNames);
+
             model.addAttribute("cvDTO", cv);
             model.addAttribute("userDTO", loggedInUser);
 
             return "cv_created_successfully";
         } else {
-            System.out.println("czt ty tu wchodzisz 9");
-            // Obsłuż brak zalogowanego użytkownika
-            return "login";  // Przekieruj na stronę logowania
+            return "login";
         }
     }
+
+
+
+
+
+
+
+
+
 
 
     @GetMapping("/redirectToShowMyCV")
@@ -254,31 +290,6 @@ public class CvController {
 
         return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
-
-//    @GetMapping("/redirectToShowMyCV")
-//    public String redirectToShowMyCV(HttpSession httpSession) {
-//        String username = (String) httpSession.getAttribute("username");
-//
-//        if (username != null) {
-//            User loggedInUser = userService.findByUserName(username);
-//
-//            if (loggedInUser != null) {
-//                // Sprawdź, czy użytkownik ma przypisane CV
-//                Optional<CV> userCV = cvService.findByUser(loggedInUser);
-//
-//                if (userCV.isPresent()) {
-//                    Integer cvId = userCV.get().getId();
-//
-//                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
-//                    return "redirect:/showCV?id=" + cvId;
-//                 }
-//            }
-//        }
-//
-//        // Obsłuż sytuację, gdy użytkownik nie jest zalogowany, nie ma przypisanego CV lub wystąpił inny problem
-//        return "redirect:/";  // Przekieruj na stronę główną lub obsłuż inaczej
-//    }
-
 
 
 
@@ -336,7 +347,8 @@ public class CvController {
 
     @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     @PutMapping("/updateCVDone")
-    public String updateCv(@ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
+    public String updateCv(
+            @Valid @ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
 
         Optional<CV> myCV = cvService.findById(updateCvDTO.getId());
         if (myCV.isPresent()) {
