@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Create CV</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Styl dla tekstu pomocniczego */
+        .helper-text {
+            font-size: 10px; /* Ustawienie mniejszej czcionki */
+        }
+    </style>
 </head>
 <body onload="displaySelectedLanguages()">
 <h2>Create CV</h2>
@@ -28,19 +35,32 @@
 
     <label>Email: </label>
     <input type="text" th:field="*{contactEmail}" required/><br/>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <br>
+                <br>
+                <br>
+                <br>
+                <!-- Tekst pomocniczy z klasą helper-text -->
+                <p class="helper-text">JEŚLI CHCESZ WYBRAĆ KILKA</p>
+                <p class="helper-text">WCIŚNIJ CTRL I ZAZNACZ</p>
+                <p class="helper-text">ODPOWIEDNIE ELEMENTY</p>
+            </div>
+            <div class="col-md-8">
+                <label for="programmingLanguages">Programming Languages:</label>
+                <br><br>
+                <select id="programmingLanguages" name="programmingLanguages" multiple>
+                    <option th:each="language : ${programmingLanguages}" th:value="${language.name}" th:text="${language.displayName}"></option>
+                </select><br/>
+                <button type="button" onclick="addSelectedLanguages()">Add to List</button><br/>
+            </div>
+        </div>
+    </div>
 
-    <label for="programmingLanguages">Programming Languages:</label>
-    <select id="programmingLanguages" name="programmingLanguages" multiple th:onchange="|displaySelectedLanguages()|">
-        <option th:each="language : ${programmingLanguages}" th:value="${language.name}" th:text="${language.displayName}"></option>
-    </select><br/>
-
-    <div id="selectedLanguages"></div><br/>
-
-    <!-- Pozostałe pola formularza -->
-
-    <input type="hidden" id="selectedLanguagesInput" name="selectedLanguages" />
-    <!-- Ukryte pola formularza do przechowywania wybranych języków programowania -->
-
+    <label></label>
+    <div id="selectedLanguages"></div>
+    <input type="hidden" id="selectedLanguagesInput" name="selectedLanguages" /><br/>
 
     <label>Education: </label>
     <input type="text" th:field="*{education}" required/><br/>
@@ -72,8 +92,6 @@
     <!-- Hidden field for userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
 
-    <!-- Include other CV fields as needed -->
-
     <input type="submit" value="Create CV"/>
 </form>
 
@@ -89,7 +107,20 @@
         }
         document.getElementById("selectedLanguages").innerHTML = "Selected Languages: " + selectedLanguages.join(", ");
     }
+function addSelectedLanguages() {
+    var select = document.getElementById("programmingLanguages");
+    var selectedLanguages = [];
+    for (var i = 0; i < select.length; i++) {
+        if (select.options[i].selected) {
+            selectedLanguages.push(select.options[i].text);
+        }
+    }
+    var existingLanguages = document.getElementById("selectedLanguagesInput").value.split(',');
+    selectedLanguages = selectedLanguages.concat(existingLanguages); // Dodanie nowych języków do już istniejących
+    document.getElementById("selectedLanguagesInput").value = selectedLanguages.join(',');
+    displaySelectedLanguages(); // Wywołanie funkcji wyświetlającej wybrane języki
+}
 </script>
-
 </body>
 </html>
+

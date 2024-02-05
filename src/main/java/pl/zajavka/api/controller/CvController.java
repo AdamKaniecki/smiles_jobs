@@ -193,7 +193,7 @@ public class CvController {
             Model model,
             BindingResult bindingResult,
             Authentication authentication,
-            @RequestParam(name = "programmingLanguage", required = false) Set<String> programmingLanguageName
+            @RequestParam(name = "programmingLanguage", required = false) Set<ProgrammingLanguage> programmingLanguageName
     ) {
         if (bindingResult.hasErrors()) {
             // Jeśli wystąpiły błędy walidacji, zwróć użytkownika z powrotem do formularza
