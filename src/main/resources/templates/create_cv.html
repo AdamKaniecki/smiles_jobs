@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>Create CV</title>
 </head>
-<body>
-
+<body onload="displaySelectedLanguages()">
 <h2>Create CV</h2>
 
 <form th:action="@{/createCV}" th:object="${cvDTO}" method="post">
@@ -31,9 +30,17 @@
     <input type="text" th:field="*{contactEmail}" required/><br/>
 
     <label for="programmingLanguages">Programming Languages:</label>
-    <select id="programmingLanguages" name="programmingLanguages" multiple>
+    <select id="programmingLanguages" name="programmingLanguages" multiple th:onchange="|displaySelectedLanguages()|">
         <option th:each="language : ${programmingLanguages}" th:value="${language.name}" th:text="${language.displayName}"></option>
     </select><br/>
+
+    <div id="selectedLanguages"></div><br/>
+
+    <!-- Pozostałe pola formularza -->
+
+    <input type="hidden" id="selectedLanguagesInput" name="selectedLanguages" />
+    <!-- Ukryte pola formularza do przechowywania wybranych języków programowania -->
+
 
     <label>Education: </label>
     <input type="text" th:field="*{education}" required/><br/>
@@ -69,6 +76,20 @@
 
     <input type="submit" value="Create CV"/>
 </form>
+
+
+<script th:inline="javascript">
+    function displaySelectedLanguages() {
+        var select = document.getElementById("programmingLanguages");
+        var selectedLanguages = [];
+        for (var i = 0; i < select.length; i++) {
+            if (select.options[i].selected) {
+                selectedLanguages.push(select.options[i].text);
+            }
+        }
+        document.getElementById("selectedLanguages").innerHTML = "Selected Languages: " + selectedLanguages.join(", ");
+    }
+</script>
 
 </body>
 </html>
