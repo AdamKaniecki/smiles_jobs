@@ -63,7 +63,7 @@ public class  UserService {
                 .roles(roles)
                 .build();
 
-        userRepository.save(userEntity);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
         return userMapper.map(userEntity);
     }
 

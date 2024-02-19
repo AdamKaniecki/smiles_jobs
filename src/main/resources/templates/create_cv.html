@@ -13,28 +13,23 @@
 </head>
 <body onload="displaySelectedLanguages()">
 <h2>Create CV</h2>
-
 <form th:action="@{/createCV}" th:object="${cvDTO}" method="post">
     <label>Name: </label>
     <input type="text" th:field="*{name}" required/><br/>
-
     <label>Surname: </label>
     <input type="text" th:field="*{surname}" required/><br/>
-
     <label>Sex: </label>
     <input type="text" th:field="*{sex}" required/><br/>
-
     <label>Date of Birth: </label>
     <input type="text" th:field="*{dateOfBirth}" required/><br/>
-
     <label>Marital Status: </label>
     <input type="text" th:field="*{maritalStatus}" required/><br/>
-
     <label>Phone Number: </label>
     <input type="text" th:field="*{phoneNumber}" required/><br/>
 
     <label>Email: </label>
     <input type="text" th:field="*{contactEmail}" required/><br/>
+
     <div class="container">
         <div class="row">
             <div class="col-md-2">
@@ -64,37 +59,28 @@
 
     <label>Education: </label>
     <input type="text" th:field="*{education}" required/><br/>
-
     <label>Work Experience: </label>
     <input type="text" th:field="*{workExperience}" required/><br/>
-
     <label>Skills: </label>
     <input type="text" th:field="*{skills}" required/><br/>
-
     <label>Language: </label>
     <input type="text" th:field="*{language}" required/><br/>
-
     <label>Language Level: </label>
     <input type="text" th:field="*{languageLevel}" required/><br/>
-
     <label>Hobby: </label>
     <input type="text" th:field="*{hobby}" required/><br/>
-
     <label for="country">Country:</label>
     <input type="text" id="country" name="address.country" required><br>
-
     <label for="city">City:</label>
     <input type="text" id="city" name="address.city" required><br>
-
     <label for="streetAndNumber">Street and Number:</label>
     <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
-
     <!-- Hidden field for userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
-
     <input type="submit" value="Create CV"/>
 </form>
-
+<input type="submit" value="Create CV"/>
+</form>
 
 <script th:inline="javascript">
     function displaySelectedLanguages() {
@@ -121,6 +107,6 @@ function addSelectedLanguages() {
     displaySelectedLanguages(); // Wywołanie funkcji wyświetlającej wybrane języki
 }
 </script>
+
 </body>
 </html>
-

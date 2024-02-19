@@ -27,8 +27,6 @@ public class AddressService {
 
     @Transactional
     public Address createAddress(Address address, User user) {
-        System.out.println("Tworzę adres");
-
         AddressEntity entity = AddressEntity.builder()
                 .country(address.getCountry())
                 .city(address.getCity())

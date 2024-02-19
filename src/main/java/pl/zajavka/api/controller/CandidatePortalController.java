@@ -40,20 +40,17 @@ import java.util.stream.Collectors;
 @Controller
 @Slf4j
 public class CandidatePortalController {
-    public static final String CANDIDATE_PORTAL = "/candidate_portal";
-    public static final String USER_ID = "/show";
+    static final String CANDIDATE_PORTAL = "/candidate_portal";
+//    public static final String USER_ID = "/show";
 
     private HttpSession httpSession;
     private UserService userService;
-    private UserRepository userRepository;
     private UserMapperDTO userMapperDTO;
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
     private NotificationMapperDTO notificationMapperDTO;
     private CvService cvService;
-    private EntityManager entityManager;
-    private SortingService sortingService;
     private PaginationService paginationService;
 
     @SneakyThrows

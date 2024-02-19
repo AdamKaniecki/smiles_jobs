@@ -35,20 +35,7 @@ public class BusinessCardController {
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
 
-    //    @GetMapping("/BusinessCardForm")
-//    public String BusinessCardForm(@ModelAttribute ("businessCardDTO") BusinessCardDTO businessCardDTO,  Model model) {
-//        String username = (String) httpSession.getAttribute("username");
-//        if (username != null) {
-//            User user = userService.findByUserName(username);
-//             userMapperDTO.map(user);
-//            model.addAttribute("userDTO", user);
-//            model.addAttribute("businessCardDTO",businessCardDTO);
-//            return "create_business_card";
-//        } else {
-//            // Obsłuż brak zalogowanego użytkownika
-//            return "login";  // Przekieruj na stronę logowania
-//        }
-//    }
+
     @GetMapping("/BusinessCardForm")
     public String businessCardForm(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model,
                                    Authentication authentication) {
@@ -83,20 +70,6 @@ public class BusinessCardController {
     }
 
 
-//    @GetMapping("/redirectToShowMyBusinessCard")
-//    public String redirectToShowMyBusinessCard(Authentication authentication) {
-//
-//        User loggedInUser = userService.getLoggedInUser((authentication));
-//
-//            BusinessCard userBusinessCard = businessCardService.findByUser(loggedInUser);
-//            if (userBusinessCard != null) {
-//            Integer businessCardId = businessCardService.findById(userBusinessCard.getId()).getId();
-//            // Przekieruj na endpoint showBusinessCard z odpowiednim identyfikatorem
-//            return "redirect:/showBusinessCard?id=" + businessCardId;
-//        } else {
-//            return "businessCard_not_found";
-//        }
-//    }
 @GetMapping("/redirectToShowMyBusinessCard")
 public String redirectToShowMyBusinessCard(Authentication authentication) {
     User loggedInUser = userService.getLoggedInUser((authentication));
@@ -136,34 +109,6 @@ public String redirectToShowMyBusinessCard(Authentication authentication) {
 
 
 
-//    @GetMapping("/businessCard/{businessCardId}")
-//    public String showBusinessCard(@PathVariable Integer businessCardId, Model model) {
-//        BusinessCard businessCard = businessCardService.findById(businessCardId);
-//
-//        model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-////            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
-//        return "show_businessCard";
-//
-//    }
-
-
-//    @GetMapping("/redirectToUpdateMyBusinessCard")
-//    public String redirectToUpdateMyBusinessCard(HttpSession httpSession) {
-//        String username = (String) httpSession.getAttribute("username");
-//        if (username != null) {
-//            User loggedInUser = userService.findByUserName(username);
-//            if (loggedInUser != null) {
-//                // Sprawdź, czy użytkownik ma przypisane CV
-//                Optional<BusinessCard> userBusinessCard = businessCardService.findByUser(loggedInUser);
-//                if (userBusinessCard.isPresent()) {
-//                    Integer cvId = userBusinessCard.get().getId();
-//                    // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
-//                    return "redirect:/updateBusinessCardForm?id=" + cvId;
-//                }
-//            }
-//        }
-//        return "businessCard_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
-//    }
 
     @GetMapping("/redirectToUpdateMyBusinessCard")
     public String redirectToUpdateMyBusinessCard(Authentication authentication) {

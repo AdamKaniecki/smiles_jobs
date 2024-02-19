@@ -149,6 +149,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -166,9 +167,7 @@ import pl.zajavka.domain.*;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -199,20 +198,16 @@ public class CvController {
             // Jeśli wystąpiły błędy walidacji, zwróć użytkownika z powrotem do formularza
             return "error";
         }
-
         // Pobierz zalogowanego użytkownika z obiektu Authentication
         String username = authentication.getName();
-
         if (username != null) {
             User user = userService.findByUserName(username);
             userMapperDTO.map(user);
             model.addAttribute("userDTO", user);
             model.addAttribute("cvDTO", cvDTO);
-
             // Pobierz listę wszystkich języków programowania
             Set<ProgrammingLanguage> programmingLanguages = enumService.getAllProgrammingLanguages();
             model.addAttribute("programmingLanguages", programmingLanguages);
-
             // Sprawdź, czy przekazano wybrany język programowania
             if (programmingLanguageName != null && !programmingLanguageName.isEmpty()) {
                 // Znajdź obiekt ProgrammingLanguage na podstawie nazwy
@@ -221,7 +216,6 @@ public class CvController {
                         .findFirst();
                 optionalProgrammingLanguage.ifPresent(language -> model.addAttribute("selectedProgrammingLanguage", language));
             }
-
             return "create_cv";
         } else {
             // Obsłuż brak zalogowanego użytkownika
@@ -238,26 +232,23 @@ public class CvController {
         if (bindingResult.hasErrors()) {
             return "error";
         }
-
         String username = authentication.getName();
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
             if (cvService.existByUser(loggedInUser)) {
                 return "cv_already_created";
             }
-
             // Tworzenie CV z wybranymi językami programowania
             CV cv = cvMapperDTO.map(cvDTO);
             cvService.createCV(cv, loggedInUser, programmingLanguagesNames);
-
             model.addAttribute("cvDTO", cv);
             model.addAttribute("userDTO", loggedInUser);
-
             return "cv_created_successfully";
         } else {
             return "login";
         }
     }
+
 
 
 
@@ -420,6 +411,24 @@ public class CvController {
         return "home";
     }
 
+
+    public static String displaySelectedLanguages(Set<String> selectedLanguages) {
+        return "Selected Languages: " + String.join(", ", selectedLanguages);
+    }
+
+    public static Set<String> addSelectedLanguages(Set<String> currentLanguages, Set<String> newLanguages) {
+        Set<String> selectedLanguagesSet = new HashSet<>();
+
+        if (currentLanguages != null) {
+            selectedLanguagesSet.addAll(currentLanguages);
+        }
+
+        if (newLanguages != null) {
+            selectedLanguagesSet.addAll(newLanguages);
+        }
+
+        return selectedLanguagesSet;
+    }
     }
 
 

@@ -65,7 +65,6 @@ PRIMARY KEY(business_card_id),
     work_experience text NOT NULL,
     education text NOT NULL,
     skills VARCHAR(32) NOT NULL,
-
     tools VARCHAR(128) ,
     IT_specializations VARCHAR(128),
     years_of_experience INT,
@@ -117,6 +116,14 @@ CREATE TABLE notification_table (
      PRIMARY KEY (cv_id, programming_language),
      FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
  );
+
+  CREATE TABLE cv_IT_specializations (
+      cv_id INT,
+      IT_specializations VARCHAR(32),
+      PRIMARY KEY (cv_id, IT_specializations),
+      FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
+  );
+
 
 
 

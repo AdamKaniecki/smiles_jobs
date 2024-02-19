@@ -50,6 +50,10 @@
         <h3>Languages</h3>
         <p th:text="'Language: ' + ${cvDTO.language}"></p>
         <p th:text="'Language Level: ' + ${cvDTO.languageLevel}"></p>
+        <h4>Programming Languages</h4>
+        <ul>
+          <li th:each="language : ${cvDTO.programmingLanguages}" th:text="${language}"></li>
+        </ul>
       </div>
     </div>
 

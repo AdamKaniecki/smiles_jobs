@@ -66,6 +66,13 @@ public class CvEntity {
     @Column(name = "programming_language")
     private Set<ProgrammingLanguage> programmingLanguages;
 
+
+    @ElementCollection(targetClass = ProgrammingLanguage.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "cv_IT_specializations", joinColumns = @JoinColumn(name = "cv_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "IT_specializations")
+    private Set<IT_SPECIALIZATIONS> IT_specializations;
+
     @Column(name = "tools")
     private String tools;
 
