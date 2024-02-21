@@ -83,13 +83,12 @@ public class SecurityConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")
-    SecurityFilterChain securityDisabled(HttpSecurity http) throws Exception {
-        http.csrf()
-                .disable()
+    SecurityFilterChain securityDisabled(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
                 .authorizeHttpRequests()
                 .anyRequest()
                 .permitAll();
 
-        return http.build();
+        return httpSecurity.build();
     }
 }

@@ -41,6 +41,12 @@
     <label for="streetAndNumber">Street and Number:</label>
     <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
 
+    <label for="postalCode">Postal Code:</label>
+    <input type="text" id="postalCode" name="address.postalCode" required><br>
+
+<!--    <label>Postal Code:</label>-->
+<!--    <input type="text" th:field="*{postalCode}" required><br>-->
+
     <!-- Pole ukryte dla userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
 

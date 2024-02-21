@@ -26,15 +26,16 @@
         <p th:text="'Marital Status: ' + ${cvDTO.maritalStatus}"></p>
         <p th:text="'Contact Email: ' + ${cvDTO.contactEmail}"></p>
         <p th:text="'Phone Number: ' + ${cvDTO.phoneNumber}"></p>
-<!--        <p th:text="'Address: ' + ${cvDTO.address}"></p>-->
+
       </div>
 
       <div class="col-md-6">
         <h3>Address</h3>
         <p th:text="'Country: ' + ${cvDTO.address.country}"></p>
         <p th:text="'City: ' + ${cvDTO.address.city}"></p>
-<!--        <p th:text="'Street: ' + ${cvDTO.address.street}"></p>-->
-<!--        <p th:text="'Zip Code: ' + ${cvDTO.address.zipCode}"></p>-->
+        <p th:text="'Street and Number: ' + ${cvDTO.address.streetAndNumber}"></p>
+        <p th:text="'Postal Code: ' + ${cvDTO.address.postalCode}"></p>
+
 
       </div>
       <div class="col-md-6">
@@ -71,19 +72,15 @@
   </div>
 
   <div class="mt-4">
-    <a th:href="@{/redirectToUpdateMyCV}" class="btn btn-info" role="button">Confirm your CV</a>
+    <a th:href="@{/redirectToUpdateMyCV}" class="btn btn-info" role="button">Update your CV</a>
   </div>
-
+<br>
   <form th:action="@{/deleteCV}"
         th:method="DELETE"
         th:object="${cvDTO}">
     <input type="hidden" th:field="*{id}"/>
-    <p>Are you sure you want to delete this CV?</p>
     <button type="submit" class="btn btn-danger">Delete</button>
-    <a th:href="@{/}" class="btn btn-secondary">Cancel</a>
   </form>
-
-
 
   <div th:unless="${cvDTO}">
     <p>CV not found</p>

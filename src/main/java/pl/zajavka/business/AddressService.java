@@ -54,6 +54,7 @@ public class AddressService {
                 existingEntity.setCountry(address.getCountry());
                 existingEntity.setCity(address.getCity());
                 existingEntity.setStreetAndNumber(address.getStreetAndNumber());
+                existingEntity.setPostalCode(address.getPostalCode());
 
                 addressRepository.save(existingEntity);
             } else {
@@ -100,9 +101,9 @@ public class AddressService {
                     .collect(Collectors.toSet());
 
             if (roles.contains("ROLE_CANDIDATE")) {
-                return "cv_created_successfully";
+                return "update_address_successfully_cv";
             } else if (roles.contains("ROLE_COMPANY")) {
-                return "job_offer_created_successfully";
+                return "update_address_successfully_business_card";
             }
         }
 

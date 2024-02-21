@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static pl.zajavka.api.controller.HomeController.HOME;
 
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 @WebMvcTest(controllers = HomeController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @AllArgsConstructor(onConstructor = @__(@Autowired))

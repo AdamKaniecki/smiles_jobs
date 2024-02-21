@@ -45,7 +45,7 @@ public class CvService {
 
 
 @Transactional
-public CV createCV(CV cv, User user, Set<String> programmingLanguagesNames) {
+public CV createCV(CV cv, User user) {
     if (cvRepository.existsByUser(userMapper.map(user))) {
         return null;
     }
@@ -69,16 +69,17 @@ public CV createCV(CV cv, User user, Set<String> programmingLanguagesNames) {
             .user(userMapper.map(user))
             .address(addressMapper.map(addressCV))
             .build();
-
-    // Ustawienie wybranych języków programowania
-    Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
-    if (programmingLanguagesNames != null) {
-        for (String languageName : programmingLanguagesNames) {
-            ProgrammingLanguage language = ProgrammingLanguage.valueOf(languageName);
-            programmingLanguages.add(language);
-        }
-    }
-    newEntity.setProgrammingLanguages(programmingLanguages);
+    newEntity.setProgrammingLanguages(cv.getProgrammingLanguages());
+//    // Ustawienie wybranych języków programowania
+//    Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
+//    if (programmingLanguagesNames != null) {
+//        for (String languageName : programmingLanguagesNames) {
+//            ProgrammingLanguage language = ProgrammingLanguage.valueOf(languageName);
+//            programmingLanguages.add(language);
+//        }
+//    }
+//    newEntity.setProgrammingLanguages(programmingLanguages);
+//
 
     cvRepository.saveAndFlush(newEntity);
     return cvMapper.map(newEntity);

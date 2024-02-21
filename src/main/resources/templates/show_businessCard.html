@@ -24,8 +24,15 @@
       <p><strong>Company Description:</strong> <span th:text="${businessCardDTO.companyDescription}"></span></p>
       <p><strong>Technologies and Tools:</strong> <span th:text="${businessCardDTO.technologiesAndTools}"></span></p>
       <p><strong>Certificates and Awards:</strong> <span th:text="${businessCardDTO.certificatesAndAwards}"></span></p>
-      <p><strong>Address:</strong> <span th:text="${businessCardDTO.address}"></span></p>
     </div>
+
+      <div class="col-md-6">
+          <h3>Address</h3>
+          <p th:text="'Country: ' + ${businessCardDTO.address.country}"></p>
+          <p th:text="'City: ' + ${businessCardDTO.address.city}"></p>
+          <p th:text="'Street and Number: ' + ${businessCardDTO.address.streetAndNumber}"></p>
+          <p th:text="'Postal Code: ' + ${businessCardDTO.address.postalCode}"></p>
+      </div>
     <br>
 
   </div>

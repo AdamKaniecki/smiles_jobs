@@ -1,23 +1,21 @@
 package pl.zajavka.api.controller;
-//
-import jakarta.servlet.http.HttpSession;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.api.dto.BusinessCardDTO;
 import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.BusinessCardMapperDTO;
-import pl.zajavka.api.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.api.dto.mapper.UserMapperDTO;
 import pl.zajavka.business.AddressService;
 import pl.zajavka.business.BusinessCardService;
-import pl.zajavka.business.JobOfferService;
 import pl.zajavka.business.UserService;
-import pl.zajavka.domain.*;
+import pl.zajavka.domain.Address;
+import pl.zajavka.domain.BusinessCard;
+import pl.zajavka.domain.User;
 
 import java.util.Optional;
 
@@ -26,14 +24,12 @@ import java.util.Optional;
 @Controller
 public class BusinessCardController {
 
-    private HttpSession httpSession;
+
     private BusinessCardService businessCardService;
     private AddressService addressService;
     private UserService userService;
     private BusinessCardMapperDTO businessCardMapperDTO;
     private UserMapperDTO userMapperDTO;
-    private JobOfferService jobOfferService;
-    private JobOfferMapperDTO jobOfferMapperDTO;
 
 
     @GetMapping("/BusinessCardForm")

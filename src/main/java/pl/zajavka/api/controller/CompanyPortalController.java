@@ -11,8 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +23,9 @@ import pl.zajavka.api.dto.UserDTO;
 import pl.zajavka.api.dto.mapper.*;
 import pl.zajavka.business.*;
 import pl.zajavka.domain.CV;
-import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
 import pl.zajavka.domain.User;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,17 +37,10 @@ import java.util.stream.Collectors;
 public class CompanyPortalController {
 
     public static final String COMPANY_PORTAL = "/company_portal";
-    public static final String CREATE_JOB_OFFER = "/create_job_offer";
-
-    private HttpSession httpSession;
-    private JobOfferService jobOfferService;
     private UserService userService;
     private UserMapperDTO userMapperDTO;
     private CvService cvService;
-    private JobOfferMapperDTO jobOfferMapperDTO;
-    private CvMapperDTO cvMapperDTO;
-    private BusinessCardService businessCardService;
-    private BusinessCardMapperDTO businessCardMapperDTO;
+    private CvMapperDTO cvMapperDTO;;
     private NotificationService notificationService;
     private NotificationMapperDTO notificationMapperDTO;
     private PaginationService paginationService;
@@ -64,31 +53,20 @@ public class CompanyPortalController {
 
         User loggedInUser = userService.getLoggedInUser(authentication);
         httpSession.setAttribute("user", loggedInUser);
-//
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
         Page<CvDTO> cvDTOPage = cvService.findAll(pageable)
                 .map(cvMapperDTO::map);
-//                .collect(Collectors.toList());
-
 
         model.addAttribute("cvDTOs", cvDTOPage.getContent());
         model.addAttribute("currentPage", cvDTOPage.getNumber()) ; // Page numbers start from 1
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
 
-//        int previousPage = Math.max(cvDTOPage.getNumber(),0);
-//        int nextPage = Math.min(cvDTOPage.getNumber() + 2, cvDTOPage.getTotalPages());
-//
-//        model.addAttribute("previousPage", previousPage + 1);
-//        model.addAttribute("nextPage", nextPage);
-
         List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
-
-
 
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
         model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
@@ -99,39 +77,30 @@ public class CompanyPortalController {
 
     }
 
-//        List<NotificationDTO> notifications = notificationService.findByUser(loggedInUser).stream()
-//                .map(notificationMapperDTO::map)
-//                .collect(Collectors.toList());
-//        model.addAttribute("notifications", notifications);
-
     @GetMapping("/search")
     public String searchAdvertisements(
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
         List<CV> searchResults = cvService.searchCvByKeywordAndCategory(keyword, category);
-        model.addAttribute("searchResults", searchResults);
+        List<CvDTO> searchResultsDTO = searchResults.stream()
+                .map(cvMapperDTO::map)
+                .collect(Collectors.toList());
+
+        model.addAttribute("searchResultsDTO", searchResultsDTO);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
         return "search_results";
     }
-
-    @GetMapping("/search_results")
-    public String showSearchResults(@RequestParam String keyword, String category, Model model) {
-        List<CV> searchResults = cvService.searchCvByKeywordAndCategory(category, keyword);
-        model.addAttribute("searchResults", searchResults);
-        return "search_results";
-    }
-
 
     @GetMapping("/cv/{cvId}")
     public String showCvDetails(@PathVariable Integer cvId, Model model) {
         Optional<CV> cv = cvService.findById(cvId);
         if (cv.isPresent()) {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
-            return "show_cv";  // Użyj istniejącego widoku show_cv
+            return "show_cv";
         } else {
-            return "cv_not_found";  // Stwórz odpowiedni widok dla przypadku, gdy CV nie zostanie znalezione
+            return "cv_not_found";
         }
     }
 
@@ -145,7 +114,6 @@ public class CompanyPortalController {
         User loggedInUser = userService.getLoggedInUser((authentication));
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationService.findById(notificationId);
-
         notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
         return "job_offer_created_successfully";
@@ -163,7 +131,6 @@ public class CompanyPortalController {
         User loggedInUser = userService.getLoggedInUser(authentication);
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationService.findById(notificationId);
-
         notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
         return "job_offer_created_successfully";
@@ -180,7 +147,6 @@ public class CompanyPortalController {
         User loggedInUser = userService.getLoggedInUser(authentication);
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationService.findById(notificationId);
-
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 
         return "job_offer_created_successfully";

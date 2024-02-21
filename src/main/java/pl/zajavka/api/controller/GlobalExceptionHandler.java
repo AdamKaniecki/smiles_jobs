@@ -19,40 +19,39 @@ import java.util.Optional;
 public class GlobalExceptionHandler {
 
 
-//    jakiego rodzaju wyjątek ma obsłużyć
     @ExceptionHandler(Exception.class)
-    public ModelAndView handlerException (Exception ex){
-String message = "Unexpected exception occurred: [%s]".formatted(ex.getMessage());
-log.error(message,ex);
+    public ModelAndView handlerException(Exception ex) {
+        String message = "Unexpected exception occurred: [%s]".formatted(ex.getMessage());
+        log.error(message, ex);
         ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("errorMessage",message);
+        modelAndView.addObject("errorMessage", message);
         return modelAndView;
 
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handlerException (NotFoundException ex){
+    public ModelAndView handlerException(NotFoundException ex) {
         String message = "Could not found a resource: [%s]".formatted(ex.getMessage());
-        log.error(message,ex);
-    ModelAndView modelAndView = new ModelAndView("error");
-    modelAndView.addObject("errorMessage",message);
-    return modelAndView;
+        log.error(message, ex);
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("errorMessage", message);
+        return modelAndView;
     }
 
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ModelAndView handlerException (EntityNotFoundException ex){
+    public ModelAndView handlerException(EntityNotFoundException ex) {
         String message = "Could not found a resource: [%s]".formatted(ex.getMessage());
-        log.error(message,ex);
+        log.error(message, ex);
         ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("errorMessage",message);
+        modelAndView.addObject("errorMessage", message);
         return modelAndView;
 
     }
 
-//    @ExceptionHandler(BindException.class)
+    //    @ExceptionHandler(BindException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
 //    public ModelAndView handlerException ( BindException ex) {
 //        String message = (" Bad request for field: [%s] wrong value: [%s]").formatted(
@@ -66,28 +65,28 @@ log.error(message,ex);
 //        return modelAndView;
 //
 //    }
-@ExceptionHandler(BindException.class)
-@ResponseStatus(HttpStatus.BAD_REQUEST)
-public ModelAndView handleBindException(BindException ex) {
-    String field = Optional.ofNullable(ex.getFieldError()).map(FieldError::getField).orElse(null);
-    Object rejectedValue = Optional.ofNullable(ex.getFieldError()).map(FieldError::getRejectedValue).orElse(null);
-    String message;
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleBindException(BindException ex) {
+        String field = Optional.ofNullable(ex.getFieldError()).map(FieldError::getField).orElse(null);
+        Object rejectedValue = Optional.ofNullable(ex.getFieldError()).map(FieldError::getRejectedValue).orElse(null);
+        String message;
 
-    if ("contactEmail".equals(field)) {
-        message = String.format("Invalid email format: [%s]. Please enter a valid email address (example@example.com) ", rejectedValue);
-    } else if ("phoneNumber".equals(field)) {
-        message = String.format("Invalid phone number format: [%s]. Please enter a valid phone number format: +XX YYY ZZZ ZZZ", rejectedValue);
-    } else {
-        message = String.format("Bad request for field: [%s] with wrong value: [%s].", field, rejectedValue);
+        if ("contactEmail".equals(field)) {
+            message = String.format("Invalid email format: [%s]. Please enter a valid email address (example@example.com) ", rejectedValue);
+        } else if ("phoneNumber".equals(field)) {
+            message = String.format("Invalid phone number format: [%s]. Please enter a valid phone number format: +XX YYY ZZZ ZZZ", rejectedValue);
+        } else {
+            message = String.format("Bad request for field: [%s] with wrong value: [%s].", field, rejectedValue);
+        }
+
+        log.error(message, ex);
+
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("errorMessage", message);
+
+        return modelAndView;
     }
-
-    log.error(message, ex);
-
-    ModelAndView modelAndView = new ModelAndView("error");
-    modelAndView.addObject("errorMessage", message);
-
-    return modelAndView;
-}
 //    @ExceptionHandler(ConstraintViolationException.class)
 //    @ResponseStatus(HttpStatus.IM_USED)
 //    public ModelAndView handlerException (ConstraintViolationException ex){
