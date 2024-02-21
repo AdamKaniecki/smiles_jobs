@@ -1,24 +1,28 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
+import pl.zajavka.infrastructure.security.UserRepository;
 
 import java.util.Set;
 
 @UtilityClass
 public class UserFixtures {
 
+
+
     public static UserEntity someUser1() {
         RoleEntity candidateRole = RoleEntity.builder().role("ROLE_CANDIDATE").build();
-        return UserEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .userName("adam12")
                 .roles(Set.of(candidateRole))
                 .password("adam112")
                 .email("adam2113@poczta.onet.pl")
                 .active(true)
                 .build();
-
+        return userEntity;
     }
 
     public static UserEntity someUser2() {

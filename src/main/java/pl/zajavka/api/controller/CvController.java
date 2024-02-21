@@ -385,6 +385,7 @@ public class CvController {
         address.setCountry(updateAddress.getCountry());
         address.setCity(updateAddress.getCity());
         address.setStreetAndNumber(updateAddress.getStreetAndNumber());
+        address.setPostalCode(updateAddress.getPostalCode());
         addressService.updateAddress(address);
 
         model.addAttribute("address", address);

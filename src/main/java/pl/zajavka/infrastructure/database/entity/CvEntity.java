@@ -6,13 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
-import pl.zajavka.domain.JobOffer;
 import pl.zajavka.infrastructure.security.UserEntity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -71,14 +66,11 @@ public class CvEntity {
     @CollectionTable(name = "cv_IT_specializations", joinColumns = @JoinColumn(name = "cv_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "IT_specializations")
-    private Set<IT_SPECIALIZATIONS> IT_specializations;
+    private Set<IT_Specializations> it_specializations;
 
     @Column(name = "tools")
     private String tools;
 
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "IT_specializations")
-    private String ITSpecializations;
 
     @Column(name = "years_of_experience")
     private Integer yearsOfExperience;

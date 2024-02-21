@@ -8,5 +8,5 @@ public interface RoleRepository extends JpaRepository<RoleEntity, Integer> {
 
     RoleEntity findByRole(String role);
 
-//    RoleEntity findByUsersContaining(UserEntity userEntity);
+
 }

@@ -14,13 +14,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findByUserName(String userName);
 
-
     boolean existsByEmail(String email);
 
-//    nie wiem czy to jest konieczne
-//    @Query("SELECT u FROM UserEntity u WHERE u.address = :addressEntity")
-//    Optional<UserEntity> findByAddress(@Param("addressEntity") AddressEntity addressEntity);
-
-//    @Query("SELECT u FROM UserEntity u WHERE u.cv = :cvEntity")
-//    Optional<UserEntity> findByCV(@Param("cvEntity") CvEntity cvEntity);
 }

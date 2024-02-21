@@ -58,12 +58,6 @@ public class  UserEntity {
     private Set<NotificationEntity> notificationsReceive;
 
 
-
-
-
-    //nie wiem czy to jest konieczne
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-//    private AddressEntity address;
 }
 
 

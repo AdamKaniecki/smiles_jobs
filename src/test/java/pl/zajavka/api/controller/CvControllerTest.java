@@ -41,11 +41,13 @@ class CvControllerTest {
     @InjectMocks
     private CvController cvController;
 
+//    ten test narazie nie działa
     @Test
     void testShowMyCV_WhenCvExists() {
         // Given
         Integer cvId = 1;
         CV cv = CvFixtures.createSampleCv(); // Utwórz przykładowy obiekt CV
+
         when(cvService.findById(cvId)).thenReturn(Optional.of(cv));
         Model model = new ExtendedModelMap();
 //        when(cvMapperDTO.map(cv)).thenReturn(cv); // Mockowanie mapowania

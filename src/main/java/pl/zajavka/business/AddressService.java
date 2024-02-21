@@ -31,6 +31,7 @@ public class AddressService {
                 .country(address.getCountry())
                 .city(address.getCity())
                 .streetAndNumber(address.getStreetAndNumber())
+                .postalCode(address.getPostalCode())
                 .build();
 
         AddressEntity created = addressRepository.saveAndFlush(entity);

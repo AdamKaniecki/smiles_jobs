@@ -39,46 +39,11 @@ public class CvService {
     private CvRepository cvRepository;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
-    private UserRepository userRepository;
-    private final JobOfferRepository jobOfferRepository;
-    private final JobOfferMapper jobOfferMapper;
-    private AddressRepository addressRepository;
-    private AddressService addressService;
-    private JobOfferService jobOfferService;
+
     private NotificationRepository notificationRepository;
 
 
-//    @Transactional
-//    public CV createCV(CV cv, User user) {
-//        // Sprawdź, czy użytkownik już ma CV
-//        if (cvRepository.existsByUser(userMapper.map(user))) {
-//            return null;
-//        }
-//        Address addressCV = cv.getAddress();
-//
-//        CvEntity newEntity = CvEntity.builder()
-//                .id(cv.getId())
-//                .name(cv.getName())
-//                .surname(cv.getSurname())
-//                .dateOfBirth(cv.getDateOfBirth())
-//                .sex(cv.getSex())
-//                .maritalStatus(cv.getMaritalStatus())
-//                .contactEmail(userMapper.map(user).getEmail())
-//                .phoneNumber(cv.getPhoneNumber())
-//                .education(cv.getEducation())
-//                .workExperience(cv.getWorkExperience())
-//                .programmingLanguages()
-//                .skills(cv.getSkills())
-//                .language(cv.getLanguage())
-//                .languageLevel(cv.getLanguageLevel())
-//                .hobby(cv.getHobby())
-//                .user(userMapper.map(user))
-//                .address(addressMapper.map(addressCV))
-//                .build();
-//
-//        cvRepository.saveAndFlush(newEntity);
-//        return cvMapper.map(newEntity);
-//    }
+
 @Transactional
 public CV createCV(CV cv, User user, Set<String> programmingLanguagesNames) {
     if (cvRepository.existsByUser(userMapper.map(user))) {
