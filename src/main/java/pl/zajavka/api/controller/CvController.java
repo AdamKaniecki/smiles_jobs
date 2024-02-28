@@ -46,8 +46,11 @@ public class CvController {
             Model model,
             BindingResult bindingResult,
             Authentication authentication,
-            @RequestParam(name = "programmingLanguage", required = false) Set<ProgrammingLanguage> programmingLanguageName
-    ) {
+            @RequestParam(name = "programmingLanguage", required = false) Set<String> programmingLanguageName
+//            @RequestParam(name = "it_specialization", required = false) Set<String> it_specializationName
+    )
+
+    {
         if (bindingResult.hasErrors()) {
             return "error";
         }
@@ -62,12 +65,20 @@ public class CvController {
             Set<ProgrammingLanguage> programmingLanguages = enumService.getAllProgrammingLanguages();
             model.addAttribute("programmingLanguages", programmingLanguages);
 
-            if (programmingLanguageName != null && !programmingLanguageName.isEmpty()) {
-                Optional<ProgrammingLanguage> optionalProgrammingLanguage = programmingLanguages.stream()
+
+//            Set<IT_Specializations> it_specializations = enumService.getAll_it_specializations();
+//            model.addAttribute("it_specializations", it_specializations);
+
+            Optional<ProgrammingLanguage> optionalProgrammingLanguage = programmingLanguages.stream()
                         .filter(language -> language.name().equals(programmingLanguageName))
                         .findFirst();
                 optionalProgrammingLanguage.ifPresent(language -> model.addAttribute("selectedProgrammingLanguage", language));
-            }
+
+//            Optional<IT_Specializations> optionalIT_specializations = it_specializations.stream()
+//                    .filter(specialization -> specialization.name().equals(it_specializationName))
+//                    .findFirst();
+//            optionalIT_specializations.ifPresent(specialization -> model.addAttribute("selected_IT_specialization", specialization));
+//
 
             return "create_cv";
         } else {
@@ -81,7 +92,9 @@ public class CvController {
     @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public String createCV(@Valid @ModelAttribute("cvDTO") CvDTO cvDTO, Model model,
                            BindingResult bindingResult, Authentication authentication,
-                           @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames) {
+                           @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames
+//                           @RequestParam(name = "it_specializations", required = false) Set<String> it_specializationNames
+    ) {
         if (bindingResult.hasErrors()) {
             return "error";
         }
@@ -93,21 +106,14 @@ public class CvController {
             }
 
             CV cv = cvMapperDTO.map(cvDTO);
+            Set<ProgrammingLanguage> programmingLanguages = enumService.convertToProgrammingLanguages(programmingLanguagesNames);
+//            Set<IT_Specializations> it_specializations = enumService.convertToSpecializations(it_specializationNames);
 
-            Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
-            if (programmingLanguagesNames != null) {
-                for (String languageName : programmingLanguagesNames) {
-                    ProgrammingLanguage language = ProgrammingLanguage.valueOf(languageName);
-                    programmingLanguages.add(language);
-                }
-            }
-
-            // Przekazanie zestawu ProgrammingLanguage do obiektu CV
             cv.setProgrammingLanguages(programmingLanguages);
-
+//            cv.setIt_specializations(it_specializations);
 
             cvService.createCV(cv, loggedInUser);
-            cv.setProgrammingLanguages(new HashSet<>());
+
             model.addAttribute("cvDTO", cv);
             model.addAttribute("userDTO", loggedInUser);
             return "cv_created_successfully";

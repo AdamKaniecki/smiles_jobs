@@ -29,9 +29,5 @@ public class JobOffer {
 //    private BigDecimal salaryMax;
     private OffsetDateTime jobOfferDateTime;
     private User user;
-//    private List<CV> receivedCvs;
-//
-//    public List<CV> getReceivedCvs() {
-//        return receivedCvs;
-//    }
+
 }

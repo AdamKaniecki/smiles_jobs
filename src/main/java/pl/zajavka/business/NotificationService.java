@@ -3,13 +3,10 @@ package pl.zajavka.business;
 import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.Notification;
@@ -27,7 +24,6 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 
@@ -186,7 +182,7 @@ public class NotificationService {
     }
 
 
-    public Page<Notification> findAll(Pageable pageable) {
+    public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
         Page<NotificationEntity> notificationEntities = notificationRepository.findAll(pageable);
         return notificationEntities.map(notificationMapper::map);
     }

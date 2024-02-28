@@ -1,5 +1,6 @@
 package pl.zajavka.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -44,7 +45,7 @@ public class BusinessCardController {
 
 
     @PostMapping("/createBusinessCard")
-    public String createBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model,
+    public String createBusinessCard(@Valid @ModelAttribute("businessCardDTO") BusinessCardDTO businessCardDTO, Model model,
                                      Authentication authentication) {
         User loggedInUser = userService.getLoggedInUser((authentication));
 

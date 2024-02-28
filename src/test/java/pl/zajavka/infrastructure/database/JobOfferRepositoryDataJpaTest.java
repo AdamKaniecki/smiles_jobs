@@ -28,9 +28,9 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testSaveJobOffer() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
-        JobOfferEntity jobOfferEntity = someJobOffer1();
+        JobOfferEntity jobOfferEntity = someJobOfferEntity1();
         jobOfferEntity.setUser(user);
 
         // When
@@ -44,9 +44,9 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testFindJobOfferById() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
-        JobOfferEntity jobOfferEntity = someJobOffer1();
+        JobOfferEntity jobOfferEntity = someJobOfferEntity1();
         jobOfferEntity.setUser(user);
         jobOfferRepository.save(jobOfferEntity);
 
@@ -64,9 +64,9 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testDeleteJobOffer() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
-        JobOfferEntity jobOfferEntity = someJobOffer1();
+        JobOfferEntity jobOfferEntity = someJobOfferEntity1();
         jobOfferEntity.setUser(user);
         jobOfferRepository.save(jobOfferEntity);
 
@@ -81,9 +81,9 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     void testFindAllJobOffers() {
 
 //        given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
-        var jobOffers = List.of(someJobOffer1(), someJobOffer2(), someJobOffer3());
+        var jobOffers = List.of(someJobOfferEntity1(), someJobOfferEntity2(), someJobOfferEntity3());
         jobOffers.forEach(jobOffer -> jobOffer.setUser(user));
         jobOfferRepository.saveAll(jobOffers);
 
@@ -97,7 +97,7 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testJobOfferBuilder() {
 //      given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
         OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
 

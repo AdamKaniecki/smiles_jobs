@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.entity.IT_Specializations;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
@@ -48,9 +47,9 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
         programmingLanguages.add(ProgrammingLanguage.JAVA);
         programmingLanguages.add(ProgrammingLanguage.PYTHON);
 
-        Set<IT_Specializations> it_specializations = new HashSet<>();
-        it_specializations.add(IT_Specializations.WEB_DEVELOPMENT);
-        it_specializations.add(IT_Specializations.DATABASE_ADMINISTRATION);
+//        Set<IT_Specializations> it_specializations = new HashSet<>();
+//        it_specializations.add(IT_Specializations.WEB_DEVELOPMENT);
+//        it_specializations.add(IT_Specializations.DATABASE_ADMINISTRATION);
 
         // when
         CvEntity cvEntity = CvEntity.builder()
@@ -66,7 +65,7 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
                 .skills("Java, Python")
                 .programmingLanguages(programmingLanguages)
                 .tools("IntelliJ IDEA, Git")
-                .it_specializations(it_specializations)
+//                .it_specializations(it_specializations)
                 .yearsOfExperience(5)
                 .language("English")
                 .languageLevel("Fluent")
@@ -89,7 +88,7 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
         assertThat(cvEntity.getSkills()).isEqualTo("Java, Python");
         assertThat(cvEntity.getProgrammingLanguages()).containsExactlyInAnyOrder(ProgrammingLanguage.JAVA, ProgrammingLanguage.PYTHON);
         assertThat(cvEntity.getTools()).isEqualTo("IntelliJ IDEA, Git");
-        assertThat(cvEntity.getIt_specializations()).containsExactlyInAnyOrder(IT_Specializations.WEB_DEVELOPMENT, IT_Specializations.DATABASE_ADMINISTRATION);
+//        assertThat(cvEntity.getIt_specializations()).containsExactlyInAnyOrder(IT_Specializations.WEB_DEVELOPMENT, IT_Specializations.DATABASE_ADMINISTRATION);
         assertThat(cvEntity.getYearsOfExperience()).isEqualTo(5);
         assertThat(cvEntity.getLanguage()).isEqualTo("English");
         assertThat(cvEntity.getLanguageLevel()).isEqualTo("Fluent");
@@ -101,10 +100,10 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testFindCvByKeywordAndCategory() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         user = userRepository.save(user);
 
-        CvEntity cvEntity = CvFixtures.sampleCV();
+        CvEntity cvEntity = CvFixtures.sampleCvEntity();
         cvEntity.setUser(user);
         cvRepository.save(cvEntity);
 
@@ -119,10 +118,10 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testExistsByUserId() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         user = userRepository.save(user);
 
-        CvEntity cvEntity = CvFixtures.sampleCV();
+        CvEntity cvEntity = CvFixtures.sampleCvEntity();
         cvEntity.setUser(user);
         cvRepository.save(cvEntity);
 
@@ -136,10 +135,10 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     public void testFindByUser() {
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         user.setId(1);
         user = userRepository.save(user);
-        CvEntity cvEntity = CvFixtures.sampleCV();
+        CvEntity cvEntity = CvFixtures.sampleCvEntity();
         cvEntity.setUser(user);
         cvRepository.save(cvEntity);
 
@@ -154,10 +153,10 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
     public void testExistsByUser() {
 
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         user.setId(1);
         user = userRepository.save(user);
-        CvEntity cvEntity = CvFixtures.sampleCV();
+        CvEntity cvEntity = CvFixtures.sampleCvEntity();
         cvEntity.setUser(user);
         cvRepository.save(cvEntity);
 
@@ -172,10 +171,10 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
     public void testFindById() {
 
         // Given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         user.setId(1);
         user = userRepository.save(user);
-        CvEntity cvEntity = CvFixtures.sampleCV();
+        CvEntity cvEntity = CvFixtures.sampleCvEntity();
         cvEntity.setUser(user);
         cvRepository.save(cvEntity);
 

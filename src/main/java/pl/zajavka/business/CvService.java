@@ -70,6 +70,7 @@ public CV createCV(CV cv, User user) {
             .address(addressMapper.map(addressCV))
             .build();
     newEntity.setProgrammingLanguages(cv.getProgrammingLanguages());
+//    newEntity.setIt_specializations(cv.getIt_specializations());
 //    // Ustawienie wybranych języków programowania
 //    Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
 //    if (programmingLanguagesNames != null) {
@@ -223,6 +224,8 @@ public CV createCV(CV cv, User user) {
         Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
         return cvEntities.map(cvMapper::map);
     }
+
+
 
 
 }

@@ -29,7 +29,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserCanBeSavedCorrectly(){
 //        given
-        var users = List.of(someUser1(), someUser2(), someUser3());
+        var users = List.of(someUserEntity1(), someUserEntity2(), someUserEntity3());
         userRepository.saveAll(users);
 //        when
         List<UserEntity> usersFound = userRepository.findAll();
@@ -41,7 +41,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserCanBeFindByUsernameCorrectly(){
 //        given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
 //        when
         UserEntity userFound = userRepository.findByUserName("adam12");
@@ -55,7 +55,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserExistByEmailCorrectly(){
 //        given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
 
 //        when
@@ -70,7 +70,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserCanBeFindByIdCorrectly(){
 //        given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
 //        when
         Optional<UserEntity> userFound = userRepository.findById(user.getId());
@@ -83,7 +83,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserCanBeDeletedCorrectly() {
         // given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         userRepository.save(user);
 
         // when
@@ -97,7 +97,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserCanBeUpdatedCorrectly() {
         // given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         String newEmail = "newemail@example.com";
         user.setEmail(newEmail);
 
@@ -111,7 +111,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserPasswordIsSetCorrectly() {
         // given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         String password = "password123";
         user.setPassword(password);
 
@@ -126,7 +126,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT{
     @Test
     void thatUserActiveIsSetCorrectly() {
         // given
-        UserEntity user = UserFixtures.someUser1();
+        UserEntity user = UserFixtures.someUserEntity1();
         boolean active = true;
         user.setActive(active);
 

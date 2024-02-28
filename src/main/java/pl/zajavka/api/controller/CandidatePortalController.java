@@ -17,7 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pl.zajavka.api.dto.CvDTO;
 import pl.zajavka.api.dto.JobOfferDTO;
 import pl.zajavka.api.dto.NotificationDTO;
 import pl.zajavka.api.dto.UserDTO;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 @Controller
 @Slf4j
 public class CandidatePortalController {
-    static final String CANDIDATE_PORTAL = "/candidate_portal";
+    public static final String CANDIDATE_PORTAL = "/candidate_portal";
     private HttpSession httpSession;
     private UserService userService;
     private UserMapperDTO userMapperDTO;
@@ -63,7 +62,7 @@ public class CandidatePortalController {
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         model.addAttribute("userDTO", userDTO);
 
-        Page<JobOfferDTO> jobOfferDTOsPage = jobOfferService.findAll(pageable)
+        Page<JobOfferDTO> jobOfferDTOsPage = jobOfferService.findAllJobOffersForPage(pageable)
                 .map(jobOfferMapperDTO::map);
 
         model.addAttribute("jobOfferDTOs", jobOfferDTOsPage.getContent());
@@ -71,40 +70,50 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferPages", jobOfferDTOsPage.getTotalPages());
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
+
+
         List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
-        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
 
+        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
         model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
         model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
         model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
-
         return "candidate_portal";
+
+
+
 
     }
 
 
-    @GetMapping("/searchJobOffers")
+    @PostMapping("/searchJobOffers")
     public String searchJobOffers(
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
         List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
+        log.info("co tu w kodzie:::::: jobOffers " + searchResults);
         List<JobOfferDTO> searchResultsDTO = searchResults.stream()
                 .map(jobOfferMapperDTO::map)
                 .collect(Collectors.toList());
 
+
+        log.info("co tu w kodzie:::::: searchResultsDTO " + searchResultsDTO);
         model.addAttribute("searchResultsDTO", searchResultsDTO);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
-        return "search_job_offers_results"; // Twój widok do wyświetlania wyników wyszukiwania ofert pracy
+        return "search_job_offers_results";
     }
 
     @GetMapping("/search_job_offers_results")
-    public String showSearchResults(@RequestParam String keyword, String category, Model model) {
+    public String showSearchResults(@RequestParam String keyword, String category, Model model ) {
         List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(category, keyword);
-        model.addAttribute("searchResults", searchResults);
+        List<JobOfferDTO> searchResultsDTO = searchResults.stream()
+                .map(jobOfferMapperDTO::map)
+                .collect(Collectors.toList());
+        model.addAttribute("searchResultsDTO", searchResultsDTO);
         return "search_job_offers_results";
     }
 

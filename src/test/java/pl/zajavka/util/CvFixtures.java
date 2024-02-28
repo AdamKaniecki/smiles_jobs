@@ -53,9 +53,33 @@ public class CvFixtures {
         return cv;
     }
 
-    public static CvEntity sampleCV(){
+    public static CvEntity sampleCvEntity(){
 
         CvEntity cv = CvEntity.builder()
+                .name("John")
+                .surname("Doe")
+                .dateOfBirth("1990-01-01")
+                .sex("Male")
+                .maritalStatus("Single")
+                .phoneNumber("123456789")
+                .contactEmail("john@example.com")
+                .workExperience("5 years")
+                .education("Master's Degree")
+                .skills("Java, Python")
+                .tools("IntelliJ IDEA, Git")
+                .yearsOfExperience(5)
+                .language("English")
+                .languageLevel("Fluent")
+                .hobby("Reading, Travelling")
+                .build();
+
+        return cv;
+
+    }
+
+    public static CV sampleCV(){
+
+        CV cv = CV.builder()
                 .name("John")
                 .surname("Doe")
                 .dateOfBirth("1990-01-01")

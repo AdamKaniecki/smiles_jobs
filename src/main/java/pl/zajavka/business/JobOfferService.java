@@ -66,8 +66,8 @@
 //        }
 //    }
 //
-//    public List<JobOffer> findAll() {
-//        return jobOfferRepository.findAll().stream()
+//    public List<JobOffer> findAllJobOffersForPage() {
+//        return jobOfferRepository.findAllJobOffersForPage().stream()
 //                .map(jobOfferMapper::map)
 //                .toList();
 //    }
@@ -111,11 +111,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
-import pl.zajavka.domain.Address;
-import pl.zajavka.domain.CV;
 import pl.zajavka.domain.JobOffer;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
@@ -179,7 +176,7 @@ public class JobOfferService {
         }
     }
 
-    public List<JobOffer> findAll() {
+    public List<JobOffer> findAllJobOffersForPage() {
         return jobOfferRepository.findAll().stream()
                 .map(jobOfferMapper::map)
                 .toList();
@@ -187,9 +184,10 @@ public class JobOfferService {
 
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
         List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
-        return searchJobOfferEntities.stream()
+        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
                 .map(jobOfferMapper::map)
                 .toList();
+        return jobOffers;
     }
 
     private BigDecimal parseSalaryRange(String salaryRange) {
@@ -269,7 +267,7 @@ public class JobOfferService {
         jobOfferRepository.delete(jobOfferEntity);
     }
 
-    public Page<JobOffer> findAll(Pageable pageable) {
+    public Page<JobOffer> findAllJobOffersForPage(Pageable pageable) {
         Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
         return jobOfferEntities.map(jobOfferMapper::map);
     }

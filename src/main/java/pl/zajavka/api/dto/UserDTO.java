@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.With;
 import pl.zajavka.domain.Notification;
-import pl.zajavka.infrastructure.security.Role;
 import pl.zajavka.infrastructure.security.RoleEntity;
 
-import java.util.List;
 import java.util.Set;
 @Data
 @With

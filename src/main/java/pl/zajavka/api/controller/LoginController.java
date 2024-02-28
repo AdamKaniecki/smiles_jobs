@@ -19,8 +19,6 @@ import pl.zajavka.infrastructure.security.RoleRepository;
 @SessionAttributes("username")
 public class LoginController {
     private UserService userService;
-//    private RoleRepository roleRepository;
-//    private AuthenticationManager authenticationManager;
 
     @GetMapping("/login")
     public String login() {
@@ -28,28 +26,34 @@ public class LoginController {
     }
 
 
-    @PostMapping("/loginUser")
-    public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
+@PostMapping("/loginUser")
+public String loginUser(@RequestParam("username") String username, String password, Model model, HttpSession session) {
 
-        User user = userService.findByUserName(username);
+    User user = userService.findByUserName(username);
 
-        if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username)) {
-            if (hasCandidateRole(user)) {
-                session.setAttribute("user", user); // Przechowaj użytkownika w sesji
-                System.out.println("Zalogowano pomyślnie");
-                model.addAttribute("username", username);
-                return "candidate_portal";
-            } else {
-                System.out.println("Użytkownik nie posiada wymaganej roli.");
-                model.addAttribute("error", "Użytkownik nie posiada wymaganej roli.");
-                return "login";
-            }
+    if (user != null && user.getPassword().equals(password) && user.getUserName().equals(username)) {
+        if (hasCandidateRole(user)) {
+            session.setAttribute("user", user); // Przechowaj użytkownika w sesji
+            System.out.println("Zalogowano pomyślnie");
+            model.addAttribute("username", username);
+            return "candidate_portal";
+        } else if (hasCompanyRole(user)) {
+            session.setAttribute("user", user); // Przechowaj użytkownika w sesji
+            System.out.println("Zalogowano jako firma pomyślnie");
+            model.addAttribute("username", username);
+            return "company_portal";
         } else {
-            System.out.println("Nieprawidłowe dane logowania.");
-            model.addAttribute("error", "Nieprawidłowe dane logowania.");
+            System.out.println("Użytkownik nie posiada wymaganej roli.");
+            model.addAttribute("error", "Użytkownik nie posiada wymaganej roli.");
             return "login";
         }
+    } else {
+        System.out.println("Nieprawidłowe dane logowania.");
+        model.addAttribute("error", "Nieprawidłowe dane logowania.");
+        return "login";
     }
+}
+
 
     private boolean hasCandidateRole(User user) {
         for (RoleEntity role : user.getRoles()) {
@@ -59,6 +63,17 @@ public class LoginController {
         }
         return false;
     }
+
+    private boolean hasCompanyRole(User user) {
+        for (RoleEntity role : user.getRoles()) {
+            if (role.getRole().equals("ROLE_COMPANY")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
 
 

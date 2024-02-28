@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static pl.zajavka.util.UserFixtures.someUser1;
-import static pl.zajavka.util.UserFixtures.someUser2;
+import static pl.zajavka.util.UserFixtures.*;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
@@ -34,9 +33,9 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
 @Test
     void thatNotificationSavedCorrectly(){
 //   given
-    var users = List.of(someUser1(), someUser2());
+    var users = List.of(someUserEntity1(),someUserEntity2());
     userRepository.saveAll(users);
-    NotificationEntity notification = NotificationFixtures.sampleNotification1();
+    NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
     notification.setReceiverUser(users.get(0));
     notification.setSenderUser(users.get(1));
 
@@ -51,9 +50,9 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testFindBySenderUser() {
         //   given
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        NotificationEntity notification = NotificationFixtures.sampleNotification1();
+        NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notificationRepository.save(notification);
@@ -68,9 +67,9 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testFindByReceiverUser() {
         //   given
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        NotificationEntity notification = NotificationFixtures.sampleNotification1();
+        NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notificationRepository.save(notification);
@@ -85,9 +84,9 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testFindByUser() {
         //   given
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        NotificationEntity notification = NotificationFixtures.sampleNotification1();
+        NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notificationRepository.save(notification);
@@ -105,12 +104,12 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testFindByCvId() {
         //   given
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        CvEntity cv = CvFixtures.sampleCV();
+        CvEntity cv = CvFixtures.sampleCvEntity();
         cv.setUser(users.get(0));
         cvRepository.save(cv);
-        NotificationEntity notification = NotificationFixtures.sampleNotification1();
+        NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notification.setCv(cv);
@@ -126,9 +125,9 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     @Test
     void testExistsBySenderUserAndJobOffer() {
         //   given
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        NotificationEntity notification = NotificationFixtures.sampleNotification1();
+        NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notificationRepository.save(notification);
@@ -144,12 +143,12 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     void testNotificationEntityBuilder(){
 //    given
         LocalDateTime notificationDateTime = LocalDateTime.now();
-        var users = List.of(someUser1(), someUser2());
+        var users = List.of(someUserEntity1(),someUserEntity2());
         userRepository.saveAll(users);
-        CvEntity cv = CvFixtures.sampleCV();
+        CvEntity cv = CvFixtures.sampleCvEntity();
         cv.setUser(users.get(0));
         cvRepository.save(cv);
-        JobOfferEntity jobOffer = JobOfferFixtures.someJobOffer1();
+        JobOfferEntity jobOffer = JobOfferFixtures.someJobOfferEntity1();
         jobOffer.setUser(users.get(1));
         jobOfferRepository.save(jobOffer);
 

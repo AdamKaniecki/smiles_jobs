@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import pl.zajavka.domain.Address;
 import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.IT_Specializations;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 
 import java.util.Set;
@@ -32,7 +31,7 @@ public class CvDTO {
     private String workExperience;
     private String skills;
     private Set<ProgrammingLanguage> programmingLanguages;
-    private Set<IT_Specializations> it_specializations;
+//    private Set<IT_Specializations> it_specializations;
     private String tools;
     private Integer yearsOfExperience;
     private String language;

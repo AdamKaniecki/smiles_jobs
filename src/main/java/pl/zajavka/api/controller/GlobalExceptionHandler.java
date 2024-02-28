@@ -2,6 +2,7 @@ package pl.zajavka.api.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -87,15 +88,16 @@ public class GlobalExceptionHandler {
 
         return modelAndView;
     }
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    @ResponseStatus(HttpStatus.IM_USED)
-//    public ModelAndView handlerException (ConstraintViolationException ex){
-//        String message = "Ten adres email już istnieje w bazie, spróbuj użyć innego: [%s]".formatted(ex.getMessage());
-//        log.error(message,ex);
-//        ModelAndView modelAndView = new ModelAndView("error");
-//        modelAndView.addObject("errorMessage",message);
-//        return modelAndView;
-//
-//    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.IM_USED)
+    public ModelAndView handlerException (ConstraintViolationException ex){
+        String message = "Ten adres email już istnieje w bazie, spróbuj użyć innego: [%s]".formatted(ex.getMessage());
+        log.error(message,ex);
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.addObject("errorMessage",message);
+        return modelAndView;
+
+    }
+
 
 }
