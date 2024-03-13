@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <title>Tworzenie Ogłoszenia</title>
 </head>
 <body>
 <h1>Tworzenie Ogłoszenia</h1>
-<form method="post" action="/createJobOffer">
-  <input type="hidden" name="username" value="${username}">
+<form th:action="@{/createJobOffer}" th:object="${jobOfferDTO}" method="post">
+<!--  <input type="hidden" name="username" value="${username}">-->
 
   <label for="companyName">Nazwa firmy</label>
   <input type="text" name="companyName" id="companyName" required>

@@ -1,14 +1,12 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.zajavka.api.dto.UserDTO;
-import pl.zajavka.domain.Notification;
-import pl.zajavka.domain.User;
+import pl.zajavka.controller.dto.UserDTO;
+import pl.zajavka.infrastructure.domain.Notification;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Set;

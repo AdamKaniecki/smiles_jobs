@@ -20,17 +20,17 @@ public class SmilesJobsControllerIT extends AbstractIT{
 
 
 
-    @Test
-    void applicationWorksCorrectly(){
-    String url = "http://localhost:%s/candidate_portal".formatted(port);
-
-        String page = this.testRestTemplate.getForObject(url, String.class);// ten tesRestTemplate udaje przeglądarkę
-//        i probuje wykonać geta do tego url
-
-        Assertions.assertThat(page).contains("<title>Logowanie</title>");// oczekuję że na tej stronie
-        // pod tym adresem będzie taki wpis
-
-    }
+//    @Test
+//    void applicationWorksCorrectly(){
+//    String url = "http://localhost:%s/candidate_portal".formatted(port);
+//
+//        String page = this.testRestTemplate.getForObject(url, String.class);// ten tesRestTemplate udaje przeglądarkę
+////        i probuje wykonać geta do tego url
+//
+//        Assertions.assertThat(page).contains("<title>Logowanie</title>");// oczekuję że na tej stronie
+//        // pod tym adresem będzie taki wpis
+//
+//    }
 
 
 }

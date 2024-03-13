@@ -1,11 +1,11 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
-import pl.zajavka.api.dto.NotificationDTO;
-import pl.zajavka.domain.CV;
-import pl.zajavka.domain.JobOffer;
-import pl.zajavka.domain.Notification;
-import pl.zajavka.domain.User;
+import pl.zajavka.controller.dto.NotificationDTO;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.Notification;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.RoleEntity;

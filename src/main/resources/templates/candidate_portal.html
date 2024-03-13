@@ -78,7 +78,7 @@
     </div>
 
     <!-- Form to search for job offers -->
-    <form action="/searchJobOffers" method="post" class="mt-4">
+    <form action="/searchJobOffers" method="get" class="mt-4">
         <!-- Search form elements -->
         <div class="form-row">
             <div class="col-md-4">
@@ -108,7 +108,7 @@
             <a th:href="@{/CvForm}" class="btn btn-info" role="button">Create CV</a>
         </div>
         <div class="col-md-4">
-            <a th:href="@{/redirectToShowMyCV}" class="btn btn-info" role="button">Show my CV</a>
+            <a th:href="@{/ShowMyCV}" class="btn btn-info" role="button">Show my CV</a>
         </div>
     </div>
 </div>
@@ -134,8 +134,14 @@
         <!-- Display notification details -->
         <td th:text="${notificationDTO.id}"></td>
         <td th:text="${notificationDTO.candidateMessage}"></td>
+<!--        <td>-->
+<!--            <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">View JobOffer</a>-->
+<!--        </td>-->
         <td>
+        <span th:if="${notificationDTO.jobOffer != null}">
             <a th:href="@{'/jobOffer/' + ${notificationDTO.jobOffer.id}}" class="btn btn-info" role="button">View JobOffer</a>
+        </span>
+            <span th:unless="${notificationDTO.jobOffer != null}">-</span>
         </td>
         <td>
             <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
@@ -143,7 +149,8 @@
                 <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Meeting scheduling'}">
                     <form th:action="@{/acceptMeetingDate}" method="post" class="d-inline">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
-                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+<!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
+                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer != null ? notificationDTO.jobOffer.id : ''}">
                         <button type="submit" class="btn btn-success">ACCEPT</button>
                     </form>
                     <form th:action="@{/changeMeetingDate}" method="post" class="d-inline">

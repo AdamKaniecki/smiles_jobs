@@ -110,7 +110,7 @@
     <h2 class="mt-4">Create a job offer</h2>
 
     <div class="col-md-4">
-        <a th:href="@{/create_job_offer}" method="GET" class="btn btn-info" role="button">Create Job Offer</a>
+        <a th:href="@{/JobOfferForm}" method="GET" class="btn btn-info" role="button">Create Job Offer</a>
     </div>
     <br>
 
@@ -127,7 +127,7 @@
     <br>
 
     <div class="col-md-4">
-        <a th:href="@{/redirectToShowMyBusinessCard}" method="GET" class="btn btn-info" role="button">Show my Business
+        <a th:href="@{/showMyBusinessCard}" method="GET" class="btn btn-info" role="button">Show my Business
             Card</a>
     </div>
     <br>
@@ -148,7 +148,9 @@
         <tbody>
         <tr th:each="notificationDTO : ${notificationDTOs}">
             <td th:text="${notificationDTO.id}"></td>
-            <td th:text="${notificationDTO.jobOffer.id}"></td>
+<!--            <td th:text="${notificationDTO.jobOffer.id != null ? notificationDTO.jobOffer.id : '-'}"></td>-->
+
+
             <td th:text="${notificationDTO.companyMessage}"></td>
             <td th:if="${notificationDTO.cv != null}">
                 <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">Zobacz
@@ -161,7 +163,8 @@
                 <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
 
                     <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null}">
-                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+<!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
+                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer != null ? notificationDTO.jobOffer.id : ''}">
                         <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                         <div class="form-row">

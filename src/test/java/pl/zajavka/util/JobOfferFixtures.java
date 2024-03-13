@@ -1,14 +1,12 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
-import pl.zajavka.api.dto.JobOfferDTO;
-import pl.zajavka.domain.JobOffer;
-import pl.zajavka.domain.User;
+import pl.zajavka.controller.dto.JobOfferDTO;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.RoleEntity;
-import pl.zajavka.infrastructure.security.UserEntity;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Set;
@@ -200,5 +198,31 @@ public class JobOfferFixtures {
 
     }
 
+    public static JobOfferDTO someJobOfferDTO() {
 
+        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_COMPANY").build();
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        User user = User.builder()
+                .id(1)
+                .userName("adam112")
+                .roles(Set.of(candidateRole))
+                .password("adam1112")
+                .email("adam21113@poczta.onet.pl")
+                .active(true)
+                .build();
+
+        JobOfferDTO jobOfferDTO = JobOfferDTO.builder()
+                .id(1)
+                .companyName("company1")
+                .position("junior java developer")
+                .responsibilities("utrzymywanie aplikacji")
+                .requiredTechnologies("spring")
+                .benefits("owocowe czwartki")
+                .jobOfferDateTime(jobOfferDateTime)
+                .user(user)
+                .build();
+
+        return jobOfferDTO;
+
+    }
 }

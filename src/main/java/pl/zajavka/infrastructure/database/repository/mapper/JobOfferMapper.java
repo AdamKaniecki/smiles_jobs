@@ -1,12 +1,10 @@
 package pl.zajavka.infrastructure.database.repository.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import pl.zajavka.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)

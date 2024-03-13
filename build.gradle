@@ -1,15 +1,13 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version "${springBootVersion}"
-    id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'io.spring.dependency-management' version "${springBootDMVersion}"
+    id 'org.openapi.generator' version "${openapiGeneratorVersion}"
 }
 
 group = 'pl.zajavka'
-version = '0.0.1-SNAPSHOT'
-
-java {
-    sourceCompatibility = '17'
-}
+version = '1.0'
+sourceCompatibility = '17'
 
 configurations {
     compileOnly {
@@ -22,51 +20,96 @@ repositories {
 }
 
 dependencies {
+    // spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-//db
+    //db
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
 
-////api
-//    implementation "org.springdoc:springdoc-openapi-ui:1.6.13"
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0'
-
-    //annotation
+    // annotations
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
-//test
+    annotationProcessor "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
 
+    // api
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.0'
+//    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+
+
+    // Po wygenerowaniu klienta, trzeba będzie dodać poniższe zależności, żeby kod się kompilował
+    implementation "org.openapitools:jackson-databind-nullable:${jacksonDatabindNullableVersion}"
+    implementation "javax.annotation:javax.annotation-api:${javaxAnnotationApiVersion}"
+    implementation "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
+    implementation "com.google.code.findbugs:jsr305:${jsr305Version}"
+
+    // test
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
+
+    // Integration tests
+    // Ta zależność musi być przed wiremock standalone
+    testImplementation "org.slf4j:slf4j-api:${wiremockSlf4jVersion}"
+    testImplementation "com.github.tomakehurst:wiremock-standalone:${wiremockVersion}"
+    testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
     }
-
 }
 
-test {
 
+openApiGenerate {
+    generatorName = "java"
+    library = "webclient"
+    configOptions = [
+            serializableModel   : "true",
+            dateLibrary         : "java8",
+            serializationLibrary: "jackson"
+    ]
+    outputDir = "$buildDir/generated-sources/openapi".toString()
+    inputSpec = "$rootDir/src/main/resources/pet-store-v3.0.2.json".toString()
+    apiPackage = "pl.zajavka.infrastructure.petstore.api"
+    modelPackage = "pl.zajavka.infrastructure.petstore.model"
+//    validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
+}
+
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/generated-sources/openapi/src/main/java"
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate
+
+
+
+
+
+
+
+
+
+
+
+test {
     useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
     }
-
 }
 
 compileJava.options.encoding = 'UTF-8'

@@ -1,15 +1,10 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
-import org.springframework.transaction.annotation.Transactional;
-import pl.zajavka.domain.Address;
-import pl.zajavka.domain.CV;
-import pl.zajavka.domain.User;
-import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.infrastructure.domain.Address;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
-import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 @UtilityClass
 public class CvFixtures {

@@ -7,12 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 //
 @Configuration
 @EnableWebSecurity
@@ -43,43 +41,44 @@ public class SecurityConfiguration {
                 .disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
-                                                         "/company_registry","/companyRegistry/**"  ).permitAll()
-                .requestMatchers("/createCV").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/candidate_portal").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/company_portal").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/redirectToShowMyCV").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/showCV").hasAuthority("ROLE_CANDIDATE")
-                .requestMatchers("/redirectToUpdateMyCV").hasAuthority("ROLE_CANDIDATE")
-                .anyRequest().authenticated()
+                                                         "/company_registry","/companyRegistry/**" )
+                .permitAll()
+                .requestMatchers("/users/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/sendCV/**","/CvForm/**","/createCV/**", "/updateCvForm/**","/updateCVDone/**",
+                         "/deleteCV/**","/ShowMyCV/**","/changeMeetingDate/**","/acceptMeetingDate/**"
+                ).hasAuthority("ROLE_CANDIDATE")
+
+//                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/candidate_portal/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("cv_already_sent","/updateAddressDone/**","/jobOffer/{jobOfferId}", "/businessCard/{businessCardId}"
+                       )
+                .permitAll()
+                .requestMatchers("/company_portal/**").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/showCV/**","/cv/**",
+                        "/JobOfferForm/**","/createJobOffer/**","/showMyJobOffers/**", "/updateJobOfferForm/**",
+                        "/updateJobOfferDone/**","/deleteJobOffer/**",
+                        "/BusinessCardForm/**","/createBusinessCard/**","/showMyBusinessCard/**",
+                        "/updateBusinessCardDone/**",  "/updateBusinessCardForm/**","/deleteBusinessCard/**"
+                        ).hasAuthority("ROLE_COMPANY")
+
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/loginUser")
-                .successHandler(authenticationSuccessHandler())
-//                .defaultSuccessUrl("/{user}/candidate_portal", true)
-//                .defaultSuccessUrl("/{user}/company_portal", true)// Tu dodaj przekierowanie po udanym zalogowaniu
                 .permitAll()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .permitAll()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
-
-
-
+                .permitAll();
 
         return http.build();
     }
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new CustomAuthenticationSuccessHandler();
-    }
+//    @Bean
+//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+//        return new CustomAuthenticationSuccessHandler();
+//    }
 
     @Bean
     @ConditionalOnProperty(value = "spring.security.enabled", havingValue = "false")

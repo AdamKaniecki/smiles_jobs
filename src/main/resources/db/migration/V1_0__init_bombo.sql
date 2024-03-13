@@ -17,6 +17,9 @@ CREATE TABLE role_table
     PRIMARY KEY (role_id)
 );
 
+insert into role_table (role_id, role)
+values (1, 'ROLE_CANDIDATE'), (2, 'ROLE_COMPANY');
+
 
 create TABLE user_role_table (
     user_id INT NOT NULL,
@@ -30,6 +33,8 @@ create TABLE user_role_table (
               REFERENCES role_table(role_id)
 
 );
+
+
 
 
 

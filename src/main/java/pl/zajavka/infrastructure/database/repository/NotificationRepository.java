@@ -1,15 +1,10 @@
 package pl.zajavka.infrastructure.database.repository;
 
-import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import pl.zajavka.domain.JobOffer;
-import pl.zajavka.domain.Notification;
-import pl.zajavka.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
@@ -35,6 +30,7 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     Page<NotificationEntity> findAll(Pageable pageable);
 
+    List<NotificationEntity> findByJobOfferId(Integer id);
 
 
 //    Page<NotificationEntity> findByUser(UserEntity userEntity, Pageable pageable);
