@@ -31,12 +31,11 @@ public class CvDTO {
     private String workExperience;
     private String skills;
     private Set<ProgrammingLanguage> programmingLanguages;
-//    private Set<IT_Specializations> it_specializations;
     private String tools;
     private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;
-    private User user;
-    private Address address;
+//    private User user;
+//    private Address address;
 }

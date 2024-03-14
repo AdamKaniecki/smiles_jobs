@@ -25,63 +25,62 @@
     <p>Please take a look at job seekers</p>
 
 
-        <table class="table" id="sortable-table-cv">
-            <thead class="table-dark">
-            <tr>
-                <th>Number</th>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Programming Languages</th>
-<!--                <th>IT Specializations</th>-->
-                <th>CV Details</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="cvDTO : ${cvDTOs}">
-                <td th:text="${cvDTO.id}"></td>
-                <td th:text="${cvDTO.name}"></td>
-                <td th:text="${cvDTO.surname}"></td>
-                <td th:text="${cvDTO.programmingLanguages}"></td>
-<!--                <td th:text="${cvDTO.it_specializations}"></td>-->
-                <td>
-                    <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <!-- Paginacja -->
-        <div th:if="${totalPages > 1}">
-            <nav aria-label="Page navigation">
-                <ul class="pagination">
-                    <!-- logika przycisku Previous -->
-                    <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
-                        <a class="page-link"
-                           th:href="@{${currentPage == 0 ? '#': '/company_portal?page=' + (currentPage - 1)}}"
-                           aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
+    <table class="table" id="sortable-table-cv">
+        <thead class="table-dark">
+        <tr>
+            <th>Number</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Programming Languages</th>
+            <!--                <th>IT Specializations</th>-->
+            <th>CV Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cvDTO : ${cvDTOs}">
+            <td th:text="${cvDTO.id}"></td>
+            <td th:text="${cvDTO.name}"></td>
+            <td th:text="${cvDTO.surname}"></td>
+            <td th:text="${cvDTO.programmingLanguages}"></td>
+            <!--                <td th:text="${cvDTO.it_specializations}"></td>-->
+            <td>
+                <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- Paginacja -->
+    <div th:if="${totalPages > 1}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <!-- logika przycisku Previous -->
+                <li th:class="${currentPage == 0 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link"
+                       th:href="@{${currentPage == 0 ? '#': '/company_portal?page=' + (currentPage - 1)}}"
+                       aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
 
-                    <!--                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage ? 'page-item active' : 'page-item'}">-->
-                    <!--                    <a class="page-link" th:href="@{'/company_portal?page=' + i}" th:text="${i + 1}"></a>-->
-                    <!--                </li>-->
+                <!--                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage ? 'page-item active' : 'page-item'}">-->
+                <!--                    <a class="page-link" th:href="@{'/company_portal?page=' + i}" th:text="${i + 1}"></a>-->
+                <!--                </li>-->
 
-                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-                        th:class="${i == currentPage ? 'page-item active' : 'page-item'}">
-                        <a class="page-link" th:href="@{'/company_portal?page=' + ${i}}" th:text="${i + 1}"></a>
-                    </li>
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:class="${i == currentPage ? 'page-item active' : 'page-item'}">
+                    <a class="page-link" th:href="@{'/company_portal?page=' + ${i}}" th:text="${i + 1}"></a>
+                </li>
 
-                    <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
-                        <a class="page-link"
-                           th:href="@{${currentPage == totalPages - 1 ? '#': '/company_portal?page=' + (currentPage + 1)}}"
-                           aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
+                <li th:class="${currentPage == totalPages - 1 ? 'page-item disabled' : 'page-item'}">
+                    <a class="page-link"
+                       th:href="@{${currentPage == totalPages - 1 ? '#': '/company_portal?page=' + (currentPage + 1)}}"
+                       aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
 
     <br>
@@ -148,7 +147,13 @@
         <tbody>
         <tr th:each="notificationDTO : ${notificationDTOs}">
             <td th:text="${notificationDTO.id}"></td>
-<!--            <td th:text="${notificationDTO.jobOffer.id != null ? notificationDTO.jobOffer.id : '-'}"></td>-->
+            <!--            <td th:text="${notificationDTO.jobOffer.id != null ? notificationDTO.jobOffer.id : '-'}"></td>-->
+            <td>
+    <span th:if="${notificationDTO.jobOffer != null}">
+        <span th:text="${notificationDTO.jobOffer.id}"></span>
+    </span>
+                <span th:unless="${notificationDTO.jobOffer != null}">-</span>
+            </td>
 
 
             <td th:text="${notificationDTO.companyMessage}"></td>
@@ -163,8 +168,9 @@
                 <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
 
                     <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null}">
-<!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
-                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer != null ? notificationDTO.jobOffer.id : ''}">
+                        <!--                        <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">-->
+                        <input type="hidden" name="jobOfferId"
+                               th:value="${notificationDTO.jobOffer != null ? notificationDTO.jobOffer.id : ''}">
                         <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
                         <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
                         <div class="form-row">
@@ -211,15 +217,20 @@
             <!-- Pagination controls for notifications -->
             <ul class="pagination" id="notification-pagination">
                 <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">
-                    <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">
+                    <a class="page-link"
+                       th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}"
+                       aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-                <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">
+                <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}"
+                    th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">
                     <a class="page-link" th:href="@{'/candidate_portal?page=' + ${j}}" th:text="${j + 1}"></a>
                 </li>
                 <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">
-                    <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}" aria-label="Next">
+                    <a class="page-link"
+                       th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}"
+                       aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

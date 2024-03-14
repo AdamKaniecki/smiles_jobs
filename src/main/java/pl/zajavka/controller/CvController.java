@@ -248,6 +248,17 @@ public class CvController {
         return "home";
     }
 
+    @GetMapping("/cv/{cvId}")
+    public String showCvDetails(@PathVariable Integer cvId, Model model) {
+        Optional<CV> cv = cvService.findById(cvId);
+        if (cv.isPresent()) {
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
+            return "show_cv";
+        } else {
+            return "cv_not_found";
+        }
+    }
+
 
     public static String displaySelectedLanguages(Set<String> selectedLanguages) {
         return "Selected Languages: " + String.join(", ", selectedLanguages);

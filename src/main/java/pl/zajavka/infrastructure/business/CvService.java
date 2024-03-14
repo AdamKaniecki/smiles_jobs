@@ -61,6 +61,11 @@ public CV createCV(CV cv, User user) {
             .address(addressMapper.map(addressCV))
             .build();
     newEntity.setProgrammingLanguages(cv.getProgrammingLanguages());
+
+
+    cvRepository.saveAndFlush(newEntity);
+    return cvMapper.map(newEntity);
+}
 //    newEntity.setIt_specializations(cv.getIt_specializations());
 //    // Ustawienie wybranych języków programowania
 //    Set<ProgrammingLanguage> programmingLanguages = new HashSet<>();
@@ -72,11 +77,6 @@ public CV createCV(CV cv, User user) {
 //    }
 //    newEntity.setProgrammingLanguages(programmingLanguages);
 //
-
-    cvRepository.saveAndFlush(newEntity);
-    return cvMapper.map(newEntity);
-}
-
 
     public List<CV> findAll() {
         return cvRepository.findAll().stream()

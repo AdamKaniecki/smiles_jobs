@@ -52,7 +52,7 @@ public class CompanyPortalController {
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
     public String getCompanyPortalPage(Authentication authentication, Model model,
-     @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
+     @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
     {
 
         String username = authentication.getName();
@@ -95,16 +95,7 @@ public class CompanyPortalController {
         return "search_results";
     }
 
-    @GetMapping("/cv/{cvId}")
-    public String showCvDetails(@PathVariable Integer cvId, Model model) {
-        Optional<CV> cv = cvService.findById(cvId);
-        if (cv.isPresent()) {
-            model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
-            return "show_cv";
-        } else {
-            return "cv_not_found";
-        }
-    }
+
 
     @PostMapping("/arrangeInterview")
     public String arrangeInterview(

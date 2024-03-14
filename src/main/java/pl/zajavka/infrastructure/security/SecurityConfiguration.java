@@ -3,6 +3,7 @@ package pl.zajavka.infrastructure.security;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,10 +41,11 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/**/**").permitAll()
                 .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
                                                          "/company_registry","/companyRegistry/**" )
                 .permitAll()
-                .requestMatchers("/users/**").hasAuthority("ROLE_CANDIDATE")
+
                 .requestMatchers("/sendCV/**","/CvForm/**","/createCV/**", "/updateCvForm/**","/updateCVDone/**",
                          "/deleteCV/**","/ShowMyCV/**","/changeMeetingDate/**","/acceptMeetingDate/**"
                 ).hasAuthority("ROLE_CANDIDATE")
@@ -61,7 +63,8 @@ public class SecurityConfiguration {
                         "/BusinessCardForm/**","/createBusinessCard/**","/showMyBusinessCard/**",
                         "/updateBusinessCardDone/**",  "/updateBusinessCardForm/**","/deleteBusinessCard/**"
                         ).hasAuthority("ROLE_COMPANY")
-
+                .requestMatchers("/api/showCV/**","/api/createCV/**","/api/updateCv/**").permitAll()
+                .requestMatchers("/users/**","/api/ShowMyCV/**").hasAuthority("ROLE_CANDIDATE")
                 .and()
                 .formLogin()
                 .permitAll()
