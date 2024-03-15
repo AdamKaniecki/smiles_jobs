@@ -72,31 +72,30 @@ dependencyManagement {
 }
 
 
-//openApiGenerate {
-//    generatorName = "java"
-//    library = "webclient"
-//    configOptions = [
-//            serializableModel   : "true",
-//            dateLibrary         : "java8",
-//            serializationLibrary: "jackson"
-//    ]
-//    outputDir = "$buildDir/generated-sources/openapi".toString()
-//    inputSpec = "$rootDir/src/main/resources/pet-store-v3.0.2.json".toString()
-//    apiPackage = "pl.zajavka.infrastructure.petstore.api"
-//    modelPackage = "pl.zajavka.infrastructure.petstore.model"
-////    validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
-//}
-//
-//sourceSets {
-//    main {
-//        java.srcDirs += "$buildDir/generated-sources/openapi/src/main/java"
-//    }
-//}
-//
-//compileJava.dependsOn tasks.openApiGenerate
+openApiGenerate {
+    generatorName = "java"
+    library = "webclient"
+    configOptions = [
+            serializableModel   : "true",
+            dateLibrary         : "java8",
+            serializationLibrary: "jackson"
+    ]
+    outputDir = "$buildDir/generated-sources/openapi".toString()
+    inputSpec = "$rootDir/src/main/resources/pet-store-v3.0.2.json".toString()
+    apiPackage = "pl.zajavka.infrastructure.petstore.api"
+    modelPackage = "pl.zajavka.infrastructure.petstore.model"
+//    validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
+}
+
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/generated-sources/openapi/src/main/java"
+    }
+}
+
+compileJava.dependsOn tasks.openApiGenerate
 
 
-//PROGRAMOWANIE FUNKCYJNE - OPERACJE NA STREAMACH - JDBC -  POSTGRESQL - FLYWAY - THYMELEAF - SPRING DATA JPA - GIT - SPRING - MOCKITO - LOMBOK - LOGBACK - JUNIT - GRADLE - HIBERNATE - SPRINGBOOT -SPRINGBOOT(REST-API) - OPEN API -
 
 
 
