@@ -13,6 +13,7 @@ import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.EnumService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
+import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 
@@ -33,7 +34,6 @@ public class CvRestController {
     private CvMapperDTO cvMapperDTO;
 
     @PostMapping("/createCV")
-    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public ResponseEntity<?> createCV(@Valid @RequestBody CvDTO cvDTO,
                                       @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames,
                                       Authentication authentication) {
@@ -119,6 +119,20 @@ public class CvRestController {
 
             return ResponseEntity.status(HttpStatus.OK).body("CV updated successfully");
         }
+
+    @DeleteMapping("/deleteCV/{id}")
+    public ResponseEntity<String> deleteCV(@PathVariable("id") Integer cvId) {
+        Optional<CV> optionalCV = cvService.findById(cvId);
+        if (optionalCV.isPresent()) {
+            CV cv = optionalCV.get();
+            Address address = cv.getAddress();
+
+            cvService.deleteCVAndSetNullInNotifications(cv, address);
+            return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
+    }
 
 }
 

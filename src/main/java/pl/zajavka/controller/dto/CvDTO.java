@@ -36,6 +36,6 @@ public class CvDTO {
     private String language;
     private String languageLevel;
     private String hobby;
-//    private User user;
-//    private Address address;
+    private User user;
+    private Address address;
 }
