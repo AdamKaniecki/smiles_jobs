@@ -27,7 +27,7 @@ public class BusinessCardDTO {
     private String companyDescription;
     private String technologiesAndTools;
     private String certificatesAndAwards;
-    private User user;
+//    private User user;
     private Address address;
 
 //    BusinessCardDTO businessCard = BusinessCardDTO.builder()
@@ -52,7 +52,7 @@ public class BusinessCardDTO {
         Optional.ofNullable(technologiesAndTools).ifPresent(value -> result.put("technologiesAndTools", value));
         Optional.ofNullable(certificatesAndAwards).ifPresent(value -> result.put("certificatesAndAwards", value));
         Optional.ofNullable(address).ifPresent(value -> result.put("address", value.toString()));
-        Optional.ofNullable(user).ifPresent(value -> result.put("user", value.toString()));
+//        Optional.ofNullable(user).ifPresent(value -> result.put("user", value.toString()));
 
 
         return result;

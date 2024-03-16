@@ -72,7 +72,7 @@ PRIMARY KEY(business_card_id),
     language_level VARCHAR(32) NOT NULL,
     hobby TEXT NOT NULL,
     address_id INT ,
-    user_id INT NOT NULL,
+    user_id INT ,
     unique(contact_email),
 
     PRIMARY KEY(cv_id),

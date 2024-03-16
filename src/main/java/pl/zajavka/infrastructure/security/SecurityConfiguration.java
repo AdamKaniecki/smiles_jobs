@@ -41,7 +41,7 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/**/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                 .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
                                                          "/company_registry","/companyRegistry/**" )
                 .permitAll()
@@ -63,8 +63,12 @@ public class SecurityConfiguration {
                         "/BusinessCardForm/**","/createBusinessCard/**","/showMyBusinessCard/**",
                         "/updateBusinessCardDone/**",  "/updateBusinessCardForm/**","/deleteBusinessCard/**"
                         ).hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/api/showCV/**","/api/createCV/**","/api/updateCv/**").permitAll()
-                .requestMatchers("/users/**","/api/ShowMyCV/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/api/createCandidate/**","/api/createCompany/**","/api/showCV/**","/api/updateCv/**","/api/deleteCV/**",
+                        "/api/createJobOffer/**","/api/showJobOffer/**","/api/showBusinessCard/**").permitAll()
+                .requestMatchers("/api/ShowMyCV/**","/api/createCV/**",
+               "/api/sendCV/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("api/createJobOffer/**", "/api/ShowMyJobOffers/**","/api/deleteJobOffer/**",
+                        "/api/createBusinessCard/**","/api/showMyBusinessCard/**","/api/deleteBusinessCard/**").hasAuthority("ROLE_COMPANY")
                 .and()
                 .formLogin()
                 .permitAll()

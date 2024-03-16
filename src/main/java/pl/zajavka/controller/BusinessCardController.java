@@ -101,18 +101,6 @@ public class BusinessCardController {
     }
 
 
-//    @GetMapping("/redirectToUpdateMyBusinessCard")
-//    public String redirectToUpdateMyBusinessCard(Authentication authentication) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        // Sprawdź, czy użytkownik ma przypisane CV
-//        BusinessCard userBusinessCard = businessCardService.findByUser(loggedInUser);
-//
-//        Integer cvId = userBusinessCard.getId();
-//        // Przekieruj na endpoint showCV z odpowiednim identyfikatorem
-//        return "redirect:/updateBusinessCardForm?id=" + cvId;
-//    }
-
 
     @GetMapping("/updateBusinessCardForm")
     public String updateMyBusinessCard(Model model, Authentication authentication) {

@@ -145,16 +145,6 @@ public class  UserService {
     }
 
 
-//    public User getLoggedInUser() {
-//        UserEntity userEntity = userRepository.findByUserName(authentication.getName());
-//        if (userEntity == null) {
-//            System.out.println("i co ?34");
-//            return null;
-//
-//        }
-//       return userMapper.map(userEntity);
-
-//}
 
     @SneakyThrows
     public String loginUser(Model model,  Authentication auth) {
@@ -197,13 +187,5 @@ public class  UserService {
     }
 
 
-//    public User findByAddress(Address address, Integer userId) {
-//        AddressEntity addressEntity = addressRepository.findById(address.getId())
-//                .orElseThrow(()-> new NotFoundException("Not found Address with ID: " + address.getId()));
-//
-//        UserEntity userEntity = userRepository.findById(userId)
-//                .orElseThrow(()-> new NotFoundException("Not Found User with ID: " + userId));
-//
-//        return userMapper.map(userEntity);
-//    }
+
 }
