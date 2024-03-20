@@ -19,7 +19,7 @@ public class UserDTO {
     private String email;
     private String password;
     private Boolean active;
-    private Set<RoleEntity> roles;
+//    private Set<RoleEntity> roles;
     private Set<Notification> notificationsSend;
     private Set<Notification> notificationsReceive;
 }

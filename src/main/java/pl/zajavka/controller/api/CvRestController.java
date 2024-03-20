@@ -97,9 +97,11 @@ public class CvRestController {
 
 
     @PutMapping("/updateCv")
-    public ResponseEntity<String> updateCv(@Valid @RequestBody CvDTO updateCvDTO) {
-            CV cv = cvMapperDTO.map(updateCvDTO);
+    public ResponseEntity<String> updateCv(@Valid @RequestBody CvDTO updateCvDTO, Authentication authentication) {
 
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+            CV cv = cvService.findByUser2(loggedInUser);
 
             cv.setName(updateCvDTO.getName());
             cv.setSurname(updateCvDTO.getSurname());

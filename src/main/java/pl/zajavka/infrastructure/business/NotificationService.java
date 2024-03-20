@@ -1,16 +1,11 @@
 package pl.zajavka.infrastructure.business;
 
-import jakarta.persistence.EntityManager;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.zajavka.infrastructure.domain.CV;
-import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.Notification;
-import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
@@ -18,8 +13,11 @@ import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.Notification;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
@@ -35,35 +33,13 @@ public class NotificationService {
     private NotificationRepository notificationRepository;
     private NotificationMapper notificationMapper;
     private UserMapper userMapper;
-    private JobOfferService jobOfferService;
     private UserService userService;
-    private CvService cvService;
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
-    private UserRepository userRepository;
-    private EntityManager entityManager;
 
 
 
-//@Transactional
-//    public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
-//
-//        NotificationEntity notificationEntity = NotificationEntity.builder()
-//                .status(Status.UNDER_REVIEW)
-//                .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
-//                .companyMessage("chcę u was pracować")
-//                .jobOffer(jobOfferMapper.map(jobOffer))
-//                .cv(cvMapper.map(cv))
-//                .senderUser(userMapper.map(loggedInUser))
-//                .receiverUser(userMapper.map(adresat))
-//                .build();
-//
-//
-//        notificationRepository.save(notificationEntity);
-//
-//
-//        return notificationMapper.map(notificationEntity);
-//    }
+
 
     @Transactional
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {

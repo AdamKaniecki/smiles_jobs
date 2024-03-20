@@ -22,5 +22,5 @@ public class JobOfferDTO {
 //    @NumberFormat(style = NumberFormat.Style.NUMBER)
 //    private BigDecimal salaryMax;
     private OffsetDateTime jobOfferDateTime;
-    private User user;
+//    private User user;
 }

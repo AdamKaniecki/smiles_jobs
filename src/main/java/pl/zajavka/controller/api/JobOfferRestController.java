@@ -1,5 +1,6 @@
 package pl.zajavka.controller.api;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,18 +78,96 @@ public class JobOfferRestController {
     }
 
     @DeleteMapping("/deleteJobOffer/{id}")
-    public ResponseEntity<String> deleteJobOffer(@PathVariable("id") Integer jobOfferId) {
-        Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
-        if (optionalJobOffer.isPresent()) {
-            JobOffer jobOffer = optionalJobOffer.get();
+    public ResponseEntity<String> deleteJobOffer(@PathVariable("id") Integer jobOfferId, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
 
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
+            if (optionalJobOffer.isPresent()) {
+                JobOffer jobOffer = optionalJobOffer.get();
 
-            jobOfferService.deleteJobOfferAndSetNullInNotifications(jobOffer.getId());
-            return ResponseEntity.status(HttpStatus.OK).body("JobOffer deleted successfully");
+                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
+                if (!jobOffer.getUser().equals(loggedInUser)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this job offer");
+                }
+
+                jobOfferService.deleteJobOfferAndSetNullInNotifications(jobOffer.getId());
+                return ResponseEntity.status(HttpStatus.OK).body("JobOffer deleted successfully");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job Offer not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting job offer");
+        }
+    }
+
+    @PutMapping("/updateJobOffer/{jobOfferId}")
+    public ResponseEntity<String> updateJobOffer(
+            @PathVariable Integer jobOfferId,
+            @RequestBody JobOfferDTO jobOfferDTO,
+            Authentication authentication) {
+
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
+
+            Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+            if (optionalJobOffer.isPresent()) {
+                JobOffer jobOffer = optionalJobOffer.get();
+
+                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
+                if (!jobOffer.getUser().equals(loggedInUser)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to update this job offer");
+                }
+                jobOffer.setCompanyName(jobOfferDTO.getCompanyName());
+                jobOffer.setBenefits(jobOfferDTO.getBenefits());
+                jobOffer.setPosition(jobOfferDTO.getPosition());
+                jobOffer.setRequiredTechnologies(jobOfferDTO.getRequiredTechnologies());
+                jobOffer.setResponsibilities(jobOfferDTO.getResponsibilities());
+
+                jobOfferService.updateJobOffer(jobOffer);
+
+                return ResponseEntity.status(HttpStatus.OK).body("JobOffer update successfully");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job Offer not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating job offer");
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job Offer not found");
+
     }
+
+    @PutMapping("/updateJobOffer")
+    public ResponseEntity<String> updateJobOffer(@RequestBody JobOfferDTO updateJobOfferDTO, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
+
+            JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
+
+            // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
+            if (!jobOffer.getUser().equals(loggedInUser)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body("You are not authorized to update this job offer");
+            }
+
+            jobOffer.setCompanyName(updateJobOfferDTO.getCompanyName());
+            jobOffer.setPosition(updateJobOfferDTO.getPosition());
+            jobOffer.setResponsibilities(updateJobOfferDTO.getResponsibilities());
+            jobOffer.setRequiredTechnologies(updateJobOfferDTO.getRequiredTechnologies());
+            jobOffer.setBenefits(updateJobOfferDTO.getBenefits());
+
+            jobOfferService.updateJobOffer(jobOffer);
+
+            return ResponseEntity.ok("Job offer updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating the job offer");
+        }
+    }
+
 }
 
 

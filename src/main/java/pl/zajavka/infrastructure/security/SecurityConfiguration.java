@@ -56,16 +56,16 @@ public class SecurityConfiguration {
                        )
                 .permitAll()
                 .requestMatchers("/company_portal/**").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**","/api/updateJobOffer/**","/api/updateBusinessCard").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/showCV/**","/cv/**",
                         "/JobOfferForm/**","/createJobOffer/**","/showMyJobOffers/**", "/updateJobOfferForm/**",
                         "/updateJobOfferDone/**","/deleteJobOffer/**",
                         "/BusinessCardForm/**","/createBusinessCard/**","/showMyBusinessCard/**",
                         "/updateBusinessCardDone/**",  "/updateBusinessCardForm/**","/deleteBusinessCard/**"
                         ).hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/api/createCandidate/**","/api/createCompany/**","/api/showCV/**","/api/updateCv/**","/api/deleteCV/**",
-                        "/api/createJobOffer/**","/api/showJobOffer/**","/api/showBusinessCard/**").permitAll()
-                .requestMatchers("/api/ShowMyCV/**","/api/createCV/**",
+                .requestMatchers("/api/createCandidate/**","/api/createCompany/**","/api/showCV/**","/api/deleteCV/**",
+                        "/api/createJobOffer/**","/api/showJobOffer/**","/api/showBusinessCard/**","/api/updateUser/**").permitAll()
+                .requestMatchers("/api/ShowMyCV/**","/api/createCV/**","/api/updateCv/**",
                "/api/sendCV/**","/api/changeMeetingDate/**","/api/acceptMeetingDate").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("api/createJobOffer/**", "/api/ShowMyJobOffers/**","/api/deleteJobOffer/**",
                         "/api/createBusinessCard/**","/api/showMyBusinessCard/**","/api/deleteBusinessCard/**","/api/arrangeInterview/**","/api/decline/**","/api/hired/**").hasAuthority("ROLE_COMPANY")

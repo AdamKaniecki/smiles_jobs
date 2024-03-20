@@ -94,4 +94,25 @@ public class BusinessCardRestController {
         }
     }
 
+    @PutMapping("/updateBusinessCard")
+    public ResponseEntity<String> updateCv(@Valid @RequestBody BusinessCardDTO updateBusinessCardDTO, Authentication authentication) {
+
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+        BusinessCard businessCard = businessCardService.findByUser(loggedInUser);
+
+
+        businessCard.setOffice(updateBusinessCardDTO.getOffice());
+        businessCard.setScopeOperations(updateBusinessCardDTO.getScopeOperations());
+        businessCard.setRecruitmentEmail(updateBusinessCardDTO.getRecruitmentEmail());
+        businessCard.setPhoneNumber(updateBusinessCardDTO.getPhoneNumber());
+        businessCard.setCompanyDescription(updateBusinessCardDTO.getCompanyDescription());
+        businessCard.setTechnologiesAndTools(updateBusinessCardDTO.getTechnologiesAndTools());
+        businessCard.setCertificatesAndAwards(updateBusinessCardDTO.getCertificatesAndAwards());
+
+        businessCardService.updateBusinessCard(businessCard);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Business Card updated successfully");
+    }
+
 }

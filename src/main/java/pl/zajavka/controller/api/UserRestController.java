@@ -2,8 +2,10 @@ package pl.zajavka.controller.api;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.UsersDTO;
@@ -58,7 +60,10 @@ public class UserRestController {
     @PostMapping("/createCompany")
     public ResponseEntity<UserDTO> addCompany(
             @RequestBody UserDTO userDTO
+
+
     ) {
+
         User user = userMapperDTO.map(userDTO);
         User createdUser = userService.createCompany(user);
 
@@ -70,18 +75,29 @@ public class UserRestController {
 //    curl -i -H "Content-Type: application/json" -X POST http://localhost:8900/api/createCompany -d "{\"userName\": \"adam20\",\"email\": \"adam2120@poczta.onet.pl\",\"password\": \"adam20\",\"active\": true,\"roles\": [{\"roleId\": 2}]}"
 
 
-    @PutMapping(USER_ID)
-//    @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
+    @PutMapping("/updateUser")
     public ResponseEntity<?> updateCandidate(
-            @PathVariable Integer userId,
-            @Valid @RequestBody UserDTO userDTO
+            @Valid @RequestBody UserDTO userDTO,
+            Authentication authentication
     ) {
-        User user = userMapperDTO.map(userDTO);
-        user.setId(userId); // Ustawiamy ID użytkownika na podstawie ścieżki
-        userService.updateUser(user);
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
 
-        return ResponseEntity.ok().build();
+            // Aktualizacja danych zalogowanego użytkownika na podstawie danych z userDTO
+            loggedInUser.setUserName(userDTO.getUserName());
+            loggedInUser.setActive(userDTO.getActive());
+            loggedInUser.setEmail(userDTO.getEmail());
+            // Dodaj inne pola do zaktualizowania
+
+            userService.updateUser(loggedInUser);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating user data");
+        }
     }
+
 //    curl który aktualizuje Kandydata:
 //curl -i -H "Content-Type: application/json" -X PUT http://localhost:8800/users/11 -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"active\": true,\"roles\": [{\"roleId\": 1}]}"
 
