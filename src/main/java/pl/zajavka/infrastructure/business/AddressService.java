@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
-import pl.zajavka.infrastructure.database.repository.AddressRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.security.RoleEntity;
 
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class AddressService {
-    private AddressRepository addressRepository;
+    private AddressJpaRepository addressJpaRepository;
     private AddressMapper addressMapper;
     private UserService userService;
 
@@ -31,7 +31,7 @@ public class AddressService {
                 .postalCode(address.getPostalCode())
                 .build();
 
-        AddressEntity created = addressRepository.saveAndFlush(entity);
+        AddressEntity created = addressJpaRepository.saveAndFlush(entity);
 
         return addressMapper.map(created);
     }
@@ -39,9 +39,9 @@ public class AddressService {
     @Transactional
     public void updateAddress(Address address) {
         // Sprawdź, czy adres istnieje w bazie danych
-        if (address.getId() != null && addressRepository.existsById(address.getId())) {
+        if (address.getId() != null && addressJpaRepository.existsById(address.getId())) {
             // Jeśli istnieje, zaktualizuj istniejący rekord
-            Optional<AddressEntity> existingEntityOptional = addressRepository.findById(address.getId());
+            Optional<AddressEntity> existingEntityOptional = addressJpaRepository.findById(address.getId());
 
             // Pobierz obiekt AddressEntity z Optional
             if (existingEntityOptional.isPresent()) {
@@ -53,7 +53,7 @@ public class AddressService {
                 existingEntity.setStreetAndNumber(address.getStreetAndNumber());
                 existingEntity.setPostalCode(address.getPostalCode());
 
-                addressRepository.save(existingEntity);
+                addressJpaRepository.save(existingEntity);
             } else {
                 // Jeśli Optional nie zawiera wartości, obsłuż odpowiednio (np. rzutuj wyjątek)
                 throw new EntityNotFoundException("Address with id " + address.getId() + " not found");
@@ -68,18 +68,18 @@ public class AddressService {
 //        return addressRepository.findById(id).map(addressMapper::map);
 //    }
 
-    public Address findById(Integer addressId){
-        AddressEntity addressEntity = addressRepository.findById(addressId)
-                .orElseThrow(() -> new EntityNotFoundException("Not found address with ID: " + addressId));
-        return addressMapper.map(addressEntity);
-
-    }
+//    public Address findById(Integer addressId){
+//        AddressEntity addressEntity = addressJpaRepository.findById(addressId)
+//                .orElseThrow(() -> new EntityNotFoundException("Not found entity Address with ID: " + addressId));
+//        return addressMapper.map(addressEntity);
+//
+//    }
 
     @Transactional
     public void deleteAddress(Address address) {
         if(address != null){
             AddressEntity addressEntity = addressMapper.map(address);
-            addressRepository.deleteById(addressEntity.getId());
+            addressJpaRepository.deleteById(addressEntity.getId());
         } else {
             throw new IllegalArgumentException("Address cannot be null");
         }

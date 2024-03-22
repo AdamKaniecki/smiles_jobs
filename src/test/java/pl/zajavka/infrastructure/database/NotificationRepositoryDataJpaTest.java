@@ -7,9 +7,9 @@ import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
@@ -24,11 +24,11 @@ import static pl.zajavka.util.UserFixtures.*;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
 
-    private NotificationRepository notificationRepository;
+    private NotificationJpaRepository notificationJpaRepository;
     private UserRepository userRepository;
 
-    private CvRepository cvRepository;
-    private JobOfferRepository jobOfferRepository;
+    private CvJpaRepository cvRepository;
+    private JobOfferJpaRepository jobOfferRepository;
 
 @Test
     void thatNotificationSavedCorrectly(){
@@ -40,7 +40,7 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     notification.setSenderUser(users.get(1));
 
 //    when
-    NotificationEntity savedNotification = notificationRepository.save(notification);
+    NotificationEntity savedNotification = notificationJpaRepository.save(notification);
 
 //    then
     assertThat(savedNotification).isNotNull();
@@ -55,10 +55,10 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
         NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
-        notificationRepository.save(notification);
+        notificationJpaRepository.save(notification);
 
         // when
-        List<NotificationEntity> notifications = notificationRepository.findBySenderUser(notification.getSenderUser());
+        List<NotificationEntity> notifications = notificationJpaRepository.findBySenderUser(notification.getSenderUser());
 
         // then
         assertThat(notifications).containsExactly(notification);
@@ -72,10 +72,10 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
         NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
-        notificationRepository.save(notification);
+        notificationJpaRepository.save(notification);
 
         // when
-        List<NotificationEntity> notifications = notificationRepository.findByReceiverUser(notification.getReceiverUser());
+        List<NotificationEntity> notifications = notificationJpaRepository.findByReceiverUser(notification.getReceiverUser());
 
         // then
         assertThat(notifications).containsExactly(notification);
@@ -89,10 +89,10 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
         NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
-        notificationRepository.save(notification);
+        notificationJpaRepository.save(notification);
 
         // when
-        List<NotificationEntity> notifications = notificationRepository.findByUser(notification.getSenderUser());
+        List<NotificationEntity> notifications = notificationJpaRepository.findByUser(notification.getSenderUser());
 
         // then
         assertThat(notifications).containsExactly(notification);
@@ -113,10 +113,10 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
         notification.setCv(cv);
-        notificationRepository.save(notification);
+        notificationJpaRepository.save(notification);
 
         // when
-        List<NotificationEntity> notifications = notificationRepository.findByCvId(notification.getCv().getId());
+        List<NotificationEntity> notifications = notificationJpaRepository.findByCvId(notification.getCv().getId());
 
         // then
         assertThat(notifications).containsExactly(notification);
@@ -130,10 +130,10 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
         NotificationEntity notification = NotificationFixtures.sampleNotificationEntity1();
         notification.setReceiverUser(users.get(0));
         notification.setSenderUser(users.get(1));
-        notificationRepository.save(notification);
+        notificationJpaRepository.save(notification);
 
         // when
-        boolean exists = notificationRepository.existsBySenderUserAndJobOffer(notification.getSenderUser(), notification.getJobOffer());
+        boolean exists = notificationJpaRepository.existsBySenderUserAndJobOffer(notification.getSenderUser(), notification.getJobOffer());
 
         // then
         assertThat(exists).isTrue();
@@ -165,7 +165,7 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
             .jobOffer(jobOffer)
             .dateTime(notificationDateTime)
             .build();
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
 
 //    then
 

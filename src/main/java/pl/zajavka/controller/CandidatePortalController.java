@@ -24,6 +24,9 @@ import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.*;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
@@ -47,6 +50,9 @@ public class CandidatePortalController {
     private NotificationMapperDTO notificationMapperDTO;
     private CvService cvService;
     private PaginationService paginationService;
+    private CvRepository cvRepository;
+    private JobOfferRepository jobOfferRepository;
+    private NotificationRepository notificationRepository;
 
     @SneakyThrows
     @GetMapping(CANDIDATE_PORTAL)
@@ -59,7 +65,7 @@ public class CandidatePortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
-        Page<JobOfferDTO> jobOfferDTOsPage = jobOfferService.findAllJobOffersForPage(pageable)
+        Page<JobOfferDTO> jobOfferDTOsPage = paginationService.findAllJobOffersForPage(pageable)
                 .map(jobOfferMapperDTO::map);
 
         model.addAttribute("jobOfferDTOs", jobOfferDTOsPage.getContent());
@@ -68,7 +74,7 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
 
-        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
+        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
 
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
@@ -121,8 +127,8 @@ public class CandidatePortalController {
         try {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-            CV cv = cvService.findByUser2(loggedInUser);
+            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+            CV cv = cvRepository.findByUser2(loggedInUser);
             User adresat = jobOffer.getUser();
 
             // Sprawdź, czy CV użytkownika istnieje
@@ -156,8 +162,8 @@ public class CandidatePortalController {
     ){
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-            Notification notification = notificationService.findById(notificationId);
+            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+            Notification notification = notificationRepository.findById(notificationId);
             User adresat = jobOffer.getUser();
 
             notificationService.changeMeetingDate(notification, loggedInUser, adresat);
@@ -174,8 +180,8 @@ public class CandidatePortalController {
     ){
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-            Notification notification = notificationService.findById(notificationId);
+            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+            Notification notification = notificationRepository.findById(notificationId);
             User adresat = jobOffer.getUser();
 
             notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);

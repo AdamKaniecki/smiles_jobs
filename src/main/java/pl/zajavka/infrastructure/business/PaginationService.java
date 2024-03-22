@@ -4,10 +4,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import pl.zajavka.controller.dto.NotificationDTO;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
+import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
 
 import java.util.List;
 
@@ -15,9 +20,11 @@ import java.util.List;
 @AllArgsConstructor
 public class PaginationService {
 
-    private final JobOfferRepository jobOfferRepository;
-    private final CvRepository cvRepository;
-    private final NotificationRepository notificationRepository;
+    private final JobOfferJpaRepository jobOfferRepository;
+    private final CvJpaRepository cvRepository;
+    private final NotificationJpaRepository notificationJpaRepository;
+    private final JobOfferMapper jobOfferMapper;
+    private final CvMapper cvMapper;
 
 
     public Page<JobOfferEntity> paginate(int pageNumber, int pageSize){
@@ -39,5 +46,15 @@ public class PaginationService {
         }
 
         return new PageImpl<>(notifications.subList(start, end), pageable, notifications.size());
+    }
+
+    public Page<CV> findAll(Pageable pageable) {
+        Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
+        return cvEntities.map(cvMapper::map);
+    }
+
+    public Page<JobOffer> findAllJobOffersForPage(Pageable pageable) {
+        Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
+        return jobOfferEntities.map(jobOfferMapper::map);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
@@ -30,7 +30,7 @@ import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 @Service
 @AllArgsConstructor
 public class NotificationService {
-    private NotificationRepository notificationRepository;
+    private NotificationJpaRepository notificationJpaRepository;
     private NotificationMapper notificationMapper;
     private UserMapper userMapper;
     private UserService userService;
@@ -53,7 +53,7 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
 
         return notificationMapper.map(notificationEntity);
     }
@@ -61,15 +61,15 @@ public class NotificationService {
 
     public void save(Notification notification) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
     }
 
-    public Notification findById(Integer notificationId) {
-        NotificationEntity notificationEntity = notificationRepository.findById(notificationId)
-                .orElse(null);
-        return notificationMapper.map(notificationEntity);
-
-    }
+//    public Notification findById(Integer notificationId) {
+//        NotificationEntity notificationEntity = notificationJpaRepository.findById(notificationId)
+//                .orElse(null);
+//        return notificationMapper.map(notificationEntity);
+//
+//    }
 
     @Transactional
     public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
@@ -82,7 +82,7 @@ public class NotificationService {
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
 
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
 
         userService.save(loggedInUser);
         userService.save(adresat);
@@ -96,7 +96,7 @@ public class NotificationService {
         notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
         userService.save(loggedInUser);
         userService.save(adresat);
     }
@@ -108,7 +108,7 @@ public class NotificationService {
         notificationEntity.setCandidateMessage("wysłano akceptację terminu");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
         userService.save(loggedInUser);
         userService.save(adresat);
     }
@@ -125,7 +125,7 @@ public class NotificationService {
         notificationEntity.setCandidateMessage("niestety nie zostałeś zatrudniony");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
         userService.save(loggedInUser);
         userService.save(adresat);
     }
@@ -137,7 +137,7 @@ public class NotificationService {
         notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationRepository.save(notificationEntity);
+        notificationJpaRepository.save(notificationEntity);
 
         UserEntity userEntity = userMapper.map(adresat);
         userEntity.setActive(false);
@@ -148,28 +148,28 @@ public class NotificationService {
     }
 
     public void deleteNotificationsByCvId(Integer cvId) {
-        notificationRepository.deleteByCvId(cvId);
+        notificationJpaRepository.deleteByCvId(cvId);
     }
 
     public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
         UserEntity userEntity = userMapper.map(loggedInUser);
         JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
-        return notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
+        return notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
     }
 
 
     public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
-        Page<NotificationEntity> notificationEntities = notificationRepository.findAll(pageable);
+        Page<NotificationEntity> notificationEntities = notificationJpaRepository.findAll(pageable);
         return notificationEntities.map(notificationMapper::map);
     }
 
 
 
-    public List<Notification> findByUser(User user) {
-        UserEntity userEntity = userMapper.map(user);
-        List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
-        return notificationMapper.mapToList(notificationEntities);
-    }
+//    public List<Notification> findByUser(User user) {
+//        UserEntity userEntity = userMapper.map(user);
+//        List<NotificationEntity> notificationEntities = notificationJpaRepository.findByUser(userEntity);
+//        return notificationMapper.mapToList(notificationEntities);
+//    }
 
 
 //    public Notification findUserRorPagination(User user){

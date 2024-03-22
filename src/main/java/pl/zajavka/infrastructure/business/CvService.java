@@ -3,23 +3,19 @@ package pl.zajavka.infrastructure.business;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.*;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 
@@ -28,13 +24,18 @@ import java.util.Optional;
 public class CvService {
 
     private CvMapper cvMapper;
-    private CvRepository cvRepository;
+    private CvJpaRepository cvRepository;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
 
-    private NotificationRepository notificationRepository;
+    private NotificationJpaRepository notificationJpaRepository;
 
 
+//    public List<CV> findAll() {
+//        return cvRepository.findAll().stream()
+//                .map(cvMapper::map)
+//                .toList();
+//    }
 
 @Transactional
 public CV createCV(CV cv, User user) {
@@ -79,47 +80,6 @@ public CV createCV(CV cv, User user) {
 //    newEntity.setProgrammingLanguages(programmingLanguages);
 //
 
-    public List<CV> findAll() {
-        return cvRepository.findAll().stream()
-                .map(cvMapper::map)
-                .toList();
-    }
-
-    public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
-        List<CvEntity> searchResultEntities = cvRepository.findCvByKeywordAndCategory(keyword, category);
-        return searchResultEntities.stream()
-                .map(cvMapper::map)
-                .toList();
-    }
-
-    public CV getCVById(Integer cvId) {
-        CvEntity cvEntity = cvRepository.findById(cvId).orElseThrow(()-> new EntityNotFoundException("Not found CV with ID: " + cvId));
-
-        return cvMapper.map(cvEntity);
-    }
-//    public Optional<CV> findCvByUserId(Integer id) {
-//        return cvRepository.findByUserId(id);
-//    }
-
-    public boolean existByUser(User loggedInUser) {
-        return cvRepository.existsByUser(userMapper.map(loggedInUser));
-    }
-
-    public Optional<CV> findById(Integer id) {
-
-        return cvRepository.findById(id).map(cvMapper::map);
-    }
-
-    public Optional<CV> findByUser(User user) {
-        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
-        return cvEntityOptional.map(cvMapper::map);
-    }
-
-    public CV findByUser2(User user){
-        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
-                .orElseThrow(()-> new EntityNotFoundException("Not found CVEntity for user: " + user.getUserName()));
-        return cvMapper.map(cvEntity);
-    }
 
 
     @Transactional
@@ -155,39 +115,17 @@ public CV createCV(CV cv, User user) {
     }
 
 
-    @Transactional
-    public void deleteCV(CV cv) {
-        System.out.println("Deleting CV: " + cv);
-
-        if (cv != null) {
-            CvEntity cvEntity = cvMapper.map(cv);
-            System.out.println("Mapped CV to CVEntity: " + cvEntity);
-            log.debug("co tu sie odjaniepawla: ",cvEntity);
-            cvRepository.deleteById(cvEntity.getId());
-            log.debug("co tu sie odjaniepawla2: ",cvEntity.getId());
-            System.out.println("Deleted CV with ID: " + cvEntity.getId());
-        } else {
-            throw new IllegalArgumentException("CV cannot be null");
-        }
-    }
-
-
-//    // Przyjmowanie identyfikatora użytkownika, do którego ma być wysłane CV
-//    public void sendCv(User sender, Integer recipientUserId) {
-//        // Pobierz CV użytkownika wysyłającego
-//        CV cvToSend = sender.getCv();
+//    @Transactional
+//    public void deleteCV(CV cv) {
 //
-//        // Pobierz użytkownika odbierającego
-//        UserEntity recipientUserEntity = userRepository.findById(recipientUserId)
-//                .orElseThrow(() -> new EntityNotFoundException("Nie znaleziono użytkownika o id: " + recipientUserId));
-//        userRepository.save(recipientUserEntity);
-//        User recipientUser = userMapper.map(recipientUserEntity);
-//        // Przypisz CV do użytkownika odbierającego
-//        recipientUser.setCv(cvToSend);
-//
-//        // Poniżej to jest przykładowe logowanie do konsoli
-//        System.out.println("CV wysłane od " + sender.getUserName() + " do " + recipientUser.getUserName());
+//        if (cv != null) {
+//            CvEntity cvEntity = cvMapper.map(cv);
+//            cvRepository.deleteById(cvEntity.getId());
+//        } else {
+//            throw new IllegalArgumentException("CV cannot be null");
+//        }
 //    }
+
 
     @Transactional
     public void deleteCVAndSetNullInNotifications(CV cv, Address address) {
@@ -195,7 +133,7 @@ public CV createCV(CV cv, User user) {
             CvEntity cvEntity = cvMapper.map(cv);
 
             // Pobierz wszystkie powiązane notyfikacje z tym CV
-            List<NotificationEntity> notifications = notificationRepository.findByCvId(cvEntity.getId());
+            List<NotificationEntity> notifications = notificationJpaRepository.findByCvId(cvEntity.getId());
 
             // Ustaw CV na null we wszystkich powiązanych notyfikacjach
             for (NotificationEntity notification : notifications) {
@@ -213,11 +151,46 @@ public CV createCV(CV cv, User user) {
     }
 
 
-    public Page<CV> findAll(Pageable pageable) {
-        Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
-        return cvEntities.map(cvMapper::map);
-    }
+//    public Page<CV> findAll(Pageable pageable) {
+//        Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
+//        return cvEntities.map(cvMapper::map);
+//    }
 
+
+
+
+
+
+
+//
+//    public CV getCVById(Integer cvId) {
+//        CvEntity cvEntity = cvRepository.findById(cvId).orElseThrow(()-> new EntityNotFoundException("Not found CV with ID: " + cvId));
+//
+//        return cvMapper.map(cvEntity);
+//    }
+//    public Optional<CV> findCvByUserId(Integer id) {
+//        return cvRepository.findByUserId(id);
+//    }
+
+//    public boolean existByUser(User loggedInUser) {
+//        return cvRepository.existsByUser(userMapper.map(loggedInUser));
+//    }
+
+//    public Optional<CV> findById(Integer id) {
+//
+//        return cvRepository.findById(id).map(cvMapper::map);
+//    }
+
+//    public Optional<CV> findByUser(User user) {
+//        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
+//        return cvEntityOptional.map(cvMapper::map);
+//    }
+
+//    public CV findByUser2(User user){
+//        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
+//                .orElseThrow(()-> new EntityNotFoundException("Not found CVEntity for user: " + user.getUserName()));
+//        return cvMapper.map(cvEntity);
+//    }
 
 
 

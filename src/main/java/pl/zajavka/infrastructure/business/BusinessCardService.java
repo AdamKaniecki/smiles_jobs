@@ -10,7 +10,7 @@ import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
-import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.security.UserEntity;
@@ -22,16 +22,15 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class BusinessCardService {
-    private BusinessCardRepository businessCardRepository;
+    private BusinessCardJpaRepository businessCardJpaRepository;
     private BusinessCardMapper businessCardMapper;
-    private AddressService addressService;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
 
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
 
-        if (businessCardRepository.existsByUser(userMapper.map(user))) {
+        if (businessCardJpaRepository.existsByUser(userMapper.map(user))) {
             return null;
         }
 
@@ -49,43 +48,42 @@ public class BusinessCardService {
                 .address(addressMapper.map(address))
                 .build();
 
-        businessCardRepository.saveAndFlush(businessCardEntity);
+        businessCardJpaRepository.saveAndFlush(businessCardEntity);
         return businessCardMapper.map(businessCardEntity);
     }
 
-    public Optional<BusinessCard> findById2(Integer id) {
+//    public Optional<BusinessCard> findById2(Integer id) {
+//        return businessCardJpaRepository.findById(id).map(businessCardMapper::map);
+//    }
 
-        return businessCardRepository.findById(id).map(businessCardMapper::map);
-    }
+//   public BusinessCard findById(Integer businessCardId){
+//        BusinessCardEntity businessCardEntity = businessCardJpaRepository.findById(businessCardId)
+//                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card with ID: " + businessCardId));
+//        return businessCardMapper.map(businessCardEntity);
+//   }
 
-   public BusinessCard findById(Integer businessCardId){
-        BusinessCardEntity businessCardEntity = businessCardRepository.findById(businessCardId)
-                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card with ID: " + businessCardId));
-        return businessCardMapper.map(businessCardEntity);
-   }
-
-    public Optional<BusinessCard> findByUser2(User loggedInUser) {
-        Optional<BusinessCardEntity> businessCardEntityOptional = businessCardRepository.findByUser(userMapper.map(loggedInUser));
-        return businessCardEntityOptional.map(businessCardMapper::map);
-    }
-    public BusinessCard findByUser(User loggedInUser){
-        UserEntity userEntity = userMapper.map(loggedInUser);
-        BusinessCardEntity businessCardEntity = businessCardRepository.findByUser(userEntity)
-                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card from User: " + userEntity));
-        return businessCardMapper.map(businessCardEntity);
-    }
-
+//    public Optional<BusinessCard> findByUser2(User loggedInUser) {
+//        Optional<BusinessCardEntity> businessCardEntityOptional = businessCardJpaRepository.findByUser(userMapper.map(loggedInUser));
+//        return businessCardEntityOptional.map(businessCardMapper::map);
+//    }
+//    public BusinessCard findByUser(User loggedInUser){
+//        UserEntity userEntity = userMapper.map(loggedInUser);
+//        BusinessCardEntity businessCardEntity = businessCardJpaRepository.findByUser(userEntity)
+//                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card from User: " + userEntity));
+//        return businessCardMapper.map(businessCardEntity);
+//    }
 
 
-    public boolean existByUser(User loggedInUser) {
-        return businessCardRepository.existsByUser(userMapper.map(loggedInUser));
-    }
+
+//    public boolean existByUser(User loggedInUser) {
+//        return businessCardJpaRepository.existsByUser(userMapper.map(loggedInUser));
+//    }
 
     @Transactional
     public BusinessCard updateBusinessCard(BusinessCard updateBusinessCard) {
         if (updateBusinessCard.getId() != null) {
             // Sprawdź, czy CV istnieje w bazie danych
-            BusinessCardEntity businessCardEntity = businessCardRepository.findById(updateBusinessCard.getId())
+            BusinessCardEntity businessCardEntity = businessCardJpaRepository.findById(updateBusinessCard.getId())
                     .orElseThrow(() -> new EntityNotFoundException("Business Card with ID " + updateBusinessCard.getId() + " not found"));
 
             businessCardEntity.setOffice(updateBusinessCard.getOffice());
@@ -98,7 +96,7 @@ public class BusinessCardService {
 
 
             // Zapisz zaktualizowany obiekt CV w bazie danych
-            BusinessCardEntity businessCardEntityUpdate = businessCardRepository.save(businessCardEntity);
+            BusinessCardEntity businessCardEntityUpdate = businessCardJpaRepository.save(businessCardEntity);
 
             return businessCardMapper.map(businessCardEntityUpdate);
         } else {
@@ -112,7 +110,7 @@ public class BusinessCardService {
 
         if (businessCard != null){
             BusinessCardEntity businessCardEntity = businessCardMapper.map(businessCard);
-            businessCardRepository.deleteById(businessCardEntity.getId());
+            businessCardJpaRepository.deleteById(businessCardEntity.getId());
         }   else {
         throw new IllegalArgumentException("Business Card cannot be null");
     }

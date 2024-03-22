@@ -16,7 +16,12 @@
 <!--; displaySelectedSpecializations()-->
 
 <h2>Create CV</h2>
-<form th:action="@{/createCV}" th:object="${cvDTO}" method="post">
+<form th:action="@{/createCV}" th:object="${cvDTO}" method="post" >
+<!--      enctype="multipart/form-data"-->
+
+
+<!--    <label>Photo: </label>-->
+<!--    <input type="file" name="photo" accept="image/*" required/><br/>-->
     <label>Name: </label>
     <input type="text" th:field="*{name}" required/><br/>
     <label>Surname: </label>

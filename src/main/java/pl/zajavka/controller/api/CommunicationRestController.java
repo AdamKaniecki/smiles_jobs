@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.infrastructure.business.*;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.domain.*;
 
 @AllArgsConstructor
@@ -19,6 +22,9 @@ public class CommunicationRestController {
     private JobOfferService jobOfferService;
     private CvService cvService;
     private NotificationService notificationService;
+    private CvRepository cvRepository;
+    private JobOfferRepository jobOfferRepository;
+    private NotificationRepository notificationRepository;
 
     @PostMapping("/sendCV")
     @Transactional
@@ -26,8 +32,8 @@ public class CommunicationRestController {
         try {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(request.getJobOfferId());
-            CV cv = cvService.findByUser2(loggedInUser);
+            JobOffer jobOffer = jobOfferRepository.findById(request.getJobOfferId());
+            CV cv = cvRepository.findByUser2(loggedInUser);
             User adresat = jobOffer.getUser();
 
             // Sprawdź, czy CV użytkownika istnieje
@@ -63,7 +69,7 @@ public class CommunicationRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
             User cvUser = userService.getUserByCv(request.getCvId());
-            Notification notification = notificationService.findById(request.getNotificationId());
+            Notification notification = notificationRepository.findById(request.getNotificationId());
 
             notificationService.arrangeInterview(notification, loggedInUser, cvUser, request.getProposedDateTime());
 
@@ -80,8 +86,8 @@ public class CommunicationRestController {
         try {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(request.getJobOfferId());
-            Notification notification = notificationService.findById(request.getNotificationId());
+            JobOffer jobOffer = jobOfferRepository.findById(request.getJobOfferId());
+            Notification notification = notificationRepository.findById(request.getNotificationId());
             User adresat = jobOffer.getUser();
 
             notificationService.changeMeetingDate(notification, loggedInUser, adresat);
@@ -99,8 +105,8 @@ public class CommunicationRestController {
         try {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferService.findById(request.getJobOfferId());
-            Notification notification = notificationService.findById(request.getNotificationId());
+            JobOffer jobOffer = jobOfferRepository.findById(request.getJobOfferId());
+            Notification notification = notificationRepository.findById(request.getNotificationId());
             User adresat = jobOffer.getUser();
 
             notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
@@ -122,7 +128,7 @@ public class CommunicationRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
             User cvUser = userService.getUserByCv(request.getCvId());
-            Notification notification = notificationService.findById(request.getNotificationId());
+            Notification notification = notificationRepository.findById(request.getNotificationId());
 
             notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
@@ -143,7 +149,7 @@ public class CommunicationRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
             User cvUser = userService.getUserByCv(request.getCvId());
-            Notification notification = notificationService.findById(request.getNotificationId());
+            Notification notification = notificationRepository.findById(request.getNotificationId());
 
             notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 

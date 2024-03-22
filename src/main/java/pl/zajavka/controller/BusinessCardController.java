@@ -15,6 +15,7 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.AddressService;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.UserService;
+import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.CV;
@@ -33,6 +34,7 @@ public class BusinessCardController {
     private UserService userService;
     private BusinessCardMapperDTO businessCardMapperDTO;
     private UserMapperDTO userMapperDTO;
+    private BusinessCardRepository businessCardRepository;
 
 
     @GetMapping("/BusinessCardForm")
@@ -54,7 +56,7 @@ public class BusinessCardController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
-        if (businessCardService.existByUser(loggedInUser)) {
+        if (businessCardRepository.existByUser(loggedInUser)) {
             return "cv_already_created";
         }
 
@@ -76,7 +78,7 @@ public class BusinessCardController {
     public String showMyBusinessCard(Authentication authentication, Model model) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        Optional<BusinessCard> userBusinessCard = businessCardService.findByUser2(loggedInUser);
+        Optional<BusinessCard> userBusinessCard = businessCardRepository.findByUser2(loggedInUser);
         if (userBusinessCard.isPresent()) {
             BusinessCard businessCard = userBusinessCard.get();
 
@@ -90,7 +92,7 @@ public class BusinessCardController {
 
     @GetMapping("/businessCard/{businessCardId}")
     public String showBusinessCard(@PathVariable Integer businessCardId, Model model) {
-        Optional<BusinessCard> businessCard = businessCardService.findById2(businessCardId);
+        Optional<BusinessCard> businessCard = businessCardRepository.findById2(businessCardId);
         if (businessCard.isPresent()) {
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
 //            model.addAttribute("userDTO", userMapperDTO.map(businessCard.getUser()));
@@ -108,7 +110,7 @@ public class BusinessCardController {
         User loggedInUser = userService.findByUserName(username);
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         if (loggedInUser != null) {
-            Optional<BusinessCard> userBusinessCard = businessCardService.findByUser2(loggedInUser);
+            Optional<BusinessCard> userBusinessCard = businessCardRepository.findByUser2(loggedInUser);
             if (userBusinessCard.isPresent()) {
                 BusinessCard businessCard = userBusinessCard.get();
                 BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
@@ -128,7 +130,7 @@ public class BusinessCardController {
     public String updateBusinessCard(
             @ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
             Model model) {
-        BusinessCard businessCard = businessCardService.findById(updateBusinessCardDTO.getId());
+        BusinessCard businessCard = businessCardRepository.findById(updateBusinessCardDTO.getId());
 
 
         businessCard.setOffice(updateBusinessCardDTO.getOffice());
@@ -151,7 +153,7 @@ public class BusinessCardController {
     public String deleteBusinessCard(@ModelAttribute("businessCardDTO") BusinessCardDTO updateBusinessCardDTO,
                                      Model model) {
 
-        BusinessCard businessCard = businessCardService.findById(updateBusinessCardDTO.getId());
+        BusinessCard businessCard = businessCardRepository.findById(updateBusinessCardDTO.getId());
         Address address = businessCard.getAddress();
         businessCardService.deleteBusinessCard(businessCard);
         addressService.deleteAddress(address);

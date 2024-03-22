@@ -13,6 +13,7 @@ import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.EnumService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
@@ -27,6 +28,7 @@ public class CvRestController {
 
 
     private final CvService cvService;
+    private final CvRepository cvRepository;
     private final UserService userService;
     private final EnumService enumService;
 
@@ -47,7 +49,7 @@ public class CvRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        if (cvService.existByUser(loggedInUser)) {
+        if (cvRepository.existByUser(loggedInUser)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CV already created");
         }
 
@@ -69,7 +71,7 @@ public class CvRestController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         if (loggedInUser != null) {
-            Optional<CV> userCV = cvService.findByUser(loggedInUser);
+            Optional<CV> userCV = cvRepository.findByUser(loggedInUser);
             if (userCV.isPresent()) {
                 CV cv = userCV.get();
                 CvDTO cvDTO = cvMapperDTO.map(cv);
@@ -82,7 +84,7 @@ public class CvRestController {
 
     @GetMapping("/showCV/{id}")
     public ResponseEntity<?> showMyCV(@PathVariable Integer id) {
-        Optional<CV> cvOpt = cvService.findById(id);
+        Optional<CV> cvOpt = cvRepository.findById(id);
 
         if (cvOpt.isPresent()) {
             CV cv = cvOpt.get();
@@ -101,7 +103,7 @@ public class CvRestController {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-            CV cv = cvService.findByUser2(loggedInUser);
+            CV cv = cvRepository.findByUser2(loggedInUser);
 
             cv.setName(updateCvDTO.getName());
             cv.setSurname(updateCvDTO.getSurname());
@@ -124,7 +126,7 @@ public class CvRestController {
 
     @DeleteMapping("/deleteCV/{id}")
     public ResponseEntity<String> deleteCV(@PathVariable("id") Integer cvId) {
-        Optional<CV> optionalCV = cvService.findById(cvId);
+        Optional<CV> optionalCV = cvRepository.findById(cvId);
         if (optionalCV.isPresent()) {
             CV cv = optionalCV.get();
             Address address = cv.getAddress();

@@ -18,6 +18,8 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
+import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
@@ -37,6 +39,8 @@ public class JobOfferController {
     private JobOfferMapperDTO jobOfferMapperDTO;
     private BusinessCardService businessCardService;
     private BusinessCardMapperDTO businessCardMapperDTO;
+    private JobOfferRepository jobOfferRepository;
+    private BusinessCardRepository businessCardRepository;
 
     @GetMapping("/JobOfferForm")
     public String jobOfferForm(
@@ -83,9 +87,9 @@ public class JobOfferController {
 
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
-        Optional<BusinessCard> businessCard = businessCardService.findByUser2(jobOffer.getUser());
+        Optional<BusinessCard> businessCard = businessCardRepository.findByUser2(jobOffer.getUser());
 
         if (businessCard.isPresent()) {
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
@@ -103,7 +107,7 @@ public class JobOfferController {
         User loggedInUser = userService.findByUserName(username);
 
         if (loggedInUser != null) {
-            List<JobOfferDTO> jobOffersDTO = jobOfferService.findListByUser(loggedInUser).stream()
+            List<JobOfferDTO> jobOffersDTO = jobOfferRepository.findListByUser(loggedInUser).stream()
                     .map(jobOfferMapperDTO::map)
                     .collect(Collectors.toList());
             model.addAttribute("jobOffersDTO", jobOffersDTO);
@@ -118,7 +122,7 @@ public class JobOfferController {
 
     @GetMapping("/updateJobOfferForm")
     public String updateMyJobOffer(@RequestParam Integer id, Model model) {
-        JobOffer myJobOffer = jobOfferService.findById(id);
+        JobOffer myJobOffer = jobOfferRepository.findById(id);
 
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(myJobOffer));
         model.addAttribute("userDTO", userMapperDTO.map(myJobOffer.getUser()));
@@ -131,7 +135,7 @@ public class JobOfferController {
     public String updateJobOffer(
             @ModelAttribute("jobOfferDTO") JobOfferDTO updateJobOfferDTO,
             Model model) {
-        JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
+        JobOffer jobOffer = jobOfferRepository.findById(updateJobOfferDTO.getId());
 
         jobOffer.setCompanyName(updateJobOfferDTO.getCompanyName());
         jobOffer.setPosition(updateJobOfferDTO.getPosition());

@@ -5,16 +5,17 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
+import pl.zajavka.infrastructure.database.repository.AddressRepository;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
@@ -24,6 +25,7 @@ import pl.zajavka.infrastructure.business.EnumService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -35,11 +37,13 @@ public class CvController {
 
 
     private CvService cvService;
+    private CvRepository cvRepository;
     private AddressService addressService;
     private UserService userService;
     private CvMapperDTO cvMapperDTO;
     private UserMapperDTO userMapperDTO;
     private EnumService enumService;
+    private AddressRepository addressRepository;
 
     @GetMapping("/CvForm")
     public String cvForm(
@@ -81,7 +85,7 @@ public class CvController {
     public String createCV(@Valid @ModelAttribute("cvDTO") CvDTO cvDTO, Model model,
                            BindingResult bindingResult, Authentication authentication,
                            @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames
-//                           @RequestParam(name = "it_specializations", required = false) Set<String> it_specializationNames
+//                           @RequestParam("photo") MultipartFile photo
     ) {
         if (bindingResult.hasErrors()) {
             return "error";
@@ -89,16 +93,24 @@ public class CvController {
         String username = authentication.getName();
         if (username != null) {
             User loggedInUser = userService.findByUserName(username);
-            if (cvService.existByUser(loggedInUser)) {
+            if (cvRepository.existByUser(loggedInUser)) {
                 return "cv_already_created";
             }
 
             CV cv = cvMapperDTO.map(cvDTO);
             Set<ProgrammingLanguage> programmingLanguages = enumService.convertToProgrammingLanguages(programmingLanguagesNames);
-//            Set<IT_Specializations> it_specializations = enumService.convertToSpecializations(it_specializationNames);
+
+//            // Konwersja pliku MultipartFile na tablicę bajtów byte[]
+//            byte[] photoData;
+//            try {
+//                photoData = photo.getBytes();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                return "error";
+//            }
+//            cv.setPhoto(photoData);
 
             cv.setProgrammingLanguages(programmingLanguages);
-//            cv.setIt_specializations(it_specializations);
 
             cvService.createCV(cv, loggedInUser);
 
@@ -110,6 +122,7 @@ public class CvController {
         }
     }
 
+
     @GetMapping("/ShowMyCV")
     public String redirectToShowMyCV(
             Authentication authentication,
@@ -118,7 +131,7 @@ public class CvController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         if (loggedInUser != null) {
-            Optional<CV> userCV = cvService.findByUser(loggedInUser);
+            Optional<CV> userCV = cvRepository.findByUser(loggedInUser);
             if (userCV.isPresent()) {
                 CV cv = userCV.get();
                 CvDTO cvDTO = cvMapperDTO.map(cv);
@@ -135,7 +148,7 @@ public class CvController {
 
     @GetMapping("/showCV")
     public String showMyCV(@RequestParam Integer id, Model model) {
-        Optional<CV> cvOpt = cvService.findById(id);
+        Optional<CV> cvOpt = cvRepository.findById(id);
 
         if (cvOpt.isPresent()) {
             CV cv = cvOpt.get();
@@ -158,7 +171,7 @@ public class CvController {
         User loggedInUser = userService.findByUserName(username);
         UserDTO userDTO = userMapperDTO.map(loggedInUser);
         if (loggedInUser != null) {
-            Optional<CV> userCV = cvService.findByUser(loggedInUser);
+            Optional<CV> userCV = cvRepository.findByUser(loggedInUser);
             if (userCV.isPresent()) {
                 CV cv = userCV.get();
                 CvDTO cvDTO = cvMapperDTO.map(cv);
@@ -180,7 +193,7 @@ public class CvController {
     public String updateCv(
             @Valid @ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
 
-        Optional<CV> myCV = cvService.findById(updateCvDTO.getId());
+        Optional<CV> myCV = cvRepository.findById(updateCvDTO.getId());
         if (myCV.isPresent()) {
             CV cv = myCV.get();
 
@@ -218,7 +231,7 @@ public class CvController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
-        Address address = addressService.findById(updateAddress.getId());
+        Address address = addressRepository.findById(updateAddress.getId());
 
         address.setCountry(updateAddress.getCountry());
         address.setCity(updateAddress.getCity());
@@ -235,7 +248,7 @@ public class CvController {
         // Mapuj CvDTO na CV
         CV cvToDelete = cvMapperDTO.map(deleteCvDTO);
 
-        Optional<CV> optionalCV = cvService.findById(cvToDelete.getId());
+        Optional<CV> optionalCV = cvRepository.findById(cvToDelete.getId());
         if (optionalCV.isPresent()) {
             CV cv = optionalCV.get();
             Address address = cv.getAddress();
@@ -250,7 +263,7 @@ public class CvController {
 
     @GetMapping("/cv/{cvId}")
     public String showCvDetails(@PathVariable Integer cvId, Model model) {
-        Optional<CV> cv = cvService.findById(cvId);
+        Optional<CV> cv = cvRepository.findById(cvId);
         if (cv.isPresent()) {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv.get()));
             return "show_cv";
@@ -276,6 +289,8 @@ public class CvController {
 
         return selectedLanguagesSet;
     }
+
+
 
 }
 

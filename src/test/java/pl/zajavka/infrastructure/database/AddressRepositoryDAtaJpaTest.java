@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
-import pl.zajavka.infrastructure.database.repository.AddressRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
 
-    private AddressRepository addressRepository;
+    private AddressJpaRepository addressJpaRepository;
 
     @Test
     void shouldSaveAddress() {
@@ -24,7 +24,7 @@ public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
                 .build();
 
         // when
-        AddressEntity savedAddress = addressRepository.save(address);
+        AddressEntity savedAddress = addressJpaRepository.save(address);
 
         // then
         assertThat(savedAddress).isNotNull();
@@ -44,13 +44,13 @@ public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
                 .postalCode("00-001")
                 .streetAndNumber("Main Street 123")
                 .build();
-        AddressEntity savedAddress = addressRepository.save(address);
+        AddressEntity savedAddress = addressJpaRepository.save(address);
 
         // when
-        addressRepository.delete(savedAddress);
+        addressJpaRepository.delete(savedAddress);
 
         // then
-        assertThat(addressRepository.findById(savedAddress.getId())).isEmpty();
+        assertThat(addressJpaRepository.findById(savedAddress.getId())).isEmpty();
     }
 
 

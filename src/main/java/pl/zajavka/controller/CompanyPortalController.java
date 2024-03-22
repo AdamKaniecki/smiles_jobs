@@ -23,6 +23,8 @@ import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
@@ -42,12 +44,14 @@ import java.util.stream.Collectors;
 public class CompanyPortalController {
 
     public static final String COMPANY_PORTAL = "/company_portal";
+    private CvRepository cvRepository;
     private UserService userService;
     private CvService cvService;
     private CvMapperDTO cvMapperDTO;;
     private NotificationService notificationService;
     private NotificationMapperDTO notificationMapperDTO;
     private PaginationService paginationService;
+    private NotificationRepository notificationRepository;
 
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
@@ -58,7 +62,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
-        Page<CvDTO> cvDTOPage = cvService.findAll(pageable)
+        Page<CvDTO> cvDTOPage = paginationService.findAll(pageable)
                 .map(cvMapperDTO::map);
 
         model.addAttribute("cvDTOs", cvDTOPage.getContent());
@@ -66,7 +70,7 @@ public class CompanyPortalController {
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
 
-        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
+        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
 
@@ -84,7 +88,7 @@ public class CompanyPortalController {
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
-        List<CV> searchResults = cvService.searchCvByKeywordAndCategory(keyword, category);
+        List<CV> searchResults = cvRepository.searchCvByKeywordAndCategory(keyword, category);
         List<CvDTO> searchResultsDTO = searchResults.stream()
                 .map(cvMapperDTO::map)
                 .collect(Collectors.toList());
@@ -107,7 +111,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationService.findById(notificationId);
+        Notification notification = notificationRepository.findById(notificationId);
 
         notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
@@ -125,7 +129,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationService.findById(notificationId);
+        Notification notification = notificationRepository.findById(notificationId);
 
         notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
@@ -142,7 +146,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationService.findById(notificationId);
+        Notification notification = notificationRepository.findById(notificationId);
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 

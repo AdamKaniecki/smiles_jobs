@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.util.UserFixtures;
@@ -19,7 +19,7 @@ import static pl.zajavka.util.JobOfferFixtures.*;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
 
-    private JobOfferRepository jobOfferRepository;
+    private JobOfferJpaRepository jobOfferRepository;
     private UserRepository userRepository;
 
     @Test

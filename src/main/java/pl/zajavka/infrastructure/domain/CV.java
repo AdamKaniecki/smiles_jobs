@@ -1,6 +1,7 @@
 package pl.zajavka.infrastructure.domain;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 
 import java.math.BigDecimal;
@@ -35,6 +36,9 @@ public class CV {
     private String hobby;
     private User user;
     private Address address;
+//    private byte [] photo;
+
+
 
 
 

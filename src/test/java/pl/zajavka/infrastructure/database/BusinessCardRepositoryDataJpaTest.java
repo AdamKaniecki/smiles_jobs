@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
-import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class BusinessCardRepositoryDataJpaTest extends AbstractJpaIT{
 
-    private BusinessCardRepository businessCardRepository;
+    private BusinessCardJpaRepository businessCardJpaRepository;
 
     @Test
     void testBuilder() {

@@ -1,50 +1,46 @@
 package pl.zajavka.infrastructure.database.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
+import pl.zajavka.infrastructure.business.dao.JobOfferDAO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
+import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Integer> {
+@AllArgsConstructor
+public class JobOfferRepository implements JobOfferDAO {
 
-    @Query("SELECT j FROM JobOfferEntity j WHERE " +
-            "(:category = 'companyName' AND LOWER(j.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'position' AND LOWER(j.position) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'requiredTechnologies' AND LOWER(j.requiredTechnologies) LIKE LOWER(CONCAT('%', :keyword, '%')))  "
-//            "(:category = 'salaryMin' AND LOWER(j.salaryMin.toString()) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            )
-    List<JobOfferEntity> findJobOffersByKeywordAndCategory(
-            @Param("keyword") String keyword,
-//            @Param("salary") BigDecimal salary,
-            @Param("category") String category);
+    private final JobOfferJpaRepository jobOfferJpaRepository;
+    private final JobOfferMapper jobOfferMapper;
+    private final UserMapper userMapper;
+    public Optional<JobOffer> findById2(Integer id) {
+        return jobOfferJpaRepository.findById(id).map(jobOfferMapper::map);
+    }
 
-    @Query("SELECT j FROM JobOfferEntity j WHERE " +
-            "(:category = 'salaryMin' AND j.salaryMin >= CAST(:salary AS java.math.BigDecimal))")
-    List<JobOfferEntity> findJobOffersBySalaryAndCategory(
-            @Param("category") String category,
-            @Param("salary") BigDecimal salary);
+    public JobOffer findById(Integer id) {
+        JobOfferEntity jobOfferEntity = jobOfferJpaRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Not found JobOffer with ID: " + id));
+        return jobOfferMapper.map(jobOfferEntity);
+    }
 
-    Optional<JobOfferEntity> findByUser(UserEntity userEntity);
+    public List<JobOffer> findListByUser(User user) {
+        UserEntity userEntity = userMapper.map(user);
+        List<JobOfferEntity> jobOfferEntityList = jobOfferJpaRepository.findListByUser(userEntity);
+        List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
+        return jobOfferList;
+    }
 
-    Optional<JobOfferEntity> findById(Integer id);
-
-    List<JobOfferEntity> findListByUser(UserEntity user);
-
-    Page<JobOfferEntity> findAll(Pageable pageable);
-
-
-            ;
-
-
-//    @Query("SELECT j FROM JobOffer j WHERE j.user = :user")
-//    List<JobOffer> findListByUser( User user);
+    public Optional<JobOffer> findByUser(User loggedInUser) {
+        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferJpaRepository.findByUser(userMapper.map(loggedInUser));
+        return jobOfferEntityOptional.map(jobOfferMapper::map);
+    }
 }

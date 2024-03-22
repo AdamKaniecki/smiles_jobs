@@ -3,16 +3,16 @@ package pl.zajavka.infrastructure.business;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 
 @Service
 @AllArgsConstructor
 public class SortingService {
-    private final JobOfferRepository jobOfferRepository;
-    private final CvRepository cvRepository;
-    private final NotificationRepository notificationRepository;
+    private final JobOfferJpaRepository jobOfferRepository;
+    private final CvJpaRepository cvRepository;
+    private final NotificationJpaRepository notificationJpaRepository;
 
 
 

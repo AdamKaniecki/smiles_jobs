@@ -14,8 +14,8 @@ import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.repository.AddressRepository;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.*;
@@ -33,9 +33,9 @@ public class  UserService {
     private RoleRepository roleRepository;
     private SmilesJobsUserDetailsService smilesJobsUserDetailsService;
     private CvMapper cvMapper;
-    private CvRepository cvRepository;
+    private CvJpaRepository cvRepository;
     private AddressMapper addressMapper;
-    private AddressRepository addressRepository;
+    private AddressJpaRepository addressJpaRepository;
 
     @Transactional
     public User createCandidate(User user) {

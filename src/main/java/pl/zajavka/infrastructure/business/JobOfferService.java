@@ -107,8 +107,6 @@ package pl.zajavka.infrastructure.business;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.domain.JobOffer;
@@ -116,28 +114,23 @@ import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
-import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @AllArgsConstructor
 @Service
 public class JobOfferService {
-    private JobOfferRepository jobOfferRepository;
-    private UserRepository userRepository;
+    private JobOfferJpaRepository jobOfferRepository;
     private UserMapper userMapper;
     private JobOfferMapper jobOfferMapper;
-    private UserService userService;
-    private NotificationRepository notificationRepository;
+    private NotificationJpaRepository notificationJpaRepository;
 
     @Transactional
     public JobOffer create(JobOffer jobOffer, User user) {
@@ -158,29 +151,18 @@ public class JobOfferService {
                 .user(userMapper.map(user))
                 .build();
 
-//        newJobOfferEntity.setSalaryMin(minSalary);
-//        newJobOfferEntity.setSalaryMax(maxSalary);
 
         jobOfferRepository.saveAndFlush(newJobOfferEntity);
         return jobOfferMapper.map(newJobOfferEntity);
 
     }
 
-    private BigDecimal parseSalary(String salaryString) {
-        try {
-            // Spróbuj parsować wartość Salary jako BigDecimal
-            return new BigDecimal(salaryString);
-        } catch (NumberFormatException e) {
-            // Obsłuż błąd parsowania - możesz rzucić wyjątkiem lub zwrócić domyślną wartość
-            throw new IllegalArgumentException("Nieprawidłowa wartość Salary: " + salaryString, e);
-        }
-    }
 
-    public List<JobOffer> findAllJobOffersForPage() {
-        return jobOfferRepository.findAll().stream()
-                .map(jobOfferMapper::map)
-                .toList();
-    }
+//    public List<JobOffer> findAllJobOffersForPage() {
+//        return jobOfferRepository.findAll().stream()
+//                .map(jobOfferMapper::map)
+//                .toList();
+//    }
 
 
 
@@ -195,28 +177,28 @@ public class JobOfferService {
 
     
 
-    public Optional<JobOffer> findById2(Integer id) {
-        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
-    }
+//    public Optional<JobOffer> findById2(Integer id) {
+//        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
+//    }
 
-    public JobOffer findById(Integer id) {
-        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Not found JobOffer with ID: " + id));
-        return jobOfferMapper.map(jobOfferEntity);
-    }
+//    public JobOffer findById(Integer id) {
+//        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)
+//                .orElseThrow(()-> new EntityNotFoundException("Not found JobOffer with ID: " + id));
+//        return jobOfferMapper.map(jobOfferEntity);
+//    }
 
 
-    public List<JobOffer> findListByUser(User user) {
-        UserEntity userEntity = userMapper.map(user);
-     List<JobOfferEntity> jobOfferEntityList = jobOfferRepository.findListByUser(userEntity);
-     List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
-     return jobOfferList;
-    }
+//    public List<JobOffer> findListByUser(User user) {
+//        UserEntity userEntity = userMapper.map(user);
+//     List<JobOfferEntity> jobOfferEntityList = jobOfferRepository.findListByUser(userEntity);
+//     List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
+//     return jobOfferList;
+//    }
 
-    public Optional<JobOffer> findByUser(User loggedInUser) {
-        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(loggedInUser));
-        return jobOfferEntityOptional.map(jobOfferMapper::map);
-    }
+//    public Optional<JobOffer> findByUser(User loggedInUser) {
+//        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(loggedInUser));
+//        return jobOfferEntityOptional.map(jobOfferMapper::map);
+//    }
 
 
     @Transactional
@@ -249,7 +231,7 @@ public class JobOfferService {
         JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOfferId)
                 .orElseThrow(() -> new IllegalArgumentException("Oferta pracy o identyfikatorze " + jobOfferId + " nie została znaleziona."));
 
-        List<NotificationEntity> notifications = notificationRepository.findByJobOfferId(jobOfferEntity.getId());
+        List<NotificationEntity> notifications = notificationJpaRepository.findByJobOfferId(jobOfferEntity.getId());
 
 
         for (NotificationEntity notification : notifications) {
@@ -263,10 +245,10 @@ public class JobOfferService {
         jobOfferRepository.deleteById(jobOfferEntity.getId());
     }
 
-    public Page<JobOffer> findAllJobOffersForPage(Pageable pageable) {
-        Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
-        return jobOfferEntities.map(jobOfferMapper::map);
-    }
+//    public Page<JobOffer> findAllJobOffersForPage(Pageable pageable) {
+//        Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
+//        return jobOfferEntities.map(jobOfferMapper::map);
+//    }
 
 
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {

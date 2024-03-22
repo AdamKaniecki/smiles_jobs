@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
@@ -39,4 +40,5 @@ public class CvDTO {
     private String hobby;
     private User user;
     private Address address;
+//    private byte[] photo;
 }

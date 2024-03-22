@@ -12,6 +12,7 @@ import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
@@ -29,6 +30,7 @@ public class JobOfferRestController {
     private UserService userService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private JobOfferService jobOfferService;
+    private JobOfferRepository jobOfferRepository;
 
     @PostMapping("/createJobOffer")
     public ResponseEntity<String> createJobOffer(@RequestBody JobOfferDTO jobOfferDTO, Authentication authentication) {
@@ -55,7 +57,7 @@ public class JobOfferRestController {
         User loggedInUser = userService.findByUserName(username);
 
         if (loggedInUser != null) {
-            List<JobOfferDTO> jobOfferDTOs = jobOfferService.findListByUser(loggedInUser).stream()
+            List<JobOfferDTO> jobOfferDTOs = jobOfferRepository.findListByUser(loggedInUser).stream()
                     .map(jobOfferMapperDTO::map)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(jobOfferDTOs);
@@ -65,7 +67,7 @@ public class JobOfferRestController {
 
     @GetMapping("/showJobOffer/{id}")
     public ResponseEntity<?> showMyJobOffer(@PathVariable Integer id) {
-        Optional<JobOffer> jobOfferOpt = jobOfferService.findById2(id);
+        Optional<JobOffer> jobOfferOpt = jobOfferRepository.findById2(id);
 
         if (jobOfferOpt.isPresent()) {
             JobOffer jobOffer = jobOfferOpt.get();
@@ -83,7 +85,7 @@ public class JobOfferRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
 
-            Optional<JobOffer> optionalJobOffer = jobOfferService.findById2(jobOfferId);
+            Optional<JobOffer> optionalJobOffer = jobOfferRepository.findById2(jobOfferId);
             if (optionalJobOffer.isPresent()) {
                 JobOffer jobOffer = optionalJobOffer.get();
 
@@ -112,7 +114,7 @@ public class JobOfferRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
 
-            Optional<JobOffer> optionalJobOffer = jobOfferService.findByUser(loggedInUser);
+            Optional<JobOffer> optionalJobOffer = jobOfferRepository.findByUser(loggedInUser);
             if (optionalJobOffer.isPresent()) {
                 JobOffer jobOffer = optionalJobOffer.get();
 
@@ -145,7 +147,7 @@ public class JobOfferRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
 
-            JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
+            JobOffer jobOffer = jobOfferRepository.findById(updateJobOfferDTO.getId());
 
             // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
             if (!jobOffer.getUser().equals(loggedInUser)) {

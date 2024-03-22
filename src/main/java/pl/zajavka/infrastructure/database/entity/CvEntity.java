@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.math.BigDecimal;
@@ -87,6 +88,9 @@ public class CvEntity {
 
     @Column(name = "hobby")
     private String hobby;
+
+//    @Transient
+//    private byte[] photo;
 
     @OneToOne (fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
