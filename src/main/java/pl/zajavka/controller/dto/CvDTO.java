@@ -27,6 +27,7 @@ public class CvDTO {
     @Size(min = 7,max = 15)
     @Pattern(regexp = "^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$")
     private String phoneNumber;
+
     private String education;
     private String workExperience;
     private String skills;

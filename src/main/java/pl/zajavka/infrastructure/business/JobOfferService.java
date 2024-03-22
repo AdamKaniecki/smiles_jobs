@@ -152,8 +152,8 @@ public class JobOfferService {
                 .responsibilities(jobOffer.getResponsibilities())
                 .requiredTechnologies(jobOffer.getRequiredTechnologies())
                 .benefits(jobOffer.getBenefits())
-//                .salaryMin(jobOffer.getSalaryMin())
-//                .salaryMax(jobOffer.getSalaryMax())
+                .salaryMin(jobOffer.getSalaryMin())
+                .salaryMax(jobOffer.getSalaryMax())
                 .jobOfferDateTime(currentDateTime)
                 .user(userMapper.map(user))
                 .build();
@@ -182,23 +182,18 @@ public class JobOfferService {
                 .toList();
     }
 
-    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-        List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
-        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
-                .map(jobOfferMapper::map)
-                .toList();
-        return jobOffers;
-    }
 
-    private BigDecimal parseSalaryRange(String salaryRange) {
-        try {
-            // Spróbuj sparsować tekst na liczbę
-            return new BigDecimal(salaryRange.trim());
-        } catch (NumberFormatException e) {
-            // Obsłuż sytuację, gdy tekst nie może być sparsowany
-            throw new IllegalArgumentException("Nieprawidłowy format liczby: " + salaryRange);
-        }
-    }
+
+//    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
+////        BigDecimal keywordAsBigDecimal = new BigDecimal(keyword);
+//        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+//        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
+//                .map(jobOfferMapper::map)
+//                .toList();
+//        return jobOffers;
+//    }
+
+    
 
     public Optional<JobOffer> findById2(Integer id) {
         return jobOfferRepository.findById(id).map(jobOfferMapper::map);
@@ -274,8 +269,22 @@ public class JobOfferService {
     }
 
 
+    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
+        List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
+                .map(jobOfferMapper::map)
+                .toList();
+        return jobOffers;
+    }
 
 
+    public List<JobOffer> searchJobOffersBySalary(String category, BigDecimal salary) {
+        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findJobOffersBySalaryAndCategory(category, salary);
+        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
+                .map(jobOfferMapper::map)
+                .toList();
+        return jobOffers;
+    }
 }
 
 

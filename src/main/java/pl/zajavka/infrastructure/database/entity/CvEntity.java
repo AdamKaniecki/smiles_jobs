@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.zajavka.infrastructure.security.UserEntity;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -44,6 +45,8 @@ public class CvEntity {
 
     @Column(name = "contact_email")
     private String contactEmail;
+
+
 
     @Column(name = "work_experience")
     private String workExperience;

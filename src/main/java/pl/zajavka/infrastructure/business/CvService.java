@@ -17,6 +17,7 @@ import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

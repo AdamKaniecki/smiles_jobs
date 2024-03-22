@@ -15,7 +15,7 @@
     <tr>
       <th>companyName</th>
       <th>position</th>
-      <th>responsibilities</th>
+<!--      <th>Salary min</th>-->
       <th>benefits</th>
       <th>Date Time</th>
       <th>JobOffer</th>
@@ -26,7 +26,7 @@
     <tr th:each="jobOfferDTO : ${searchResultsDTO}">
       <td th:text="${jobOfferDTO.companyName}"></td>
       <td th:text="${jobOfferDTO.position}"></td>
-      <td th:text="${jobOfferDTO.responsibilities}"></td>
+<!--      <td th:text="${jobOfferDTO.salaryMin}"></td>-->
       <td th:text="${jobOfferDTO.benefits}"></td>
       <td th:text="${#temporals.format(jobOfferDTO.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>
       <td>

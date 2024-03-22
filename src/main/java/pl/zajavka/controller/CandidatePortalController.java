@@ -29,6 +29,7 @@ import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,16 +70,16 @@ public class CandidatePortalController {
 
         List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
-//
+
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
         model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
         model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
         model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
-//
-//    }
+
         return "candidate_portal";
     }
+
 
 
     @GetMapping("/searchJobOffers")
@@ -86,7 +87,20 @@ public class CandidatePortalController {
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
-        List<JobOffer> searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
+        List<JobOffer> searchResults;
+        if ("salaryMin".equals(category)) {
+            try {
+                BigDecimal salaryMinValue = BigDecimal.valueOf(Double.parseDouble(keyword)); // Parsowanie wartości salaryMin
+                searchResults = jobOfferService.searchJobOffersBySalary(category, salaryMinValue);
+            } catch (NumberFormatException e) {
+                // Obsługa błędu parsowania
+                // Możesz np. przekierować użytkownika na stronę błędu lub zastosować inną logikę obsługi błędu
+                return "error_page"; // Zwróć widok strony błędu
+            }
+        } else {
+            searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
+        }
+
         List<JobOfferDTO> searchResultsDTO = searchResults.stream()
                 .map(jobOfferMapperDTO::map)
                 .collect(Collectors.toList());
@@ -97,6 +111,9 @@ public class CandidatePortalController {
 
         return "search_job_offers_results";
     }
+
+
+
 
     @PostMapping("/sendCV")
     @Transactional

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,12 +19,19 @@ public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Intege
     @Query("SELECT j FROM JobOfferEntity j WHERE " +
             "(:category = 'companyName' AND LOWER(j.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
             "(:category = 'position' AND LOWER(j.position) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'responsibilities' AND LOWER(j.responsibilities) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'requiredTechnologies' AND LOWER(j.requiredTechnologies) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'benefits' AND LOWER(j.benefits) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+            "(:category = 'requiredTechnologies' AND LOWER(j.requiredTechnologies) LIKE LOWER(CONCAT('%', :keyword, '%')))  "
+//            "(:category = 'salaryMin' AND LOWER(j.salaryMin.toString()) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            )
     List<JobOfferEntity> findJobOffersByKeywordAndCategory(
             @Param("keyword") String keyword,
+//            @Param("salary") BigDecimal salary,
             @Param("category") String category);
+
+    @Query("SELECT j FROM JobOfferEntity j WHERE " +
+            "(:category = 'salaryMin' AND j.salaryMin >= CAST(:salary AS java.math.BigDecimal))")
+    List<JobOfferEntity> findJobOffersBySalaryAndCategory(
+            @Param("category") String category,
+            @Param("salary") BigDecimal salary);
 
     Optional<JobOfferEntity> findByUser(UserEntity userEntity);
 
@@ -33,6 +41,8 @@ public interface JobOfferRepository extends JpaRepository<JobOfferEntity, Intege
 
     Page<JobOfferEntity> findAll(Pageable pageable);
 
+
+            ;
 
 
 //    @Query("SELECT j FROM JobOffer j WHERE j.user = :user")

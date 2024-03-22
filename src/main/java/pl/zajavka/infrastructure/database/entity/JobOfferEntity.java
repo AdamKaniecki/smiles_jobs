@@ -42,11 +42,11 @@ public class JobOfferEntity {
     @Column(name = "benefits")
     private String benefits;
 
-//    @Column(name = "salary_min")
-//    private BigDecimal salaryMin;
-//
-//    @Column(name = "salary_max")
-//    private BigDecimal salaryMax;
+    @Column(name = "salary_min")
+    private BigDecimal salaryMin;
+
+    @Column(name = "salary_max")
+    private BigDecimal salaryMax;
 
     @Column(name = "date_time_job_offer")
     private OffsetDateTime jobOfferDateTime;

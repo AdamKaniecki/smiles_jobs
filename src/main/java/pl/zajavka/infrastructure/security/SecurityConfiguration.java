@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                 ).hasAuthority("ROLE_CANDIDATE")
 
 //                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/candidate_portal/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/candidate_portal/**","/searchJobOffers/**").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("cv_already_sent","/updateAddressDone/**","/jobOffer/{jobOfferId}", "/businessCard/{businessCardId}"
                        )
                 .permitAll()
