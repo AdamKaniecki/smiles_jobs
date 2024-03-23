@@ -36,8 +36,8 @@ public class  UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "visible")
+    private Boolean visible;
 
 
     @ManyToMany(cascade = CascadeType.MERGE)

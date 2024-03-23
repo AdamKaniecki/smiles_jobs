@@ -18,14 +18,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.controller.dto.CvDTO;
+import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.UserDTO;
-import pl.zajavka.controller.dto.mapper.CvMapperDTO;
-import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
-import pl.zajavka.controller.dto.mapper.UserMapperDTO;;
+import pl.zajavka.controller.dto.mapper.*;
+;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.business.CvService;
@@ -52,6 +54,8 @@ public class CompanyPortalController {
     private NotificationMapperDTO notificationMapperDTO;
     private PaginationService paginationService;
     private NotificationRepository notificationRepository;
+    private JobOfferRepository jobOfferRepository;
+    private JobOfferMapperDTO jobOfferMapperDTO;
 
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
@@ -147,11 +151,22 @@ public class CompanyPortalController {
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationRepository.findById(notificationId);
+        // Pobierz ofertę pracy z powiadomienia
+
+        JobOffer jobOffer = notification.getJobOffer();
+        // Ustaw pole active na false
+        jobOffer.setActive(false);
+        // Zapisz zmienioną encję JobOffer
+        jobOfferRepository.saveJobOffer(jobOffer);
+        JobOfferDTO jobOfferDTO = jobOfferMapperDTO.map(jobOffer);
+        jobOfferDTO.setActive(false);
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 
         return "job_offer_created_successfully";
     }
+
+
 
 
 }

@@ -109,6 +109,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zajavka.infrastructure.business.dao.JobOfferDAO;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
@@ -131,6 +132,7 @@ public class JobOfferService {
     private UserMapper userMapper;
     private JobOfferMapper jobOfferMapper;
     private NotificationJpaRepository notificationJpaRepository;
+    private final JobOfferDAO jobOfferDAO;
 
     @Transactional
     public JobOffer create(JobOffer jobOffer, User user) {
@@ -148,6 +150,7 @@ public class JobOfferService {
                 .salaryMin(jobOffer.getSalaryMin())
                 .salaryMax(jobOffer.getSalaryMax())
                 .jobOfferDateTime(currentDateTime)
+                .active(true)
                 .user(userMapper.map(user))
                 .build();
 
@@ -157,48 +160,6 @@ public class JobOfferService {
 
     }
 
-
-//    public List<JobOffer> findAllJobOffersForPage() {
-//        return jobOfferRepository.findAll().stream()
-//                .map(jobOfferMapper::map)
-//                .toList();
-//    }
-
-
-
-//    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-////        BigDecimal keywordAsBigDecimal = new BigDecimal(keyword);
-//        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
-//        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
-//                .map(jobOfferMapper::map)
-//                .toList();
-//        return jobOffers;
-//    }
-
-    
-
-//    public Optional<JobOffer> findById2(Integer id) {
-//        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
-//    }
-
-//    public JobOffer findById(Integer id) {
-//        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)
-//                .orElseThrow(()-> new EntityNotFoundException("Not found JobOffer with ID: " + id));
-//        return jobOfferMapper.map(jobOfferEntity);
-//    }
-
-
-//    public List<JobOffer> findListByUser(User user) {
-//        UserEntity userEntity = userMapper.map(user);
-//     List<JobOfferEntity> jobOfferEntityList = jobOfferRepository.findListByUser(userEntity);
-//     List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
-//     return jobOfferList;
-//    }
-
-//    public Optional<JobOffer> findByUser(User loggedInUser) {
-//        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(loggedInUser));
-//        return jobOfferEntityOptional.map(jobOfferMapper::map);
-//    }
 
 
     @Transactional
@@ -267,7 +228,55 @@ public class JobOfferService {
                 .toList();
         return jobOffers;
     }
+
+    @Transactional
+    public JobOffer saveJobOffer(JobOffer jobOffer) {
+        return jobOfferDAO.saveJobOffer(jobOffer);
+    }
 }
 
 
 
+
+
+//    public List<JobOffer> findAllJobOffersForPage() {
+//        return jobOfferRepository.findAll().stream()
+//                .map(jobOfferMapper::map)
+//                .toList();
+//    }
+
+
+
+//    public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
+////        BigDecimal keywordAsBigDecimal = new BigDecimal(keyword);
+//        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+//        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
+//                .map(jobOfferMapper::map)
+//                .toList();
+//        return jobOffers;
+//    }
+
+
+
+//    public Optional<JobOffer> findById2(Integer id) {
+//        return jobOfferRepository.findById(id).map(jobOfferMapper::map);
+//    }
+
+//    public JobOffer findById(Integer id) {
+//        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(id)
+//                .orElseThrow(()-> new EntityNotFoundException("Not found JobOffer with ID: " + id));
+//        return jobOfferMapper.map(jobOfferEntity);
+//    }
+
+
+//    public List<JobOffer> findListByUser(User user) {
+//        UserEntity userEntity = userMapper.map(user);
+//     List<JobOfferEntity> jobOfferEntityList = jobOfferRepository.findListByUser(userEntity);
+//     List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
+//     return jobOfferList;
+//    }
+
+//    public Optional<JobOffer> findByUser(User loggedInUser) {
+//        Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferRepository.findByUser(userMapper.map(loggedInUser));
+//        return jobOfferEntityOptional.map(jobOfferMapper::map);
+//    }

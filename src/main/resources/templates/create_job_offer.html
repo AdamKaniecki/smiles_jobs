@@ -2,48 +2,64 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
   <title>Tworzenie Ogłoszenia</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Tworzenie Ogłoszenia</h1>
-<form th:action="@{/createJobOffer}" th:object="${jobOfferDTO}" method="post">
-<!--  <input type="hidden" name="username" value="${username}">-->
+<div class="container">
+  <h1>Tworzenie Ogłoszenia</h1>
+  <form th:action="@{/createJobOffer}" th:object="${jobOfferDTO}" method="post">
+    <!--  <input type="hidden" name="username" value="${username}">-->
 
-  <label for="companyName">Nazwa firmy</label>
-  <input type="text" name="companyName" id="companyName" required>
+    <div class="form-group">
+      <label for="companyName">Nazwa firmy</label>
+      <input type="text" class="form-control" name="companyName" id="companyName" required>
+    </div>
 
-  <label for="position">Stanowisko</label>
-  <input type="text" name="position" id="position" required>
+    <div class="form-group">
+      <label for="position">Stanowisko</label>
+      <input type="text" class="form-control" name="position" id="position" required>
+    </div>
 
-  <label for="responsibilities">Zakres obowiązków</label>
-  <input type="text" name="responsibilities" id="responsibilities" required>
+    <div class="form-group">
+      <label for="responsibilities">Zakres obowiązków</label>
+      <input type="text" class="form-control" name="responsibilities" id="responsibilities" required>
+    </div>
 
-  <label for="requiredTechnologies">Wymagane technologie</label>
-  <input type="text" name="requiredTechnologies" id="requiredTechnologies" required>
+    <div class="form-group">
+      <label for="requiredTechnologies">Wymagane technologie</label>
+      <input type="text" class="form-control" name="requiredTechnologies" id="requiredTechnologies" required>
+    </div>
 
-  <label for="benefits">Benefity</label>
-  <input type="text" name="benefits" id="benefits" required>
+    <div class="form-group">
+      <label for="benefits">Benefity</label>
+      <input type="text" class="form-control" name="benefits" id="benefits" required>
+    </div>
 
-  <label for="salaryMin">Minimum Salary</label>
-  <input type="text" name="salaryMin" id="salaryMin">
+    <div class="form-group">
+      <label for="salaryMin">Minimum Salary</label>
+      <input type="text" class="form-control" name="salaryMin" id="salaryMin">
+    </div>
 
+    <div class="form-group">
+      <label for="salaryMax">Maximum Salary:</label>
+      <input type="text" class="form-control" name="salaryMax" id="salaryMax">
+    </div>
 
-  <label for="salaryMax">Maximum Salary:</label>
-  <input type="text" name="salaryMax" id="salaryMax">
+    <input type="hidden" class="form-control" name="jobOfferDateTime" id="jobOfferDateTime" required>
 
+    <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
 
-  <input type="hidden" name="jobOfferDateTime" id="jobOfferDateTime" required>
+    <button type="submit" class="btn btn-primary">Utwórz Ofertę Pracy</button>
+  </form>
+</div>
 
-  <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
-
-  <button type="submit">Utwórz Ofertę Pracy</button>
-</form>
 <script>
-  // Pobierz pole dateTime
-  const jobOfferDateTime = document.getElementById("jobOfferDateTime");
+    // Pobierz pole dateTime
+    const jobOfferDateTime = document.getElementById("jobOfferDateTime");
 
-  // Ustaw wartość pola dateTime na aktualną datę i czas
-  const currentDateTime = new Date().toISOString().slice(0, 16);
-  jobOfferDateTimeField.value = currentDateTime;
+    // Ustaw wartość pola dateTime na aktualną datę i czas
+    const currentDateTime = new Date().toISOString().slice(0, 16);
+    jobOfferDateTime.value = currentDateTime;
 </script>
 </body>
 </html>

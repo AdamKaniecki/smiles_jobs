@@ -86,7 +86,7 @@ public class UserRestController {
 
             // Aktualizacja danych zalogowanego użytkownika na podstawie danych z userDTO
             loggedInUser.setUserName(userDTO.getUserName());
-            loggedInUser.setActive(userDTO.getActive());
+            loggedInUser.setVisible(userDTO.getVisible());
             loggedInUser.setEmail(userDTO.getEmail());
             // Dodaj inne pola do zaktualizowania
 

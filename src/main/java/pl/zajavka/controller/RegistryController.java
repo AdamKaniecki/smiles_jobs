@@ -36,21 +36,20 @@ public class RegistryController {
     @PostMapping("/candidateRegistry")
     public String createCandidate(
 //            @Valid
-            @ModelAttribute("username") UserDTO userDTO, Model model, HttpSession session) {
+            @ModelAttribute("username") UserDTO userDTO, Model model) {
         User user = userMapperDTO.map(userDTO);
 
         userService.createCandidate(user);
-        session.setAttribute("userSession", userDTO);
         model.addAttribute("user", userDTO);
 
         return "candidate_created_successfully";
     }
 
     @PostMapping("/companyRegistry")
-    public String createCompany(@ModelAttribute("username") UserDTO userDTO, Model model, HttpSession session) {
+    public String createCompany(@ModelAttribute("username") UserDTO userDTO, Model model) {
         User user = userMapperDTO.map(userDTO);
         userService.createCompany(user);
-        session.setAttribute("userSession", userDTO);
+
         model.addAttribute("user", userDTO);
 
         return "company_created_successfully";

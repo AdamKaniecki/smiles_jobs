@@ -30,7 +30,8 @@
         </thead>
         <tbody>
         <!-- Thymeleaf loop to display job offers -->
-        <tr th:each="jobOfferDTO : ${jobOfferDTOs}">
+        <tr th:each="jobOfferDTO : ${jobOfferDTOs}"
+            th:style="${jobOfferDTO.active == false ? 'color: gray;' : 'color: black;'}">
             <!-- Display job offer details -->
             <td th:text="${jobOfferDTO.id}"></td>
             <td th:text="${jobOfferDTO.companyName}"></td>
@@ -43,13 +44,14 @@
                 <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
             <td>
-                <form th:action="@{/sendCV}" method="post">
+                <form th:if="${jobOfferDTO.active}" th:action="@{/sendCV}" method="post">
                     <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">
                     <!--                <input type="hidden" name="cvId" th:if="${cvrDTO.id == null}">-->
                     <button type="submit" class="btn btn-primary">Send CV</button>
                 </form>
             </td>
             <td th:text="${#temporals.format(jobOfferDTO.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>
+<!--            <td th:style="${jobOfferDTO.active == false ? 'color: black;' : 'color: gray;'}"></td>-->
 
 
         </tr>

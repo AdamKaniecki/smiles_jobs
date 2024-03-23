@@ -140,7 +140,7 @@ public class NotificationService {
         notificationJpaRepository.save(notificationEntity);
 
         UserEntity userEntity = userMapper.map(adresat);
-        userEntity.setActive(false);
+        userEntity.setVisible(false);
         userService.save(loggedInUser);
         userService.save(adresat);
 

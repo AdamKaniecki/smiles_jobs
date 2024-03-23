@@ -9,6 +9,7 @@ CREATE TABLE job_offer_table(
     salary_min NUMERIC(7,2) ,
     salary_max NUMERIC(7,2) ,
     date_time_job_offer TIMESTAMP WITH TIME ZONE NOT NULL,
+    active BOOLEAN NOT NULL,
     user_id INT not null,
     PRIMARY KEY(job_offer_id),
     CONSTRAINT fk_job_offer_table_user_table

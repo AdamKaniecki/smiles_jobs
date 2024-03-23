@@ -12,4 +12,5 @@ public interface JobOfferDAO {
     JobOffer findById(Integer id);
     List<JobOffer> findListByUser(User user);
     Optional<JobOffer> findByUser(User loggedInUser);
+    JobOffer saveJobOffer(JobOffer jobOffer);
 }

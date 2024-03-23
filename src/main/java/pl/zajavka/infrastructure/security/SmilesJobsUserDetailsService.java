@@ -39,7 +39,7 @@
             return new User(
                     user.getUserName(),
                     user.getPassword(),
-                    user.getActive(),
+                    user.getVisible(),
 
                     true,
                     true,

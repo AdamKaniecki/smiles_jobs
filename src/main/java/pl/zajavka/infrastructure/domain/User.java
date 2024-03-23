@@ -16,7 +16,7 @@ public class User  {
     private String userName;
     private String email;
     private String password;
-    private Boolean active;
+    private Boolean visible;
     private Set<RoleEntity> roles;
     private Set<JobOffer> jobOffers;
     private CV cv;

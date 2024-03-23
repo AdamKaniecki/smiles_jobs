@@ -52,11 +52,11 @@ public class  UserService {
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(encodedPassword)
-                .active(true)
+                .visible(user.getVisible())
                 .roles(roles)
                 .build();
 
-        UserEntity savedUserEntity = userRepository.save(userEntity);
+            userRepository.save(userEntity);
         return userMapper.map(userEntity);
     }
 
@@ -74,7 +74,7 @@ public class  UserService {
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(encodedPassword)
-                .active(true)
+                .visible(true)
                 .roles(roles)
                 .build();
 
@@ -101,7 +101,7 @@ public class  UserService {
         userEntity.setUserName(user.getUserName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(user.getPassword());
-        userEntity.setActive(user.getActive());
+        userEntity.setVisible(user.getVisible());
 
         return userMapper.map(userRepository.save(userEntity));
     }

@@ -51,6 +51,9 @@ public class JobOfferEntity {
     @Column(name = "date_time_job_offer")
     private OffsetDateTime jobOfferDateTime;
 
+    @Column(name = "active")
+    private Boolean active;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")

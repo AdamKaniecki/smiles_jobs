@@ -20,5 +20,6 @@ public class JobOfferDTO {
     private BigDecimal salaryMin;
     private BigDecimal salaryMax;
     private OffsetDateTime jobOfferDateTime;
+    private Boolean active;
 
 }

@@ -18,7 +18,7 @@ public class UserDTO {
     @Email
     private String email;
     private String password;
-    private Boolean active;
+    private Boolean visible;
 //    private Set<RoleEntity> roles;
     private Set<Notification> notificationsSend;
     private Set<Notification> notificationsReceive;

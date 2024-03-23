@@ -43,4 +43,11 @@ public class JobOfferRepository implements JobOfferDAO {
         Optional<JobOfferEntity> jobOfferEntityOptional = jobOfferJpaRepository.findByUser(userMapper.map(loggedInUser));
         return jobOfferEntityOptional.map(jobOfferMapper::map);
     }
+
+    @Override
+    public JobOffer saveJobOffer(JobOffer jobOffer) {
+        JobOfferEntity toSave = jobOfferMapper.map(jobOffer);
+        JobOfferEntity saved = jobOfferJpaRepository.save(toSave);
+        return jobOfferMapper.map(saved);
+    }
 }

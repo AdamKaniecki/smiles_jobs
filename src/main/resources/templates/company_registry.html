@@ -2,24 +2,39 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Create User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h2>Create User</h2>
+<div class="container">
+    <h2 class="mt-5">Create User</h2>
 
-<form th:action="@{/companyRegistry}" th:object="${userDTO}" method="post">
-    <label for="userName">Username:</label>
-    <input type="text" th:field="*{userName}" id="userName" name="userName" required>
+    <form th:action="@{/companyRegistry}" th:object="${userDTO}" method="post">
+        <div class="form-group">
+            <label for="userName">Username:</label>
+            <input type="text" class="form-control" th:field="*{userName}" id="userName" name="userName" required>
+        </div>
 
-    <label for="email">Email:</label>
-    <input type="email" th:field="*{email}" id="email" name="email" required>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" th:field="*{email}" id="email" name="email" required>
+        </div>
 
-    <label for="password">Password:</label>
-    <input type="password" th:field="*{password}" id="password" name="password" required>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" th:field="*{password}" id="password" name="password" required>
+        </div>
 
-    <label for="active">Active:</label>
-    <input type="checkbox" th:field="*{active}" id="active" name="active">
+<!--        <div class="form-group form-check">-->
+<!--            <p>Choose your status:</p>-->
+<!--            <input type="radio" class="form-check-input" th:field="*{visible}" id="visible" name="visible" value="true">-->
+<!--            <label class="form-check-label" for="visible">Visible</label>-->
+<!--            <br>-->
+<!--            <input type="radio" class="form-check-input" th:field="*{visible}" id="invisible" name="visible" value="false">-->
+<!--            <label class="form-check-label" for="invisible">Invisible</label>-->
+<!--        </div>-->
 
-    <button type="submit">Create User</button>
-</form>
+        <button type="submit" class="btn btn-primary">Create User</button>
+    </form>
+</div>
 </body>
 </html>
