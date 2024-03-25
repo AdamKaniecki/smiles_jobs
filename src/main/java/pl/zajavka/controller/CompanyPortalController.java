@@ -61,6 +61,7 @@ public class CompanyPortalController {
     @GetMapping(COMPANY_PORTAL)
     public String getCompanyPortalPage(Authentication authentication, Model model,
      @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
+
     {
 
         String username = authentication.getName();
@@ -74,18 +75,44 @@ public class CompanyPortalController {
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
 
+
+
+        List<NotificationDTO> notificationDTOs = notificationRepository.findLatestByUser(loggedInUser).stream()
+                .map(notificationMapperDTO::map)
+                .limit(5)
+                .collect(Collectors.toList());
+
+        model.addAttribute("notificationDTOs",notificationDTOs);
+
+        return "company_portal";
+
+    }
+
+    @GetMapping("/companyNotifications")
+    public String getAllNotifications(Authentication authentication, Model model,
+                                      @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
         List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
-        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
 
+        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
         model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
         model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
         model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
 
-        return "company_portal";
-
+        return "company_notifications";
     }
+
+    //        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
+//
+//        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
+//        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
+//        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
+//        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
+
 
     @GetMapping("/search")
     public String searchAdvertisements(

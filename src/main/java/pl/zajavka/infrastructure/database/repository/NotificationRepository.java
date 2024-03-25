@@ -1,6 +1,9 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -32,6 +35,20 @@ private final UserMapper userMapper;
         List<NotificationEntity> notificationEntities = notificationJpaRepository.findByUser(userEntity);
         return notificationMapper.mapToList(notificationEntities);
     }
+    public List<Notification> findLatestByUser(User user) {
+        UserEntity userEntity = userMapper.map(user);
+        List<NotificationEntity> notificationEntities = notificationJpaRepository.findLatestByUser(userEntity);
+        return notificationMapper.mapToList(notificationEntities);
+    }
+
+
+//    public List<Notification> findLatestByUser(User user) {
+//        UserEntity userEntity = userMapper.map(user);
+//        // Ustawiamy sortowanie po dacie wstecz i limitujemy do 5 notyfikacji
+//        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "dateTime"));
+//        List<NotificationEntity> notificationEntities = notificationJpaRepository.findByUser(userEntity,pageable);
+//        return notificationMapper.mapToList(notificationEntities);
+//    }
 
 
 

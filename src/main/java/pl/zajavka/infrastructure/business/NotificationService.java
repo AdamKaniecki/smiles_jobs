@@ -3,12 +3,17 @@ package pl.zajavka.infrastructure.business;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zajavka.controller.dto.NotificationDTO;
+import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
+import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
@@ -22,6 +27,7 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 
@@ -36,6 +42,8 @@ public class NotificationService {
     private UserService userService;
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
+    private NotificationRepository notificationRepository;
+    private NotificationMapperDTO notificationMapperDTO;
 
 
 

@@ -246,31 +246,36 @@
 
 
 </table>
-
-<!-- Pagination for notifications -->
-<div th:if="${totalNotificationPages > 1}">
-    <nav aria-label="Notification Page Navigation">
-        <!-- Pagination controls for notifications -->
-        <ul class="pagination" id="notification-pagination">
-            <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">
-                <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">
-                <a class="page-link" th:href="@{'/candidate_portal?page=' + ${j}}" th:text="${j + 1}"></a>
-            </li>
-            <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">
-                <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+<div class="col-md-4">
+    <a th:href="@{/candidateNotifications}" class="btn btn-info" role="button">All notifications</a>
 </div>
+<!--&lt;!&ndash; Pagination for notifications &ndash;&gt;-->
+<!--<div th:if="${totalNotificationPages > 1}">-->
+<!--    <nav aria-label="Notification Page Navigation">-->
+<!--        &lt;!&ndash; Pagination controls for notifications &ndash;&gt;-->
+<!--        <ul class="pagination" id="notification-pagination">-->
+<!--            <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">-->
+<!--                <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">-->
+<!--                    <span aria-hidden="true">&laquo;</span>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--            <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">-->
+<!--                <a class="page-link" th:href="@{'/candidate_portal?page=' + ${j}}" th:text="${j + 1}"></a>-->
+<!--            </li>-->
+<!--            <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">-->
+<!--                <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}" aria-label="Next">-->
+<!--                    <span aria-hidden="true">&raquo;</span>-->
+<!--                </a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </nav>-->
+<!--</div>-->
 
 <br>
 <br>
 <br>
+<form th:action="@{/logout}" method="post">
+    <button type="submit" class="btn btn-danger">Wyloguj się</button>
+</form>
 </body>
 </html>

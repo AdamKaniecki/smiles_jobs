@@ -1,0 +1,112 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous">
+  <title>Smiles Jobs</title>
+</head>
+<body>
+
+<h2 class="mt-4">Notifications</h2>
+<table class="table" id="sortable-table">
+  <thead class="table-dark">
+  <tr>
+    <th>ID</th>
+    <th>Dotyczy Oferty</th>
+    <th>Message</th>
+    <th>CV</th>
+    <th>ARRANGE A JOB INTERVIEW</th>
+    <th>STATUS</th>
+    <th>Decision</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="notificationDTO : ${notificationDTOs}">
+    <td th:text="${notificationDTO.id}"></td>
+    <td th:text="${notificationDTO.jobOffer.id}"></td>
+    <td th:text="${notificationDTO.companyMessage}"></td>
+    <td th:if="${notificationDTO.cv != null}">
+      <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">Zobacz
+        szczegóły</a>
+
+    </td>
+    <td th:if="${notificationDTO.cv == null}">-</td>
+    <td>
+      <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
+      <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
+        <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null}">
+          <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+          <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+          <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+          <div class="form-row">
+            <div class="col-md-8">
+              <label for="proposedDateTime">Proposed Date and Time:</label>
+              <input type="datetime-local"
+                     id="proposedDateTime"
+                     name="proposedDateTime"
+                     th:value="${proposedDateTime != null} ? ${#temporals.format(proposedDateTime, 'yyyy-MM-ddTHH:mm')} : ''"
+                     th:onload="this.dispatchEvent(new Event('input'))">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success">ARRANGE</button>
+        </form>
+      </div>
+    </td>
+    <td th:if="${notificationDTO.status != null}" th:text="${notificationDTO.status.getDisplayName()}"></td>
+    <td>
+      <div class="mt-2" th:if="${notificationDTO.dateTime != null}">
+        <div>
+          <div class="mt-2" th:if="${notificationDTO.status.getDisplayName() == 'Waiting for Interview'}">
+            <form th:action="@{/decline}" method="post" class="d-inline"
+                  th:if="${notificationDTO.cv != null}">
+              <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+              <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+              <button type="submit" class="btn btn-danger">Decline</button>
+            </form>
+            <form th:action="@{/hired}" method="post" class="d-inline"
+                  th:if="${notificationDTO.cv != null}">
+              <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
+              <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
+              <button type="submit" class="btn btn-success">Hired</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<!-- Pagination for notifications -->
+<div th:if="${totalNotificationPages > 1}">
+  <nav aria-label="Notification Page Navigation">
+    <!-- Pagination controls for notifications -->
+    <ul class="pagination" id="notification-pagination">
+      <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">
+        <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/companyNotifications?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">
+        <a class="page-link" th:href="@{'/companyNotifications?page=' + ${j}}" th:text="${j + 1}"></a>
+      </li>
+      <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">
+        <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/companyNotifications?page=' + (currentNotificationPage + 1)}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<br>
+<br>
+<br>
+
+<div class="col-md-4">
+  <a th:href="@{/}" class="btn btn-info" role="button">Go back to the main page</a>
+</div>
+</body>
+
+</html>

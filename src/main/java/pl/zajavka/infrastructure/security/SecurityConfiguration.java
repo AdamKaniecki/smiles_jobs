@@ -46,7 +46,7 @@ public class SecurityConfiguration {
                                                          "/company_registry","/companyRegistry/**" )
                 .permitAll()
 
-                .requestMatchers("/sendCV/**","/CvForm/**","/createCV/**", "/updateCvForm/**","/updateCVDone/**",
+                .requestMatchers("/candidateNotifications/**","/sendCV/**","/CvForm/**","/createCV/**", "/updateCvForm/**","/updateCVDone/**",
                          "/deleteCV/**","/ShowMyCV/**","/changeMeetingDate/**","/acceptMeetingDate/**"
                 ).hasAuthority("ROLE_CANDIDATE")
 
@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                 .requestMatchers("cv_already_sent","/updateAddressDone/**","/jobOffer/{jobOfferId}", "/businessCard/{businessCardId}"
                        )
                 .permitAll()
-                .requestMatchers("/company_portal/**").hasAuthority("ROLE_COMPANY")
+                .requestMatchers("/company_portal/**","/companyNotifications/**").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**","/api/updateJobOffer/**","/api/updateBusinessCard").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/showCV/**","/cv/**",
                         "/JobOfferForm/**","/createJobOffer/**","/showMyJobOffers/**", "/updateJobOfferForm/**",

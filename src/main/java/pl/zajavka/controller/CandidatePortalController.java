@@ -60,7 +60,7 @@ public class CandidatePortalController {
             Authentication authentication,
             Model model,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-//            @PageableDefault(size = 2, sort = "id", direction = Sort.Direction.DESC) Pageable pageable2
+//
     ) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
@@ -74,6 +74,23 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
 
+        List<NotificationDTO> notificationDTOs = notificationRepository.findLatestByUser(loggedInUser).stream()
+                .map(notificationMapperDTO::map)
+                .limit(5)
+                .collect(Collectors.toList());
+
+        model.addAttribute("notificationDTOs",notificationDTOs);
+
+
+        return "candidate_portal";
+    }
+
+    @GetMapping("/candidateNotifications")
+    public String getAllNotifications(Authentication authentication, Model model,
+                                      @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
         List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
                 .map(notificationMapperDTO::map).toList();
 
@@ -83,9 +100,16 @@ public class CandidatePortalController {
         model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
         model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
 
-        return "candidate_portal";
+        return "candidate_notifications";
     }
-
+//    List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
+////                .map(notificationMapperDTO::map).toList();
+////
+////        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
+////        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
+////        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
+////        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
+////        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
 
 
     @GetMapping("/searchJobOffers")
