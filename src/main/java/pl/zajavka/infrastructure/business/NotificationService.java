@@ -13,6 +13,7 @@ import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
+import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
@@ -42,6 +43,7 @@ public class NotificationService {
     private UserService userService;
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
+    private JobOfferRepository jobOfferRepository;
     private NotificationRepository notificationRepository;
     private NotificationMapperDTO notificationMapperDTO;
 
@@ -72,54 +74,62 @@ public class NotificationService {
         notificationJpaRepository.save(notificationEntity);
     }
 
-//    public Notification findById(Integer notificationId) {
-//        NotificationEntity notificationEntity = notificationJpaRepository.findById(notificationId)
-//                .orElse(null);
-//        return notificationMapper.map(notificationEntity);
-//
-//    }
 
     @Transactional
     public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
-        NotificationEntity notificationEntity = notificationMapper.map(notification);
-
-        notificationEntity.setStatus(Status.MEETING_SCHEDULING);
-        notificationEntity.setDateTime(proposedDateTime);
-        notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
-        notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
-        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-        notificationEntity.setReceiverUser(userMapper.map(adresat));
-
-        notificationJpaRepository.save(notificationEntity);
-
-        userService.save(loggedInUser);
-        userService.save(adresat);
+        Status currentStatus = notification.getStatus();
+        if (currentStatus == Status.UNDER_REVIEW || currentStatus == Status.MEETING_SCHEDULING) {
+            NotificationEntity notificationEntity = notificationMapper.map(notification);
+            notificationEntity.setStatus(Status.MEETING_SCHEDULING);
+            notificationEntity.setDateTime(proposedDateTime);
+            notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
+            notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
+            notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationJpaRepository.save(notificationEntity);
+            userService.save(loggedInUser);
+            userService.save(adresat);
+        } else {
+            throw new IllegalStateException("Cannot arrange interview when the status is not Under Review or Meeting Scheduling.");
+        }
+    }
+    @Transactional
+    public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
+        if (notification.getStatus() == Status.MEETING_SCHEDULING) {
+            // Możesz dokonać zmiany daty spotkania tylko jeśli status jest "Meeting Scheduling"
+            NotificationEntity notificationEntity = notificationMapper.map(notification);
+            notificationEntity.setDateTime(null);
+            notificationEntity.setCompanyMessage("proszę o zmianę terminu");
+            notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
+            notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationJpaRepository.save(notificationEntity);
+            userService.save(loggedInUser);
+            userService.save(adresat);
+        } else {
+            // W przeciwnym razie zablokuj zmianę daty
+            throw new IllegalStateException("Cannot change meeting date when the status is not Meeting Scheduling.");
+        }
     }
 
     @Transactional
-    public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
-        NotificationEntity notificationEntity = notificationMapper.map(notification);
-        notificationEntity.setDateTime(null);
-        notificationEntity.setCompanyMessage("proszę o zmianę terminu");
-        notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
-        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-        notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationJpaRepository.save(notificationEntity);
-        userService.save(loggedInUser);
-        userService.save(adresat);
+    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat) {
+        Status currentStatus = notification.getStatus();
+        if (currentStatus == Status.MEETING_SCHEDULING) {
+            NotificationEntity notificationEntity = notificationMapper.map(notification);
+            notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
+            notificationEntity.setCompanyMessage("zaakceptowano termin");
+            notificationEntity.setCandidateMessage("wysłano akceptację terminu");
+            notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationJpaRepository.save(notificationEntity);
+            userService.save(loggedInUser);
+            userService.save(adresat);
+        } else {
+            throw new IllegalStateException("Cannot accept meeting date when the status is not Meeting Scheduling.");
+        }
     }
 
-    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat) {
-        NotificationEntity notificationEntity = notificationMapper.map(notification);
-        notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
-        notificationEntity.setCompanyMessage("zaakceptowano termin");
-        notificationEntity.setCandidateMessage("wysłano akceptację terminu");
-        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-        notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationJpaRepository.save(notificationEntity);
-        userService.save(loggedInUser);
-        userService.save(adresat);
-    }
 
     public boolean isNotificationDateTimeAfterNow(Notification notification) {
         LocalDateTime notificationDateTime = notification.getDateTime();
@@ -138,20 +148,39 @@ public class NotificationService {
         userService.save(adresat);
     }
 
+    @Transactional
     public void hiredCandidate(Notification notification, User loggedInUser, User adresat) {
-        NotificationEntity notificationEntity = notificationMapper.map(notification);
-        notificationEntity.setStatus(HIRED);
-        notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
-        notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
-        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-        notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationJpaRepository.save(notificationEntity);
+        Status currentStatus = notification.getStatus();
+        if (currentStatus != Status.REJECT) {
+            NotificationEntity notificationEntity = notificationMapper.map(notification);
+            notificationEntity.setStatus(HIRED);
+            notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
+            notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
+            notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+            notificationEntity.setReceiverUser(userMapper.map(adresat));
+//            poprawić to notification Repository
+            notificationJpaRepository.save(notificationEntity);
 
-        UserEntity userEntity = userMapper.map(adresat);
-        userEntity.setVisible(false);
-        userService.save(loggedInUser);
-        userService.save(adresat);
+            UserEntity userEntity = userMapper.map(adresat);
+            userEntity.setVisible(false);
+            userService.save(loggedInUser);
+            userService.save(adresat);
 
+            JobOffer jobOffer = notification.getJobOffer();
+
+            // Zwiększ liczbę zatrudnionych pracowników
+            jobOffer.setHiredCount(jobOffer.getHiredCount() + 1);
+
+            // Sprawdź, czy liczba zatrudnionych pracowników osiągnęła docelową wartość
+            if (jobOffer.isFullyStaffed()) {
+                // Jeśli tak, ustaw pole active na false
+                jobOffer.setActive(false);
+            }
+
+            jobOfferRepository.saveJobOffer(jobOffer);
+        } else {
+            throw new IllegalStateException("Cannot hire candidate when the status is REJECT.");
+        }
 
     }
 
@@ -160,6 +189,8 @@ public class NotificationService {
     }
 
     public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
+
+
         UserEntity userEntity = userMapper.map(loggedInUser);
         JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
         return notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
@@ -169,6 +200,11 @@ public class NotificationService {
     public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
         Page<NotificationEntity> notificationEntities = notificationJpaRepository.findAll(pageable);
         return notificationEntities.map(notificationMapper::map);
+    }
+
+    @Transactional
+    public boolean canChangeMeetingDate(Notification notification) {
+        return notification.getStatus() != Status.WAITING_FOR_INTERVIEW;
     }
 
 

@@ -34,6 +34,7 @@ import pl.zajavka.infrastructure.domain.User;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -80,7 +81,7 @@ public class CandidatePortalController {
                 .collect(Collectors.toList());
 
         model.addAttribute("notificationDTOs",notificationDTOs);
-
+        model.addAttribute("username", username);
 
         return "candidate_portal";
     }
@@ -117,6 +118,7 @@ public class CandidatePortalController {
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
+
         List<JobOffer> searchResults;
         if ("salaryMin".equals(category)) {
             try {
@@ -148,18 +150,14 @@ public class CandidatePortalController {
     @PostMapping("/sendCV")
     @Transactional
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Authentication authentication) {
-        try {
-            String username = authentication.getName();
-            User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
-            CV cv = cvRepository.findByUser2(loggedInUser);
-            User adresat = jobOffer.getUser();
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+        User adresat = jobOffer.getUser();
 
-            // Sprawdź, czy CV użytkownika istnieje
-            if (cv == null) {
-                // Jeśli CV nie istnieje, zwróć widok cv_not_found
-                return "cv_not_found";
-            }
+        Optional<CV> userCVOptional = cvRepository.findByUser(loggedInUser);
+        if (userCVOptional.isPresent()) {
+            CV cv = userCVOptional.get();
 
             if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
                 return "cv_already_sent";
@@ -170,15 +168,17 @@ public class CandidatePortalController {
 
                 return "cv_send_successfully";
             }
-        } catch (EntityNotFoundException e) {
-            // Obsłuż wyjątek EntityNotFoundException i zwróć widok cv_not_found
+        } else {
             return "cv_not_found";
         }
     }
 
 
 
-        @PostMapping("/changeMeetingDate")
+
+
+
+    @PostMapping("/changeMeetingDate")
         public String changeMeetingDate (
                 @RequestParam("notificationId") Integer notificationId,
                 @RequestParam("jobOfferId") Integer jobOfferId,

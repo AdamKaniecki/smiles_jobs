@@ -19,8 +19,6 @@ public class CV {
     private String surname;
     private String dateOfBirth;
     private String sex;
-    private BigDecimal minSalary;
-    private BigDecimal maxSalary;
     private String maritalStatus;
     private String phoneNumber;
     private String contactEmail;

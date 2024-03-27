@@ -10,21 +10,31 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-4">Welcome to Smiles Jobs</h1>
 
+
+    <!-- Sekcja logowania i wylogowywania -->
+    <div class="d-flex justify-content-end align-items-center mb-3">
+<!--        <span class="username" style="color: green;">Logged in : <span th:text="${username}"></span></span>-->
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    </div>
+    <h1 class="mt-4">Welcome to Smiles Jobs</h1>
+    <!-- Sekcja ofert pracy -->
     <h2 class="mt-4">Job Offers</h2>
     <table class="table" id="sortable-table-job-offers">
         <thead class="table-dark">
         <tr>
-            <th>ID</th>
+            <th>Number</th>
             <th>Company Name</th>
             <th>Position</th>
+            <th>Experience</th>
+            <th>Job Location</th>
+            <th>Type Of Work</th>
             <th>Min Salary</th>
             <th>Max Salary</th>
-            <th>Required Technologies</th>
             <th>Details</th>
             <th>Send CV</th>
-            <!-- Wyświetl połączoną wartość Salary Range -->
             <th>Date and Time</th>
         </tr>
         </thead>
@@ -36,24 +46,21 @@
             <td th:text="${jobOfferDTO.id}"></td>
             <td th:text="${jobOfferDTO.companyName}"></td>
             <td th:text="${jobOfferDTO.position}"></td>
+            <td th:text="${jobOfferDTO.experience}"></td>
+            <td th:text="${jobOfferDTO.jobLocation}"></td>
+            <td th:text="${jobOfferDTO.typeOfWork}"></td>
             <td th:text="${jobOfferDTO.salaryMin}"></td>
             <td th:text="${jobOfferDTO.salaryMax}"></td>
-            <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
-
             <td>
                 <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
             <td>
                 <form th:if="${jobOfferDTO.active}" th:action="@{/sendCV}" method="post">
                     <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">
-                    <!--                <input type="hidden" name="cvId" th:if="${cvrDTO.id == null}">-->
                     <button type="submit" class="btn btn-primary">Send CV</button>
                 </form>
             </td>
             <td th:text="${#temporals.format(jobOfferDTO.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>
-<!--            <td th:style="${jobOfferDTO.active == false ? 'color: black;' : 'color: gray;'}"></td>-->
-
-
         </tr>
         </tbody>
     </table>
@@ -80,30 +87,6 @@
         </nav>
     </div>
 
-
-<!--        <form action="/searchJobOffers" method="get" class="mt-4">-->
-<!--            <div class="form-row">-->
-<!--                <div class="col-md-4">-->
-<!--                    <label for="category">Search by category:</label>-->
-<!--                    <select id="category" name="category" class="form-control">-->
-<!--                        <option value="companyName">Company Name</option>-->
-<!--                        <option value="position">Position</option>-->
-<!--                        <option value="responsibilities">Responsibilities</option>-->
-<!--                        <option value="requiredTechnologies">Required Technologies</option>-->
-<!--                        <option value="benefits">Benefits</option>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--                <div class="col-md-4">-->
-<!--                    <label for="keyword">Search by keywords:</label>-->
-<!--                    <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
-<!--                </div>-->
-<!--                <div class="col">-->
-<!--                    <button type="submit" class="btn btn-primary">Search</button>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </form>-->
-
-
     <form action="/searchJobOffers" method="get" class="mt-4">
         <!-- Search form elements -->
         <div class="form-row">
@@ -112,6 +95,10 @@
                 <select id="category" name="category" class="form-control">
                     <option value="companyName">Company Name</option>
                     <option value="position">Position</option>
+                    <option value="experience">Experience</option>
+                    <option value="jobLocation">Job Location</option>
+                    <option value="typeOfWork">Type Of Work</option>
+                    <option value="requiredLanguage">Required Language</option>
                     <option value="salaryMin">Min Salary</option>
                     <option value="requiredTechnologies">Required Technologies</option>
                     <option value="benefits">Benefits</option>
@@ -124,80 +111,32 @@
 
             <div class="col">
                 <button type="submit" class="btn btn-primary">Search</button>
+                <span class="text-muted ml-2"> (Only active job offers)</span>
             </div>
         </div>
     </form>
 
-    <!--    <form method="get" class="mt-4">-->
-<!--        &lt;!&ndash; Search form elements &ndash;&gt;-->
-<!--        <div class="form-row">-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="category">Search by category:</label>-->
-<!--                <select id="category" name="category" class="form-control">-->
-<!--                    <option value="companyName">Company Name</option>-->
-<!--                    <option value="position">Position</option>-->
-<!--                    <option value="salaryMin">Min Salary</option>-->
-<!--                    <option value="requiredTechnologies">Required Technologies</option>-->
-<!--                    <option value="benefits">Benefits</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="keyword">Search by keywords:</label>-->
-<!--                <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--                <button type="submit" class="btn btn-primary">Search</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </form>-->
-
-<!--    <form action="/searchJobOffers" method="get" class="mt-4">-->
-<!--        &lt;!&ndash; Search form elements &ndash;&gt;-->
-<!--        <div class="form-row">-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="category">Search by category:</label>-->
-<!--                <select id="category" name="category" class="form-control">-->
-<!--                    <option value="companyName">Company Name</option>-->
-<!--                    <option value="position">Position</option>-->
-<!--                    <option value="salaryMin">Min Salary</option>-->
-<!--                    <option value="requiredTechnologies">Required Technologies</option>-->
-<!--                    <option value="benefits">Benefits</option>-->
-<!--                </select>-->
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="keyword">Search by keywords:</label>-->
-<!--                <input type="text" id="keyword" name="keyword" class="form-control" placeholder="Enter a keyword">-->
-
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
-<!--                <label for="salary">Search by salary:</label>-->
-<!--                <input type="number" id="salary" name="salary" class="form-control" placeholder="Enter a salary">-->
-<!--            </div>-->
-<!--            <div class="col">-->
-<!--                <button type="submit" class="btn btn-primary">Search</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </form>-->
-
 
     <!-- Links to create and view CV -->
-    <h2 class="mt-4">Create Your CV</h2>
+    <h2 class="mt-4">CV Centre</h2>
     <div class="d-flex">
         <div class="col-md-4">
             <a th:href="@{/CvForm}" class="btn btn-info" role="button">Create CV</a>
+
         </div>
+    </div>
         <div class="col-md-4">
+            <br>
             <a th:href="@{/ShowMyCV}" class="btn btn-info" role="button">Show my CV</a>
         </div>
     </div>
-</div>
 
 <br>
 <br>
 <br>
 
-<h2 class="mt-4">Notifications</h2>
-<table class="table" id="sortable-table">
+   <h2 class="mt-4">Notifications</h2>
+    <table class="table" id="sortable-table">
     <thead class="table-dark">
     <tr>
         <th>ID</th>
@@ -249,33 +188,7 @@
 <div class="col-md-4">
     <a th:href="@{/candidateNotifications}" class="btn btn-info" role="button">All notifications</a>
 </div>
-<!--&lt;!&ndash; Pagination for notifications &ndash;&gt;-->
-<!--<div th:if="${totalNotificationPages > 1}">-->
-<!--    <nav aria-label="Notification Page Navigation">-->
-<!--        &lt;!&ndash; Pagination controls for notifications &ndash;&gt;-->
-<!--        <ul class="pagination" id="notification-pagination">-->
-<!--            <li th:class="${currentNotificationPage == 0 ? 'page-item disabled' : 'page-item'}">-->
-<!--                <a class="page-link" th:href="@{${currentNotificationPage == 0 ? '#': '/candidate_portal?page=' + (currentNotificationPage - 1)}}" aria-label="Previous">-->
-<!--                    <span aria-hidden="true">&laquo;</span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--            <li th:each="j : ${#numbers.sequence(0, totalNotificationPages - 1)}" th:class="${j == currentNotificationPage ? 'page-item active' : 'page-item'}">-->
-<!--                <a class="page-link" th:href="@{'/candidate_portal?page=' + ${j}}" th:text="${j + 1}"></a>-->
-<!--            </li>-->
-<!--            <li th:class="${currentNotificationPage == totalNotificationPages - 1 ? 'page-item disabled' : 'page-item'}">-->
-<!--                <a class="page-link" th:href="@{${currentNotificationPage == totalNotificationPages - 1 ? '#': '/candidate_portal?page=' + (currentNotificationPage + 1)}}" aria-label="Next">-->
-<!--                    <span aria-hidden="true">&raquo;</span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</div>-->
 
-<br>
-<br>
-<br>
-<form th:action="@{/logout}" method="post">
-    <button type="submit" class="btn btn-danger">Wyloguj się</button>
-</form>
+
 </body>
 </html>

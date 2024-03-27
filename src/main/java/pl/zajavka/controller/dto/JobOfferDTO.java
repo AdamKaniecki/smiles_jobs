@@ -16,10 +16,20 @@ public class JobOfferDTO {
     private String position;
     private String responsibilities;
     private String requiredTechnologies;
-    private String benefits;
+    private String experience;
+    private String jobLocation;
+    private String typeOfContract;
+    private String typeOfWork;
     private BigDecimal salaryMin;
     private BigDecimal salaryMax;
+    private String requiredLanguage;
+    private String requiredLanguageLevel;
+    private String benefits;
+    private String jobDescription;
     private OffsetDateTime jobOfferDateTime;
     private Boolean active;
+    private Integer neededStaff;
+    private Integer hiredCount;
+
 
 }

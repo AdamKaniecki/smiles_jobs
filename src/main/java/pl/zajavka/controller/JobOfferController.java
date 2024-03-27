@@ -141,6 +141,15 @@ public class JobOfferController {
         jobOffer.setPosition(updateJobOfferDTO.getPosition());
         jobOffer.setResponsibilities(updateJobOfferDTO.getResponsibilities());
         jobOffer.setRequiredTechnologies(updateJobOfferDTO.getRequiredTechnologies());
+        jobOffer.setExperience(updateJobOfferDTO.getExperience());
+        jobOffer.setSalaryMin(updateJobOfferDTO.getSalaryMin());
+        jobOffer.setSalaryMax(updateJobOfferDTO.getSalaryMax());
+        jobOffer.setJobLocation(updateJobOfferDTO.getJobLocation());
+        jobOffer.setTypeOfContract(updateJobOfferDTO.getTypeOfContract());
+        jobOffer.setTypeOfWork(updateJobOfferDTO.getTypeOfWork());
+        jobOffer.setJobDescription(updateJobOfferDTO.getJobDescription());
+        jobOffer.setRequiredLanguage(updateJobOfferDTO.getRequiredLanguage());
+        jobOffer.setRequiredLanguageLevel(updateJobOfferDTO.getRequiredLanguageLevel());
         jobOffer.setBenefits(updateJobOfferDTO.getBenefits());
 
         jobOfferService.updateJobOffer(jobOffer);

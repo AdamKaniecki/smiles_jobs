@@ -44,6 +44,7 @@ public class CvRepository implements CvDAO {
     }
 
     public CV findByUser2(User user){
+
         CvEntity cvEntity = cvJpaRepository.findByUser(userMapper.map(user))
                 .orElseThrow(()-> new EntityNotFoundException("Not found CVEntity for user: " + user.getUserName()));
         return cvMapper.map(cvEntity);

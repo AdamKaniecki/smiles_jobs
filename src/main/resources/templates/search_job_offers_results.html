@@ -10,28 +10,45 @@
 <div class="container">
   <h1 class="mt-4">Search Results</h1>
 
-  <table class="table table-striped">
+  <table class="table" id="sortable-table-job-offers">
     <thead class="table-dark">
     <tr>
-      <th>companyName</th>
-      <th>position</th>
-<!--      <th>Salary min</th>-->
-      <th>benefits</th>
-      <th>Date Time</th>
-      <th>JobOffer</th>
+      <th>Number</th>
+      <th>Company Name</th>
+      <th>Position</th>
+      <th>Experience</th>
+      <th>Job Location</th>
+      <th>Type Of Work</th>
+      <th>Min Salary</th>
+      <th>Max Salary</th>
+      <th>Details</th>
+      <th>Send CV</th>
+      <th>Date and Time</th>
     </tr>
     </thead>
     <tbody>
-    <!-- Poniżej dodaj pętlę Thymeleaf, aby wyświetlać wyniki wyszukiwania -->
-    <tr th:each="jobOfferDTO : ${searchResultsDTO}">
+    <!-- Thymeleaf loop to display job offers -->
+    <tr th:each="jobOfferDTO : ${searchResultsDTO}"
+        th:style="${jobOfferDTO.active == false ? 'color: gray;' : 'color: black;'}">
+      <!-- Display job offer details -->
+      <td th:text="${jobOfferDTO.id}"></td>
       <td th:text="${jobOfferDTO.companyName}"></td>
       <td th:text="${jobOfferDTO.position}"></td>
-<!--      <td th:text="${jobOfferDTO.salaryMin}"></td>-->
-      <td th:text="${jobOfferDTO.benefits}"></td>
-      <td th:text="${#temporals.format(jobOfferDTO.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>
+      <td th:text="${jobOfferDTO.experience}"></td>
+      <td th:text="${jobOfferDTO.jobLocation}"></td>
+      <td th:text="${jobOfferDTO.typeOfWork}"></td>
+      <td th:text="${jobOfferDTO.salaryMin}"></td>
+      <td th:text="${jobOfferDTO.salaryMax}"></td>
       <td>
         <a th:href="@{/jobOffer/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View Details</a>
       </td>
+      <td>
+        <form th:if="${jobOfferDTO.active}" th:action="@{/sendCV}" method="post">
+          <input type="hidden" name="jobOfferId" th:value="${jobOfferDTO.id}">
+          <button type="submit" class="btn btn-primary">Send CV</button>
+        </form>
+      </td>
+      <td th:text="${#temporals.format(jobOfferDTO.jobOfferDateTime, 'yyyy-MM-dd HH:mm')}"></td>
     </tr>
     </tbody>
   </table>

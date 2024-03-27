@@ -136,20 +136,27 @@ public class JobOfferService {
 
     @Transactional
     public JobOffer create(JobOffer jobOffer, User user) {
-        System.out.println("twórz psie");
-        log.info("Received job offer: {}", jobOffer);
+
         OffsetDateTime currentDateTime = OffsetDateTime.now();
 
         JobOfferEntity newJobOfferEntity = JobOfferEntity.builder()
-//                .id(jobOffer.getId())
                 .companyName(jobOffer.getCompanyName())
                 .position(jobOffer.getPosition())
                 .responsibilities(jobOffer.getResponsibilities())
                 .requiredTechnologies(jobOffer.getRequiredTechnologies())
-                .benefits(jobOffer.getBenefits())
+                .experience(jobOffer.getExperience())
+                .jobLocation(jobOffer.getJobLocation())
+                .typeOfContract(jobOffer.getTypeOfContract())
+                .typeOfWork(jobOffer.getTypeOfWork())
                 .salaryMin(jobOffer.getSalaryMin())
                 .salaryMax(jobOffer.getSalaryMax())
+                .requiredLanguage(jobOffer.getRequiredLanguage())
+                .requiredLanguageLevel(jobOffer.getRequiredLanguageLevel())
+                .benefits(jobOffer.getBenefits())
+                .jobDescription(jobOffer.getJobDescription())
                 .jobOfferDateTime(currentDateTime)
+                .neededStaff(jobOffer.getNeededStaff())
+                .hiredCount(0)
                 .active(true)
                 .user(userMapper.map(user))
                 .build();
@@ -175,6 +182,14 @@ public class JobOfferService {
             jobOfferEntity.setResponsibilities(jobOffer.getResponsibilities());
             jobOfferEntity.setRequiredTechnologies(jobOffer.getRequiredTechnologies());
             jobOfferEntity.setBenefits(jobOffer.getBenefits());
+            jobOfferEntity.setExperience(jobOffer.getExperience());
+            jobOfferEntity.setSalaryMin(jobOffer.getSalaryMin());
+            jobOfferEntity.setSalaryMax(jobOffer.getSalaryMax());
+            jobOfferEntity.setJobLocation(jobOffer.getJobLocation());
+            jobOfferEntity.setTypeOfContract(jobOffer.getTypeOfContract());
+            jobOfferEntity.setTypeOfWork(jobOffer.getTypeOfWork());
+            jobOfferEntity.setJobDescription(jobOffer.getJobDescription());
+            jobOfferEntity.setRequiredLanguage(jobOffer.getRequiredLanguage());
 
 
             // Zapisz zaktualizowany obiekt CV w bazie danych
@@ -213,7 +228,7 @@ public class JobOfferService {
 
 
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-        List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findJobOffersByKeywordAndCategory(keyword, category);
+        List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findActiveJobOffersByKeywordAndCategory(keyword, category);
         List<JobOffer> jobOffers = searchJobOfferEntities.stream()
                 .map(jobOfferMapper::map)
                 .toList();
@@ -222,7 +237,7 @@ public class JobOfferService {
 
 
     public List<JobOffer> searchJobOffersBySalary(String category, BigDecimal salary) {
-        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findJobOffersBySalaryAndCategory(category, salary);
+        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findActiveJobOffersBySalaryAndCategory(category, salary);
         List<JobOffer> jobOffers = searchJobOfferEntities.stream()
                 .map(jobOfferMapper::map)
                 .toList();

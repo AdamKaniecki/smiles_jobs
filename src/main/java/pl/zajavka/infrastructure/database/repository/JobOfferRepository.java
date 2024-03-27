@@ -50,4 +50,6 @@ public class JobOfferRepository implements JobOfferDAO {
         JobOfferEntity saved = jobOfferJpaRepository.save(toSave);
         return jobOfferMapper.map(saved);
     }
+
+
 }

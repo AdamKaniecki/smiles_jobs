@@ -99,17 +99,6 @@ public class CvController {
 
             CV cv = cvMapperDTO.map(cvDTO);
             Set<ProgrammingLanguage> programmingLanguages = enumService.convertToProgrammingLanguages(programmingLanguagesNames);
-
-//            // Konwersja pliku MultipartFile na tablicę bajtów byte[]
-//            byte[] photoData;
-//            try {
-//                photoData = photo.getBytes();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return "error";
-//            }
-//            cv.setPhoto(photoData);
-
             cv.setProgrammingLanguages(programmingLanguages);
 
             cvService.createCV(cv, loggedInUser);
@@ -215,7 +204,7 @@ public class CvController {
 
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
 
-            return "cv_created_successfully";
+            return "cv_update successfully";
         } else {
 
             return "cv_not_found";
@@ -255,7 +244,7 @@ public class CvController {
 
             cvService.deleteCVAndSetNullInNotifications(cvToDelete, address);
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
-            return "cv_created_successfully";
+            return "cv_deleted_successfully";
         }
 
         return "home";

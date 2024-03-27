@@ -77,7 +77,7 @@ public class CommunicationRestController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification or user not found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while arranging interview");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while arranging interview");
         }
     }
 
@@ -96,7 +96,7 @@ public class CommunicationRestController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification or job offer not found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while changing meeting date");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while changing meeting date");
         }
     }
 
@@ -115,7 +115,7 @@ public class CommunicationRestController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification or job offer not found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while accepting meeting date");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while accepting meeting date");
         }
     }
 
@@ -136,7 +136,7 @@ public class CommunicationRestController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification or user not found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while declining notification");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while declining notification");
         }
     }
 
@@ -157,7 +157,7 @@ public class CommunicationRestController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notification or user not found");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while hiring candidate");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("An error occurred while hiring candidate");
         }
 
 

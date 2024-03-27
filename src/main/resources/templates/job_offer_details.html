@@ -13,25 +13,58 @@
     <div class="card mt-4">
         <div class="card-body">
             <h5 class="card-title" th:text="${jobOfferDTO.companyName}"></h5>
-            <h6 class="card-subtitle mb-2 text-muted" th:text="${jobOfferDTO.position}"></h6>
 
             <p class="card-text">
-                <strong>Responsibilities:</strong> <span th:text="${jobOfferDTO.responsibilities}"></span>
+                <strong>Job Description</strong> <span th:text="${jobOfferDTO.jobDescription}"></span>
             </p>
 
             <p class="card-text">
-                <strong>Required Technologies:</strong> <span th:text="${jobOfferDTO.requiredTechnologies}"></span>
+                <strong>Position</strong> <span th:text="${jobOfferDTO.position}"></span>
             </p>
+
+            <p class="card-text">
+                <strong>Responsibilities</strong> <span th:text="${jobOfferDTO.responsibilities}"></span>
+            </p>
+
+            <p class="card-text">
+                <strong>Required Technologies</strong> <span th:text="${jobOfferDTO.requiredTechnologies}"></span>
+            </p>
+
+            <p class="card-text">
+                <strong>Experience</strong> <span th:text="${jobOfferDTO.experience}"></span>
+            </p>
+
+            <p class="card-text">
+                <strong>Job Location</strong> <span th:text="${jobOfferDTO.jobLocation}"></span>
+            </p>
+            <p class="card-text">
+                <strong>Type Of Contract</strong> <span th:text="${jobOfferDTO.typeOfContract}"></span>
+            </p>
+
+            <p class="card-text">
+                <strong>Type Of Work</strong> <span th:text="${jobOfferDTO.typeOfWork}"></span>
+            </p>
+
             <p class="card-text">
                 <strong>Salary Min:</strong> <span th:text="${jobOfferDTO.salaryMin}"></span>
             </p>
+
             <p class="card-text">
                 <strong>Salary Max:</strong> <span th:text="${jobOfferDTO.salaryMax}"></span>
             </p>
 
             <p class="card-text">
-                <strong>Benefits:</strong> <span th:text="${jobOfferDTO.benefits}"></span>
+                <strong>Required Language</strong> <span th:text="${jobOfferDTO.requiredLanguage}"></span>
             </p>
+
+            <p class="card-text">
+                <strong>Required Language Level</strong> <span th:text="${jobOfferDTO.requiredLanguageLevel}"></span>
+            </p>
+
+            <p class="card-text">
+                <strong>Benefits</strong> <span th:text="${jobOfferDTO.benefits}"></span>
+            </p>
+
             <input type="hidden" name="businessCardId" th:value="${businessCardDTO.id}">
 
             <a th:if="${businessCardDTO.id != null}"

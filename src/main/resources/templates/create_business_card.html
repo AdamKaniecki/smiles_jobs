@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <title>Create Business Card</title>
 </head>
 <body>
@@ -44,8 +45,6 @@
     <label for="postalCode">Postal Code:</label>
     <input type="text" id="postalCode" name="address.postalCode" required><br>
 
-<!--    <label>Postal Code:</label>-->
-<!--    <input type="text" th:field="*{postalCode}" required><br>-->
 
     <!-- Pole ukryte dla userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">

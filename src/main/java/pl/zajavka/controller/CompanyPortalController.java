@@ -106,12 +106,6 @@ public class CompanyPortalController {
         return "company_notifications";
     }
 
-    //        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
-//
-//        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
-//        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
-//        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
-//        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
 
 
     @GetMapping("/search")
@@ -179,14 +173,6 @@ public class CompanyPortalController {
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationRepository.findById(notificationId);
         // Pobierz ofertę pracy z powiadomienia
-
-        JobOffer jobOffer = notification.getJobOffer();
-        // Ustaw pole active na false
-        jobOffer.setActive(false);
-        // Zapisz zmienioną encję JobOffer
-        jobOfferRepository.saveJobOffer(jobOffer);
-        JobOfferDTO jobOfferDTO = jobOfferMapperDTO.map(jobOffer);
-        jobOfferDTO.setActive(false);
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 

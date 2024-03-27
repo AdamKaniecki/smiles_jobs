@@ -55,7 +55,7 @@ public class UserRestController {
                 .build();
     }
 //    curl dodający Kandydata:
-//    curl -i -H "Content-Type: application/json" -X POST http://localhost:8900/api/createCandidate -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"active\": true,\"roles\": [{\"roleId\": 1}]}"
+//    curl -i -H "Content-Type: application/json" -X POST http://localhost:8900/api/createCandidate -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"visible\": true,\"roles\": [{\"roleId\": 1}]}"
 
     @PostMapping("/createCompany")
     public ResponseEntity<UserDTO> addCompany(

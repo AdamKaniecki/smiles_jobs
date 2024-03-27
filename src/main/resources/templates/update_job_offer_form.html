@@ -16,6 +16,9 @@
   <label>companyName: </label>
   <input type="text" th:field="*{companyName}" required/><br/>
 
+  <label>Job Description: </label>
+  <input type="text" th:field="*{jobDescription}" required/><br/>
+
   <label>position: </label>
   <input type="text" th:field="*{position}" required/><br/>
 
@@ -25,8 +28,38 @@
   <label>requiredTechnologies: </label>
   <input type="text" th:field="*{requiredTechnologies}" required/><br/>
 
+  <label>experience: </label>
+  <input type="text" th:field="*{experience}" required/><br/>
+
+  <label>Job Location: </label>
+  <input type="text" th:field="*{jobLocation}" required/><br/>
+
+  <label>Type Of Contract: </label>
+  <input type="text" th:field="*{typeOfContract}" required/><br/>
+
+  <label>Type Of Work: </label>
+  <input type="text" th:field="*{typeOfWork}" required/><br/>
+
+  <label>Min Salary: </label>
+  <input type="text" th:field="*{salaryMin}" required/><br/>
+
+  <label>Max Salary: </label>
+  <input type="text" th:field="*{salaryMax}" required/><br/>
+
+  <label>Required Language: </label>
+  <input type="text" th:field="*{requiredLanguage}" required/><br/>
+
+  <label>Required Language Level: </label>
+  <input type="text" th:field="*{requiredLanguageLevel}" required/><br/>
+
   <label>benefits: </label>
   <input type="text" th:field="*{benefits}" required/><br/>
+
+  <label>Needed Staff: </label>
+  <input type="text" th:field="*{neededStaff}" required/><br/>
+
+
+
 
 
   <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">

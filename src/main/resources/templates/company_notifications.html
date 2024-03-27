@@ -26,7 +26,7 @@
   <tbody>
   <tr th:each="notificationDTO : ${notificationDTOs}">
     <td th:text="${notificationDTO.id}"></td>
-    <td th:text="${notificationDTO.jobOffer.id}"></td>
+    <td th:text="${notificationDTO.jobOffer != null} ? ${notificationDTO.jobOffer.id} : '-'"></td>
     <td th:text="${notificationDTO.companyMessage}"></td>
     <td th:if="${notificationDTO.cv != null}">
       <a th:href="@{/cv/{cvId}(cvId=${notificationDTO.cv.id})}" class="btn btn-info" role="button">Zobacz

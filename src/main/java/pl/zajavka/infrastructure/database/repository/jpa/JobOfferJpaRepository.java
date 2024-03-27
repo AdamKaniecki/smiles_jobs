@@ -16,20 +16,22 @@ import java.util.Optional;
 @Repository
 public interface JobOfferJpaRepository extends JpaRepository<JobOfferEntity, Integer> {
 
-    @Query("SELECT j FROM JobOfferEntity j WHERE " +
+    @Query("SELECT j FROM JobOfferEntity j WHERE j.active = true AND (" +
             "(:category = 'companyName' AND LOWER(j.companyName) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
             "(:category = 'position' AND LOWER(j.position) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'requiredTechnologies' AND LOWER(j.requiredTechnologies) LIKE LOWER(CONCAT('%', :keyword, '%')))  "
-//            "(:category = 'salaryMin' AND LOWER(j.salaryMin.toString()) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            )
-    List<JobOfferEntity> findJobOffersByKeywordAndCategory(
+            "(:category = 'requiredTechnologies' AND LOWER(j.requiredTechnologies) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'experience' AND LOWER(j.experience) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'jobLocation' AND LOWER(j.jobLocation) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'typeOfWork' AND LOWER(j.typeOfWork) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'requiredLanguage' AND LOWER(j.requiredLanguage) LIKE LOWER(CONCAT('%', :keyword, '%'))))"
+    )
+    List<JobOfferEntity> findActiveJobOffersByKeywordAndCategory(
             @Param("keyword") String keyword,
-//            @Param("salary") BigDecimal salary,
             @Param("category") String category);
 
-    @Query("SELECT j FROM JobOfferEntity j WHERE " +
+    @Query("SELECT j FROM JobOfferEntity j WHERE j.active = true AND " +
             "(:category = 'salaryMin' AND j.salaryMin >= CAST(:salary AS java.math.BigDecimal))")
-    List<JobOfferEntity> findJobOffersBySalaryAndCategory(
+    List<JobOfferEntity> findActiveJobOffersBySalaryAndCategory(
             @Param("category") String category,
             @Param("salary") BigDecimal salary);
 

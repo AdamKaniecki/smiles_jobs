@@ -39,8 +39,17 @@ public class JobOfferEntity {
     @Column(name = "required_technologies")
     private String requiredTechnologies;
 
-    @Column(name = "benefits")
-    private String benefits;
+    @Column(name = "experience")
+    private String experience;
+
+    @Column(name = "job_location")
+    private String jobLocation;
+
+    @Column(name = "type_of_contract")
+    private String typeOfContract;
+
+    @Column(name = "type_of_work")
+    private String typeOfWork;
 
     @Column(name = "salary_min")
     private BigDecimal salaryMin;
@@ -48,18 +57,36 @@ public class JobOfferEntity {
     @Column(name = "salary_max")
     private BigDecimal salaryMax;
 
+    @Column(name = "required_language")
+    private String requiredLanguage;
+
+    @Column(name = "required_language_level")
+    private String requiredLanguageLevel;
+
+    @Column(name = "benefits")
+    private String benefits;
+
+    @Column(name = "job_description")
+    private String jobDescription;
+
     @Column(name = "date_time_job_offer")
     private OffsetDateTime jobOfferDateTime;
 
     @Column(name = "active")
     private Boolean active;
 
+    @Column(name = "needed_staff")
+    private Integer neededStaff; // Ilość potrzebnych pracowników
+
+    @Column(name = "hired_count")
+    private Integer hiredCount; // Liczba zatrudnionych pracowników
+
+
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "jobOffers")
-//    private List<CvEntity> cvs;
 
 }

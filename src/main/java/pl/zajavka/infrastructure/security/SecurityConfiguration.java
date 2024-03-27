@@ -53,7 +53,7 @@ public class SecurityConfiguration {
 //                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/candidate_portal/**","/searchJobOffers/**").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("cv_already_sent","/updateAddressDone/**","/jobOffer/{jobOfferId}", "/businessCard/{businessCardId}"
-                       )
+                      )
                 .permitAll()
                 .requestMatchers("/company_portal/**","/companyNotifications/**").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**","/api/updateJobOffer/**","/api/updateBusinessCard").hasAuthority("ROLE_COMPANY")
