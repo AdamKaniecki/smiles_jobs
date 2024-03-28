@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +23,8 @@ public class WebClientConfiguration {
 //    dla każdego jednego API jest skonfigurowany oddzielnie jeden WebClient, gdyby nasza aplikacja komunikowała się z
 //    dwiema aplikacjami to musielibyśmy napisać dwie konfiguracje WebClienta
 
-    public static final String PET_STORE_URL = "https://swagger-ui/index.html";
+//    public static final String PET_STORE_URL = "https://swagger-ui/index.html";
+    public static final String GLOAT_URL = "https://swagger.gloat.com/#/";
     public static final int TIMEOUT = 5000; // api powinno odpowiedzieć w ciągu 5 sekund a jak nie to powinno zwrocic wyjątek
                                             // timeout Exception
 
@@ -47,8 +49,8 @@ public class WebClientConfiguration {
                             );
                     configurer
                             .defaultCodecs()
-                            .jackson2JsonEncoder(
-                                    new Jackson2JsonEncoder(
+                            .jackson2JsonDecoder(
+                                    new Jackson2JsonDecoder(
                                             objectMapper, MediaType.APPLICATION_JSON
                                     )
                             );
@@ -57,7 +59,7 @@ public class WebClientConfiguration {
 
 //        tworzenie instancji tego Web Clienta
         return WebClient.builder()
-                .baseUrl(PET_STORE_URL)
+                .baseUrl(GLOAT_URL)
                 .exchangeStrategies(exchangeStrategies)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();

@@ -41,7 +41,7 @@ public class SecurityConfiguration {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**","/api.gloat.com/api/v2/**").permitAll()
                 .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
                                                          "/company_registry","/companyRegistry/**" )
                 .permitAll()

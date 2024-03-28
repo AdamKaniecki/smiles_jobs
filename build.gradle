@@ -81,10 +81,10 @@ openApiGenerate {
             serializationLibrary: "jackson"
     ]
     outputDir = "$buildDir/generated-sources/openapi".toString()
-    inputSpec = "$rootDir/src/main/resources/pet-store-v3.0.2.json".toString()
-    apiPackage = "pl.zajavka.infrastructure.petstore.api"
-    modelPackage = "pl.zajavka.infrastructure.petstore.model"
-//    validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
+    inputSpec = "$rootDir/src/main/resources/gloat-v1.0.0.json".toString()
+    apiPackage = "pl.zajavka.infrastructure.gloat.api"
+    modelPackage = "pl.zajavka.infrastructure.gloat.model"
+    validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
 }
 
 sourceSets {
