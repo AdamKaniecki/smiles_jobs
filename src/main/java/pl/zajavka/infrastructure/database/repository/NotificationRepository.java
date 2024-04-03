@@ -41,7 +41,10 @@ private final UserMapper userMapper;
         return notificationMapper.mapToList(notificationEntities);
     }
 
-
+    @Override
+    public List<NotificationEntity> findByCvId(Integer id) {
+        return notificationJpaRepository.findByCvId(id);
+    }
 //    public List<Notification> findLatestByUser(User user) {
 //        UserEntity userEntity = userMapper.map(user);
 //        // Ustawiamy sortowanie po dacie wstecz i limitujemy do 5 notyfikacji

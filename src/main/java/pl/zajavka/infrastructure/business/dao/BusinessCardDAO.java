@@ -9,7 +9,7 @@ public interface BusinessCardDAO {
 
     Optional<BusinessCard> findById2(Integer id);
     BusinessCard findById(Integer businessCardId);
-    Optional<BusinessCard> findByUser2(User loggedInUser);
+//    Optional<BusinessCard> findByUser2(User loggedInUser);
     BusinessCard findByUser(User loggedInUser);
     boolean existByUser(User loggedInUser);
 }

@@ -74,20 +74,20 @@ public class BusinessCardController {
     }
 
 
-    @GetMapping("/showMyBusinessCard")
-    public String showMyBusinessCard(Authentication authentication, Model model) {
-        String username = authentication.getName();
-        User loggedInUser = userService.findByUserName(username);
-        Optional<BusinessCard> userBusinessCard = businessCardRepository.findByUser2(loggedInUser);
-        if (userBusinessCard.isPresent()) {
-            BusinessCard businessCard = userBusinessCard.get();
-
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-            model.addAttribute("userDTO", userMapperDTO.map(loggedInUser));
-            return "show_my_businessCard";
-        }
-        return "businessCard_not_found";
-    }
+//    @GetMapping("/showMyBusinessCard")
+//    public String showMyBusinessCard(Authentication authentication, Model model) {
+//        String username = authentication.getName();
+//        User loggedInUser = userService.findByUserName(username);
+//        Optional<BusinessCard> userBusinessCard = businessCardRepository.findByUser2(loggedInUser);
+//        if (userBusinessCard.isPresent()) {
+//            BusinessCard businessCard = userBusinessCard.get();
+//
+//            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
+//            model.addAttribute("userDTO", userMapperDTO.map(loggedInUser));
+//            return "show_my_businessCard";
+//        }
+//        return "businessCard_not_found";
+//    }
 
 
     @GetMapping("/businessCard/{businessCardId}")

@@ -77,10 +77,7 @@ public class CompanyPortalController {
 
 
 
-        List<NotificationDTO> notificationDTOs = notificationRepository.findLatestByUser(loggedInUser).stream()
-                .map(notificationMapperDTO::map)
-                .limit(5)
-                .collect(Collectors.toList());
+        List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
 
         model.addAttribute("notificationDTOs",notificationDTOs);
 
@@ -94,8 +91,7 @@ public class CompanyPortalController {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
-                .map(notificationMapperDTO::map).toList();
+        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser);
 
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
@@ -113,11 +109,8 @@ public class CompanyPortalController {
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
-        List<CV> searchResults = cvRepository.searchCvByKeywordAndCategory(keyword, category);
-        List<CvDTO> searchResultsDTO = searchResults.stream()
-                .map(cvMapperDTO::map)
-                .collect(Collectors.toList());
 
+        List<CvDTO> searchResultsDTO = cvService.searchCvByKeywordAndCategory(keyword, category);
 
         model.addAttribute("searchResultsDTO", searchResultsDTO);
         model.addAttribute("keyword", keyword);
@@ -137,7 +130,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationRepository.findById(notificationId);
+        Notification notification = notificationService.findById(notificationId);
 
         notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
@@ -155,7 +148,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationRepository.findById(notificationId);
+        Notification notification = notificationService.findById(notificationId);
 
         notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
@@ -172,7 +165,7 @@ public class CompanyPortalController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
-        Notification notification = notificationRepository.findById(notificationId);
+        Notification notification = notificationService.findById(notificationId);
         // Pobierz ofertę pracy z powiadomienia
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);

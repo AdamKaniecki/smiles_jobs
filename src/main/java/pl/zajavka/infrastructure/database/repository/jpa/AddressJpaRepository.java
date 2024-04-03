@@ -12,4 +12,5 @@ public interface AddressJpaRepository extends JpaRepository<AddressEntity, Integ
 
     @Override
     Optional<AddressEntity> findById(Integer integer);
+
 }

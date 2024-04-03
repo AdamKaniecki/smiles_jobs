@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
+import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -29,6 +30,7 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,10 +49,8 @@ public class NotificationService {
     private CvMapper cvMapper;
     private JobOfferRepository jobOfferRepository;
     private CvRepository cvRepository;
-
-
-
-
+    private final NotificationDAO notificationDAO;
+    private NotificationMapperDTO notificationMapperDTO;
 
 
     @Transactional
@@ -95,6 +95,7 @@ public class NotificationService {
             throw new IllegalStateException("Cannot arrange interview when the status is not Under Review or Meeting Scheduling.");
         }
     }
+
     @Transactional
     public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
         if (notification.getStatus() == Status.MEETING_SCHEDULING) {
@@ -210,6 +211,24 @@ public class NotificationService {
         return notification.getStatus() != Status.WAITING_FOR_INTERVIEW;
     }
 
+    public List<NotificationDTO> findLatestByUser(User loggedInUser) {
+        List<Notification> latestNotifications = notificationDAO.findLatestByUser(loggedInUser);
+        return latestNotifications.stream()
+                .map(notificationMapperDTO::map)
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
+    public List<NotificationDTO> findByUser(User loggedInUser) {
+        List<Notification> notifications = notificationDAO.findByUser(loggedInUser);
+        return notifications.stream()
+                .map(notificationMapperDTO::map)
+                .toList();
+    }
+
+    public Notification findById(Integer notificationId) {
+        return notificationDAO.findById(notificationId);
+    }
 
 
 //    public List<Notification> findByUser(User user) {
@@ -226,7 +245,6 @@ public class NotificationService {
 //    }
 
 
-
 //    @Transactional
 //    public Page<Notification> findByUser(User user, Pageable pageable) {
 //        // Pobierz stronę powiadomień z bazy danych
@@ -239,12 +257,9 @@ public class NotificationService {
 //                .map(notificationMapper::map)
 //                .collect(Collectors.toList());
 
-        // Zwróć stronę paginacji z zmapowanymi obiektami DTO
+    // Zwróć stronę paginacji z zmapowanymi obiektami DTO
 
-    }
-
-
-
+}
 
 
 //    public Page<Notification> findByUser(User user, Pageable pageable ) {

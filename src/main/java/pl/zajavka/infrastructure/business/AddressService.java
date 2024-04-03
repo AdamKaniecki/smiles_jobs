@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zajavka.infrastructure.business.dao.AddressDAO;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
@@ -18,9 +19,10 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class AddressService {
-    private AddressJpaRepository addressJpaRepository;
+
     private AddressMapper addressMapper;
-    private UserService userService;
+    private final AddressDAO addressDAO;
+
 
     @Transactional
     public Address createAddress(Address address, User user) {
@@ -31,7 +33,7 @@ public class AddressService {
                 .postalCode(address.getPostalCode())
                 .build();
 
-        AddressEntity created = addressJpaRepository.saveAndFlush(entity);
+        AddressEntity created = addressDAO.saveAndFlush(entity);
 
         return addressMapper.map(created);
     }
@@ -39,47 +41,30 @@ public class AddressService {
     @Transactional
     public void updateAddress(Address address) {
         // Sprawdź, czy adres istnieje w bazie danych
-        if (address.getId() != null && addressJpaRepository.existsById(address.getId())) {
-            // Jeśli istnieje, zaktualizuj istniejący rekord
-            Optional<AddressEntity> existingEntityOptional = addressJpaRepository.findById(address.getId());
-
-            // Pobierz obiekt AddressEntity z Optional
-            if (existingEntityOptional.isPresent()) {
-                AddressEntity existingEntity = existingEntityOptional.get();
-
-                // Zaktualizuj pola bezpośrednio
-                existingEntity.setCountry(address.getCountry());
-                existingEntity.setCity(address.getCity());
-                existingEntity.setStreetAndNumber(address.getStreetAndNumber());
-                existingEntity.setPostalCode(address.getPostalCode());
-
-                addressJpaRepository.save(existingEntity);
-            } else {
-                // Jeśli Optional nie zawiera wartości, obsłuż odpowiednio (np. rzutuj wyjątek)
-                throw new EntityNotFoundException("Address with id " + address.getId() + " not found");
-            }
-        } else {
-            // Jeśli nie istnieje, obsłuż odpowiednio (np. rzutuj wyjątek)
+        if (!addressDAO.existsById(address.getId())) {
+            // Jeśli nie istnieje, rzucamy wyjątek
             throw new EntityNotFoundException("Address with id " + address.getId() + " not found");
         }
+
+        AddressEntity existingEntity = addressMapper.map(address);
+
+        // Zaktualizuj pola istniejącego obiektu AddressEntity
+        existingEntity.setCountry(address.getCountry());
+        existingEntity.setCity(address.getCity());
+        existingEntity.setStreetAndNumber(address.getStreetAndNumber());
+        existingEntity.setPostalCode(address.getPostalCode());
+
+        // Zapisz zaktualizowany obiekt do bazy danych
+        addressDAO.save(existingEntity);
     }
 
-//    public Optional<Address> findById(Integer id) {
-//        return addressRepository.findById(id).map(addressMapper::map);
-//    }
 
-//    public Address findById(Integer addressId){
-//        AddressEntity addressEntity = addressJpaRepository.findById(addressId)
-//                .orElseThrow(() -> new EntityNotFoundException("Not found entity Address with ID: " + addressId));
-//        return addressMapper.map(addressEntity);
-//
-//    }
 
     @Transactional
     public void deleteAddress(Address address) {
         if(address != null){
             AddressEntity addressEntity = addressMapper.map(address);
-            addressJpaRepository.deleteById(addressEntity.getId());
+            addressDAO.deleteById(addressEntity.getId());
         } else {
             throw new IllegalArgumentException("Address cannot be null");
         }
@@ -108,4 +93,8 @@ public class AddressService {
         return "home";
     }
 
+
+    public Address findById(Integer id) {
+      return   addressDAO.findById(id);
+    }
 }

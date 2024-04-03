@@ -52,20 +52,20 @@ public class BusinessCardRestController {
     }
 
 
-    @GetMapping("/showMyBusinessCard")
-    public ResponseEntity<?> showMyBusinessCard(Authentication authentication) {
-        String username = authentication.getName();
-        User loggedInUser = userService.findByUserName(username);
-        if (loggedInUser != null) {
-            Optional<BusinessCard> businessCardOpt = businessCardRepository.findByUser2(loggedInUser);
-            if (businessCardOpt.isPresent()) {
-                BusinessCard businessCard = businessCardOpt.get();
-                BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
-                return ResponseEntity.ok(businessCardDTO);
-            }
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    @GetMapping("/showMyBusinessCard")
+//    public ResponseEntity<?> showMyBusinessCard(Authentication authentication) {
+//        String username = authentication.getName();
+//        User loggedInUser = userService.findByUserName(username);
+//        if (loggedInUser != null) {
+//            Optional<BusinessCard> businessCardOpt = businessCardRepository.findByUser2(loggedInUser);
+//            if (businessCardOpt.isPresent()) {
+//                BusinessCard businessCard = businessCardOpt.get();
+//                BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
+//                return ResponseEntity.ok(businessCardDTO);
+//            }
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @GetMapping("/showBusinessCard/{businessCardId}")
     public ResponseEntity<?> showBusinessCard(@PathVariable Integer businessCardId) {

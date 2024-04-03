@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.zajavka.controller.dto.CvDTO;
+import pl.zajavka.controller.dto.mapper.CvMapperDTO;
+import pl.zajavka.infrastructure.business.dao.CvDAO;
+import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
@@ -16,6 +20,7 @@ import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 
@@ -28,6 +33,9 @@ public class CvService {
     private UserMapper userMapper;
     private AddressMapper addressMapper;
     private NotificationJpaRepository notificationJpaRepository;
+    private final NotificationDAO notificationDAO;
+    private final CvDAO cvDAO;
+    private final CvMapperDTO cvMapperDTO;
 
 
     @Transactional
@@ -87,7 +95,6 @@ public class CvService {
             cvEntity.setPhoneNumber(updatedCv.getPhoneNumber());
             cvEntity.setEducation(updatedCv.getEducation());
             cvEntity.setWorkExperience(updatedCv.getWorkExperience());
-//            cvEntity.setCourses(updatedCv.getCourses());
             cvEntity.setSocialMediaProfil(updatedCv.getSocialMediaProfil());
             cvEntity.setProjects(updatedCv.getProjects());
             cvEntity.setAboutMe(updatedCv.getAboutMe());
@@ -116,7 +123,7 @@ public class CvService {
             CvEntity cvEntity = cvMapper.map(cv);
 
             // Pobierz wszystkie powiązane notyfikacje z tym CV
-            List<NotificationEntity> notifications = notificationJpaRepository.findByCvId(cvEntity.getId());
+            List<NotificationEntity> notifications = notificationDAO.findByCvId(cvEntity.getId());
 
             // Ustaw CV na null we wszystkich powiązanych notyfikacjach
             for (NotificationEntity notification : notifications) {
@@ -127,10 +134,27 @@ public class CvService {
             }
 
             // Usuń CV
-            cvRepository.deleteById(cvEntity.getId());
+            cvDAO.deleteById(cvEntity.getId());
         } else {
             throw new IllegalArgumentException("CV cannot be null");
         }
     }
 
+    public boolean existByUser(User loggedInUser) {
+       return cvDAO.existByUser(loggedInUser);
+    }
+
+    public Optional<CV> findByUser(User loggedInUser) {
+       return cvDAO.findByUser(loggedInUser);
+    }
+
+    public Optional<CV> findById(Integer id) {
+       return cvDAO.findById(id);
+    }
+
+    public List<CvDTO> searchCvByKeywordAndCategory(String keyword, String category) {
+        return cvDAO.searchCvByKeywordAndCategory(keyword,category).stream()
+                .map(cvMapperDTO::map)
+                .toList();
+    }
 }

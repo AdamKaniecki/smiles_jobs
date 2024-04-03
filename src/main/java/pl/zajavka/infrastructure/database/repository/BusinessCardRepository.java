@@ -36,12 +36,12 @@ public class BusinessCardRepository implements BusinessCardDAO {
         return businessCardEntityOptional.map(businessCardMapper::map);
     }
 
-    public BusinessCard findByUser(User loggedInUser){
+    public BusinessCard findByUser(User loggedInUser) {
         UserEntity userEntity = userMapper.map(loggedInUser);
-        BusinessCardEntity businessCardEntity = businessCardJpaRepository.findByUser(userEntity)
-                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card from User: " + userEntity));
-        return businessCardMapper.map(businessCardEntity);
+        Optional<BusinessCardEntity> businessCardEntityOptional = businessCardJpaRepository.findByUser(userEntity);
+        return businessCardEntityOptional.map(businessCardMapper::map).orElse(null);
     }
+
 
     public boolean existByUser(User loggedInUser) {
         return businessCardJpaRepository.existsByUser(userMapper.map(loggedInUser));

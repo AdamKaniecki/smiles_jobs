@@ -34,7 +34,6 @@ public class CvRepository implements CvDAO {
         return cvJpaRepository.existsByUser(userMapper.map(loggedInUser));
     }
     public Optional<CV> findById(Integer id) {
-
         return cvJpaRepository.findById(id).map(cvMapper::map);
     }
 
@@ -63,4 +62,11 @@ public class CvRepository implements CvDAO {
         CvEntity cvEntity = cvMapper.map(cv);
         cvJpaRepository.save(cvEntity);
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        cvJpaRepository.deleteById(id);
+    }
+
+
 }

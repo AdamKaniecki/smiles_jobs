@@ -2,7 +2,6 @@
 
 package pl.zajavka.controller;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +20,6 @@ import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
-import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.*;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
@@ -48,12 +45,9 @@ public class CandidatePortalController {
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
-    private NotificationMapperDTO notificationMapperDTO;
     private CvService cvService;
     private PaginationService paginationService;
-    private CvRepository cvRepository;
-    private JobOfferRepository jobOfferRepository;
-    private NotificationRepository notificationRepository;
+
 
     @SneakyThrows
     @GetMapping(CANDIDATE_PORTAL)
@@ -74,14 +68,10 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferPages", jobOfferDTOsPage.getTotalPages());
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
-
-        List<NotificationDTO> notificationDTOs = notificationRepository.findLatestByUser(loggedInUser).stream()
-                .map(notificationMapperDTO::map)
-                .limit(5)
-                .collect(Collectors.toList());
+        List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
 
         model.addAttribute("notificationDTOs",notificationDTOs);
-        model.addAttribute("username", username);
+//        model.addAttribute("username", username);
 
         return "candidate_portal";
     }
@@ -92,8 +82,8 @@ public class CandidatePortalController {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
-                .map(notificationMapperDTO::map).toList();
+//        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
+        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser);
 
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
         model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
@@ -103,14 +93,7 @@ public class CandidatePortalController {
 
         return "candidate_notifications";
     }
-//    List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
-////                .map(notificationMapperDTO::map).toList();
-////
-////        Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
-////        model.addAttribute("notificationDTOs", notificationDTOsPage.getContent());
-////        model.addAttribute("currentNotificationPage", notificationDTOsPage.getNumber());
-////        model.addAttribute("totalNotificationPages", notificationDTOsPage.getTotalPages());
-////        model.addAttribute("totalNotificationItems", notificationDTOsPage.getTotalElements());
+
 
 
     @GetMapping("/searchJobOffers")
@@ -152,10 +135,10 @@ public class CandidatePortalController {
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Authentication authentication) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         User adresat = jobOffer.getUser();
 
-        Optional<CV> userCVOptional = cvRepository.findByUser(loggedInUser);
+        Optional<CV> userCVOptional = cvService.findByUser(loggedInUser);
         if (userCVOptional.isPresent()) {
             CV cv = userCVOptional.get();
 
@@ -186,8 +169,8 @@ public class CandidatePortalController {
     ){
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
-            Notification notification = notificationRepository.findById(notificationId);
+            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+            Notification notification = notificationService.findById(notificationId);
             User adresat = jobOffer.getUser();
 
             notificationService.changeMeetingDate(notification, loggedInUser, adresat);
@@ -204,8 +187,8 @@ public class CandidatePortalController {
     ){
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
-            JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
-            Notification notification = notificationRepository.findById(notificationId);
+            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+            Notification notification = notificationService.findById(notificationId);
             User adresat = jobOffer.getUser();
 
             notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);

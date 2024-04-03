@@ -14,4 +14,8 @@ public interface CvDAO {
     Optional<CV> findByUser(User user);
     CV findByUser2(User user);
 
+    void deleteById(Integer id);
+
+    List<CV>searchCvByKeywordAndCategory(String keyword, String category);
+
 }

@@ -147,7 +147,7 @@ public class JobOfferRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
 
-            JobOffer jobOffer = jobOfferRepository.findById(updateJobOfferDTO.getId());
+            JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
 
             // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
             if (!jobOffer.getUser().equals(loggedInUser)) {

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import pl.zajavka.infrastructure.business.dao.BusinessCardDAO;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
@@ -26,6 +27,7 @@ public class BusinessCardService {
     private BusinessCardMapper businessCardMapper;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
+    private final BusinessCardDAO businessCardDAO;
 
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
@@ -117,6 +119,9 @@ public class BusinessCardService {
     }
 
 
+    public BusinessCard findByUser(User user) {
+      return   businessCardDAO.findByUser(user);
+    }
 }
 
 

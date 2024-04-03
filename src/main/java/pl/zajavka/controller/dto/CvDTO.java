@@ -30,14 +30,12 @@ public class CvDTO {
     private String phoneNumber;
     private String education;
     private String workExperience;
-//    private String courses;
     private String socialMediaProfil;
     private String projects;
     private String aboutMe;
     private String certificatesOfCourses;
     private String programmingLanguage;
     private String skillsAndTools;
-//    private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;
@@ -45,5 +43,5 @@ public class CvDTO {
     private Boolean visible;
     private User user;
     private Address address;
-//    private byte[] photo;
+
 }

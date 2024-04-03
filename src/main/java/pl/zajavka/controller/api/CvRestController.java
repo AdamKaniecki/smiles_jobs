@@ -4,22 +4,18 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.CvService;
-import pl.zajavka.infrastructure.business.EnumService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.util.Optional;
-import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -30,14 +26,10 @@ public class CvRestController {
     private final CvService cvService;
     private final CvRepository cvRepository;
     private final UserService userService;
-    private final EnumService enumService;
-
-
     private CvMapperDTO cvMapperDTO;
 
     @PostMapping("/createCV")
     public ResponseEntity<?> createCV(@Valid @RequestBody CvDTO cvDTO,
-                                      @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames,
                                       Authentication authentication) {
         String username = authentication.getName();
         if (username == null) {
@@ -49,7 +41,7 @@ public class CvRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        if (cvRepository.existByUser(loggedInUser)) {
+        if (cvService.existByUser(loggedInUser)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CV already created");
         }
 
@@ -68,7 +60,7 @@ public class CvRestController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
         if (loggedInUser != null) {
-            Optional<CV> userCV = cvRepository.findByUser(loggedInUser);
+            Optional<CV> userCV = cvService.findByUser(loggedInUser);
             if (userCV.isPresent()) {
                 CV cv = userCV.get();
                 CvDTO cvDTO = cvMapperDTO.map(cv);
@@ -81,7 +73,7 @@ public class CvRestController {
 
     @GetMapping("/showCV/{id}")
     public ResponseEntity<?> showMyCV(@PathVariable Integer id) {
-        Optional<CV> cvOpt = cvRepository.findById(id);
+        Optional<CV> cvOpt = cvService.findById(id);
 
         if (cvOpt.isPresent()) {
             CV cv = cvOpt.get();
@@ -109,6 +101,13 @@ public class CvRestController {
             cv.setMaritalStatus(updateCvDTO.getMaritalStatus());
             cv.setPhoneNumber(updateCvDTO.getPhoneNumber());
             cv.setContactEmail(updateCvDTO.getContactEmail());
+            cv.setSkillsAndTools(updateCvDTO.getSkillsAndTools());
+            cv.setProgrammingLanguage(updateCvDTO.getProgrammingLanguage());
+            cv.setFollowPosition(updateCvDTO.getFollowPosition());
+            cv.setAboutMe(updateCvDTO.getAboutMe());
+            cv.setCertificatesOfCourses(updateCvDTO.getCertificatesOfCourses());
+            cv.setProjects(updateCvDTO.getProjects());
+            cv.setSocialMediaProfil(updateCvDTO.getSocialMediaProfil());
             cv.setEducation(updateCvDTO.getEducation());
             cv.setWorkExperience(updateCvDTO.getWorkExperience());
             cv.setLanguage(updateCvDTO.getLanguage());
@@ -120,18 +119,43 @@ public class CvRestController {
             return ResponseEntity.status(HttpStatus.OK).body("CV updated successfully");
         }
 
-    @DeleteMapping("/deleteCV/{id}")
-    public ResponseEntity<String> deleteCV(@PathVariable("id") Integer cvId) {
-        Optional<CV> optionalCV = cvRepository.findById(cvId);
-        if (optionalCV.isPresent()) {
-            CV cv = optionalCV.get();
-            Address address = cv.getAddress();
+//    @DeleteMapping("/deleteCV/{id}")
+//    public ResponseEntity<String> deleteCV(@PathVariable("id") Integer cvId) {
+//        Optional<CV> optionalCV = cvRepository.findById(cvId);
+//        if (optionalCV.isPresent()) {
+//            CV cv = optionalCV.get();
+//            Address address = cv.getAddress();
+//
+//            cvService.deleteCVAndSetNullInNotifications(cv, address);
+//            return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
+//    }
 
-            cvService.deleteCVAndSetNullInNotifications(cv, address);
-            return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
+    @DeleteMapping("/deleteCV/{cvId}")
+    public ResponseEntity<String> deleteCV(@PathVariable("cvId") Integer cvId, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
+
+            Optional<CV> optionalCV = cvService.findById(cvId);
+            if (optionalCV.isPresent()) {
+                CV cv = optionalCV.get();
+                Address address = cv.getAddress();
+                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
+                if (!cv.getUser().equals(loggedInUser)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this CV");
+                }
+
+                cvService.deleteCVAndSetNullInNotifications(cv, address);
+                return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting CV");
         }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
     }
 
 }

@@ -87,18 +87,17 @@ public class JobOfferController {
 
     @GetMapping("/jobOffer/{jobOfferId}")
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
-        JobOffer jobOffer = jobOfferRepository.findById(jobOfferId);
+        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
         Optional<BusinessCard> businessCard = businessCardRepository.findByUser2(jobOffer.getUser());
-
         if (businessCard.isPresent()) {
             model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
         } else {
             model.addAttribute("businessCardDTO", new BusinessCardDTO());
         }
-
         return "job_offer_details";
     }
+
 
 
     @GetMapping("/showMyJobOffers")

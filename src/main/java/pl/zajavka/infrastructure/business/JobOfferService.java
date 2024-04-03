@@ -248,6 +248,10 @@ public class JobOfferService {
     public JobOffer saveJobOffer(JobOffer jobOffer) {
         return jobOfferDAO.saveJobOffer(jobOffer);
     }
+
+    public JobOffer findById(Integer jobOfferId) {
+      return  jobOfferDAO.findById(jobOfferId);
+    }
 }
 
 
