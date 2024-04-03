@@ -109,7 +109,7 @@ public class CompanyPortalController {
 
 
     @GetMapping("/search")
-    public String searchAdvertisements(
+    public String searchCV(
             @RequestParam("keyword") String keyword,
             @RequestParam("category") String category,
             Model model) {
@@ -117,6 +117,7 @@ public class CompanyPortalController {
         List<CvDTO> searchResultsDTO = searchResults.stream()
                 .map(cvMapperDTO::map)
                 .collect(Collectors.toList());
+
 
         model.addAttribute("searchResultsDTO", searchResultsDTO);
         model.addAttribute("keyword", keyword);

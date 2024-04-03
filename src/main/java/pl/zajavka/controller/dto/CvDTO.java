@@ -28,16 +28,21 @@ public class CvDTO {
     @Size(min = 7,max = 15)
     @Pattern(regexp = "^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$")
     private String phoneNumber;
-
     private String education;
     private String workExperience;
-    private String skills;
-    private Set<ProgrammingLanguage> programmingLanguages;
-    private String tools;
-    private Integer yearsOfExperience;
+//    private String courses;
+    private String socialMediaProfil;
+    private String projects;
+    private String aboutMe;
+    private String certificatesOfCourses;
+    private String programmingLanguage;
+    private String skillsAndTools;
+//    private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;
+    private String followPosition;
+    private Boolean visible;
     private User user;
     private Address address;
 //    private byte[] photo;

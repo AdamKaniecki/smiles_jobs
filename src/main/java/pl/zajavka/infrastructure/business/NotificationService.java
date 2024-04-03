@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
+import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
@@ -44,8 +46,8 @@ public class NotificationService {
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
     private JobOfferRepository jobOfferRepository;
-    private NotificationRepository notificationRepository;
-    private NotificationMapperDTO notificationMapperDTO;
+    private CvRepository cvRepository;
+
 
 
 
@@ -161,8 +163,9 @@ public class NotificationService {
 //            poprawić to notification Repository
             notificationJpaRepository.save(notificationEntity);
 
-            UserEntity userEntity = userMapper.map(adresat);
-            userEntity.setVisible(false);
+            CV cv = notification.getCv();
+            cv.setVisible(false);
+            cvRepository.saveCV(cv);
             userService.save(loggedInUser);
             userService.save(adresat);
 

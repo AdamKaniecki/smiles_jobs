@@ -73,18 +73,24 @@ PRIMARY KEY(business_card_id),
     marital_status VARCHAR(32) NOT NULL,
     phone_number VARCHAR(32) NOT NULL,
     contact_email VARCHAR(32) NOT NULL,
-    work_experience text NOT NULL,
-    education text NOT NULL,
-    skills VARCHAR(32) NOT NULL,
-    tools VARCHAR(128) ,
-    years_of_experience INT,
+--    courses TEXT,
+    social_media_profil VARCHAR (255),
+    projects VARCHAR(255),
+    about_me TEXT,
+    certificates_of_courses TEXT,
+    programming_language TEXT NOT NULL,
+    skills_and_tools TEXT NOT NULL,
+    follow_position VARCHAR(64) NOT NULL,
+    work_experience TEXT NOT NULL,
+    education TEXT NOT NULL,
+--    years_of_experience INT,
     language VARCHAR(32) NOT NULL,
     language_level VARCHAR(32) NOT NULL,
     hobby TEXT NOT NULL,
+    visible BOOLEAN NOT NULL,
     address_id INT ,
     user_id INT ,
     unique(contact_email),
-
     PRIMARY KEY(cv_id),
     CONSTRAINT fk_CV_address_table
         FOREIGN KEY (address_id)
@@ -120,19 +126,19 @@ CREATE TABLE notification_table (
              REFERENCES job_offer_table (job_offer_id)
  );
 
- CREATE TABLE cv_programming_languages (
-     cv_id INT,
-     programming_language VARCHAR(32),
-     PRIMARY KEY (cv_id, programming_language),
-     FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
- );
-
-  CREATE TABLE cv_IT_specializations (
-      cv_id INT,
-      IT_specializations VARCHAR(32),
-      PRIMARY KEY (cv_id, IT_specializations),
-      FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
-  );
+-- CREATE TABLE cv_programming_languages (
+--     cv_id INT,
+--     programming_language VARCHAR(32),
+--     PRIMARY KEY (cv_id, programming_language),
+--     FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
+-- );
+--
+--  CREATE TABLE cv_IT_specializations (
+--      cv_id INT,
+--      IT_specializations VARCHAR(32),
+--      PRIMARY KEY (cv_id, IT_specializations),
+--      FOREIGN KEY (cv_id) REFERENCES cv(cv_id)
+--  );
 
 
 

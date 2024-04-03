@@ -54,9 +54,6 @@ public class CvRestController {
         }
 
         CV cv = cvMapperDTO.map(cvDTO);
-        Set<ProgrammingLanguage> programmingLanguages = enumService.convertToProgrammingLanguages(programmingLanguagesNames);
-        cv.setProgrammingLanguages(programmingLanguages);
-
         cvService.createCV(cv, loggedInUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("CV created successfully");
@@ -114,7 +111,6 @@ public class CvRestController {
             cv.setContactEmail(updateCvDTO.getContactEmail());
             cv.setEducation(updateCvDTO.getEducation());
             cv.setWorkExperience(updateCvDTO.getWorkExperience());
-            cv.setSkills(updateCvDTO.getSkills());
             cv.setLanguage(updateCvDTO.getLanguage());
             cv.setLanguageLevel(updateCvDTO.getLanguageLevel());
             cv.setHobby(updateCvDTO.getHobby());

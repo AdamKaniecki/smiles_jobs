@@ -13,4 +13,5 @@ public interface CvDAO {
 
     Optional<CV> findByUser(User user);
     CV findByUser2(User user);
+
 }

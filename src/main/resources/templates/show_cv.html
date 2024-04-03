@@ -19,7 +19,6 @@
       </div>
     </div>
 
-
     <div class="row mt-4">
       <div class="col-md-6">
         <h3>Main Information</h3>
@@ -28,46 +27,44 @@
         <p th:text="'Marital Status: ' + ${cvDTO.maritalStatus}"></p>
         <p th:text="'Contact Email: ' + ${cvDTO.contactEmail}"></p>
         <p th:text="'Phone Number: ' + ${cvDTO.phoneNumber}"></p>
-
       </div>
 
+      <div class="col-md-6">
+        <h3>Skills</h3>
+        <p th:text="${cvDTO.skillsAndTools}"></p>
+        <p th:text="'Language Programming: ' + ${cvDTO.programmingLanguage}"></p>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h3>Education</h3>
+        <p th:text="${cvDTO.education}"></p>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h3>Work Experience</h3>
+        <p th:text="${cvDTO.workExperience}"></p>
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h3>Languages</h3>
+        <p th:text="'Language: ' + ${cvDTO.language}"></p>
+        <p th:text="'Language Level: ' + ${cvDTO.languageLevel}"></p>
+      </div>
+    </div>
+
+    <div class="row mt-4">
       <div class="col-md-6">
         <h3>Address</h3>
         <p th:text="'Country: ' + ${cvDTO.address.country}"></p>
         <p th:text="'City: ' + ${cvDTO.address.city}"></p>
         <p th:text="'Street and Number: ' + ${cvDTO.address.streetAndNumber}"></p>
         <p th:text="'Postal Code: ' + ${cvDTO.address.postalCode}"></p>
-
-
-      </div>
-      <div class="col-md-6">
-        <h3>Education</h3>
-        <p th:text="'Education: ' + ${cvDTO.education}"></p>
-      </div>
-    </div>
-
-    <div class="row mt-4">
-      <div class="col-md-12">
-        <h3>Work Experience</h3>
-        <p th:text="'Work Experience: ' + ${cvDTO.workExperience}"></p>
-      </div>
-    </div>
-    <div class="row mt-4">
-      <div class="col-md-6">
-
-        <h3>Skills</h3>
-        <p th:text="'Skills: ' + ${cvDTO.skills}"></p>
-        <p th:text="'Language Programming: ' + ${cvDTO.programmingLanguages}"></p>
-<!--        <p th:text="'Specialization: ' + ${cvDTO.it_specializations}"></p>-->
-
-      </div>
-      <div class="col-md-6">
-        <h3>Languages</h3>
-        <p th:text="'Language: ' + ${cvDTO.language}"></p>
-        <p th:text="'Language Level: ' + ${cvDTO.languageLevel}"></p>
-
-
-
       </div>
     </div>
 
@@ -77,16 +74,26 @@
         <p th:text="'Hobby: ' + ${cvDTO.hobby}"></p>
       </div>
     </div>
-  </div>
 
-  <div th:unless="${cvDTO}">
-    <p>CV not found</p>
-  </div>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <h3>Project Link</h3>
+        <span th:if="${cvDTO.projects != null}">
+          <a th:href="${cvDTO.projects}" target="_blank">Project</a>
+        </span>
+      </div>
+      <div class="col-md-6">
+        <h3>Social Media Link</h3>
+        <span th:if="${cvDTO.socialMediaProfil != null}">
+          <a th:href="${cvDTO.socialMediaProfil}" target="_blank">Social Media</a>
+        </span>
+      </div>
+    </div>
 
-  <div class="mt-4">
-    <a th:href="@{/company_portal}" class="btn btn-info" role="button">Back to Company Portal</a>
+    <div class="mt-4">
+      <a th:href="@{/company_portal}" class="btn btn-info" role="button">Back to Company Portal</a>
+    </div>
   </div>
 </div>
-
 </body>
 </html>

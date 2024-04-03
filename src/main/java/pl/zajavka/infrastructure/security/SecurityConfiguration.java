@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                 .permitAll()
                 .requestMatchers("/company_portal/**","/companyNotifications/**").hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/arrangeInterview/**","/decline/**","/hired/**","/api/updateJobOffer/**","/api/updateBusinessCard").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/showCV/**","/cv/**",
+                .requestMatchers("/showCV/**","/search/**","/cv/**",
                         "/JobOfferForm/**","/createJobOffer/**","/showMyJobOffers/**", "/updateJobOfferForm/**",
                         "/updateJobOfferDone/**","/deleteJobOffer/**",
                         "/BusinessCardForm/**","/createBusinessCard/**","/showMyBusinessCard/**",

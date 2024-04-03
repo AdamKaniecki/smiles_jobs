@@ -5,158 +5,170 @@
     <title>Create CV</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Styl dla tekstu pomocniczego */
-        .helper-text {
-            font-size: 10px; /* Ustawienie mniejszej czcionki */
+        /* Custom styles for spacing */
+        .form-group {
+            margin-bottom: 1.5rem; /* Adjust as needed */
+        }
+        label {
+            display: block;
         }
     </style>
 </head>
-<body onload="displaySelectedLanguages()"
->
-<!--; displaySelectedSpecializations()-->
+<body>
+<div class="container">
+    <h2>Create CV</h2>
+    <form th:action="@{/createCV}" th:object="${cvDTO}" method="post">
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="aboutMe">About Me:</label>
+                <textarea th:field="*{aboutMe}" class="form-control" id="aboutMe" required rows="5"></textarea>
+            </div>
 
-<h2>Create CV</h2>
-<form th:action="@{/createCV}" th:object="${cvDTO}" method="post" >
-<!--      enctype="multipart/form-data"-->
-
-
-<!--    <label>Photo: </label>-->
-<!--    <input type="file" name="photo" accept="image/*" required/><br/>-->
-    <label>Name: </label>
-    <input type="text" th:field="*{name}" required/><br/>
-    <label>Surname: </label>
-    <input type="text" th:field="*{surname}" required/><br/>
-    <label>Sex: </label>
-    <input type="text" th:field="*{sex}" required/><br/>
-    <label>Date of Birth: </label>
-    <input type="text" th:field="*{dateOfBirth}" required/><br/>
-    <label>Marital Status: </label>
-    <input type="text" th:field="*{maritalStatus}" required/><br/>
-    <label>Phone Number: </label>
-    <input type="text" th:field="*{phoneNumber}" required/><br/>
-
-    <label>Email: </label>
-    <input type="text" th:field="*{contactEmail}" required/><br/>
-
-    <div class="container">
-                <div class="row">
-                    <div class="col-md-2">
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <!-- Tekst pomocniczy z klasą helper-text -->
-                        <p class="helper-text">JEŚLI CHCESZ WYBRAĆ KILKA</p>
-                        <p class="helper-text">WCIŚNIJ CTRL I ZAZNACZ</p>
-                        <p class="helper-text">ODPOWIEDNIE ELEMENTY</p>
-                    </div>
-                    <div class="col-md-8">
-                        <label for="programmingLanguages">Programming Languages:</label>
-                <br><br>
-                <select id="programmingLanguages" name="programmingLanguages" multiple>
-                    <option th:each="language : ${programmingLanguages}" th:value="${language.name}" th:text="${language.displayName}"></option>
-                </select><br/>
-                <button type="button" onclick="addSelectedLanguages()">Add to List</button><br/>
+            <div class="form-group col-md-8">
+                <label for="name">Name:</label>
+                <input type="text" th:field="*{name}" class="form-control" id="name" required>
             </div>
         </div>
-    </div>
 
-    <label></label>
-    <div id="selectedLanguages"></div>
-    <input type="hidden" id="selectedLanguagesInput" name="selectedLanguages" /><br/>
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="surname">Surname:</label>
+                <input type="text" th:field="*{surname}" class="form-control" id="surname" required>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="sex">Sex:</label>
+                <input type="text" th:field="*{sex}" class="form-control" id="sex" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="dateOfBirth">Date of Birth:</label>
+                <input type="text" th:field="*{dateOfBirth}" class="form-control" id="dateOfBirth" required>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="maritalStatus">Marital Status:</label>
+                <input type="text" th:field="*{maritalStatus}" class="form-control" id="maritalStatus" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="contactEmail">Email:</label>
+                <input type="text" th:field="*{contactEmail}" class="form-control" id="contactEmail" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="programmingLanguage">Programming Languages:</label>
+                <textarea th:field="*{programmingLanguage}" class="form-control" id="programmingLanguage" required rows="5"></textarea>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="skillsAndTools">Skills and Tools:</label>
+                <textarea th:field="*{skillsAndTools}" class="form-control" id="skillsAndTools" required rows="5"></textarea>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="projects">Projects:</label>
+                <input type="text" th:field="*{projects}" class="form-control" id="projects" required>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="socialMediaProfil">Social Media Profile:</label>
+                <input type="text" th:field="*{socialMediaProfil}" class="form-control" id="socialMediaProfil" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="workExperience">Work Experience:</label>
+                <textarea th:field="*{workExperience}" class="form-control" id="workExperience" required rows="5"></textarea>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="certificatesOfCourses">Certificates Of Courses:</label>
+                <textarea th:field="*{certificatesOfCourses}" class="form-control" id="certificatesOfCourses" required rows="5"></textarea>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="education">Education:</label>
+                <textarea th:field="*{education}" class="form-control" id="education" required rows="5"></textarea>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="followPosition">Follow Position:</label>
+                <input type="text" th:field="*{followPosition}" class="form-control" id="followPosition" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="language">Language:</label>
+                <input type="text" th:field="*{language}" class="form-control" id="language" required>
+            </div>
+
+            <div class="form-group col-md-8">
+                <label for="languageLevel">Language Level:</label>
+                <input type="text" th:field="*{languageLevel}" class="form-control" id="languageLevel" required>
+            </div>
+        </div>
+
+        <!-- Include other fields following the same pattern -->
+
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                <label for="hobby">Hobby:</label>
+                <input type="text" th:field="*{hobby}" class="form-control" id="hobby" required>
+            </div>
+        </div>
 
 
+        <div class="form-group">
 
-    <label>Education: </label>
-    <input type="text" th:field="*{education}" required/><br/>
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="address.country" class="form-control" required><br>
 
-    <label>Work Experience: </label>
-    <input type="text" th:field="*{workExperience}" required/><br/>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="address.city" class="form-control" required><br>
 
-    <label>Skills: </label>
-    <input type="text" th:field="*{skills}" required/><br/>
+            <label for="streetAndNumber">Street and Number:</label>
+            <input type="text" id="streetAndNumber" name="address.streetAndNumber" class="form-control" required><br>
 
-    <label>Language: </label>
-    <input type="text" th:field="*{language}" required/><br/>
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="address.postalCode" class="form-control" required><br>
+        </div>
 
-    <label>Language Level: </label>
-    <input type="text" th:field="*{languageLevel}" required/><br/>
-
-    <label>Hobby: </label>
-    <input type="text" th:field="*{hobby}" required/><br/>
-    <br>
-    <p>Address:</p>
-    <label for="country">Country:</label>
-    <input type="text" id="country" name="address.country" required><br>
-
-    <label for="city">City:</label>
-    <input type="text" id="city" name="address.city" required><br>
-
-    <label for="streetAndNumber">Street and Number:</label>
-    <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
-
-    <label for="postalCode">Postal Code:</label>
-    <input type="text" id="postalCode" name="address.postalCode" required><br>
-
-    <input type="submit" value="Create CV"/>
-    <!-- Hidden field for userId -->
-    <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
-
-</form>
-
-<script th:inline="javascript">
-    function displaySelectedLanguages() {
-        var select = document.getElementById("programmingLanguages");
-        var selectedLanguages = [];
-        for (var i = 0; i < select.length; i++) {
-            if (select.options[i].selected) {
-                selectedLanguages.push(select.options[i].text);
-            }
-        }
-        document.getElementById("selectedLanguages").innerHTML = "Selected Languages: " + selectedLanguages.join(", ");
-    }
-function addSelectedLanguages() {
-    var select = document.getElementById("programmingLanguages");
-    var selectedLanguages = [];
-    for (var i = 0; i < select.length; i++) {
-        if (select.options[i].selected) {
-            selectedLanguages.push(select.options[i].text);
-        }
-    }
-    var existingLanguages = document.getElementById("selectedLanguagesInput").value.split(',');
-    selectedLanguages = selectedLanguages.concat(existingLanguages); // Dodanie nowych języków do już istniejących
-    document.getElementById("selectedLanguagesInput").value = selectedLanguages.join(',');
-    displaySelectedLanguages(); // Wywołanie funkcji wyświetlającej wybrane języki
-}
-
-
-<!--    function displaySelectedSpecializations() {-->
-<!--        var select2 = document.getElementById("it_specializations");-->
-<!--        var selectedSpecializations = [];-->
-<!--        for (var i = 0; i < select2.length; i++) {-->
-<!--            if (select2.options[i].selected2) {-->
-<!--                selectedSpecializations.push(select2.options[i].text);-->
-<!--            }-->
-<!--        }-->
-
-<!--        document.getElementById("selectedSpecializations").innerHTML = "Selected Specializations: " + selectedSpecializations.join(", ");-->
-<!--    }-->
-
-<!--    function addSelectedSpecializations() {-->
-<!--        var select2 = document.getElementById("it_specializations");-->
-<!--        var selectedSpecializations = [];-->
-<!--        for (var i = 0; i < select2.length; i++) {-->
-<!--            if (select2.options[i].selected2) {-->
-<!--                selectedSpecializations.push(select2.options[i].text);-->
-<!--            }-->
-<!--        }-->
-<!--        var existingSpecializations = document.getElementById("selectedSpecializationsInput").value.split(',');-->
-<!--        selectedSpecializations = selectedSpecializations.concat(existingSpecializations); // Dodanie nowych języków do już istniejących-->
-<!--        document.getElementById("selectedSpecializationsInput").value = selectedSpecializations.join(',');-->
-<!--        displaySelectedSpecializations(); // Wywołanie funkcji wyświetlającej wybrane języki-->
-<!--    }-->
-
-</script>
-
+        <input type="submit" value="Create CV" class="btn btn-primary">
+        <!-- Hidden field for userId -->
+        <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+    </form>
+</div>
 </body>
 </html>

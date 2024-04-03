@@ -45,6 +45,7 @@
   "paths": {
     "/ping": {
       "get": {
+        "operationId": "pingCheck",
         "tags": ["Meta"],
         "summary": "Test service availability and authorization",
         "description": "Returns a successful response, if authorization succeeded",
@@ -2018,7 +2019,7 @@
                     "description": "If false and the update triggers the creation of a rejection action, then Gloat will send a rejection notice to the candidate. If true, a rejection notice will not be sent."
                   }
                 },
-                "allOf": [
+                "oneOf": [
                   {
                     "type": "object",
                     "required": ["vendor"],
@@ -2139,7 +2140,7 @@
                   "candidacies": {
                     "type": "array",
                     "items": {
-                      "allOf": [
+                      "oneOf": [
                         {
                           "type": "object",
                           "properties": {
@@ -3430,7 +3431,7 @@
       "candidacy_data_object": {
         "title": "Candidacy",
         "type": "object",
-        "allOf": [
+        "oneOf": [
           {"$ref": "#/components/schemas/candidacy_id_data"},
           {
             "type": "object",
@@ -3541,7 +3542,7 @@
           "candidacies": {
             "type": "array",
             "items": {
-              "allOf": [
+              "oneOf": [
                 {"$ref": "#/components/schemas/candidacy_outbound_object_get"},
                 {
                   "type": "object",

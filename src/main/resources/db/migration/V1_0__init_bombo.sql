@@ -4,7 +4,7 @@ CREATE TABLE user_table
     user_name VARCHAR(32)   NOT NULL,
     email     VARCHAR(32)   NOT NULL,
     password  VARCHAR(128)  NOT NULL,
-    visible    BOOLEAN              ,
+    active    BOOLEAN       NOT NULL,
     unique(email),
     PRIMARY KEY (user_id)
 

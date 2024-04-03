@@ -31,11 +31,9 @@ public class  UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private RoleRepository roleRepository;
-    private SmilesJobsUserDetailsService smilesJobsUserDetailsService;
     private CvMapper cvMapper;
     private CvJpaRepository cvRepository;
-    private AddressMapper addressMapper;
-    private AddressJpaRepository addressJpaRepository;
+
 
     @Transactional
     public User createCandidate(User user) {
@@ -52,7 +50,7 @@ public class  UserService {
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(encodedPassword)
-                .visible(user.getVisible())
+                .active(true)
                 .roles(roles)
                 .build();
 
@@ -74,7 +72,7 @@ public class  UserService {
                 .userName(user.getUserName())
                 .email(user.getEmail())
                 .password(encodedPassword)
-                .visible(true)
+                .active(true)
                 .roles(roles)
                 .build();
 
@@ -101,7 +99,7 @@ public class  UserService {
         userEntity.setUserName(user.getUserName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(user.getPassword());
-        userEntity.setVisible(user.getVisible());
+        userEntity.setActive(user.getActive());
 
         return userMapper.map(userRepository.save(userEntity));
     }
@@ -146,30 +144,30 @@ public class  UserService {
 
 
 
-    @SneakyThrows
-    public String loginUser(Model model,  Authentication auth) {
-        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
-        String username = userAuth.getName();
-
-
-
-        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CANDIDATE"))) {
-            // Zalogowano Kandydata pomyślnie
-            System.out.println("Zalogowano Kandydata pomyślnie");
-            model.addAttribute("username", username);
-            return "redirect:/candidate_portal";
-        } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
-            // Zalogowano Firmę pomyślnie
-            System.out.println("Zalogowano Firmę pomyślnie");
-            model.addAttribute("username", username);
-            return "redirect:/company_portal";
-        } else {
-            // Nieprawidłowe dane logowania
-            System.out.println("Nieprawidłowe dane logowania.");
-            model.addAttribute("error", "Invalid credentials");
-            return "login";
-        }
-    }
+//    @SneakyThrows
+//    public String loginUser(Model model,  Authentication auth) {
+//        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
+//        String username = userAuth.getName();
+//
+//
+//
+//        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CANDIDATE"))) {
+//            // Zalogowano Kandydata pomyślnie
+//            System.out.println("Zalogowano Kandydata pomyślnie");
+//            model.addAttribute("username", username);
+//            return "redirect:/candidate_portal";
+//        } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
+//            // Zalogowano Firmę pomyślnie
+//            System.out.println("Zalogowano Firmę pomyślnie");
+//            model.addAttribute("username", username);
+//            return "redirect:/company_portal";
+//        } else {
+//            // Nieprawidłowe dane logowania
+//            System.out.println("Nieprawidłowe dane logowania.");
+//            model.addAttribute("error", "Invalid credentials");
+//            return "login";
+//        }
+//    }
 
     public User getUserByJobOffer(JobOffer jobOffer) {
         Integer jobOfferId = jobOffer.getId();

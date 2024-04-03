@@ -50,8 +50,7 @@ public class CvController {
             @ModelAttribute("cvDTO") CvDTO cvDTO,
             Model model,
             BindingResult bindingResult,
-            Authentication authentication,
-            @RequestParam(name = "programmingLanguage", required = false) Set<String> programmingLanguageName
+            Authentication authentication
     ) {
         if (bindingResult.hasErrors()) {
             return "error";
@@ -64,13 +63,7 @@ public class CvController {
             model.addAttribute("userDTO", user);
             model.addAttribute("cvDTO", cvDTO);
 
-            Set<ProgrammingLanguage> programmingLanguages = enumService.getAllProgrammingLanguages();
-            model.addAttribute("programmingLanguages", programmingLanguages);
 
-            Optional<ProgrammingLanguage> optionalProgrammingLanguage = programmingLanguages.stream()
-                    .filter(language -> language.name().equals(programmingLanguageName))
-                    .findFirst();
-            optionalProgrammingLanguage.ifPresent(language -> model.addAttribute("selectedProgrammingLanguage", language));
 
             return "create_cv";
         } else {
@@ -83,8 +76,8 @@ public class CvController {
     @PostMapping("/createCV")
     @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     public String createCV(@Valid @ModelAttribute("cvDTO") CvDTO cvDTO, Model model,
-                           BindingResult bindingResult, Authentication authentication,
-                           @RequestParam(name = "programmingLanguages", required = false) Set<String> programmingLanguagesNames
+                           BindingResult bindingResult, Authentication authentication
+
 //                           @RequestParam("photo") MultipartFile photo
     ) {
         if (bindingResult.hasErrors()) {
@@ -98,9 +91,6 @@ public class CvController {
             }
 
             CV cv = cvMapperDTO.map(cvDTO);
-            Set<ProgrammingLanguage> programmingLanguages = enumService.convertToProgrammingLanguages(programmingLanguagesNames);
-            cv.setProgrammingLanguages(programmingLanguages);
-
             cvService.createCV(cv, loggedInUser);
 
             model.addAttribute("cvDTO", cv);
@@ -195,7 +185,13 @@ public class CvController {
             cv.setContactEmail(updateCvDTO.getContactEmail());
             cv.setEducation(updateCvDTO.getEducation());
             cv.setWorkExperience(updateCvDTO.getWorkExperience());
-            cv.setSkills(updateCvDTO.getSkills());
+//            cv.setCourses(updateCvDTO.getCourses());
+            cv.setSocialMediaProfil(updateCvDTO.getSocialMediaProfil());
+            cv.setProjects(updateCvDTO.getProjects());
+            cv.setAboutMe(updateCvDTO.getAboutMe());
+            cv.setCertificatesOfCourses(updateCvDTO.getCertificatesOfCourses());
+            cv.setProgrammingLanguage(updateCvDTO.getProgrammingLanguage());
+            cv.setSkillsAndTools(updateCvDTO.getSkillsAndTools());
             cv.setLanguage(updateCvDTO.getLanguage());
             cv.setLanguageLevel(updateCvDTO.getLanguageLevel());
             cv.setHobby(updateCvDTO.getHobby());
@@ -260,25 +256,6 @@ public class CvController {
             return "cv_not_found";
         }
     }
-
-
-    public static String displaySelectedLanguages(Set<String> selectedLanguages) {
-        return "Selected Languages: " + String.join(", ", selectedLanguages);
-    }
-
-    public static Set<String> addSelectedLanguages(Set<String> currentLanguages, Set<String> newLanguages) {
-        Set<String> selectedLanguagesSet = new HashSet<>();
-
-        if (currentLanguages != null) {
-            selectedLanguagesSet.addAll(currentLanguages);
-        }
-        if (newLanguages != null) {
-            selectedLanguagesSet.addAll(newLanguages);
-        }
-
-        return selectedLanguagesSet;
-    }
-
 
 
 }

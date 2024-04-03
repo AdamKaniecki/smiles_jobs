@@ -32,17 +32,26 @@
             <th>Name</th>
             <th>Surname</th>
             <th>Programming Languages</th>
-            <!--                <th>IT Specializations</th>-->
+            <th>Follow Position</th>
+            <th>Skill And Tools</th>
+
             <th>CV Details</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="cvDTO : ${cvDTOs}">
+        <tr th:each="cvDTO : ${cvDTOs}"
+            th:style="${cvDTO.visible == false ? 'color: gray;' : 'color: black;'}"
+        >
             <td th:text="${cvDTO.id}"></td>
             <td th:text="${cvDTO.name}"></td>
             <td th:text="${cvDTO.surname}"></td>
-            <td th:text="${cvDTO.programmingLanguages}"></td>
-            <!--                <td th:text="${cvDTO.it_specializations}"></td>-->
+            <td>
+                <span th:text="${#strings.length(cvDTO.programmingLanguage) > 60 ? #strings.substring(cvDTO.programmingLanguage, 0, 60) + '...' : cvDTO.programmingLanguage}"></span>
+            </td>
+            <td th:text="${cvDTO.followPosition}"></td>
+            <td>
+                <span th:text="${#strings.length(cvDTO.skillsAndTools) > 60 ? #strings.substring(cvDTO.skillsAndTools, 0, 60) + '...' : cvDTO.skillsAndTools}"></span>
+            </td>
             <td>
                 <a th:href="@{/cv/{cvId}(cvId=${cvDTO.id})}" class="btn btn-info" role="button">View Details</a>
             </td>
@@ -90,10 +99,12 @@
             <div class="col-md-4">
                 <label for="category">Search by category:</label>
                 <select id="category" name="category" class="form-control">
-                    <option value="name">Name</option>
-                    <option value="surname">Surname</option>
-                    <option value="workExperience">workExperience</option>
-                    <option value="skills">Skills</option>
+                    <option value="followPosition">Follow Position</option>
+                    <option value="programmingLanguage">Programming Language</option>
+                    <option value="skillsAndTools">Skills And Tools</option>
+                    <option value="language">Language</option>
+                    <option value="languageLevel">Language Level</option>
+                    <option value="education">Education</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -102,6 +113,7 @@
             </div>
             <div class="col">
                 <button type="submit" class="btn btn-primary">Search</button>
+                <span class="text-muted ml-2"> (Only visible candidates)</span>
             </div>
         </div>
     </form>

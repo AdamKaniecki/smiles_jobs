@@ -14,47 +14,72 @@
       th:method="PUT"
       th:object="${cvDTO}">
 
+
+  <label>About Me: </label>
+  <input type="text" th:field="*{aboutMe}" required/><br/>
+
   <label>Name: </label>
   <input type="text" th:field="*{name}" required/><br/>
 
   <label>Surname: </label>
   <input type="text" th:field="*{surname}" required/><br/>
 
-  <label>sex </label>
+  <label>Sex: </label>
   <input type="text" th:field="*{sex}" required/><br/>
 
-  <label>dateOfBirth: </label>
+  <label>Date of Birth: </label>
   <input type="text" th:field="*{dateOfBirth}" required/><br/>
 
-  <label>maritalStatus: </label>
+  <label>Marital Status: </label>
   <input type="text" th:field="*{maritalStatus}" required/><br/>
 
-  <label>phoneNumber: </label>
+  <label>Phone Number: </label>
   <input type="text" th:field="*{phoneNumber}" required/><br/>
 
-  <label>email: </label>
+  <label>Email: </label>
   <input type="text" th:field="*{contactEmail}" required/><br/>
 
-  <label>education </label>
-  <input type="text" th:field="*{education}" required/><br/>
+  <label>Programming Languages: </label>
+  <input type="text" th:field="*{programmingLanguage}" required/><br/>
+
+  <label>Skills And Tools: </label>
+  <input type="text" th:field="*{skillsAndTools}" required/><br/>
+
+  <label>Projects: </label>
+  <input type="text" th:field="*{projects}" required/><br/>
+
+  <label>Social Media Profile: </label>
+  <input type="text" th:field="*{socialMediaProfil}" required/><br/>
+
+
+<!--  <label>Courses: </label>-->
+<!--  <input type="text" th:field="*{courses}" required/><br/>-->
 
   <label>Work Experience: </label>
   <input type="text" th:field="*{workExperience}" required/><br/>
 
-  <label>skills: </label>
-  <input type="text" th:field="*{skills}" required/><br/>
 
-  <label>language: </label>
+  <label>Certificates Of Courses: </label>
+  <input type="text" th:field="*{certificatesOfCourses}" required/><br/>
+
+  <label>Education: </label>
+  <input type="text" th:field="*{education}" required/><br/>
+
+
+  <label>Follow Position: </label>
+  <input type="text" th:field="*{followPosition}" required/><br/>
+
+<!--  <label>Years Of Experience in IT: </label>-->
+<!--  <input type="text" th:field="*{yearsOfExperience}" required/><br/>-->
+
+  <label>Language: </label>
   <input type="text" th:field="*{language}" required/><br/>
 
-  <label>languageLevel: </label>
+  <label>Language Level: </label>
   <input type="text" th:field="*{languageLevel}" required/><br/>
 
-  <label>hobby: </label>
+  <label>Hobby: </label>
   <input type="text" th:field="*{hobby}" required/><br/>
-
-  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
-  <input type="hidden" id="cvId" name="id" th:value="${cvDTO.id}">
 
   <!-- Include other CV fields as needed -->
 

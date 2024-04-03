@@ -14,6 +14,7 @@ import java.util.Set;
 @Builder
 @EqualsAndHashCode(of = "id")
 public class CV {
+
     private Integer id;
     private String name;
     private String surname;
@@ -24,17 +25,22 @@ public class CV {
     private String contactEmail;
     private String workExperience;
     private String education;
-    private String skills;
-    private Set<ProgrammingLanguage> programmingLanguages;
-//    private Set<IT_Specializations> it_specializations;
-    private String tools;
-    private Integer yearsOfExperience;
+//    private String courses;
+    private String socialMediaProfil;
+    private String projects;
+    private String aboutMe;
+    private String certificatesOfCourses;
+    private String programmingLanguage;
+    private String skillsAndTools;
+//    private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;
+    private String followPosition;
+    private Boolean visible;
     private User user;
     private Address address;
-//    private byte [] photo;
+
 
 
 

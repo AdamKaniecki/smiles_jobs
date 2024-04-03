@@ -59,35 +59,8 @@ public class CvRepository implements CvDAO {
                 .toList();
     }
 
-
-//
-//    public CV getCVById(Integer cvId) {
-//        CvEntity cvEntity = cvRepository.findById(cvId).orElseThrow(()-> new EntityNotFoundException("Not found CV with ID: " + cvId));
-//
-//        return cvMapper.map(cvEntity);
-//    }
-//    public Optional<CV> findCvByUserId(Integer id) {
-//        return cvRepository.findByUserId(id);
-//    }
-//
-//    public boolean existByUser(User loggedInUser) {
-//        return cvRepository.existsByUser(userMapper.map(loggedInUser));
-//    }
-//
-//    public Optional<CV> findById(Integer id) {
-//
-//        return cvRepository.findById(id).map(cvMapper::map);
-//    }
-//
-//    public Optional<CV> findByUser(User user) {
-//        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
-//        return cvEntityOptional.map(cvMapper::map);
-//    }
-//
-//    public CV findByUser2(User user){
-//        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
-//                .orElseThrow(()-> new EntityNotFoundException("Not found CVEntity for user: " + user.getUserName()));
-//        return cvMapper.map(cvEntity);
-//    }
-
+    public void saveCV(CV cv) {
+        CvEntity cvEntity = cvMapper.map(cv);
+        cvJpaRepository.save(cvEntity);
+    }
 }

@@ -13,11 +13,14 @@ import java.util.Optional;
 @Repository
 public interface CvJpaRepository extends JpaRepository<CvEntity, Integer> {
 
-    @Query("SELECT a FROM CvEntity a WHERE " +
-            "(:category = 'name' AND LOWER(a.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'surname' AND LOWER(a.surname) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'workExperience' AND LOWER(a.workExperience) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
-            "(:category = 'skills' AND LOWER(a.skills) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    @Query("SELECT a FROM CvEntity a WHERE a.visible = true AND (" +
+            "(:category = 'followPosition' AND LOWER(a.followPosition) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'language' AND LOWER(a.language) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'education' AND LOWER(a.education) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'programmingLanguage' AND LOWER(a.programmingLanguage) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'languageLevel' AND LOWER(a.languageLevel) LIKE LOWER(CONCAT('%', :keyword, '%'))) OR " +
+            "(:category = 'skillsAndTools' AND LOWER(a.skillsAndTools) LIKE LOWER(CONCAT('%', :keyword, '%'))))"
+    )
     List<CvEntity> findCvByKeywordAndCategory(
             @Param("keyword") String keyword,
             @Param("category") String category);
