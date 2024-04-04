@@ -66,7 +66,7 @@ public class BusinessCardRestController {
 //        }
 //        return ResponseEntity.notFound().build();
 //    }
-
+//
     @GetMapping("/showBusinessCard/{businessCardId}")
     public ResponseEntity<?> showBusinessCard(@PathVariable Integer businessCardId) {
         Optional<BusinessCard> businessCard = businessCardRepository.findById2(businessCardId);
