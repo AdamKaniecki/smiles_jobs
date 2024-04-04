@@ -1,5 +1,6 @@
 package pl.zajavka.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -40,8 +41,11 @@ public class CvDTO {
     private String languageLevel;
     private String hobby;
     private String followPosition;
-    private Boolean visible;
-    private User user;
     private Address address;
+    @JsonIgnore
+    private Boolean visible;
+    @JsonIgnore
+    private User user;
+
 
 }

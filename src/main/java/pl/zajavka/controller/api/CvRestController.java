@@ -13,8 +13,10 @@ import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.SearchRequest;
 import pl.zajavka.infrastructure.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -156,6 +158,18 @@ public class CvRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting CV");
         }
+    }
+
+    @GetMapping("/searchCV")
+    public ResponseEntity<List<CvDTO>> searchCV(@RequestBody SearchRequest searchRequest, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String keyword = searchRequest.getKeyword();
+        String category = searchRequest.getCategory();
+        List<CvDTO> searchResultsDTO = cvService.searchCvByKeywordAndCategory(keyword, category);
+        return ResponseEntity.ok(searchResultsDTO);
     }
 
 }

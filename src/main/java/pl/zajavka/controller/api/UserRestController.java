@@ -101,4 +101,6 @@ public class UserRestController {
 //    curl który aktualizuje Kandydata:
 //curl -i -H "Content-Type: application/json" -X PUT http://localhost:8800/users/11 -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"active\": true,\"roles\": [{\"roleId\": 1}]}"
 
+
+
 }

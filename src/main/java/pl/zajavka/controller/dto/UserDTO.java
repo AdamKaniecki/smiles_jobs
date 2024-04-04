@@ -1,5 +1,6 @@
 package pl.zajavka.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 import pl.zajavka.infrastructure.domain.Notification;
@@ -19,7 +20,8 @@ public class UserDTO {
     private String email;
     private String password;
     private Boolean active;
-//    private Set<RoleEntity> roles;
+    @JsonIgnore
     private Set<Notification> notificationsSend;
+    @JsonIgnore
     private Set<Notification> notificationsReceive;
 }

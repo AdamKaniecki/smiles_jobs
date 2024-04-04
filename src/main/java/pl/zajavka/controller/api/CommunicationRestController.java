@@ -23,8 +23,7 @@ public class CommunicationRestController {
     private CvService cvService;
     private NotificationService notificationService;
     private CvRepository cvRepository;
-    private JobOfferRepository jobOfferRepository;
-    private NotificationRepository notificationRepository;
+
 
     @PostMapping("/sendCV")
     @Transactional

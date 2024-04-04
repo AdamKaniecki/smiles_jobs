@@ -1,5 +1,6 @@
 package pl.zajavka.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import pl.zajavka.infrastructure.domain.User;
 
@@ -27,9 +28,12 @@ public class JobOfferDTO {
     private String benefits;
     private String jobDescription;
     private OffsetDateTime jobOfferDateTime;
-    private Boolean active;
-    private Integer neededStaff;
-    private Integer hiredCount;
+    @JsonIgnore
+    private boolean active;
+    @JsonIgnore
+    private int neededStaff;
+    @JsonIgnore
+    private int hiredCount;;
 
 
 }

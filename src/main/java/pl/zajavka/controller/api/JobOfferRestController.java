@@ -13,11 +13,9 @@ import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.domain.Address;
-import pl.zajavka.infrastructure.domain.CV;
-import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.domain.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -169,6 +167,37 @@ public class JobOfferRestController {
                     .body("An error occurred while updating the job offer");
         }
     }
+
+    @GetMapping("/searchJobOffers")
+    public ResponseEntity<List<JobOfferDTO>> searchJobOffers(
+            @RequestBody SearchRequest searchRequest,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String keyword = searchRequest.getKeyword();
+        String category = searchRequest.getCategory();
+
+        List<JobOffer> searchResults;
+        if ("salaryMin".equals(category)) {
+            try {
+                BigDecimal salaryMinValue = BigDecimal.valueOf(Double.parseDouble(keyword));
+                searchResults = jobOfferService.searchJobOffersBySalary(category, salaryMinValue);
+            } catch (NumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
+        } else {
+            searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
+        }
+
+        List<JobOfferDTO> searchResultsDTO = searchResults.stream()
+                .map(jobOfferMapperDTO::map)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(searchResultsDTO);
+    }
+
 
 }
 

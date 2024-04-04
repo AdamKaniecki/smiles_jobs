@@ -66,9 +66,9 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/createCandidate/**","/api/createCompany/**","/api/showCV/**","/api/deleteCV/**",
                         "/api/createJobOffer/**","/api/showJobOffer/**","/api/showBusinessCard/**","/api/updateUser/**").permitAll()
                 .requestMatchers("/api/ShowMyCV/**","/api/createCV/**","/api/updateCv/**",
-               "/api/sendCV/**","/api/changeMeetingDate/**","/api/acceptMeetingDate","/api/deleteCV/**").hasAuthority("ROLE_CANDIDATE")
+               "/api/sendCV/**","/api/changeMeetingDate/**","/api/acceptMeetingDate","/api/deleteCV/**","/api/searchJobOffers").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("api/createJobOffer/**", "/api/ShowMyJobOffers/**","/api/deleteJobOffer/**",
-                        "/api/createBusinessCard/**","/api/showMyBusinessCard/**","/api/deleteBusinessCard/**","/api/arrangeInterview/**","/api/decline/**","/api/hired/**").hasAuthority("ROLE_COMPANY")
+                        "/api/createBusinessCard/**","/api/showMyBusinessCard/**","/api/deleteBusinessCard/**","/api/arrangeInterview/**","/api/decline/**","/api/hired/**","/api/searchCV/**").hasAuthority("ROLE_COMPANY")
                 .and()
                 .formLogin()
                 .permitAll()
