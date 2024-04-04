@@ -17,7 +17,7 @@ import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.util.Optional;
-//
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api")
