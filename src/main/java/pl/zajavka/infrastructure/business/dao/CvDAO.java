@@ -1,5 +1,6 @@
 package pl.zajavka.infrastructure.business.dao;
 
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 
@@ -9,13 +10,13 @@ import java.util.Optional;
 public interface CvDAO {
     List<CV> findAll();
     boolean existByUser(User loggedInUser);
-    Optional<CV> findById(Integer id);
+    CV findById(Integer id);
 
-    Optional<CV> findByUser(User user);
-    CV findByUser2(User user);
+    CV findByUser(User user);
 
     void deleteById(Integer id);
 
     List<CV>searchCvByKeywordAndCategory(String keyword, String category);
 
+    void saveCV(CvEntity newEntity);
 }

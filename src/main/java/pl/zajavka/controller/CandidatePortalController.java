@@ -45,7 +45,6 @@ public class CandidatePortalController {
     private JobOfferService jobOfferService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
-    private CvService cvService;
     private PaginationService paginationService;
 
 
@@ -55,7 +54,7 @@ public class CandidatePortalController {
             Authentication authentication,
             Model model,
             @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
-//
+
     ) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
@@ -69,9 +68,7 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
         List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
-
         model.addAttribute("notificationDTOs",notificationDTOs);
-//        model.addAttribute("username", username);
 
         return "candidate_portal";
     }
@@ -82,7 +79,6 @@ public class CandidatePortalController {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-//        List<NotificationDTO> notificationDTOs = notificationRepository.findByUser(loggedInUser).stream()
         List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser);
 
         Page<NotificationDTO> notificationDTOsPage = paginationService.createNotificationPage(notificationDTOs, pageable);
@@ -108,8 +104,7 @@ public class CandidatePortalController {
                 BigDecimal salaryMinValue = BigDecimal.valueOf(Double.parseDouble(keyword)); // Parsowanie wartości salaryMin
                 searchResults = jobOfferService.searchJobOffersBySalary(category, salaryMinValue);
             } catch (NumberFormatException e) {
-                // Obsługa błędu parsowania
-                // Możesz np. przekierować użytkownika na stronę błędu lub zastosować inną logikę obsługi błędu
+
                 return "error_page"; // Zwróć widok strony błędu
             }
         } else {
@@ -126,78 +121,6 @@ public class CandidatePortalController {
 
         return "search_job_offers_results";
     }
-
-
-
-
-
-
-//    @PostMapping("/sendCV")
-//    @Transactional
-//    public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Authentication authentication) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//        User adresat = jobOffer.getUser();
-//
-//        Optional<CV> userCVOptional = cvService.findByUser(loggedInUser);
-//        if (userCVOptional.isPresent()) {
-//            CV cv = userCVOptional.get();
-//
-//            if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
-//                return "cv_already_sent";
-//            } else {
-//                notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
-//                userService.save(loggedInUser);
-//                userService.save(adresat);
-//
-//                return "cv_send_successfully";
-//            }
-//        } else {
-//            return "cv_not_found";
-//        }
-//    }
-
-
-
-
-
-
-//    @PostMapping("/changeMeetingDate")
-//        public String changeMeetingDate (
-//                @RequestParam("notificationId") Integer notificationId,
-//                @RequestParam("jobOfferId") Integer jobOfferId,
-//                Authentication authentication
-//    ){
-//            String username = authentication.getName();
-//            User loggedInUser = userService.findByUserName(username);
-//            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//            Notification notification = notificationService.findById(notificationId);
-//            User adresat = jobOffer.getUser();
-//
-//            notificationService.changeMeetingDate(notification, loggedInUser, adresat);
-//
-//            return "cv_created_successfully";
-//        }
-//
-//
-//        @PostMapping("/acceptMeetingDate")
-//        public String acceptNotification (
-//                @RequestParam("notificationId") Integer notificationId,
-//                @RequestParam("jobOfferId") Integer jobOfferId,
-//                Authentication authentication
-//    ){
-//            String username = authentication.getName();
-//            User loggedInUser = userService.findByUserName(username);
-//            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-//            Notification notification = notificationService.findById(notificationId);
-//            User adresat = jobOffer.getUser();
-//
-//            notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
-//
-//            return "cv_created_successfully";
-//        }
-
 
     }
 

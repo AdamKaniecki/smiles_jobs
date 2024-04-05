@@ -2,23 +2,19 @@ package pl.zajavka.infrastructure.business;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
-
+import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
-import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
-import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
-import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
-import pl.zajavka.infrastructure.security.*;
+import pl.zajavka.infrastructure.security.RoleEntity;
+import pl.zajavka.infrastructure.security.RoleRepository;
+import pl.zajavka.infrastructure.security.UserEntity;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.HashSet;
@@ -142,32 +138,6 @@ public class  UserService {
         userRepository.saveAndFlush(userEntity);
     }
 
-
-
-//    @SneakyThrows
-//    public String loginUser(Model model,  Authentication auth) {
-//        Authentication userAuth = SecurityContextHolder.getContext().getAuthentication();
-//        String username = userAuth.getName();
-//
-//
-//
-//        if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_CANDIDATE"))) {
-//            // Zalogowano Kandydata pomyślnie
-//            System.out.println("Zalogowano Kandydata pomyślnie");
-//            model.addAttribute("username", username);
-//            return "redirect:/candidate_portal";
-//        } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_COMPANY"))) {
-//            // Zalogowano Firmę pomyślnie
-//            System.out.println("Zalogowano Firmę pomyślnie");
-//            model.addAttribute("username", username);
-//            return "redirect:/company_portal";
-//        } else {
-//            // Nieprawidłowe dane logowania
-//            System.out.println("Nieprawidłowe dane logowania.");
-//            model.addAttribute("error", "Invalid credentials");
-//            return "login";
-//        }
-//    }
 
     public User getUserByJobOffer(JobOffer jobOffer) {
         Integer jobOfferId = jobOffer.getId();

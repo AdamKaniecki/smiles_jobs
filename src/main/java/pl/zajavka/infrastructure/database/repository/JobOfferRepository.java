@@ -35,8 +35,7 @@ public class JobOfferRepository implements JobOfferDAO {
     public List<JobOffer> findListByUser(User user) {
         UserEntity userEntity = userMapper.map(user);
         List<JobOfferEntity> jobOfferEntityList = jobOfferJpaRepository.findListByUser(userEntity);
-        List <JobOffer> jobOfferList = jobOfferMapper.map(jobOfferEntityList);
-        return jobOfferList;
+        return jobOfferMapper.map(jobOfferEntityList);
     }
 
     public Optional<JobOffer> findByUser(User loggedInUser) {

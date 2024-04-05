@@ -6,11 +6,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import pl.zajavka.infrastructure.business.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pl.zajavka.infrastructure.business.CvService;
+import pl.zajavka.infrastructure.business.JobOfferService;
+import pl.zajavka.infrastructure.business.NotificationService;
+import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
 import pl.zajavka.infrastructure.domain.*;
 
 @AllArgsConstructor
@@ -20,9 +24,8 @@ public class CommunicationRestController {
 
     private UserService userService;
     private JobOfferService jobOfferService;
-    private CvService cvService;
     private NotificationService notificationService;
-    private CvRepository cvRepository;
+    private CvService cvService;
 
 
     @PostMapping("/sendCV")
@@ -32,17 +35,17 @@ public class CommunicationRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
             JobOffer jobOffer = jobOfferService.findById(request.getJobOfferId());
-            CV cv = cvRepository.findByUser2(loggedInUser);
+            CV cv = cvService.findByUser(loggedInUser);
             User adresat = jobOffer.getUser();
 
-            // Sprawdź, czy CV użytkownika istnieje
+
             if (cv == null) {
-                // Jeśli CV nie istnieje, zwróć odpowiedź z błędem
+
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
             }
 
             if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
-                // Jeśli CV już zostało wysłane do oferty pracy, zwróć odpowiedź z błędem
+
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CV already sent");
             } else {
                 // Wysłanie powiadomienia o przesłaniu CV
@@ -50,11 +53,10 @@ public class CommunicationRestController {
                 userService.save(loggedInUser);
                 userService.save(adresat);
 
-                // Zwróć odpowiedź potwierdzającą
                 return ResponseEntity.status(HttpStatus.OK).body("CV sent successfully");
             }
         } catch (EntityNotFoundException e) {
-            // Obsłuż wyjątek EntityNotFoundException i zwróć odpowiedź z błędem
+
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
         }
     }

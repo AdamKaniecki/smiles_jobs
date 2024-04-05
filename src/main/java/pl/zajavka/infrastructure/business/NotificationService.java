@@ -41,7 +41,7 @@ import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 @Service
 @AllArgsConstructor
 public class NotificationService {
-    private NotificationJpaRepository notificationJpaRepository;
+
     private NotificationMapper notificationMapper;
     private UserMapper userMapper;
     private UserService userService;
@@ -51,6 +51,7 @@ public class NotificationService {
     private CvRepository cvRepository;
     private final NotificationDAO notificationDAO;
     private NotificationMapperDTO notificationMapperDTO;
+
 
 
     @Transactional
@@ -65,7 +66,7 @@ public class NotificationService {
                 .receiverUser(userMapper.map(adresat))
                 .build();
 
-        notificationJpaRepository.save(notificationEntity);
+        notificationDAO.save(notificationEntity);
 
         return notificationMapper.map(notificationEntity);
     }
@@ -73,7 +74,7 @@ public class NotificationService {
 
     public void save(Notification notification) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
-        notificationJpaRepository.save(notificationEntity);
+        notificationDAO.save(notificationEntity);
     }
 
 
@@ -88,7 +89,7 @@ public class NotificationService {
             notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(adresat));
-            notificationJpaRepository.save(notificationEntity);
+            notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
             userService.save(adresat);
         } else {
@@ -106,7 +107,7 @@ public class NotificationService {
             notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(adresat));
-            notificationJpaRepository.save(notificationEntity);
+            notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
             userService.save(adresat);
         } else {
@@ -125,7 +126,7 @@ public class NotificationService {
             notificationEntity.setCandidateMessage("wysłano akceptację terminu");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(adresat));
-            notificationJpaRepository.save(notificationEntity);
+            notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
             userService.save(adresat);
         } else {
@@ -146,7 +147,7 @@ public class NotificationService {
         notificationEntity.setCandidateMessage("niestety nie zostałeś zatrudniony");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(adresat));
-        notificationJpaRepository.save(notificationEntity);
+        notificationDAO.save(notificationEntity);
         userService.save(loggedInUser);
         userService.save(adresat);
     }
@@ -162,7 +163,7 @@ public class NotificationService {
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(adresat));
 //            poprawić to notification Repository
-            notificationJpaRepository.save(notificationEntity);
+            notificationDAO.save(notificationEntity);
 
             CV cv = notification.getCv();
             cv.setVisible(false);
@@ -189,7 +190,7 @@ public class NotificationService {
     }
 
     public void deleteNotificationsByCvId(Integer cvId) {
-        notificationJpaRepository.deleteByCvId(cvId);
+        notificationDAO.deleteByCvId(cvId);
     }
 
     public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
@@ -197,12 +198,12 @@ public class NotificationService {
 
         UserEntity userEntity = userMapper.map(loggedInUser);
         JobOfferEntity jobOfferEntity = jobOfferMapper.map(jobOffer);
-        return notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
+        return notificationDAO.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
     }
 
 
     public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
-        Page<NotificationEntity> notificationEntities = notificationJpaRepository.findAll(pageable);
+        Page<NotificationEntity> notificationEntities = notificationDAO.findAll(pageable);
         return notificationEntities.map(notificationMapper::map);
     }
 
@@ -231,42 +232,11 @@ public class NotificationService {
     }
 
 
-//    public List<Notification> findByUser(User user) {
-//        UserEntity userEntity = userMapper.map(user);
-//        List<NotificationEntity> notificationEntities = notificationJpaRepository.findByUser(userEntity);
-//        return notificationMapper.mapToList(notificationEntities);
-//    }
-
-
-//    public Notification findUserRorPagination(User user){
-//        UserEntity userEntity = userMapper.map(user);
-//        NotificationEntity notificationEntity = notificationRepository.findUserRorPagination(userEntity);
-//        return notificationMapper.map(notificationEntity);
-//    }
-
-
-//    @Transactional
-//    public Page<Notification> findByUser(User user, Pageable pageable) {
-//        // Pobierz stronę powiadomień z bazy danych
-//        UserEntity userEntity = userMapper.map(user);
-//        Page<NotificationEntity> notificationEntitiesPage = notificationRepository.findByUser(userEntity, pageable);
-//        return notificationMapper.mapToPage(notificationEntitiesPage,pageable);
-
-//        // Mapuj powiadomienia na DTO
-//        List<NotificationDTO> notificationDTOs = notificationEntityPage.getContent().stream()
-//                .map(notificationMapper::map)
-//                .collect(Collectors.toList());
-
-    // Zwróć stronę paginacji z zmapowanymi obiektami DTO
 
 }
 
 
-//    public Page<Notification> findByUser(User user, Pageable pageable ) {
-//        UserEntity userEntity = userMapper.map(user);
-//      List<NotificationEntity> notificationEntities = notificationRepository.findByUser(userEntity);
-//        return notificationMapper.mapToList(notificationEntities);
-//}
+
 
 
 

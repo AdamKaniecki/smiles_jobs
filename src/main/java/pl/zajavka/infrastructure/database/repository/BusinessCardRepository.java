@@ -31,10 +31,6 @@ public class BusinessCardRepository implements BusinessCardDAO {
         return businessCardMapper.map(businessCardEntity);
     }
 
-    public Optional<BusinessCard> findByUser2(User loggedInUser) {
-        Optional<BusinessCardEntity> businessCardEntityOptional = businessCardJpaRepository.findByUser(userMapper.map(loggedInUser));
-        return businessCardEntityOptional.map(businessCardMapper::map);
-    }
 
     public BusinessCard findByUser(User loggedInUser) {
         UserEntity userEntity = userMapper.map(loggedInUser);
@@ -47,6 +43,13 @@ public class BusinessCardRepository implements BusinessCardDAO {
         return businessCardJpaRepository.existsByUser(userMapper.map(loggedInUser));
     }
 
+    @Override
+    public void save(BusinessCardEntity businessCardEntity) {
+        businessCardJpaRepository.save(businessCardEntity);
+    }
 
-
+    @Override
+    public void deleteById(Integer id) {
+        businessCardJpaRepository.deleteById(id);
+    }
 }

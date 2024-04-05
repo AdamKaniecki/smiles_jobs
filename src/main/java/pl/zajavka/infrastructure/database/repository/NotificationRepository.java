@@ -1,11 +1,13 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
@@ -45,14 +47,25 @@ private final UserMapper userMapper;
     public List<NotificationEntity> findByCvId(Integer id) {
         return notificationJpaRepository.findByCvId(id);
     }
-//    public List<Notification> findLatestByUser(User user) {
-//        UserEntity userEntity = userMapper.map(user);
-//        // Ustawiamy sortowanie po dacie wstecz i limitujemy do 5 notyfikacji
-//        Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "dateTime"));
-//        List<NotificationEntity> notificationEntities = notificationJpaRepository.findByUser(userEntity,pageable);
-//        return notificationMapper.mapToList(notificationEntities);
-//    }
 
 
+    @Override
+    public void save(NotificationEntity notificationEntity) {
+        notificationJpaRepository.save(notificationEntity);
+    }
 
+    @Override
+    public void deleteByCvId(Integer cvId) {
+        notificationJpaRepository.deleteById(cvId);
+    }
+
+    @Override
+    public boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntity) {
+      return   notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity,jobOfferEntity);
+    }
+
+    @Override
+    public Page<NotificationEntity> findAll(Pageable pageable) {
+        return notificationJpaRepository.findAll(pageable);
+    }
 }

@@ -9,18 +9,18 @@ import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.dao.CvDAO;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.database.entity.NotificationEntity;
+import pl.zajavka.infrastructure.database.entity.Status;
+import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
+import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.infrastructure.database.entity.*;
-import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
-import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
-import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
-import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 
@@ -32,7 +32,6 @@ public class CvService {
     private CvJpaRepository cvRepository;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
-    private NotificationJpaRepository notificationJpaRepository;
     private final NotificationDAO notificationDAO;
     private final CvDAO cvDAO;
     private final CvMapperDTO cvMapperDTO;
@@ -40,9 +39,6 @@ public class CvService {
 
     @Transactional
     public CV createCV(CV cv, User user) {
-        if (cvRepository.existsByUser(userMapper.map(user))) {
-            return null;
-        }
 
         Address addressCV = cv.getAddress();
         CvEntity newEntity = CvEntity.builder()
@@ -56,7 +52,7 @@ public class CvService {
                 .phoneNumber(cv.getPhoneNumber())
                 .education(cv.getEducation())
                 .workExperience(cv.getWorkExperience())
-//                .courses(cv.getCourses())
+
                 .socialMediaProfil(cv.getSocialMediaProfil())
                 .projects(cv.getProjects())
                 .aboutMe(cv.getAboutMe())
@@ -73,7 +69,7 @@ public class CvService {
                 .build();
 
 
-        cvRepository.saveAndFlush(newEntity);
+        cvDAO.saveCV(newEntity);
         return cvMapper.map(newEntity);
     }
 
@@ -81,11 +77,9 @@ public class CvService {
     @Transactional
     public void updateCV(CV updatedCv) {
         if (updatedCv.getId() != null) {
-            // Sprawdź, czy CV istnieje w bazie danych
-            CvEntity cvEntity = cvRepository.findById(updatedCv.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("CV with ID " + updatedCv.getId() + " not found"));
+            CV cv = cvDAO.findById(updatedCv.getId());
+            CvEntity cvEntity = cvMapper.map(cv);
 
-            // Aktualizuj pola CV na podstawie danych z formularza
             cvEntity.setName(updatedCv.getName());
             cvEntity.setSurname(updatedCv.getSurname());
             cvEntity.setDateOfBirth(updatedCv.getDateOfBirth());
@@ -106,13 +100,10 @@ public class CvService {
             cvEntity.setHobby(updatedCv.getHobby());
             cvEntity.setFollowPosition(updatedCv.getFollowPosition());
 
-            // Zapisz zaktualizowany obiekt CV w bazie danych
-           cvRepository.save(cvEntity);
+            cvDAO.saveCV(cvEntity);
 
-//            return cvMapper.map(cvEntityUpdate);
         } else {
-            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
-            throw new EntityNotFoundException("CV ID cannot be null");
+            throw new EntityNotFoundException("Not found CV entity with ID: " + updatedCv.getId());
         }
     }
 
@@ -141,19 +132,19 @@ public class CvService {
     }
 
     public boolean existByUser(User loggedInUser) {
-       return cvDAO.existByUser(loggedInUser);
+        return cvDAO.existByUser(loggedInUser);
     }
 
-    public Optional<CV> findByUser(User loggedInUser) {
-       return cvDAO.findByUser(loggedInUser);
+    public CV findByUser(User loggedInUser) {
+        return cvDAO.findByUser(loggedInUser);
     }
 
-    public Optional<CV> findById(Integer id) {
-       return cvDAO.findById(id);
+    public CV findById(Integer id) {
+        return cvDAO.findById(id);
     }
 
     public List<CvDTO> searchCvByKeywordAndCategory(String keyword, String category) {
-        return cvDAO.searchCvByKeywordAndCategory(keyword,category).stream()
+        return cvDAO.searchCvByKeywordAndCategory(keyword, category).stream()
                 .map(cvMapperDTO::map)
                 .toList();
     }

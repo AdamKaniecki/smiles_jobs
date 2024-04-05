@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                 ).hasAuthority("ROLE_CANDIDATE")
 
 //                .requestMatchers("/createJobOffer").hasAuthority("ROLE_COMPANY")
-                .requestMatchers("/candidate_portal/**","/searchJobOffers/**").hasAuthority("ROLE_CANDIDATE")
+                .requestMatchers("/candidate_portal/**","/searchJobOffers/**","/businessCardNotFound/**").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("cv_already_sent","/updateAddressDone/**","/jobOffer/{jobOfferId}", "/businessCard/{businessCardId}"
                       )
                 .permitAll()
@@ -64,7 +64,7 @@ public class SecurityConfiguration {
                         "/updateBusinessCardDone/**",  "/updateBusinessCardForm/**","/deleteBusinessCard/**"
                         ).hasAuthority("ROLE_COMPANY")
                 .requestMatchers("/api/createCandidate/**","/api/createCompany/**","/api/showCV/**","/api/deleteCV/**",
-                        "/api/createJobOffer/**","/api/showJobOffer/**","/api/showBusinessCard/**","/api/updateUser/**").permitAll()
+                       "/api/showJobOffer/**","/api/showBusinessCard/**","/api/updateUser/**","/api/myNotifications").permitAll()
                 .requestMatchers("/api/ShowMyCV/**","/api/createCV/**","/api/updateCv/**",
                "/api/sendCV/**","/api/changeMeetingDate/**","/api/acceptMeetingDate","/api/deleteCV/**","/api/searchJobOffers").hasAuthority("ROLE_CANDIDATE")
                 .requestMatchers("api/createJobOffer/**", "/api/ShowMyJobOffers/**","/api/deleteJobOffer/**",

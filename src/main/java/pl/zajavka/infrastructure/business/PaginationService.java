@@ -22,19 +22,8 @@ public class PaginationService {
 
     private final JobOfferJpaRepository jobOfferRepository;
     private final CvJpaRepository cvRepository;
-    private final NotificationJpaRepository notificationJpaRepository;
     private final JobOfferMapper jobOfferMapper;
     private final CvMapper cvMapper;
-
-
-    public Page<JobOfferEntity> paginate(int pageNumber, int pageSize){
-        System.out.printf("pagination. pn: %s, ps: %s ####%n", pageNumber, pageSize);
-
-        Sort sort = Sort.by("id").ascending();
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        return jobOfferRepository.findAll(pageable);
-    }
 
     public Page<NotificationDTO> createNotificationPage(List<NotificationDTO> notifications, Pageable pageable) {
         int start = (int) pageable.getOffset();
@@ -57,4 +46,16 @@ public class PaginationService {
         Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
         return jobOfferEntities.map(jobOfferMapper::map);
     }
+
+
 }
+
+//    public Page<JobOfferEntity> paginate(int pageNumber, int pageSize){
+//        System.out.printf("pagination. pn: %s, ps: %s ####%n", pageNumber, pageSize);
+//
+//        Sort sort = Sort.by("id").ascending();
+//
+//        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+//        return jobOfferRepository.findAll(pageable);
+//    }
+//}

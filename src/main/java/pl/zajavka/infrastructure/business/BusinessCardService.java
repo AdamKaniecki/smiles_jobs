@@ -5,39 +5,28 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import pl.zajavka.infrastructure.business.dao.BusinessCardDAO;
+import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
+import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
-import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
-import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
-import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class BusinessCardService {
-    private BusinessCardJpaRepository businessCardJpaRepository;
     private BusinessCardMapper businessCardMapper;
     private UserMapper userMapper;
     private AddressMapper addressMapper;
     private final BusinessCardDAO businessCardDAO;
 
+
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
-
-        if (businessCardJpaRepository.existsByUser(userMapper.map(user))) {
-            return null;
-        }
-
         Address address = businessCard.getAddress();
-
         BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
                 .office(businessCard.getOffice())
                 .scopeOperations(businessCard.getScopeOperations())
@@ -50,43 +39,17 @@ public class BusinessCardService {
                 .address(addressMapper.map(address))
                 .build();
 
-        businessCardJpaRepository.saveAndFlush(businessCardEntity);
+        businessCardDAO.save(businessCardEntity);
         return businessCardMapper.map(businessCardEntity);
     }
 
-//    public Optional<BusinessCard> findById2(Integer id) {
-//        return businessCardJpaRepository.findById(id).map(businessCardMapper::map);
-//    }
-
-//   public BusinessCard findById(Integer businessCardId){
-//        BusinessCardEntity businessCardEntity = businessCardJpaRepository.findById(businessCardId)
-//                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card with ID: " + businessCardId));
-//        return businessCardMapper.map(businessCardEntity);
-//   }
-
-//    public Optional<BusinessCard> findByUser2(User loggedInUser) {
-//        Optional<BusinessCardEntity> businessCardEntityOptional = businessCardJpaRepository.findByUser(userMapper.map(loggedInUser));
-//        return businessCardEntityOptional.map(businessCardMapper::map);
-//    }
-//    public BusinessCard findByUser(User loggedInUser){
-//        UserEntity userEntity = userMapper.map(loggedInUser);
-//        BusinessCardEntity businessCardEntity = businessCardJpaRepository.findByUser(userEntity)
-//                .orElseThrow(()-> new EntityNotFoundException("Not found Business Card from User: " + userEntity));
-//        return businessCardMapper.map(businessCardEntity);
-//    }
-
-
-
-//    public boolean existByUser(User loggedInUser) {
-//        return businessCardJpaRepository.existsByUser(userMapper.map(loggedInUser));
-//    }
 
     @Transactional
     public BusinessCard updateBusinessCard(BusinessCard updateBusinessCard) {
         if (updateBusinessCard.getId() != null) {
-            // Sprawdź, czy CV istnieje w bazie danych
-            BusinessCardEntity businessCardEntity = businessCardJpaRepository.findById(updateBusinessCard.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Business Card with ID " + updateBusinessCard.getId() + " not found"));
+            businessCardDAO.findById(updateBusinessCard.getId());
+
+            BusinessCardEntity businessCardEntity = businessCardMapper.map(updateBusinessCard);
 
             businessCardEntity.setOffice(updateBusinessCard.getOffice());
             businessCardEntity.setScopeOperations(updateBusinessCard.getScopeOperations());
@@ -98,29 +61,37 @@ public class BusinessCardService {
 
 
             // Zapisz zaktualizowany obiekt CV w bazie danych
-            BusinessCardEntity businessCardEntityUpdate = businessCardJpaRepository.save(businessCardEntity);
+            businessCardDAO.save(businessCardEntity);
 
-            return businessCardMapper.map(businessCardEntityUpdate);
+            return businessCardMapper.map(businessCardEntity);
         } else {
             // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
             throw new EntityNotFoundException("Business Card ID cannot be null");
         }
     }
 
-
+    @Transactional
     public void deleteBusinessCard(BusinessCard businessCard) {
 
-        if (businessCard != null){
+        if (businessCard != null) {
             BusinessCardEntity businessCardEntity = businessCardMapper.map(businessCard);
-            businessCardJpaRepository.deleteById(businessCardEntity.getId());
-        }   else {
-        throw new IllegalArgumentException("Business Card cannot be null");
-    }
+            businessCardDAO.deleteById(businessCardEntity.getId());
+        } else {
+            throw new IllegalArgumentException("Business Card cannot be null");
+        }
     }
 
 
     public BusinessCard findByUser(User user) {
-      return   businessCardDAO.findByUser(user);
+        return businessCardDAO.findByUser(user);
+    }
+
+    public boolean existByUser(User loggedInUser) {
+        return businessCardDAO.existByUser(loggedInUser);
+    }
+
+    public BusinessCard findById(Integer businessCardId) {
+        return businessCardDAO.findById(businessCardId);
     }
 }
 

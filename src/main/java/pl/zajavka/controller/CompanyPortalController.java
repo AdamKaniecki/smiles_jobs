@@ -46,16 +46,12 @@ import java.util.stream.Collectors;
 public class CompanyPortalController {
 
     public static final String COMPANY_PORTAL = "/company_portal";
-    private CvRepository cvRepository;
     private UserService userService;
     private CvService cvService;
     private CvMapperDTO cvMapperDTO;;
     private NotificationService notificationService;
-    private NotificationMapperDTO notificationMapperDTO;
     private PaginationService paginationService;
-    private NotificationRepository notificationRepository;
-    private JobOfferRepository jobOfferRepository;
-    private JobOfferMapperDTO jobOfferMapperDTO;
+
 
     @SneakyThrows
     @GetMapping(COMPANY_PORTAL)
@@ -63,22 +59,18 @@ public class CompanyPortalController {
      @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable)
 
     {
-
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
         Page<CvDTO> cvDTOPage = paginationService.findAll(pageable)
                 .map(cvMapperDTO::map);
-
         model.addAttribute("cvDTOs", cvDTOPage.getContent());
         model.addAttribute("currentPage", cvDTOPage.getNumber()) ;
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
 
 
-
         List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
-
         model.addAttribute("notificationDTOs",notificationDTOs);
 
         return "company_portal";
@@ -111,7 +103,6 @@ public class CompanyPortalController {
             Model model) {
 
         List<CvDTO> searchResultsDTO = cvService.searchCvByKeywordAndCategory(keyword, category);
-
         model.addAttribute("searchResultsDTO", searchResultsDTO);
         model.addAttribute("keyword", keyword);
         model.addAttribute("category", category);
@@ -119,59 +110,6 @@ public class CompanyPortalController {
     }
 
 
-
-//    @PostMapping("/arrangeInterview")
-//    public String arrangeInterview(
-//            @RequestParam("cvId") Integer cvId,
-//            @RequestParam("notificationId") Integer notificationId,
-//            @RequestParam("proposedDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime proposedDateTime,
-//            Authentication authentication
-//    ) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        User cvUser = userService.getUserByCv(cvId);
-//        Notification notification = notificationService.findById(notificationId);
-//
-//        notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
-//
-//        return "job_offer_created_successfully";
-//
-//    }
-//
-//
-//    @PostMapping("/decline")
-//    public String declineNotification(
-//            @RequestParam("notificationId") Integer notificationId,
-//            @RequestParam("cvId") Integer cvId,
-//            Authentication authentication
-//    ) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        User cvUser = userService.getUserByCv(cvId);
-//        Notification notification = notificationService.findById(notificationId);
-//
-//        notificationService.declineCandidate(notification, loggedInUser, cvUser);
-//
-//        return "job_offer_created_successfully";
-//
-//    }
-//
-//    @PostMapping("/hired")
-//    public String hiredCandidate(
-//            @RequestParam("notificationId") Integer notificationId,
-//            @RequestParam("cvId") Integer cvId,
-//            Authentication authentication
-//    ) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        User cvUser = userService.getUserByCv(cvId);
-//        Notification notification = notificationService.findById(notificationId);
-//        // Pobierz ofertę pracy z powiadomienia
-//
-//        notificationService.hiredCandidate(notification, loggedInUser, cvUser);
-//
-//        return "job_offer_created_successfully";
-//    }
 
 
 

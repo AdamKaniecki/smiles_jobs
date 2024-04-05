@@ -11,12 +11,9 @@ import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.infrastructure.business.AddressService;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
-
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -27,7 +24,7 @@ public class BusinessCardRestController {
     private BusinessCardService businessCardService;
     private BusinessCardMapperDTO businessCardMapperDTO;
     private AddressService addressService;
-    private BusinessCardRepository businessCardRepository;
+
 
     @PostMapping("/createBusinessCard")
     public ResponseEntity<String> createBusinessCard(@Valid @RequestBody BusinessCardDTO businessCardDTO,
@@ -35,7 +32,7 @@ public class BusinessCardRestController {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
 
-        if (businessCardRepository.existByUser(loggedInUser)) {
+        if (businessCardService.existByUser(loggedInUser)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Business card already created");
         }
@@ -52,26 +49,24 @@ public class BusinessCardRestController {
     }
 
 
-//    @GetMapping("/showMyBusinessCard")
-//    public ResponseEntity<?> showMyBusinessCard(Authentication authentication) {
-//        String username = authentication.getName();
-//        User loggedInUser = userService.findByUserName(username);
-//        if (loggedInUser != null) {
-//            Optional<BusinessCard> businessCardOpt = businessCardRepository.findByUser2(loggedInUser);
-//            if (businessCardOpt.isPresent()) {
-//                BusinessCard businessCard = businessCardOpt.get();
-//                BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
-//                return ResponseEntity.ok(businessCardDTO);
-//            }
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+    @GetMapping("/showMyBusinessCard")
+    public ResponseEntity<?> showMyBusinessCard(Authentication authentication) {
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+          BusinessCard businessCard  = businessCardService.findByUser(loggedInUser);
+            if (businessCard != null ) {
+                BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
+                return ResponseEntity.ok(businessCardDTO);
+            }
+
+        return ResponseEntity.notFound().build();
+    }
 //
     @GetMapping("/showBusinessCard/{businessCardId}")
     public ResponseEntity<?> showBusinessCard(@PathVariable Integer businessCardId) {
-        Optional<BusinessCard> businessCard = businessCardRepository.findById2(businessCardId);
-        if (businessCard.isPresent()) {
-            BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard.get());
+        BusinessCard businessCard = businessCardService.findById(businessCardId);
+        if (businessCard != null) {
+            BusinessCardDTO businessCardDTO = businessCardMapperDTO.map(businessCard);
             return ResponseEntity.ok(businessCardDTO);
         } else {
             return ResponseEntity.notFound().build();
@@ -80,9 +75,8 @@ public class BusinessCardRestController {
 
     @DeleteMapping("/deleteBusinessCard/{businessCardId}")
     public ResponseEntity<?> deleteBusinessCard(@PathVariable Integer businessCardId) {
-        Optional<BusinessCard> businessCardOptional = businessCardRepository.findById2(businessCardId);
-        if (businessCardOptional.isPresent()) {
-            BusinessCard businessCard = businessCardOptional.get();
+        BusinessCard businessCard = businessCardService.findById(businessCardId);
+        if (businessCard != null) {
             Address address = businessCard.getAddress();
             businessCardService.deleteBusinessCard(businessCard);
             addressService.deleteAddress(address);
@@ -97,7 +91,7 @@ public class BusinessCardRestController {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        BusinessCard businessCard = businessCardRepository.findByUser(loggedInUser);
+        BusinessCard businessCard = businessCardService.findByUser(loggedInUser);
 
 
         businessCard.setOffice(updateBusinessCardDTO.getOffice());

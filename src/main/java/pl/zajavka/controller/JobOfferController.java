@@ -39,8 +39,7 @@ public class JobOfferController {
     private JobOfferMapperDTO jobOfferMapperDTO;
     private BusinessCardService businessCardService;
     private BusinessCardMapperDTO businessCardMapperDTO;
-    private JobOfferRepository jobOfferRepository;
-    private BusinessCardRepository businessCardRepository;
+
 
     @GetMapping("/JobOfferForm")
     public String jobOfferForm(
@@ -52,17 +51,11 @@ public class JobOfferController {
         if (bindingResult.hasErrors()) {
             return "error";
         }
-
         String username = authentication.getName();
-        if (username != null) {
-            User user = userService.findByUserName(username);
-            userMapperDTO.map(user);
-            model.addAttribute("userDTO", user);
-            model.addAttribute("jobOfferDTO", jobOfferDTO);
+        userService.findByUserName(username);
+        model.addAttribute("jobOfferDTO", jobOfferDTO);
 
-            return "create_job_offer";
-        }
-        return "login";
+        return "create_job_offer";
     }
 
 
@@ -79,7 +72,7 @@ public class JobOfferController {
         jobOfferService.create(jobOffer, loggedInUser);
 
         model.addAttribute("jobOfferDTO", jobOfferDTO);
-        model.addAttribute("user", loggedInUser);
+//        model.addAttribute("userDTO", loggedInUser);
 
         return "job_offer_created_successfully";
     }
@@ -89,15 +82,14 @@ public class JobOfferController {
     public String showJobOfferDetails(@PathVariable Integer jobOfferId, Model model) {
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
-        Optional<BusinessCard> businessCard = businessCardRepository.findByUser2(jobOffer.getUser());
-        if (businessCard.isPresent()) {
-            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard.get()));
+        BusinessCard businessCard = businessCardService.findByUser(jobOffer.getUser());
+        if (businessCard != null) {
+            model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
         } else {
             model.addAttribute("businessCardDTO", new BusinessCardDTO());
         }
         return "job_offer_details";
     }
-
 
 
     @GetMapping("/showMyJobOffers")
@@ -106,7 +98,7 @@ public class JobOfferController {
         User loggedInUser = userService.findByUserName(username);
 
         if (loggedInUser != null) {
-            List<JobOfferDTO> jobOffersDTO = jobOfferRepository.findListByUser(loggedInUser).stream()
+            List<JobOfferDTO> jobOffersDTO = jobOfferService.findListByUser(loggedInUser).stream()
                     .map(jobOfferMapperDTO::map)
                     .collect(Collectors.toList());
             model.addAttribute("jobOffersDTO", jobOffersDTO);
@@ -121,7 +113,7 @@ public class JobOfferController {
 
     @GetMapping("/updateJobOfferForm")
     public String updateMyJobOffer(@RequestParam Integer id, Model model) {
-        JobOffer myJobOffer = jobOfferRepository.findById(id);
+        JobOffer myJobOffer = jobOfferService.findById(id);
 
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(myJobOffer));
         model.addAttribute("userDTO", userMapperDTO.map(myJobOffer.getUser()));
@@ -134,7 +126,7 @@ public class JobOfferController {
     public String updateJobOffer(
             @ModelAttribute("jobOfferDTO") JobOfferDTO updateJobOfferDTO,
             Model model) {
-        JobOffer jobOffer = jobOfferRepository.findById(updateJobOfferDTO.getId());
+        JobOffer jobOffer = jobOfferService.findById(updateJobOfferDTO.getId());
 
         jobOffer.setCompanyName(updateJobOfferDTO.getCompanyName());
         jobOffer.setPosition(updateJobOfferDTO.getPosition());

@@ -28,7 +28,7 @@ public class JobOfferRestController {
     private UserService userService;
     private JobOfferMapperDTO jobOfferMapperDTO;
     private JobOfferService jobOfferService;
-    private JobOfferRepository jobOfferRepository;
+
 
     @PostMapping("/createJobOffer")
     public ResponseEntity<String> createJobOffer(@RequestBody JobOfferDTO jobOfferDTO, Authentication authentication) {
@@ -36,7 +36,6 @@ public class JobOfferRestController {
         if (username == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
-
         User loggedInUser = userService.findByUserName(username);
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -55,7 +54,7 @@ public class JobOfferRestController {
         User loggedInUser = userService.findByUserName(username);
 
         if (loggedInUser != null) {
-            List<JobOfferDTO> jobOfferDTOs = jobOfferRepository.findListByUser(loggedInUser).stream()
+            List<JobOfferDTO> jobOfferDTOs = jobOfferService.findListByUser(loggedInUser).stream()
                     .map(jobOfferMapperDTO::map)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(jobOfferDTOs);
@@ -65,12 +64,10 @@ public class JobOfferRestController {
 
     @GetMapping("/showJobOffer/{id}")
     public ResponseEntity<?> showMyJobOffer(@PathVariable Integer id) {
-        Optional<JobOffer> jobOfferOpt = jobOfferRepository.findById2(id);
+       JobOffer jobOffer = jobOfferService.findById(id);
 
-        if (jobOfferOpt.isPresent()) {
-            JobOffer jobOffer = jobOfferOpt.get();
+        if (jobOffer != null) {
             JobOfferDTO jobOfferDTO = jobOfferMapperDTO.map(jobOffer);
-
             return ResponseEntity.ok(jobOfferDTO);
         } else {
             return ResponseEntity.notFound().build();
@@ -83,15 +80,12 @@ public class JobOfferRestController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
 
-            Optional<JobOffer> optionalJobOffer = jobOfferRepository.findById2(jobOfferId);
-            if (optionalJobOffer.isPresent()) {
-                JobOffer jobOffer = optionalJobOffer.get();
-
+             JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+            if (jobOffer != null) {
                 // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
                 if (!jobOffer.getUser().equals(loggedInUser)) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this job offer");
                 }
-
                 jobOfferService.deleteJobOfferAndSetNullInNotifications(jobOffer.getId());
                 return ResponseEntity.status(HttpStatus.OK).body("JobOffer deleted successfully");
             }
@@ -102,42 +96,6 @@ public class JobOfferRestController {
         }
     }
 
-    @PutMapping("/updateJobOffer/{jobOfferId}")
-    public ResponseEntity<String> updateJobOffer(
-            @PathVariable Integer jobOfferId,
-            @RequestBody JobOfferDTO jobOfferDTO,
-            Authentication authentication) {
-
-        try {
-            String username = authentication.getName();
-            User loggedInUser = userService.findByUserName(username);
-
-            Optional<JobOffer> optionalJobOffer = jobOfferRepository.findByUser(loggedInUser);
-            if (optionalJobOffer.isPresent()) {
-                JobOffer jobOffer = optionalJobOffer.get();
-
-                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
-                if (!jobOffer.getUser().equals(loggedInUser)) {
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to update this job offer");
-                }
-                jobOffer.setCompanyName(jobOfferDTO.getCompanyName());
-                jobOffer.setBenefits(jobOfferDTO.getBenefits());
-                jobOffer.setPosition(jobOfferDTO.getPosition());
-                jobOffer.setRequiredTechnologies(jobOfferDTO.getRequiredTechnologies());
-                jobOffer.setResponsibilities(jobOfferDTO.getResponsibilities());
-
-                jobOfferService.updateJobOffer(jobOffer);
-
-                return ResponseEntity.status(HttpStatus.OK).body("JobOffer update successfully");
-            }
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job Offer not found");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while updating job offer");
-        }
-
-
-    }
 
     @PutMapping("/updateJobOffer")
     public ResponseEntity<String> updateJobOffer(@RequestBody JobOfferDTO updateJobOfferDTO, Authentication authentication) {

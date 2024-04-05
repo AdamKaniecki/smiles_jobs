@@ -71,7 +71,7 @@
                th:href="@{/businessCard/{businessCardId}(businessCardId=${businessCardDTO.id})}" class="btn btn-info"
                role="button">Owner's Business Card</a>
 
-            <a th:unless="${businessCardDTO.id != null}" th:href="@{/businessCard/0}" class="btn btn-info"
+            <a th:if="${businessCardDTO.id == null}" th:href="@{/businessCardNotFound}" class="btn btn-info"
                role="button">Owner's Business Card</a>
 
             <form th:action="@{/sendCV}" method="post">

@@ -38,14 +38,13 @@ public class CommunicationController {
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         User adresat = jobOffer.getUser();
 
-        Optional<CV> userCVOptional = cvService.findByUser(loggedInUser);
-        if (userCVOptional.isPresent()) {
-            CV cv = userCVOptional.get();
+       CV  userCV = cvService.findByUser(loggedInUser);
+        if (userCV != null) {
 
             if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
                 return "cv_already_sent";
             } else {
-                notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
+                notificationService.createNotification(jobOffer, userCV, loggedInUser, adresat);
                 userService.save(loggedInUser);
                 userService.save(adresat);
 
@@ -138,7 +137,6 @@ public class CommunicationController {
         User loggedInUser = userService.findByUserName(username);
         User cvUser = userService.getUserByCv(cvId);
         Notification notification = notificationService.findById(notificationId);
-        // Pobierz ofertę pracy z powiadomienia
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 

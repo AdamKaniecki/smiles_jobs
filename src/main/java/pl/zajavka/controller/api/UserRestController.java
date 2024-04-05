@@ -7,13 +7,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.UsersDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
+
+import pl.zajavka.infrastructure.business.NotificationService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +30,7 @@ public class UserRestController {
 
     private final UserService userService;
     private UserMapperDTO userMapperDTO;
+    private NotificationService notificationService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public UsersDTO usersList() {
@@ -101,6 +106,12 @@ public class UserRestController {
 //    curl który aktualizuje Kandydata:
 //curl -i -H "Content-Type: application/json" -X PUT http://localhost:8800/users/11 -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"active\": true,\"roles\": [{\"roleId\": 1}]}"
 
+    @GetMapping("/myNotifications")
+    public ResponseEntity<List<NotificationDTO>> getNotifications(Authentication authentication) {
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+        List<NotificationDTO> notificationDTOs = notificationService.findByUser(loggedInUser);
 
-
+        return ResponseEntity.ok(notificationDTOs);
+    }
 }
