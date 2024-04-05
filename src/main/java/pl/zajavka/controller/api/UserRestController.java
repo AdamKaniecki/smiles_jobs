@@ -59,8 +59,6 @@ public class UserRestController {
                 .created(URI.create(USER + USER_ID_RESULT.formatted(createdUser.getId())))
                 .build();
     }
-//    curl dodający Kandydata:
-//    curl -i -H "Content-Type: application/json" -X POST http://localhost:8900/api/createCandidate -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"visible\": true,\"roles\": [{\"roleId\": 1}]}"
 
     @PostMapping("/createCompany")
     public ResponseEntity<UserDTO> addCompany(
@@ -76,8 +74,6 @@ public class UserRestController {
                 .created(URI.create(USER + USER_ID_RESULT.formatted(createdUser.getId())))
                 .build();
     }
-//    curl dodający Kandydata:
-//    curl -i -H "Content-Type: application/json" -X POST http://localhost:8900/api/createCompany -d "{\"userName\": \"adam20\",\"email\": \"adam2120@poczta.onet.pl\",\"password\": \"adam20\",\"active\": true,\"roles\": [{\"roleId\": 2}]}"
 
 
     @PutMapping("/updateUser")
@@ -103,8 +99,6 @@ public class UserRestController {
         }
     }
 
-//    curl który aktualizuje Kandydata:
-//curl -i -H "Content-Type: application/json" -X PUT http://localhost:8800/users/11 -d "{\"userName\": \"john_doe\",\"email\": \"john.doe@example.com\",\"password\": \"secretpassword123\",\"active\": true,\"roles\": [{\"roleId\": 1}]}"
 
     @GetMapping("/myNotifications")
     public ResponseEntity<List<NotificationDTO>> getNotifications(Authentication authentication) {

@@ -19,4 +19,6 @@ public interface CvDAO {
     List<CV>searchCvByKeywordAndCategory(String keyword, String category);
 
     void saveCV(CvEntity newEntity);
+
+
 }

@@ -2,9 +2,7 @@ package pl.zajavka.infrastructure.database.repository;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;

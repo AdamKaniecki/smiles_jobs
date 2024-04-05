@@ -1,16 +1,13 @@
 package pl.zajavka.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.zajavka.controller.dto.BusinessCardDTO;
-import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
@@ -18,13 +15,11 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j

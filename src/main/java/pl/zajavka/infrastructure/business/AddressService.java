@@ -40,21 +40,18 @@ public class AddressService {
 
     @Transactional
     public void updateAddress(Address address) {
-        // Sprawdź, czy adres istnieje w bazie danych
+
         if (!addressDAO.existsById(address.getId())) {
-            // Jeśli nie istnieje, rzucamy wyjątek
             throw new EntityNotFoundException("Address with id " + address.getId() + " not found");
         }
 
         AddressEntity existingEntity = addressMapper.map(address);
 
-        // Zaktualizuj pola istniejącego obiektu AddressEntity
         existingEntity.setCountry(address.getCountry());
         existingEntity.setCity(address.getCity());
         existingEntity.setStreetAndNumber(address.getStreetAndNumber());
         existingEntity.setPostalCode(address.getPostalCode());
 
-        // Zapisz zaktualizowany obiekt do bazy danych
         addressDAO.save(existingEntity);
     }
 
@@ -88,8 +85,6 @@ public class AddressService {
                 return "update_address_successfully_business_card";
             }
         }
-
-        // Domyślny wynik, jeśli rola nie jest określona lub użytkownik nie istnieje
         return "home";
     }
 

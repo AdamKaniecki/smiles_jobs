@@ -38,13 +38,6 @@
 
   <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
   <input type="hidden" id="businessCardId" name="id" th:value="${businessCardDTO.id}">
-<!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
-<!--  <input type="hidden" id="cvId" name="id" th:value="${cvDTO.id}">-->
-<!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
-<!--  <input type="hidden" id="businessCardId" name="id" th:value="${businessCardDTO.id}">-->
-
-  <!-- Include other CV fields as needed -->
-
   <input type="submit" value="Update Business Card"/>
 </form>
 
@@ -55,8 +48,6 @@
         th:action="@{/updateAddressDone}"
         th:method="put"
         th:object="${address}">
-
-  <!-- Tutaj znajdują się pola do aktualizacji CV -->
 
   <label>Country:</label>
   <input type="text" th:field="*{country}" required><br>
@@ -70,7 +61,6 @@
   <label>Postal Code:</label>
   <input type="text" th:field="*{postalCode}" required><br>
 
-  <!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
   <input type="hidden" id="addressId" name="id" th:value="${address.id}">
 
   <input type="submit" value="Update Address"/>

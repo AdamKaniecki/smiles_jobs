@@ -13,7 +13,6 @@ public class OffsetDateTimeConverter implements Converter<String,OffsetDateTime>
         try {
             return OffsetDateTime.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         } catch (Exception e) {
-            // Jeśli nie można dokonać konwersji, obsłuż wyjątek lub zwróć wartość domyślną
             return null;
         }
     }

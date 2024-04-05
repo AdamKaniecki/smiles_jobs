@@ -14,16 +14,11 @@ public interface NotificationMapper {
 
     Notification map(NotificationEntity notificationEntity);
 
-//    @Mapping(target = "cv.user.roles", source = "notificationEntity.cv.user.roles")
-//    @Mapping(target = "jobOffer.user.roles", source = "notificationEntity.jobOffer.user.roles")
-//    Notification mapWithRoles(NotificationEntity notificationEntity);
 
     List<NotificationEntity> mapToEntityList(List<Notification> notifications);
 
     List<Notification> mapToList(List<NotificationEntity> notificationEntities);
 
 
-//    Page<Notification> mapToPage(Page<NotificationEntity> notificationEntities, Pageable pageable);
-//    Page<NotificationEntity> mapToEntityPage(Page<Notification> notifications, Pageable pageable);
 
 }

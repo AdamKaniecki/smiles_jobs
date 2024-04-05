@@ -18,9 +18,6 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 @AllArgsConstructor
 public class BootstrapApplicationComponent implements ApplicationListener<ContextRefreshedEvent> {
 
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private UserService userService;
     private RoleRepository roleRepository;
 
     @Override

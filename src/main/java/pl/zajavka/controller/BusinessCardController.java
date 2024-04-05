@@ -14,7 +14,6 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.AddressService;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.repository.BusinessCardRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
@@ -64,7 +63,6 @@ public class BusinessCardController {
         businessCardService.createBusinessCard(businessCard, loggedInUser);
 
         model.addAttribute("businessCardDTO", businessCard);
-//        model.addAttribute("userDTO", loggedInUser);
 
         return "business_card_created_successfully";
     }

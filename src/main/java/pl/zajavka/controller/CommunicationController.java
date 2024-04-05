@@ -1,12 +1,12 @@
 package pl.zajavka.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.JobOfferService;
@@ -18,7 +18,6 @@ import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Controller
@@ -30,30 +29,41 @@ public class CommunicationController {
     private CvService cvService;
     private NotificationService notificationService;
 
+
+
     @PostMapping("/sendCV")
     @Transactional
     public String sendCV(@RequestParam("jobOfferId") Integer jobOfferId, Authentication authentication) {
-        String username = authentication.getName();
-        User loggedInUser = userService.findByUserName(username);
-        JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-        User adresat = jobOffer.getUser();
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
+            JobOffer jobOffer = jobOfferService.findById(jobOfferId);
+            CV cv = cvService.findByUser2(loggedInUser);
+            User adresat = jobOffer.getUser();
 
-       CV  userCV = cvService.findByUser(loggedInUser);
-        if (userCV != null) {
+            // Sprawdź, czy CV użytkownika istnieje
+            if (cv == null) {
+                // Jeśli CV nie istnieje, zwróć widok cv_not_found
+                return "cv_not_found";
+            }
 
             if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
                 return "cv_already_sent";
             } else {
-                notificationService.createNotification(jobOffer, userCV, loggedInUser, adresat);
+                notificationService.createNotification(jobOffer, cv, loggedInUser, adresat);
                 userService.save(loggedInUser);
                 userService.save(adresat);
 
                 return "cv_send_successfully";
             }
-        } else {
+        } catch (EntityNotFoundException e) {
+            // Obsłuż wyjątek EntityNotFoundException i zwróć widok cv_not_found
             return "cv_not_found";
         }
     }
+
+
+
 
     @PostMapping("/changeMeetingDate")
     public String changeMeetingDate (

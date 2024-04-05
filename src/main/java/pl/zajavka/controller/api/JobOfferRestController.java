@@ -1,23 +1,20 @@
 package pl.zajavka.controller.api;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.JobOfferDTO;
-import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.domain.*;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.SearchRequest;
+import pl.zajavka.infrastructure.domain.User;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor

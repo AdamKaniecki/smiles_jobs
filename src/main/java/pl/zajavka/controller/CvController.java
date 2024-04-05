@@ -16,7 +16,6 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.AddressService;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.database.repository.AddressRepository;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
@@ -35,6 +34,7 @@ public class CvController {
     private UserService userService;
     private CvMapperDTO cvMapperDTO;
     private UserMapperDTO userMapperDTO;
+    private CvRepository cvRepository;
 
 
     @GetMapping("/CvForm")
@@ -69,7 +69,6 @@ public class CvController {
     public String createCV(@Valid @ModelAttribute("cvDTO") CvDTO cvDTO, Model model,
                            BindingResult bindingResult, Authentication authentication
 
-//                           @RequestParam("photo") MultipartFile photo
     ) {
         if (bindingResult.hasErrors()) {
             return "error";
@@ -84,7 +83,7 @@ public class CvController {
             CV cv = cvMapperDTO.map(cvDTO);
             cvService.createCV(cv, loggedInUser);
 
-            model.addAttribute("cvDTO", cv);
+            model.addAttribute("cvDTO", cvDTO);
             model.addAttribute("userDTO", loggedInUser);
             return "cv_created_successfully";
         } else {
@@ -93,26 +92,27 @@ public class CvController {
     }
 
 
-    @GetMapping("/ShowMyCV")
-    public String redirectToShowMyCV(
-            Authentication authentication,
-            Model model
-    ) {
-        String username = authentication.getName();
-        User loggedInUser = userService.findByUserName(username);
-        if (loggedInUser != null) {
-            CV userCV = cvService.findByUser(loggedInUser);
-            if (userCV != null) {
-                CvDTO cvDTO = cvMapperDTO.map(userCV);
-                model.addAttribute("cvDTO", cvDTO);
-                return "show_my_cv";
+@GetMapping("/ShowMyCV")
+public String redirectToShowMyCV(
+        Authentication authentication,
+        Model model
+) {
+    String username = authentication.getName();
+    User loggedInUser = userService.findByUserName(username);
+    if (loggedInUser != null) {
+        Optional<CV> userCV = cvService.findByUser3(loggedInUser);
+        if (userCV.isPresent()) {
+            CV cv = userCV.get();
+            CvDTO cvDTO = cvMapperDTO.map(cv);
+            model.addAttribute("cvDTO", cvMapperDTO.map(cvDTO));
 
-            }
+            return "show_my_cv";
+
         }
-
-        return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
     }
 
+    return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
+}
 
     @GetMapping("/showCV")
     public String showMyCV(@RequestParam Integer id, Model model) {
@@ -158,11 +158,12 @@ public class CvController {
     @PreAuthorize("hasAuthority('ROLE_CANDIDATE')")
     @PutMapping("/updateCVDone")
     public String updateCv(
-            @Valid @ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model) {
+            @Valid @ModelAttribute("cvDTO") CvDTO updateCvDTO, Model model, Authentication authentication) {
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
+        CV cv = cvService.findByUser(loggedInUser);
 
-        CV cv = cvService.findById(updateCvDTO.getId());
         if (cv != null) {
-
 
             cv.setName(updateCvDTO.getName());
             cv.setSurname(updateCvDTO.getSurname());
@@ -184,7 +185,6 @@ public class CvController {
             cv.setHobby(updateCvDTO.getHobby());
 
             cvService.updateCV(cv);
-
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
 
             return "cv_update successfully";
@@ -239,6 +239,11 @@ public class CvController {
         } else {
             return "cv_not_found";
         }
+    }
+
+    @GetMapping("/cvNotFound")
+    public String cvNotFound(){
+        return "cv_not_found";
     }
 
 

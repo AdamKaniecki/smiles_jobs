@@ -1,7 +1,6 @@
 
 package pl.zajavka.controller;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -9,36 +8,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.controller.dto.CvDTO;
-import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.NotificationDTO;
-import pl.zajavka.controller.dto.UserDTO;
-import pl.zajavka.controller.dto.mapper.*;
-;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
-import pl.zajavka.infrastructure.domain.CV;
-import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.Notification;
-import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.NotificationService;
 import pl.zajavka.infrastructure.business.PaginationService;
 import pl.zajavka.infrastructure.business.UserService;
+import pl.zajavka.infrastructure.domain.User;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+;
 
 @Slf4j
 @AllArgsConstructor

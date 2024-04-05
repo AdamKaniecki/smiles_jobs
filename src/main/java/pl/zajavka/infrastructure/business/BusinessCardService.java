@@ -59,13 +59,10 @@ public class BusinessCardService {
             businessCardEntity.setTechnologiesAndTools(updateBusinessCard.getTechnologiesAndTools());
             businessCardEntity.setCertificatesAndAwards(updateBusinessCard.getCertificatesAndAwards());
 
-
-            // Zapisz zaktualizowany obiekt CV w bazie danych
             businessCardDAO.save(businessCardEntity);
 
             return businessCardMapper.map(businessCardEntity);
         } else {
-            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
             throw new EntityNotFoundException("Business Card ID cannot be null");
         }
     }

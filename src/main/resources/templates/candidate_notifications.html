@@ -22,9 +22,8 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Thymeleaf loop to display notifications -->
+
     <tr th:each="notificationDTO : ${notificationDTOs}">
-        <!-- Display notification details -->
         <td th:text="${notificationDTO.id}"></td>
         <td th:text="${notificationDTO.candidateMessage}"></td>
         <td>

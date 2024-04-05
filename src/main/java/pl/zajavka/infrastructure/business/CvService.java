@@ -21,6 +21,7 @@ import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 
@@ -52,7 +53,6 @@ public class CvService {
                 .phoneNumber(cv.getPhoneNumber())
                 .education(cv.getEducation())
                 .workExperience(cv.getWorkExperience())
-
                 .socialMediaProfil(cv.getSocialMediaProfil())
                 .projects(cv.getProjects())
                 .aboutMe(cv.getAboutMe())
@@ -112,11 +112,8 @@ public class CvService {
     public void deleteCVAndSetNullInNotifications(CV cv, Address address) {
         if (cv != null) {
             CvEntity cvEntity = cvMapper.map(cv);
-
-            // Pobierz wszystkie powiązane notyfikacje z tym CV
             List<NotificationEntity> notifications = notificationDAO.findByCvId(cvEntity.getId());
 
-            // Ustaw CV na null we wszystkich powiązanych notyfikacjach
             for (NotificationEntity notification : notifications) {
                 notification.setCv(null);
                 notification.setCompanyMessage("użytkownik usunął swoje CV");
@@ -124,7 +121,6 @@ public class CvService {
                 notification.setStatus(Status.REJECT);
             }
 
-            // Usuń CV
             cvDAO.deleteById(cvEntity.getId());
         } else {
             throw new IllegalArgumentException("CV cannot be null");
@@ -148,4 +144,16 @@ public class CvService {
                 .map(cvMapperDTO::map)
                 .toList();
     }
+
+    public Optional<CV> findByUser3(User user) {
+        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
+        return cvEntityOptional.map(cvMapper::map);
+    }
+
+    public CV findByUser2(User user){
+        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
+                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
+        return cvMapper.map(cvEntity);
+    }
+
 }

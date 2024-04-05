@@ -35,31 +35,21 @@
         <td th:text="${jobOfferDTO.responsibilities}"></td>
         <td th:text="${jobOfferDTO.requiredTechnologies}"></td>
         <td th:text="${jobOfferDTO.benefits}"></td>
-<!--        <td th:text="${jobOfferDTO.jobOfferDTODateTime}"></td>-->
         <td>
-          <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
+
           <a class="btn btn-warning" th:href="@{'/updateJobOfferForm?id=' + ${jobOfferDTO.id}}">Update</a>
 
-          <!-- Dodaj przycisk "Update" z linkiem do formularza aktualizacji -->
           <form th:action="@{'/deleteJobOffer/' + ${jobOfferDTO.id}}" th:method="DELETE" >
             <button type="submit" class="btn btn-danger">Delete</button>
           </form>
         </td>
-<!--        <td>-->
-<!--          <a th:href="@{/showReceivedCvs/{jobOfferId}(jobOfferId=${jobOfferDTO.id})}" class="btn btn-info" role="button">View CVs</a>-->
-<!--        </td>-->
 
-
-<!--        <button type="submit" class="btn btn-danger">Delete</button>-->
 
       </tr>
       </tbody>
     </table>
   </div>
 
-<!--  <div th:unless="${jobOffersDTO}">-->
-<!--    <p>No job offers found</p>-->
-<!--  </div>-->
 
   <div class="mt-4">
     <a th:href="@{/company_portal}" class="btn btn-info" role="button">Back to Company Portal</a>

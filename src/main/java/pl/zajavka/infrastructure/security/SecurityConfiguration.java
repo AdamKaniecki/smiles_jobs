@@ -43,7 +43,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**","/api.gloat.com/api/v2/**").permitAll()
                 .requestMatchers("/", "/login", "/candidate_registry", "/candidateRegistry/**",
-                                                         "/company_registry","/companyRegistry/**" )
+                                                         "/company_registry","/companyRegistry/**","/cvNotFound" )
                 .permitAll()
 
                 .requestMatchers("/candidateNotifications/**","/sendCV/**","/CvForm/**","/createCV/**", "/updateCvForm/**","/updateCVDone/**",

@@ -24,9 +24,6 @@ public interface CvJpaRepository extends JpaRepository<CvEntity, Integer> {
     List<CvEntity> findCvByKeywordAndCategory(
             @Param("keyword") String keyword,
             @Param("category") String category);
-//
-//    @Query("SELECT cv FROM CvEntity cv WHERE cv.user = :user")
-//    Optional<CvEntity> findByUserId(@Param("id") Integer integer);
 
     boolean existsByUserId(Integer userId);
     Optional<CvEntity> findByUser(UserEntity userEntity);
@@ -36,4 +33,6 @@ public interface CvJpaRepository extends JpaRepository<CvEntity, Integer> {
 
 
     List<CvEntity> findAll();
+
+
 }

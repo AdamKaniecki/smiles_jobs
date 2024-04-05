@@ -25,14 +25,12 @@ public class CV {
     private String contactEmail;
     private String workExperience;
     private String education;
-//    private String courses;
     private String socialMediaProfil;
     private String projects;
     private String aboutMe;
     private String certificatesOfCourses;
     private String programmingLanguage;
     private String skillsAndTools;
-//    private Integer yearsOfExperience;
     private String language;
     private String languageLevel;
     private String hobby;

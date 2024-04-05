@@ -2,7 +2,6 @@
 
 package pl.zajavka.controller;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,24 +13,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.NotificationDTO;
+import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
-import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.infrastructure.business.*;
-import pl.zajavka.infrastructure.database.repository.CvRepository;
-import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
-import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -46,7 +38,8 @@ public class CandidatePortalController {
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
     private PaginationService paginationService;
-
+    private CvService cvService;
+    private CvMapperDTO cvMapperDTO;
 
     @SneakyThrows
     @GetMapping(CANDIDATE_PORTAL)

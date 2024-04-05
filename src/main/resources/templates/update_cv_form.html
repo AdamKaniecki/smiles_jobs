@@ -52,9 +52,6 @@
   <input type="text" th:field="*{socialMediaProfil}" required/><br/>
 
 
-<!--  <label>Courses: </label>-->
-<!--  <input type="text" th:field="*{courses}" required/><br/>-->
-
   <label>Work Experience: </label>
   <input type="text" th:field="*{workExperience}" required/><br/>
 
@@ -69,8 +66,6 @@
   <label>Follow Position: </label>
   <input type="text" th:field="*{followPosition}" required/><br/>
 
-<!--  <label>Years Of Experience in IT: </label>-->
-<!--  <input type="text" th:field="*{yearsOfExperience}" required/><br/>-->
 
   <label>Language: </label>
   <input type="text" th:field="*{language}" required/><br/>
@@ -81,7 +76,6 @@
   <label>Hobby: </label>
   <input type="text" th:field="*{hobby}" required/><br/>
 
-  <!-- Include other CV fields as needed -->
 
   <input type="submit" value="Update CV"/>
 </form>
@@ -94,7 +88,6 @@
         th:method="put"
         th:object="${address}">
 
-  <!-- Tutaj znajdują się pola do aktualizacji CV -->
 
   <label>Country:</label>
   <input type="text" th:field="*{country}" required><br>
@@ -108,8 +101,6 @@
   <label>Postal Code:</label>
   <input type="text" th:field="*{postalCode}" required><br>
 
-
-<!--  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">-->
   <input type="hidden" id="addressId" name="id" th:value="${address.id}">
 
   <input type="submit" value="Update Address"/>

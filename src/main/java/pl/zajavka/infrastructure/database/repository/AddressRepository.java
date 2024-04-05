@@ -9,7 +9,6 @@ import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.domain.Address;
 
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor

@@ -10,7 +10,6 @@
 <h2>Create Business Card</h2>
 
 <form action="/createBusinessCard" method="post" th:object="${businessCardDTO}">
-    <!-- Pola BusinessCard -->
     <label for="office">Office:</label>
     <input type="text" id="office" name="office" required><br>
 
@@ -32,7 +31,6 @@
     <label for="certificatesAndAwards">Certificates and Awards:</label>
     <input type="text" id="certificatesAndAwards" name="certificatesAndAwards" required><br>
 
-    <!-- Pola Address -->
     <label for="country">Country:</label>
     <input type="text" id="country" name="address.country" required><br>
 
@@ -46,7 +44,6 @@
     <input type="text" id="postalCode" name="address.postalCode" required><br>
 
 
-    <!-- Pole ukryte dla userId -->
     <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
 
     <button type="submit">Create Business Card</button>

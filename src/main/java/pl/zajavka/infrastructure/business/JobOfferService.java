@@ -174,7 +174,6 @@ public class JobOfferService {
     @Transactional
     public JobOffer updateJobOffer(JobOffer jobOffer){
         if (jobOffer.getId() != null) {
-            // Sprawdź, czy CV istnieje w bazie danych
             JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOffer.getId())
                     .orElseThrow(() -> new EntityNotFoundException("JobOffer with ID " + jobOffer.getId() + " not found"));
 
@@ -194,12 +193,10 @@ public class JobOfferService {
             jobOfferEntity.setRequiredLanguage(jobOffer.getRequiredLanguage());
 
 
-            // Zapisz zaktualizowany obiekt CV w bazie danych
             JobOfferEntity jobOfferEntityUpdate = jobOfferRepository.save(jobOfferEntity);
 
             return jobOfferMapper.map(jobOfferEntityUpdate);
         } else {
-            // Obsłuż sytuację, gdy CV nie zostało znalezione w bazie danych
             throw new EntityNotFoundException("Job Offer ID cannot be null");
         }
     }
@@ -222,11 +219,6 @@ public class JobOfferService {
 
         jobOfferRepository.deleteById(jobOfferEntity.getId());
     }
-
-//    public Page<JobOffer> findAllJobOffersForPage(Pageable pageable) {
-//        Page<JobOfferEntity> jobOfferEntities = jobOfferRepository.findAll(pageable);
-//        return jobOfferEntities.map(jobOfferMapper::map);
-//    }
 
 
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {

@@ -20,10 +20,7 @@ public class User  {
     private Set<RoleEntity> roles;
     private Set<JobOffer> jobOffers;
     private CV cv;
-
     private Set<Notification> notificationsSend;
     private Set<Notification> notificationsReceive;
 
-    //nie wiem czy to jest konieczne
-//    private Address address;
 }

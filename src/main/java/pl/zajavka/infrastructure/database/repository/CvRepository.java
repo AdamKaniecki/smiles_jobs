@@ -42,16 +42,9 @@ public class CvRepository implements CvDAO {
     public CV findByUser(User user) {
         Optional<CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
         CvEntity cvEntity = cvEntityOptional.orElseThrow(() -> new EntityNotFoundException("CV not found for the user"));
-
         return cvMapper.map(cvEntity);
     }
 
-    public CV findByUser2(User user){
-
-        CvEntity cvEntity = cvJpaRepository.findByUser(userMapper.map(user))
-                .orElseThrow(()-> new EntityNotFoundException("Not found CVEntity for user: " + user.getUserName()));
-        return cvMapper.map(cvEntity);
-    }
 
 
 
@@ -76,4 +69,6 @@ public class CvRepository implements CvDAO {
     public void saveCV(CvEntity newEntity) {
         cvJpaRepository.save(newEntity);
     }
+
+
 }

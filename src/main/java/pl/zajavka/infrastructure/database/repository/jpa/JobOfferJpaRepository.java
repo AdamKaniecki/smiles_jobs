@@ -47,6 +47,4 @@ public interface JobOfferJpaRepository extends JpaRepository<JobOfferEntity, Int
             ;
 
 
-//    @Query("SELECT j FROM JobOffer j WHERE j.user = :user")
-//    List<JobOffer> findListByUser( User user);
 }

@@ -3,22 +3,17 @@ package pl.zajavka.infrastructure.business;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.mapper.NotificationMapperDTO;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.CvRepository;
 import pl.zajavka.infrastructure.database.repository.JobOfferRepository;
-import pl.zajavka.infrastructure.database.repository.NotificationRepository;
-import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
@@ -30,7 +25,6 @@ import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,7 +94,6 @@ public class NotificationService {
     @Transactional
     public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
         if (notification.getStatus() == Status.MEETING_SCHEDULING) {
-            // Możesz dokonać zmiany daty spotkania tylko jeśli status jest "Meeting Scheduling"
             NotificationEntity notificationEntity = notificationMapper.map(notification);
             notificationEntity.setDateTime(null);
             notificationEntity.setCompanyMessage("proszę o zmianę terminu");
@@ -111,7 +104,6 @@ public class NotificationService {
             userService.save(loggedInUser);
             userService.save(adresat);
         } else {
-            // W przeciwnym razie zablokuj zmianę daty
             throw new IllegalStateException("Cannot change meeting date when the status is not Meeting Scheduling.");
         }
     }
@@ -162,7 +154,6 @@ public class NotificationService {
             notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(adresat));
-//            poprawić to notification Repository
             notificationDAO.save(notificationEntity);
 
             CV cv = notification.getCv();
@@ -172,13 +163,8 @@ public class NotificationService {
             userService.save(adresat);
 
             JobOffer jobOffer = notification.getJobOffer();
-
-            // Zwiększ liczbę zatrudnionych pracowników
             jobOffer.setHiredCount(jobOffer.getHiredCount() + 1);
-
-            // Sprawdź, czy liczba zatrudnionych pracowników osiągnęła docelową wartość
             if (jobOffer.isFullyStaffed()) {
-                // Jeśli tak, ustaw pole active na false
                 jobOffer.setActive(false);
             }
 
