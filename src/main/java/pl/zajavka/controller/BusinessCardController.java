@@ -56,7 +56,7 @@ public class BusinessCardController {
         }
 
         BusinessCard businessCard = businessCardMapperDTO.map(businessCardDTO);
-        Address createdAddress = addressService.createAddress(businessCard.getAddress(), loggedInUser);
+        Address createdAddress = addressService.createAddress(businessCard.getAddress());
         businessCard.setAddress(createdAddress);
         businessCard.setUser(loggedInUser);
 

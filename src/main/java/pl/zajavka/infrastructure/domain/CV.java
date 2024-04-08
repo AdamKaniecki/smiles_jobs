@@ -1,11 +1,6 @@
 package pl.zajavka.infrastructure.domain;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
-
-import java.math.BigDecimal;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor

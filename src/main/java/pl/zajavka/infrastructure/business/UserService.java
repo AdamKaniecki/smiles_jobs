@@ -89,7 +89,7 @@ public class  UserService {
     @Transactional
     public User updateUser(User user) {
         UserEntity userEntity = userRepository.findById(user.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + user.getId()));
+                .orElseThrow(() -> new EntityNotFoundException("Not found entity User with ID: " + user.getId()));
 
         // Zaktualizuj pola użytkownika
         userEntity.setUserName(user.getUserName());
@@ -103,14 +103,14 @@ public class  UserService {
     @Transactional
     public void deleteUser(Integer userId) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("Not found entity User with ID: " + userId));
         userRepository.delete(userEntity);
     }
 
     @Transactional
     public User findById(Integer userId) {
         UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Brak użytkownika o userId: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("Not found entity User with ID: " + userId));
 
         return userMapper.map(userEntity);
 

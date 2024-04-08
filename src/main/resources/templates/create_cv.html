@@ -18,7 +18,8 @@
 <div class="container">
     <h2>Create CV</h2>
     <form th:action="@{/createCV}" th:object="${cvDTO}" method="post">
-        <div class="form-row">
+
+
             <div class="form-group col-md-8">
                 <label for="aboutMe">About Me:</label>
                 <textarea th:field="*{aboutMe}" class="form-control" id="aboutMe" required rows="5"></textarea>
@@ -28,9 +29,9 @@
                 <label for="name">Name:</label>
                 <input type="text" th:field="*{name}" class="form-control" id="name" required>
             </div>
-        </div>
 
-        <div class="form-row">
+
+
             <div class="form-group col-md-8">
                 <label for="surname">Surname:</label>
                 <input type="text" th:field="*{surname}" class="form-control" id="surname" required>
@@ -40,10 +41,9 @@
                 <label for="sex">Sex:</label>
                 <input type="text" th:field="*{sex}" class="form-control" id="sex" required>
             </div>
-        </div>
 
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="dateOfBirth">Date of Birth:</label>
                 <input type="text" th:field="*{dateOfBirth}" class="form-control" id="dateOfBirth" required>
@@ -53,25 +53,28 @@
                 <label for="maritalStatus">Marital Status:</label>
                 <input type="text" th:field="*{maritalStatus}" class="form-control" id="maritalStatus" required>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
-            <div class="form-group col-md-8">
+
+        <div class="form-group col-md-8">
                 <label for="phoneNumber">Phone Number:</label>
-                <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required>
-            </div>
+                <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required
+                       pattern="^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$"
+                       title="Please enter a phone number in the format +xx xxx xxx xxx (15 digits)">
+                <small id="phoneHelpBlock" class="form-text text-muted">Phone number must be in the format +xx xxx xxx xxx (15 digits).</small>
+        </div>
 
             <div class="form-group col-md-8">
                 <label for="contactEmail">Email:</label>
                 <input type="text" th:field="*{contactEmail}" class="form-control" id="contactEmail" required>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="programmingLanguage">Programming Languages:</label>
                 <textarea th:field="*{programmingLanguage}" class="form-control" id="programmingLanguage" required rows="5"></textarea>
@@ -81,11 +84,11 @@
                 <label for="skillsAndTools">Skills and Tools:</label>
                 <textarea th:field="*{skillsAndTools}" class="form-control" id="skillsAndTools" required rows="5"></textarea>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="projects">Projects:</label>
                 <input type="text" th:field="*{projects}" class="form-control" id="projects" required>
@@ -95,11 +98,11 @@
                 <label for="socialMediaProfil">Social Media Profile:</label>
                 <input type="text" th:field="*{socialMediaProfil}" class="form-control" id="socialMediaProfil" required>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="workExperience">Work Experience:</label>
                 <textarea th:field="*{workExperience}" class="form-control" id="workExperience" required rows="5"></textarea>
@@ -109,11 +112,11 @@
                 <label for="certificatesOfCourses">Certificates Of Courses:</label>
                 <textarea th:field="*{certificatesOfCourses}" class="form-control" id="certificatesOfCourses" required rows="5"></textarea>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="education">Education:</label>
                 <textarea th:field="*{education}" class="form-control" id="education" required rows="5"></textarea>
@@ -123,11 +126,11 @@
                 <label for="followPosition">Follow Position:</label>
                 <input type="text" th:field="*{followPosition}" class="form-control" id="followPosition" required>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
+
             <div class="form-group col-md-8">
                 <label for="language">Language:</label>
                 <input type="text" th:field="*{language}" class="form-control" id="language" required>
@@ -137,29 +140,34 @@
                 <label for="languageLevel">Language Level:</label>
                 <input type="text" th:field="*{languageLevel}" class="form-control" id="languageLevel" required>
             </div>
-        </div>
+
 
         <!-- Include other fields following the same pattern -->
 
-        <div class="form-row">
             <div class="form-group col-md-8">
                 <label for="hobby">Hobby:</label>
                 <input type="text" th:field="*{hobby}" class="form-control" id="hobby" required>
             </div>
-        </div>
 
 
-        <div class="form-group">
 
+
+        <div class="form-group col-md-8">
             <label for="country">Country:</label>
             <input type="text" id="country" name="address.country" class="form-control" required><br>
+        </div>
 
+         <div class="form-group col-md-8">
             <label for="city">City:</label>
             <input type="text" id="city" name="address.city" class="form-control" required><br>
+        </div>
 
+        <div class="form-group col-md-8">
             <label for="streetAndNumber">Street and Number:</label>
             <input type="text" id="streetAndNumber" name="address.streetAndNumber" class="form-control" required><br>
+        </div>
 
+        <div class="form-group col-md-8">
             <label for="postalCode">Postal Code:</label>
             <input type="text" id="postalCode" name="address.postalCode" class="form-control" required><br>
         </div>

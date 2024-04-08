@@ -5,48 +5,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <title>Create Business Card</title>
+    <style>
+        /* Custom styles for spacing */
+        .form-group {
+            margin-bottom: 1.5rem; /* Adjust as needed */
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<h2>Create Business Card</h2>
+<div class="container">
+    <h2>Create Business Card</h2>
 
-<form action="/createBusinessCard" method="post" th:object="${businessCardDTO}">
-    <label for="office">Office:</label>
-    <input type="text" id="office" name="office" required><br>
+    <form action="/createBusinessCard" method="post" th:object="${businessCardDTO}">
 
-    <label for="scopeOperations">Scope of Operations:</label>
-    <input type="text" id="scopeOperations" name="scopeOperations" required><br>
+        <div class="form-group col-md-6">
+            <label for="office">Office:</label>
+            <input type="text" id="office" name="office" class="form-control" required>
+        </div>
 
-    <label for="recruitmentEmail">Recruitment Email:</label>
-    <input type="email" id="recruitmentEmail" name="recruitmentEmail" required><br>
+        <div class="form-group col-md-6">
+            <label for="scopeOperations">Scope of Operations:</label>
+            <textarea id="scopeOperations" name="scopeOperations" class="form-control" rows="4" required></textarea>
+        </div>
 
-    <label for="phoneNumber">Phone Number:</label>
-    <input type="tel" id="phoneNumber" name="phoneNumber" required><br>
-
-    <label for="companyDescription">Company Description:</label>
-    <textarea id="companyDescription" name="companyDescription" rows="4" required></textarea><br>
-
-    <label for="technologiesAndTools">Technologies and Tools:</label>
-    <input type="text" id="technologiesAndTools" name="technologiesAndTools" required><br>
-
-    <label for="certificatesAndAwards">Certificates and Awards:</label>
-    <input type="text" id="certificatesAndAwards" name="certificatesAndAwards" required><br>
-
-    <label for="country">Country:</label>
-    <input type="text" id="country" name="address.country" required><br>
-
-    <label for="city">City:</label>
-    <input type="text" id="city" name="address.city" required><br>
-
-    <label for="streetAndNumber">Street and Number:</label>
-    <input type="text" id="streetAndNumber" name="address.streetAndNumber" required><br>
-
-    <label for="postalCode">Postal Code:</label>
-    <input type="text" id="postalCode" name="address.postalCode" required><br>
+        <div class="form-group col-md-6">
+            <label for="recruitmentEmail">Recruitment Email:</label>
+            <input type="email" id="recruitmentEmail" name="recruitmentEmail" class="form-control" required>
+        </div>
 
 
-    <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+        <div class="form-group col-md-6">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required
+                   pattern="^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$"
+                   title="Please enter a phone number in the format +xx xxx xxx xxx (15 digits)">
+            <small id="phoneHelpBlock" class="form-text text-muted">Phone number must be in the format +xx xxx xxx xxx (15 digits).</small>
+        </div>
 
-    <button type="submit">Create Business Card</button>
-</form>
+        <div class="form-group col-md-6">
+            <label for="companyDescription">Company Description:</label>
+            <textarea id="companyDescription" name="companyDescription" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="technologiesAndTools">Technologies and Tools:</label>
+            <textarea id="technologiesAndTools" name="technologiesAndTools" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="certificatesAndAwards">Certificates and Awards:</label>
+            <textarea id="certificatesAndAwards" name="certificatesAndAwards" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="address.country" class="form-control" required>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="address.city" class="form-control" required>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="streetAndNumber">Street and Number:</label>
+            <input type="text" id="streetAndNumber" name="address.streetAndNumber" class="form-control" required>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="postalCode">Postal Code:</label>
+            <input type="text" id="postalCode" name="address.postalCode" class="form-control" required>
+        </div>
+
+        <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+
+        <button type="submit" class="btn btn-primary">Create Business Card</button>
+    </form>
+</div>
 </body>
 </html>

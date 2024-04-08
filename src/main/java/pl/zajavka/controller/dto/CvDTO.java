@@ -5,12 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.infrastructure.database.entity.ProgrammingLanguage;
-
-import java.util.Set;
 
 @With
 @Data

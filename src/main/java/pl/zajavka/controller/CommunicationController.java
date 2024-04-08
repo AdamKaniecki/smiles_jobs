@@ -93,9 +93,9 @@ public class CommunicationController {
         User loggedInUser = userService.findByUserName(username);
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         Notification notification = notificationService.findById(notificationId);
-        User adresat = jobOffer.getUser();
+        User recipient = jobOffer.getUser();
 
-        notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
+        notificationService.acceptMeetingDateTime(notification, loggedInUser, recipient);
 
         return "meeting_date_successfully";
     }

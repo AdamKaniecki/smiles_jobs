@@ -2,72 +2,116 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Update CV</title>
+  <title>Update Job Offer</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 
-<h2>Update Job Offer</h2>
+<div class="container">
+  <h2>Update Job Offer</h2>
 
-<form action="#"
-      th:action="@{/updateJobOfferDone}"
-      th:method="PUT"
-      th:object="${jobOfferDTO}">
+  <form action="#" th:action="@{/updateJobOfferDone}" th:method="PUT" th:object="${jobOfferDTO}" class="needs-validation" novalidate>
 
-  <label>companyName: </label>
-  <input type="text" th:field="*{companyName}" required/><br/>
+    <div class="col-md-6">
+      <label for="companyName">Company Name: </label>
+      <input type="text" th:field="*{companyName}" id="companyName" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a company name.</div>
+    </div>
 
-  <label>Job Description: </label>
-  <input type="text" th:field="*{jobDescription}" required/><br/>
+    <div class="col-md-6">
+      <label for="position">Position: </label>
+      <input type="text" th:field="*{position}" id="position" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a position.</div>
+    </div>
 
-  <label>position: </label>
-  <input type="text" th:field="*{position}" required/><br/>
+    <div class="col-md-6">
+      <label for="responsibilities">Responsibilities: </label>
+      <textarea th:field="*{responsibilities}" id="responsibilities" class="form-control" rows="5" required></textarea>
+      <div class="invalid-feedback">Please provide responsibilities.</div>
+    </div>
 
-  <label>responsibilities </label>
-  <input type="text" th:field="*{responsibilities}" required/><br/>
+    <div class="col-md-6">
+      <label for="requiredTechnologies">Required Technologies: </label>
+      <textarea th:field="*{requiredTechnologies}" id="requiredTechnologies" class="form-control" rows="5" required></textarea>
+      <div class="invalid-feedback">Please provide required technologies.</div>
+    </div>
 
-  <label>requiredTechnologies: </label>
-  <input type="text" th:field="*{requiredTechnologies}" required/><br/>
+    <div class="col-md-6">
+      <label for="experience">Experience: </label>
+      <textarea th:field="*{experience}" id="experience" class="form-control" rows="5" required></textarea>
+      <div class="invalid-feedback">Please provide experience.</div>
+    </div>
 
-  <label>experience: </label>
-  <input type="text" th:field="*{experience}" required/><br/>
+    <div class="col-md-6">
+      <label for="jobLocation">Job Location: </label>
+      <input type="text" th:field="*{jobLocation}" id="jobLocation" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a job location.</div>
+    </div>
 
-  <label>Job Location: </label>
-  <input type="text" th:field="*{jobLocation}" required/><br/>
+    <div class="col-md-6">
+      <label for="typeOfContract">Type Of Contract: </label>
+      <input type="text" th:field="*{typeOfContract}" id="typeOfContract" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a type of contract.</div>
+    </div>
 
-  <label>Type Of Contract: </label>
-  <input type="text" th:field="*{typeOfContract}" required/><br/>
+    <div class="col-md-6">
+      <label for="typeOfWork">Type Of Work: </label>
+      <input type="text" th:field="*{typeOfWork}" id="typeOfWork" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a type of work.</div>
+    </div>
 
-  <label>Type Of Work: </label>
-  <input type="text" th:field="*{typeOfWork}" required/><br/>
+    <div class="col-md-6">
+      <label for="salaryMin">Min Salary: </label>
+      <input type="text" th:field="*{salaryMin}" id="salaryMin" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a minimum salary.</div>
+    </div>
 
-  <label>Min Salary: </label>
-  <input type="text" th:field="*{salaryMin}" required/><br/>
+    <div class="col-md-6">
+      <label for="salaryMax">Max Salary: </label>
+      <input type="text" th:field="*{salaryMax}" id="salaryMax" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a maximum salary.</div>
+    </div>
 
-  <label>Max Salary: </label>
-  <input type="text" th:field="*{salaryMax}" required/><br/>
+    <div class="col-md-6">
+      <label for="requiredLanguage">Required Language: </label>
+      <input type="text" th:field="*{requiredLanguage}" id="requiredLanguage" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a required language.</div>
+    </div>
 
-  <label>Required Language: </label>
-  <input type="text" th:field="*{requiredLanguage}" required/><br/>
+    <div class="col-md-6">
+      <label for="requiredLanguageLevel">Required Language Level: </label>
+      <input type="text" th:field="*{requiredLanguageLevel}" id="requiredLanguageLevel" class="form-control" required/>
+      <div class="invalid-feedback">Please provide a required language level.</div>
+    </div>
 
-  <label>Required Language Level: </label>
-  <input type="text" th:field="*{requiredLanguageLevel}" required/><br/>
+    <div class="col-md-6">
+      <label for="benefits">Benefits: </label>
+      <textarea th:field="*{benefits}" id="benefits" class="form-control" rows="5" required></textarea>
+      <div class="invalid-feedback">Please provide benefits.</div>
+    </div>
 
-  <label>benefits: </label>
-  <input type="text" th:field="*{benefits}" required/><br/>
+    <div class="col-md-6">
+      <label for="neededStaff">Needed Staff: </label>
+      <input type="text" th:field="*{neededStaff}" id="neededStaff" class="form-control" required/>
+      <div class="invalid-feedback">Please provide the number of needed staff.</div>
+    </div>
 
-  <label>Needed Staff: </label>
-  <input type="text" th:field="*{neededStaff}" required/><br/>
+    <div class="col-md-6">
+      <label for="jobDescription">Job Description: </label>
+      <textarea th:field="*{jobDescription}" id="jobDescription" class="form-control" rows="5" required></textarea>
+      <div class="invalid-feedback">Please provide a job description.</div>
+    </div>
 
+    <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
+    <input type="hidden" id="jobOfferId" name="id" th:value="${jobOfferDTO.id}">
 
+    <button type="submit" class="btn btn-warning">Update Job Offer</button>
+  </form>
+</div>
 
-
-
-  <input type="hidden" id="userId" name="userId" th:value="${userDTO.id}">
-  <input type="hidden" id="jobOfferId" name="id" th:value="${jobOfferDTO.id}">
-
-  <input type="submit" value="Update JobOffer"/>
-</form>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

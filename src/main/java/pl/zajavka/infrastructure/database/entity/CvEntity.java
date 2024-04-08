@@ -6,11 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 import pl.zajavka.infrastructure.security.UserEntity;
-
-import java.math.BigDecimal;
-import java.util.Set;
 
 @Entity
 @Data
@@ -45,9 +41,6 @@ public class CvEntity {
     @Column(name = "contact_email")
     private String contactEmail;
 
-//    @Column(name = "courses")
-//    private String courses;
-
     @Column(name = "social_media_profil")
     private String socialMediaProfil;
 
@@ -72,9 +65,6 @@ public class CvEntity {
     @Column(name = "education")
     private String education;
 
-//    @Column(name = "years_of_experience")
-//    private Integer yearsOfExperience;
-
     @Column(name = "language")
     private String language;
 
@@ -97,28 +87,6 @@ public class CvEntity {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
-
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "notifications",
-//            joinColumns = @JoinColumn(name = "cv_id"),
-//            inverseJoinColumns = @JoinColumn(name = "job_offer_id"))
-//    private List<JobOffer> jobOffers;
-
-
-//    @ElementCollection(targetClass = ProgrammingLanguage.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "cv_programming_languages", joinColumns = @JoinColumn(name = "cv_id"))
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "programming_language")
-//    private Set<ProgrammingLanguage> programmingLanguages;
-
-
-//    @ElementCollection(targetClass = ProgrammingLanguage.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "cv_IT_specializations", joinColumns = @JoinColumn(name = "cv_id"))
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "IT_specializations")
-//    private Set<IT_Specializations> it_specializations;
 
 
 }

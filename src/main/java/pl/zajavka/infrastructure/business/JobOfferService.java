@@ -204,15 +204,15 @@ public class JobOfferService {
     public void deleteJobOfferAndSetNullInNotifications(Integer jobOfferId) {
 
         JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOfferId)
-                .orElseThrow(() -> new IllegalArgumentException("Oferta pracy o identyfikatorze " + jobOfferId + " nie została znaleziona."));
+                .orElseThrow(() -> new IllegalArgumentException("Job Offer with ID " + jobOfferId + " not founded"));
 
         List<NotificationEntity> notifications = notificationJpaRepository.findByJobOfferId(jobOfferEntity.getId());
 
 
         for (NotificationEntity notification : notifications) {
             notification.setJobOffer(null);
-            notification.setCompanyMessage("usunąłeś swoją ofertę pracy");
-            notification.setCandidateMessage("użytkownik usunął ofertę pracy");
+            notification.setCompanyMessage("Your Job Offer has been deleted");
+            notification.setCandidateMessage("The user deleted their Job Offer");
             notification.setStatus(Status.REJECT);
 
         }

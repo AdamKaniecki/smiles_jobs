@@ -10,36 +10,20 @@
 <div class="container">
   <h1 class="mt-4">Welcome to Smiles Jobs</h1>
 
-  <h2 class="mt-4">Ogłoszenia kandydatów</h2>
+  <h2 class="mt-4">CV List</h2>
   <table class="table table-striped">
     <thead>
     <tr>
-      <th>Numer ogłoszenia</th>
-      <th>Imię</th>
-      <th>Nazwisko</th>
-      <th>Doświadczenie zawodowe</th>
-      <th>Poznane technologie</th>
-      <th>Linki do projektów</th>
-      <th>Data i godzina</th>
-      <th>Status kandydata</th>
-      <th>Send Offer</th>
+      <th>NUMBER</th>
+      <th>NAME</th>
+      <th>SURNAME</th>
+      <th>PROGRAMMING LANGUAGES</th>
+      <th>FOLLOW POSITION</th>
+      <th>SKILL AND TOOLS</th>
+      <th>CV DETAILS</th>
     </tr>
     </thead>
     <tbody>
-    <!-- Poniżej  pętla Thymeleaf, aby wyświetlać tylko ostatnie 5 pozycji -->
-    <tr th:each="candidate, rowStat : ${candidates}" th:if="${rowStat.index < 5}">
-      <td th:text="${candidate.number}"></td>
-      <td th:text="${candidate.firstName}"></td>
-      <td th:text="${candidate.lastName}"></td>
-      <td th:text="${candidate.experience}"></td>
-      <td th:text="${candidate.technologies}"></td>
-      <td th:text="${candidate.projectLinks}"></td>
-      <td th:text="${candidate.dateTime}"></td>
-      <td th:text="${candidate.status}"></td>
-      <td>
-        <a class="btn btn-primary" th:href="@{'/send-offer/' + ${candidate.id}}">Send Offer</a>
-      </td>
-    </tr>
     </tbody>
   </table>
 
@@ -47,35 +31,26 @@
   <table class="table table-striped">
     <thead>
     <tr>
-      <th>Numer ogłoszenia</th>
-      <th>Nazwa firmy</th>
-      <th>Stanowisko</th>
-      <th>Zakres obowiązków</th>
-      <th>Wymagana znajomość technologii</th>
-      <th>Benefity</th>
-      <th>Data i godzina</th>
+      <th>Number</th>
+      <th>Company Name</th>
+      <th>Position</th>
+      <th>Experience</th>
+      <th>Job Location</th>
+      <th>Type Of Work</th>
+      <th>Min Salary</th>
+      <th>Max Salary</th>
+      <th>Details</th>
       <th>Send CV</th>
+      <th>Date and Time</th>
     </tr>
     </thead>
     <tbody>
-
-    <tr th:each="jobOffer : ${jobOffers}">
-      <td th:text="${jobOffer.number}"></td>
-      <td th:text="${jobOffer.companyName}"></td>
-      <td th:text="${jobOffer.position}"></td>
-      <td th:text="${jobOffer.jobDescription}"></td>
-      <td th:text="${jobOffer.requiredTechnologies}"></td>
-      <td th:text="${jobOffer.benefits}"></td>
-      <td th:text="${jobOffer.dateTime}"></td>
-      <td>
-        <a class="btn btn-primary" th:href="@{'/send-cv/' + ${jobOffer.id}}">Send CV</a>
-      </td>
     </tr>
     </tbody>
   </table>
 
   <div class="alert alert-info mt-4">
-    Jeśli chcesz mieć pełen dostęp do wszystkich ogłoszeń, zaloguj się.
+    If you want to have full access to all the ads that interest you, log in
   </div>
   <div class="row mt-3">
     <div class="col-md-4">
@@ -87,7 +62,7 @@
   </div>
 
   <div class="alert alert-warning mt-4">
-    Jeśli nie jesteś jeszcze użytkownikiem, zarejestruj się.
+    If you are not a user yet, please register
   </div>
 
   <div class="row mt-3">

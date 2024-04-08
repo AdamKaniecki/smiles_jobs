@@ -6,81 +6,81 @@
 </head>
 <body>
 <div class="container">
-  <h1>Tworzenie Ogłoszenia</h1>
+  <h1>Create Job Offer</h1>
   <form th:action="@{/createJobOffer}" th:object="${jobOfferDTO}" method="post">
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="companyName">Company name</label>
       <input type="text" class="form-control" name="companyName" id="companyName" required>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="position">Position</label>
       <input type="text" class="form-control" name="position" id="position" required>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="responsibilities">Responsibilities</label>
-      <input type="text" class="form-control" name="responsibilities" id="responsibilities" required>
+      <textarea class="form-control" name="responsibilities" id="responsibilities" rows="5" required></textarea>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="requiredTechnologies">Required Technologies</label>
-      <input type="text" class="form-control" name="requiredTechnologies" id="requiredTechnologies" required>
+      <textarea class="form-control" name="requiredTechnologies" id="requiredTechnologies" rows="5" required></textarea>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="experience">Experience </label>
-      <input type="text" class="form-control" name="experience" id="experience" required>
+      <textarea class="form-control" name="experience" id="experience" rows="5" required></textarea>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="jobLocation">Job Location</label>
       <input type="text" class="form-control" name="jobLocation" id="jobLocation" required>
     </div>
 
 
-    <div class="form-group">
+    < <div class="col-md-6">
       <label for="typeOfContract">Typ Of Contract</label>
       <input type="text" class="form-control" name="typeOfContract" id="typeOfContract" required>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="typeOfWork">Type Of Work</label>
       <input type="text" class="form-control" name="typeOfWork" id="typeOfWork" required>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="salaryMin">Minimum Salary</label>
       <input type="text" class="form-control" name="salaryMin" id="salaryMin">
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="salaryMax">Maximum Salary</label>
       <input type="text" class="form-control" name="salaryMax" id="salaryMax">
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="requiredLanguage">Required Language</label>
       <input type="text" class="form-control" name="requiredLanguage" id="requiredLanguage">
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="requiredLanguageLevel">Required Language Level</label>
       <input type="text" class="form-control" name="requiredLanguageLevel" id="requiredLanguageLevel">
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="benefits">Benefits</label>
-      <input type="text" class="form-control" name="benefits" id="benefits" required>
+      <textarea class="form-control" name="benefits" id="benefits" rows="5" required></textarea>
     </div>
 
-    <div class="form-group">
+     <div class="col-md-6">
       <label for="jobDescription">Job Description</label>
-      <input type="text" class="form-control" name="jobDescription" id="jobDescription">
+      <textarea class="form-control" name="jobDescription" id="jobDescription" rows="5" required></textarea>
     </div>
 
-    <div class="form-group">
+    <div class="col-md-6">
       <label for="neededStaff">Needed staff:</label>
       <input type="text" class="form-control" name="neededStaff" id="neededStaff">
     </div>
@@ -89,7 +89,7 @@
 
     <!-- Dodatkowe pola formularza dla innych danych ogłoszenia -->
 
-    <button type="submit" class="btn btn-primary">Utwórz Ofertę Pracy</button>
+    <button type="submit" class="btn btn-primary">Create Job Offer</button>
   </form>
 </div>
 

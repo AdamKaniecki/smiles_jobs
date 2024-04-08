@@ -52,8 +52,8 @@ public class NotificationService {
     public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
         NotificationEntity notificationEntity = NotificationEntity.builder()
                 .status(Status.UNDER_REVIEW)
-                .candidateMessage("Wysłano CV, oczekuj na propozycję rozmowy")
-                .companyMessage("chcę u was pracować")
+                .candidateMessage("CV sent, await interview offer")
+                .companyMessage("I would like to work for you")
                 .jobOffer(jobOfferMapper.map(jobOffer))
                 .cv(cvMapper.map(cv))
                 .senderUser(userMapper.map(loggedInUser))
@@ -73,54 +73,54 @@ public class NotificationService {
 
 
     @Transactional
-    public void arrangeInterview(Notification notification, User loggedInUser, User adresat, LocalDateTime proposedDateTime) {
+    public void arrangeInterview(Notification notification, User loggedInUser, User recipient, LocalDateTime proposedDateTime) {
         Status currentStatus = notification.getStatus();
         if (currentStatus == Status.UNDER_REVIEW || currentStatus == Status.MEETING_SCHEDULING) {
             NotificationEntity notificationEntity = notificationMapper.map(notification);
             notificationEntity.setStatus(Status.MEETING_SCHEDULING);
             notificationEntity.setDateTime(proposedDateTime);
-            notificationEntity.setCandidateMessage("zaakceptuj termin rozmowy lub poproś o inny");
-            notificationEntity.setCompanyMessage("wysłano propozycję terminu rozmowy");
+            notificationEntity.setCandidateMessage("Accept the meeting schedule or request another");
+            notificationEntity.setCompanyMessage("The meeting schedule proposal has been sent");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationEntity.setReceiverUser(userMapper.map(recipient));
             notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
-            userService.save(adresat);
+            userService.save(recipient);
         } else {
             throw new IllegalStateException("Cannot arrange interview when the status is not Under Review or Meeting Scheduling.");
         }
     }
 
     @Transactional
-    public void changeMeetingDate(Notification notification, User loggedInUser, User adresat) {
+    public void changeMeetingDate(Notification notification, User loggedInUser, User recipient) {
         if (notification.getStatus() == Status.MEETING_SCHEDULING) {
             NotificationEntity notificationEntity = notificationMapper.map(notification);
             notificationEntity.setDateTime(null);
-            notificationEntity.setCompanyMessage("proszę o zmianę terminu");
-            notificationEntity.setCandidateMessage("wysłano prośbę o zmianę terminu");
+            notificationEntity.setCompanyMessage("Please request a change of schedule");
+            notificationEntity.setCandidateMessage("The request to change the schedule has been sent");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationEntity.setReceiverUser(userMapper.map(recipient));
             notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
-            userService.save(adresat);
+            userService.save(recipient);
         } else {
             throw new IllegalStateException("Cannot change meeting date when the status is not Meeting Scheduling.");
         }
     }
 
     @Transactional
-    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User adresat) {
+    public void acceptMeetingDateTime(Notification notification, User loggedInUser, User recipient) {
         Status currentStatus = notification.getStatus();
         if (currentStatus == Status.MEETING_SCHEDULING) {
             NotificationEntity notificationEntity = notificationMapper.map(notification);
             notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
-            notificationEntity.setCompanyMessage("zaakceptowano termin");
-            notificationEntity.setCandidateMessage("wysłano akceptację terminu");
+            notificationEntity.setCompanyMessage("The meeting schedule has been accepted");
+            notificationEntity.setCandidateMessage("The meeting schedule has been accepted");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationEntity.setReceiverUser(userMapper.map(recipient));
             notificationDAO.save(notificationEntity);
             userService.save(loggedInUser);
-            userService.save(adresat);
+            userService.save(recipient);
         } else {
             throw new IllegalStateException("Cannot accept meeting date when the status is not Meeting Scheduling.");
         }
@@ -132,20 +132,20 @@ public class NotificationService {
         return notificationDateTime != null && LocalDateTime.now().isAfter(notificationDateTime);
     }
 
-    public void declineCandidate(Notification notification, User loggedInUser, User adresat) {
+    public void declineCandidate(Notification notification, User loggedInUser, User recipient) {
         NotificationEntity notificationEntity = notificationMapper.map(notification);
         notificationEntity.setStatus(Status.REJECT);
-        notificationEntity.setCompanyMessage("wysłano odpowiedź odmowną ");
-        notificationEntity.setCandidateMessage("niestety nie zostałeś zatrudniony");
+        notificationEntity.setCompanyMessage("The rejection response has been sent");
+        notificationEntity.setCandidateMessage("Unfortunately, you have not been hired");
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-        notificationEntity.setReceiverUser(userMapper.map(adresat));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
         notificationDAO.save(notificationEntity);
         userService.save(loggedInUser);
-        userService.save(adresat);
+        userService.save(recipient);
     }
 
     @Transactional
-    public void hiredCandidate(Notification notification, User loggedInUser, User adresat) {
+    public void hiredCandidate(Notification notification, User loggedInUser, User recipient) {
         Status currentStatus = notification.getStatus();
         if (currentStatus != Status.REJECT) {
             NotificationEntity notificationEntity = notificationMapper.map(notification);
@@ -153,14 +153,14 @@ public class NotificationService {
             notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
             notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-            notificationEntity.setReceiverUser(userMapper.map(adresat));
+            notificationEntity.setReceiverUser(userMapper.map(recipient));
             notificationDAO.save(notificationEntity);
 
             CV cv = notification.getCv();
             cv.setVisible(false);
             cvRepository.saveCV(cv);
             userService.save(loggedInUser);
-            userService.save(adresat);
+            userService.save(recipient);
 
             JobOffer jobOffer = notification.getJobOffer();
             jobOffer.setHiredCount(jobOffer.getHiredCount() + 1);

@@ -8,9 +8,6 @@ import lombok.NoArgsConstructor;
 import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Entity
 @Data
@@ -45,7 +42,7 @@ public class NotificationEntity {
     @ManyToOne
     @JoinColumn(name = "job_offer_id")
     private JobOfferEntity jobOffer;
-//
+
     @ManyToOne
     @JoinColumn(name = "sender_user_id")
     private UserEntity senderUser;
@@ -54,21 +51,5 @@ public class NotificationEntity {
     @JoinColumn(name = "receiver_user_id")
     private UserEntity receiverUser;
 
-
-//    @ManyToOne() // Dodaj cascade = CascadeType.ALL
-//    @JoinColumn(name = "cv_id")
-//    private CvEntity cv;
-//
-//    @ManyToOne() // Dodaj cascade = CascadeType.ALL
-//    @JoinColumn(name = "job_offer_id")
-//    private JobOfferEntity jobOffer;
-//
-//    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
-//    @JoinColumn(name = "sender_user_id")
-//    private UserEntity senderUser;
-//
-//    @ManyToOne(cascade = CascadeType.ALL) // Dodaj cascade = CascadeType.ALL
-//    @JoinColumn(name = "receiver_user_id")
-//    private UserEntity receiverUser;
 }
 

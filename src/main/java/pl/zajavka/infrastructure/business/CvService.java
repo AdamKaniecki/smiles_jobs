@@ -116,8 +116,8 @@ public class CvService {
 
             for (NotificationEntity notification : notifications) {
                 notification.setCv(null);
-                notification.setCompanyMessage("użytkownik usunął swoje CV");
-                notification.setCandidateMessage("usunąłeś swoje CV");
+                notification.setCompanyMessage("The user deleted their CV");
+                notification.setCandidateMessage("Your CV has been deleted");
                 notification.setStatus(Status.REJECT);
             }
 

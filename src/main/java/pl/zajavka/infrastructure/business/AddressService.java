@@ -25,7 +25,7 @@ public class AddressService {
 
 
     @Transactional
-    public Address createAddress(Address address, User user) {
+    public Address createAddress(Address address) {
         AddressEntity entity = AddressEntity.builder()
                 .country(address.getCountry())
                 .city(address.getCity())
