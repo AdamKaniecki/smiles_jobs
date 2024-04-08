@@ -129,7 +129,7 @@ public class BusinessCardController {
 
 
         model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
-        return "business_card_created_successfully";
+        return "update_business_card_successfully";
     }
 
 
@@ -143,7 +143,7 @@ public class BusinessCardController {
         addressService.deleteAddress(address);
         model.addAttribute("businessCardDTO", businessCardMapperDTO.map(businessCard));
 
-        return "business_card_created_successfully";
+        return "business_card_deleted_successfully";
     }
 
     @GetMapping("/businessCardNotFound")

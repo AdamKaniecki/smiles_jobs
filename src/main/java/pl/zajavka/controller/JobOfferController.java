@@ -142,7 +142,7 @@ public class JobOfferController {
 
         model.addAttribute("jobOfferDTO", jobOfferMapperDTO.map(jobOffer));
 
-        return "job_offer_created_successfully";
+        return "job_offer_update_successfully";
     }
 
 

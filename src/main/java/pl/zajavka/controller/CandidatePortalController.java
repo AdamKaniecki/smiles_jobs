@@ -38,8 +38,8 @@ public class CandidatePortalController {
     private JobOfferMapperDTO jobOfferMapperDTO;
     private NotificationService notificationService;
     private PaginationService paginationService;
-    private CvService cvService;
-    private CvMapperDTO cvMapperDTO;
+
+
 
     @SneakyThrows
     @GetMapping(CANDIDATE_PORTAL)

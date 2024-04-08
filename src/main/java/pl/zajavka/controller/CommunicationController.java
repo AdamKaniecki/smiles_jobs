@@ -79,7 +79,7 @@ public class CommunicationController {
 
         notificationService.changeMeetingDate(notification, loggedInUser, adresat);
 
-        return "cv_created_successfully";
+        return "change_meeting_date_successfully";
     }
 
 
@@ -97,7 +97,7 @@ public class CommunicationController {
 
         notificationService.acceptMeetingDateTime(notification, loggedInUser, adresat);
 
-        return "cv_created_successfully";
+        return "meeting_date_successfully";
     }
 
 
@@ -115,7 +115,7 @@ public class CommunicationController {
 
         notificationService.arrangeInterview(notification, loggedInUser, cvUser, proposedDateTime);
 
-        return "job_offer_created_successfully";
+        return "arrange_interview_successfully";
 
     }
 
@@ -133,7 +133,7 @@ public class CommunicationController {
 
         notificationService.declineCandidate(notification, loggedInUser, cvUser);
 
-        return "job_offer_created_successfully";
+        return "decline_successfully";
 
     }
 
@@ -150,7 +150,7 @@ public class CommunicationController {
 
         notificationService.hiredCandidate(notification, loggedInUser, cvUser);
 
-        return "job_offer_created_successfully";
+        return "hired_successfully";
     }
 
 
