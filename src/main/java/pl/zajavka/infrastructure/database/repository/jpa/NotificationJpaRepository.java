@@ -22,7 +22,7 @@ public interface NotificationJpaRepository extends JpaRepository<NotificationEnt
     @Query("SELECT n FROM NotificationEntity n WHERE n.senderUser = :user OR n.receiverUser = :user")
     List<NotificationEntity> findByUser(UserEntity user);
 
-    void deleteByCvId(Integer cvId);
+//    void deleteByCvId(Integer cvId);
 
 
     List<NotificationEntity> findByCvId(Integer id);

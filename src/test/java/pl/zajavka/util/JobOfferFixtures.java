@@ -1,56 +1,68 @@
-//package pl.zajavka.util;
-//
-//import lombok.experimental.UtilityClass;
-//import pl.zajavka.controller.dto.JobOfferDTO;
-//import pl.zajavka.infrastructure.domain.JobOffer;
-//import pl.zajavka.infrastructure.domain.User;
-//import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
-//import pl.zajavka.infrastructure.security.RoleEntity;
-//
-//import java.time.OffsetDateTime;
-//import java.util.List;
-//import java.util.Set;
-//
-//@UtilityClass
-//public class JobOfferFixtures {
-//    public static JobOfferEntity someJobOfferEntity1(){
-//
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        return JobOfferEntity.builder()
-//                .companyName("company1")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
-//                .build();
-//    }
-//    public static JobOfferEntity someJobOfferEntity2(){
-//
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        return JobOfferEntity.builder()
-//                .companyName("company2")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
-//                .build();
-//    }
-//
-//    public static JobOfferEntity someJobOfferEntity3(){
-//
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        return JobOfferEntity.builder()
-//                .companyName("company3")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
-//                .build();
-//    }
-//
+package pl.zajavka.util;
+
+import lombok.experimental.UtilityClass;
+import pl.zajavka.controller.dto.JobOfferDTO;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.security.RoleEntity;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Set;
+
+@UtilityClass
+public class JobOfferFixtures {
+    public static JobOfferEntity someJobOfferEntity1(){
+
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        return JobOfferEntity.builder()
+                .companyName("januszex")
+                .position("junior java developer")
+                .responsibilities("support")
+                .requiredTechnologies("spring")
+                .experience("two years")
+                .jobLocation("remote")
+                .typeOfContract("b2b")
+                .typeOfWork("FULL-TIME JOB")
+                .salaryMin(new BigDecimal("4000")) // Przykładowe wynagrodzenie minimalne
+                .salaryMax(new BigDecimal("6000")) // Przykładowe wynagrodzenie maksymalne
+                .requiredLanguage("English") // Wymagany język
+                .requiredLanguageLevel("B2") // Poziom wymaganego języka
+                .benefits("fruits") // Korzyści oferowane przez pracodawcę
+                .jobDescription("example about us") // Opis stanowiska pracy
+                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
+                .active(true) // Czy oferta pracy jest aktywna
+                .neededStaff(5) // Ilość potrzebnych pracowników
+                .hiredCount(0) // Liczba zatrudnionych pracowników
+                .build();
+    }
+    public static JobOfferEntity someJobOfferEntity2(){
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        return JobOfferEntity.builder()
+                .companyName("januszex2")
+                .position("junior java developer2")
+                .responsibilities("support2")
+                .requiredTechnologies("spring2")
+                .experience("two years2")
+                .jobLocation("remote2")
+                .typeOfContract("b2b2")
+                .typeOfWork("FULL-TIME JOB2")
+                .salaryMin(new BigDecimal("4000")) // Przykładowe wynagrodzenie minimalne
+                .salaryMax(new BigDecimal("6000")) // Przykładowe wynagrodzenie maksymalne
+                .requiredLanguage("English2") // Wymagany język
+                .requiredLanguageLevel("B2") // Poziom wymaganego języka
+                .benefits("fruits2") // Korzyści oferowane przez pracodawcę
+                .jobDescription("example about us2") // Opis stanowiska pracy
+                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
+                .active(true) // Czy oferta pracy jest aktywna
+                .neededStaff(5) // Ilość potrzebnych pracowników
+                .hiredCount(0) // Liczba zatrudnionych pracowników
+                .build();
+    }
+
+
 //    public static JobOffer someJobOffer1(){
 //        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
 //        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
@@ -96,7 +108,7 @@
 //                .user(user)
 //                .build();
 //    }
-//
+
 //    public static List<JobOfferDTO> jobOfferDTOs(){
 //
 //        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_COMPANY").build();
@@ -143,10 +155,10 @@
 //
 //        List<JobOfferDTO> outputJobOffers = List.of(jobOfferDTO1,jobOfferDTO2);
 //        return  outputJobOffers;
-//
-//
+
+
 //    }
-//
+
 //    public static List<JobOffer> jobOffers(){
 //
 //        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_COMPANY").build();
@@ -225,4 +237,4 @@
 //        return jobOfferDTO;
 //
 //    }
-//}
+}

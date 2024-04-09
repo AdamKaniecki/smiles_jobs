@@ -1,98 +1,144 @@
-//package pl.zajavka.util;
-//
-//import lombok.experimental.UtilityClass;
-//import pl.zajavka.infrastructure.domain.Address;
-//import pl.zajavka.infrastructure.domain.CV;
-//import pl.zajavka.infrastructure.domain.User;
-//import pl.zajavka.infrastructure.database.entity.CvEntity;
-//
-//@UtilityClass
-//public class CvFixtures {
-//
-//
-//
-//    public CV createSampleCv() {
-//
-//        Address address = Address.builder()
-//                .city("Sample City")
-//                .country("Sample Country")
-//                .streetAndNumber("Sample Street 125")
-//                .build();
-//
-//        User user = User.builder()
-//                .userName("sample_user")
-//                .email("sample@example.com")
-//                .password("password123")
-//                .active(true)
-//                .build();
-//
-//
-//
-//        CV cv = CV.builder()
-//                .name("Sample Name")
-//                .surname("Sample Surname")
-//                .dateOfBirth("01-01-1990")
-//                .sex("Male")
-//                .maritalStatus("Single")
-//                .contactEmail("sample@example.com")
-//                .phoneNumber("+1234567890")
-//                .education("Sample Education")
-//                .workExperience("Sample Work Experience")
-//                .skills("Sample Skills")
-//                .language("English")
-//                .languageLevel("B2")
-//                .hobby("Sample Hobby")
-//                .address(address)
-//                .user(user)
-//                .build();
-//        return cv;
-//    }
-//
-//    public static CvEntity sampleCvEntity(){
-//
-//        CvEntity cv = CvEntity.builder()
-//                .name("John")
-//                .surname("Doe")
-//                .dateOfBirth("1990-01-01")
-//                .sex("Male")
-//                .maritalStatus("Single")
-//                .phoneNumber("123456789")
-//                .contactEmail("john@example.com")
-//                .workExperience("5 years")
-//                .education("Master's Degree")
-//                .skills("Java, Python")
-//                .tools("IntelliJ IDEA, Git")
-//                .yearsOfExperience(5)
-//                .language("English")
-//                .languageLevel("Fluent")
-//                .hobby("Reading, Travelling")
-//                .build();
-//
-//        return cv;
-//
-//    }
-//
-//    public static CV sampleCV(){
-//
-//        CV cv = CV.builder()
-//                .name("John")
-//                .surname("Doe")
-//                .dateOfBirth("1990-01-01")
-//                .sex("Male")
-//                .maritalStatus("Single")
-//                .phoneNumber("123456789")
-//                .contactEmail("john@example.com")
-//                .workExperience("5 years")
-//                .education("Master's Degree")
-//                .skills("Java, Python")
-//                .tools("IntelliJ IDEA, Git")
-//                .yearsOfExperience(5)
-//                .language("English")
-//                .languageLevel("Fluent")
-//                .hobby("Reading, Travelling")
-//                .build();
-//
-//        return cv;
-//
-//    }
-//}
+package pl.zajavka.util;
+
+import lombok.experimental.UtilityClass;
+import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.infrastructure.domain.Address;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.security.UserEntity;
+
+@UtilityClass
+public class CvFixtures {
+
+
+    public static CV someCV1() {
+
+        Address address = Address.builder()
+                .city("Sample City")
+                .country("Sample Country")
+                .streetAndNumber("Sample Street 125")
+                .postalCode("09-500")
+                .build();
+
+        User user = User.builder()
+                .userName("sample_user")
+                .email("sample@example.com")
+                .password("password123")
+                .active(true)
+                .build();
+
+
+        CV cv = CV.builder()
+                .name("A")
+                .surname("Z")
+                .dateOfBirth("19999")
+                .sex("man")
+                .maritalStatus("married")
+                .phoneNumber("+48 999 120 000")
+                .contactEmail("a@gmail.com")
+                .workExperience("ccc")
+                .education("ddd")
+                .socialMediaProfil("lll")
+                .projects("lllll")
+                .aboutMe("ooo")
+                .certificatesOfCourses("ccc")
+                .programmingLanguage("jjj")
+                .skillsAndTools("sss")
+                .language("eee")
+                .languageLevel("a2")
+                .hobby("ppp")
+                .followPosition("jjjj")
+                .visible(true)
+                .address(address)
+                .user(user)
+                .build();
+        return cv;
+    }
+
+    public static CvEntity someCvEntity1() {
+
+        AddressEntity address = AddressEntity.builder()
+                .city("Sample City")
+                .country("Sample Country")
+                .streetAndNumber("Sample Street 125")
+                .postalCode("09-500")
+                .build();
+
+        return CvEntity.builder()
+                .name("John")
+                .surname("Doe")
+                .dateOfBirth("1990-01-01")
+                .sex("Male")
+                .maritalStatus("Single")
+                .phoneNumber("123456789")
+                .contactEmail("john@example.com")
+                .aboutMe("coś tam")
+                .followPosition("junior")
+                .workExperience("5 years")
+                .education("Master's Degree")
+                .skillsAndTools("IntelliJ IDEA, Git")
+                .programmingLanguage("Java, Python")
+                .certificatesOfCourses("zajavka")
+                .language("English")
+                .languageLevel("A2")
+                .visible(true)
+                .socialMediaProfil("linked")
+                .projects("smiles")
+                .hobby("Reading, Travelling")
+                .address(address)
+                .build();
+
+
+    }
+
+    public static CvEntity someCvEntity2() {
+
+        AddressEntity address = AddressEntity.builder()
+                .city("Sample City2")
+                .country("Sample Country2")
+                .streetAndNumber("Sample Street2 125")
+                .postalCode("09-500")
+                .build();
+
+        UserEntity user = UserEntity.builder()
+                .userName("sample_user2")
+                .email("sample@example.com2")
+                .password("password123")
+                .active(true)
+                .build();
+
+
+        CvEntity cv = CvEntity.builder()
+                .name("John2")
+                .surname("Doe2")
+                .dateOfBirth("1990-01-12")
+                .sex("Male2")
+                .maritalStatus("Single2")
+                .phoneNumber("1234567892")
+                .contactEmail("john@example.com2")
+                .aboutMe("coś tam2")
+                .followPosition("junior2")
+                .workExperience("5 years2")
+                .education("Master's Degree2")
+                .skillsAndTools("IntelliJ IDEA, Git2")
+                .programmingLanguage("Java, Python2")
+                .certificatesOfCourses("zajavka2")
+                .language("English2")
+                .languageLevel("A2")
+                .visible(true)
+                .socialMediaProfil("linked2")
+                .projects("smiles2")
+                .hobby("Reading, Travelling2")
+
+                .address(address)
+                .user(user)
+                .build();
+
+        return cv;
+
+    }
+
+
+}
+

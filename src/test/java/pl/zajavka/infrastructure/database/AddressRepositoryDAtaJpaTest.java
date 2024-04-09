@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
+import pl.zajavka.util.AddressFixtures;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,14 +18,8 @@ public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
 
     @Test
     void shouldSaveAddress() {
-        // given
-        AddressEntity address = AddressEntity.builder()
-                .country("Poland")
-                .city("Warsaw")
-                .postalCode("00-001")
-                .streetAndNumber("Main Street 123")
-                .build();
 
+        AddressEntity address = AddressFixtures.someAddressEntity1();
         // when
         AddressEntity savedAddress = addressJpaRepository.save(address);
 
@@ -38,12 +35,7 @@ public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
     @Test
     void shouldDeleteAddress() {
         // given
-        AddressEntity address = AddressEntity.builder()
-                .country("Poland")
-                .city("Warsaw")
-                .postalCode("00-001")
-                .streetAndNumber("Main Street 123")
-                .build();
+        AddressEntity address = AddressFixtures.someAddressEntity1();
         AddressEntity savedAddress = addressJpaRepository.save(address);
 
         // when
@@ -52,7 +44,24 @@ public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
         // then
         assertThat(addressJpaRepository.findById(savedAddress.getId())).isEmpty();
     }
+    @Test
+    void shouldFindAddressById() {
+        // given
+        AddressEntity address = AddressFixtures.someAddressEntity1();
+        AddressEntity savedAddress = addressJpaRepository.save(address);
 
+        // when
+        Optional<AddressEntity> foundAddressOptional = addressJpaRepository.findById(savedAddress.getId());
+
+        // then
+        assertThat(foundAddressOptional).isPresent();
+        AddressEntity foundAddress = foundAddressOptional.get();
+        assertThat(foundAddress.getId()).isEqualTo(savedAddress.getId());
+        assertThat(foundAddress.getCountry()).isEqualTo(savedAddress.getCountry());
+        assertThat(foundAddress.getCity()).isEqualTo(savedAddress.getCity());
+        assertThat(foundAddress.getPostalCode()).isEqualTo(savedAddress.getPostalCode());
+        assertThat(foundAddress.getStreetAndNumber()).isEqualTo(savedAddress.getStreetAndNumber());
+    }
 
 
 
