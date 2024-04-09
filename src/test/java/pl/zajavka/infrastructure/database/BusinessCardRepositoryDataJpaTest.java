@@ -42,7 +42,8 @@ public class BusinessCardRepositoryDataJpaTest extends AbstractJpaIT{
 
     }
 
-
+//
+//
 
 
 
