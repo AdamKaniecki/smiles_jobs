@@ -22,6 +22,7 @@ import pl.zajavka.infrastructure.domain.User;
 @AllArgsConstructor
 @Controller
 public class BusinessCardController {
+//
 
 
     private BusinessCardService businessCardService;
