@@ -1,10 +1,9 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.AddressJpaRepository;
 import pl.zajavka.util.AddressFixtures;
 
 import java.util.Optional;
@@ -12,7 +11,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT{
+public class AddressRepositoryDAtaJpaTest extends AbstractJpaIT {
 
     private AddressJpaRepository addressJpaRepository;
 

@@ -47,13 +47,14 @@ public class CvRepository implements CvDAO {
 
 
 
-
+    @Override
     public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
         List<CvEntity> searchResultEntities = cvJpaRepository.findCvByKeywordAndCategory(keyword, category);
         return searchResultEntities.stream()
                 .map(cvMapper::map)
                 .toList();
     }
+
 
     public void saveCV(CV cv) {
         CvEntity cvEntity = cvMapper.map(cv);

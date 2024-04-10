@@ -1,11 +1,10 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.util.AddressFixtures;

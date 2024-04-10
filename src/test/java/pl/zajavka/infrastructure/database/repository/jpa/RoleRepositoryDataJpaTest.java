@@ -1,4 +1,4 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.RoleRepository;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-class RoleRepositoryDataJpaTest extends AbstractJpaIT{
+class RoleRepositoryDataJpaTest extends AbstractJpaIT {
     @Autowired
     private RoleRepository roleRepository;
 

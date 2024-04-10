@@ -1,4 +1,4 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -7,9 +7,6 @@ import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
-import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
-import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
-import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.util.CvFixtures;

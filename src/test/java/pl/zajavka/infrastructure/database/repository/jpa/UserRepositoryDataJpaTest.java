@@ -1,4 +1,4 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ import static pl.zajavka.util.UserFixtures.*;
 
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class UserRepositoryDataJpaTest extends AbstractJpaIT{
+public class UserRepositoryDataJpaTest extends AbstractJpaIT {
 
 
 

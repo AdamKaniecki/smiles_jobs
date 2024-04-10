@@ -1,16 +1,15 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
 import pl.zajavka.infrastructure.security.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class BusinessCardRepositoryDataJpaTest extends AbstractJpaIT{
+public class BusinessCardRepositoryDataJpaTest extends AbstractJpaIT {
 
     private BusinessCardJpaRepository businessCardJpaRepository;
     private UserRepository userRepository;

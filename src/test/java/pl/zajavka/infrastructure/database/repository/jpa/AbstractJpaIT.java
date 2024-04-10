@@ -1,10 +1,11 @@
-package pl.zajavka.infrastructure.database;
+package pl.zajavka.infrastructure.database.repository.jpa;
 
 
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import pl.zajavka.infrastructure.database.repository.jpa.DatabaseContainerInitializer;
 
 //dzięki tej konfiguracji każdy test który dziedziczy z tej klasy będzie testowany w tych konkretnych warunkach
 @DataJpaTest
