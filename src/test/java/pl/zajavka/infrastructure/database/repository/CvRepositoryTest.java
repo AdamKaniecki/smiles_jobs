@@ -1,19 +1,21 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
+import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.AbstractJpaIT;
 import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
+import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
+import pl.zajavka.util.AddressFixtures;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.UserFixtures;
 
@@ -36,6 +38,10 @@ public class CvRepositoryTest extends AbstractJpaIT {
     private CvMapper cvMapper;
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private AddressMapper addressMapper;
+
 
     @Test
     void testFindAll() {
@@ -195,6 +201,7 @@ public class CvRepositoryTest extends AbstractJpaIT {
         assertDoesNotThrow(() -> cvList.forEach(cv -> assertNotNull(cv))); // 9. Sprawdzenie, czy każde CV w liście nie jest null
 
     }
+
     @Test
     void testSaveCV() {
         // given
@@ -209,6 +216,97 @@ public class CvRepositoryTest extends AbstractJpaIT {
         verify(cvMapper).map(cv); // Sprawdzenie, czy metoda map z CvMapper została wywołana
         verify(cvJpaRepository).save(cvEntity); // Sprawdzenie, czy metoda save z CvJpaRepository została wywołana z odpowiednim argumentem
     }
+
+    @Test
+    void testDeleteById_WhenExists() {
+        // given
+        Integer id = 1;
+
+        // when
+        cvRepository.deleteById(id);
+
+        // then
+        verify(cvJpaRepository).deleteById(id); // Sprawdzenie, czy metoda deleteById z CvJpaRepository została wywołana z odpowiednim argumentem
+    }
+
+    @Test
+    void testDeleteById_WhenNotExists() {
+        // given
+        Integer id = 1;
+
+        // Mockowanie zachowania cvJpaRepository.deleteById() w przypadku, gdy rzucany jest wyjątek EntityNotFoundException
+        doThrow(new EntityNotFoundException("CV not found for id: " + id))
+                .when(cvJpaRepository).deleteById(id);
+
+        // when
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> cvRepository.deleteById(id));
+
+        // then
+        assertNotNull(exception); // Sprawdzenie, czy rzucany jest wyjątek EntityNotFoundException
+        assertEquals("CV not found for id: " + id, exception.getMessage()); // Sprawdzenie, czy wiadomość wyjątku jest poprawna
+        verify(cvJpaRepository).deleteById(id); // Sprawdzenie, czy metoda deleteById z CvJpaRepository została wywołana z odpowiednim argumentem
+    }
+
+    @Test
+    void testUpdateCV_WhenExists() {
+        // given
+        CV updateCV = CvFixtures.someCv1();
+        CvEntity cvEntity = CvFixtures.someCvEntity1();
+
+        // when
+        when(cvMapper.map(updateCV)).thenReturn(cvEntity);
+        cvRepository.updateCV(updateCV);
+
+        // then
+        verify(cvMapper).map(updateCV); // 1. Sprawdzenie, czy metoda map z CvMapper została wywołana z odpowiednim argumentem
+        assertEquals(updateCV.getName(), cvEntity.getName()); // 2. Sprawdzenie, czy pole name encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getSurname(), cvEntity.getSurname()); // 3. Sprawdzenie, czy pole surname encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getDateOfBirth(), cvEntity.getDateOfBirth()); // 4. Sprawdzenie, czy pole dateOfBirth encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getSex(), cvEntity.getSex()); // 5. Sprawdzenie, czy pole sex encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getMaritalStatus(), cvEntity.getMaritalStatus()); // 6. Sprawdzenie, czy pole maritalStatus encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getContactEmail(), cvEntity.getContactEmail()); // 7. Sprawdzenie, czy pole contactEmail encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getPhoneNumber(), cvEntity.getPhoneNumber()); // 8. Sprawdzenie, czy pole phoneNumber encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getEducation(), cvEntity.getEducation()); // 9. Sprawdzenie, czy pole education encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+        assertEquals(updateCV.getWorkExperience(), cvEntity.getWorkExperience()); // 10. Sprawdzenie, czy pole workExperience encji CV zostało ustawione na odpowiednią wartość z obiektu CV
+    }
+
+    @Test
+    void testCreateCV() {
+        CV createdCV = CvFixtures.someCv1();
+        CvEntity cvEntity = CvFixtures.someCvEntity1();
+        User user = CvFixtures.someCv1().getUser();
+
+        // when
+        when(cvMapper.map(createdCV)).thenReturn(cvEntity);
+        // when
+        cvRepository.createCV(createdCV, user);
+
+        // then
+        assertNotNull(createdCV); // Sprawdzenie, czy utworzony obiekt CV nie jest null
+
+        // Sprawdzenie, czy pola obiektu CV nie są null
+        assertNotNull(createdCV.getName());
+        assertNotNull(createdCV.getSurname());
+        assertNotNull(createdCV.getDateOfBirth());
+        assertNotNull(createdCV.getSex());
+        assertNotNull(createdCV.getMaritalStatus());
+        assertNotNull(createdCV.getContactEmail());
+        assertNotNull(createdCV.getPhoneNumber());
+        assertNotNull(createdCV.getEducation());
+        assertNotNull(createdCV.getWorkExperience());
+        assertNotNull(createdCV.getSocialMediaProfil());
+        assertNotNull(createdCV.getProjects());
+        assertNotNull(createdCV.getAboutMe());
+        assertNotNull(createdCV.getCertificatesOfCourses());
+        assertNotNull(createdCV.getProgrammingLanguage());
+        assertNotNull(createdCV.getSkillsAndTools());
+        assertNotNull(createdCV.getLanguage());
+        assertNotNull(createdCV.getLanguageLevel());
+        assertNotNull(createdCV.getHobby());
+        assertNotNull(createdCV.getFollowPosition());
+
+    }
+
 
 }
 

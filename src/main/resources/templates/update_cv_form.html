@@ -51,11 +51,9 @@
 
         <div class="col-md-6">
             <label for="phoneNumber">Phone Number:</label>
-            <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required
-                   pattern="^[+]\\d{2}\\s\\d{3}\\s\\d{3}\\s\\d{3}$"
-                   title="Please enter a phone number in the format +xx xxx xxx xxx (15 digits)">
+            <input type="text" th:field="*{phoneNumber}" class="form-control" id="phoneNumber" required>
             <small id="phoneHelpBlock" class="form-text text-muted">Phone number must be in the format +xx xxx xxx xxx
-                (15 digits).</small>
+                .</small>
         </div>
 
         <div class="col-md-6">

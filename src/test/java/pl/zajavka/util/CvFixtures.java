@@ -102,8 +102,8 @@ public class CvFixtures {
                 .build();
 
         UserEntity user = UserEntity.builder()
-                .userName("sample_user2")
-                .email("sample@example.com2")
+                .userName("sample_user")
+                .email("sample@example.com")
                 .password("password123")
                 .active(true)
                 .build();

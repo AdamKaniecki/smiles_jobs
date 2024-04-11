@@ -32,7 +32,6 @@ public class CvService {
     private CvMapper cvMapper;
     private CvJpaRepository cvRepository;
     private UserMapper userMapper;
-    private AddressMapper addressMapper;
     private final NotificationDAO notificationDAO;
     private final CvDAO cvDAO;
     private final CvMapperDTO cvMapperDTO;
@@ -40,68 +39,15 @@ public class CvService {
 
     @Transactional
     public CV createCV(CV cv, User user) {
+       return cvDAO.createCV(cv, user);
 
-        Address addressCV = cv.getAddress();
-        CvEntity newEntity = CvEntity.builder()
-                .id(cv.getId())
-                .name(cv.getName())
-                .surname(cv.getSurname())
-                .dateOfBirth(cv.getDateOfBirth())
-                .sex(cv.getSex())
-                .maritalStatus(cv.getMaritalStatus())
-                .contactEmail(userMapper.map(user).getEmail())
-                .phoneNumber(cv.getPhoneNumber())
-                .education(cv.getEducation())
-                .workExperience(cv.getWorkExperience())
-                .socialMediaProfil(cv.getSocialMediaProfil())
-                .projects(cv.getProjects())
-                .aboutMe(cv.getAboutMe())
-                .certificatesOfCourses(cv.getCertificatesOfCourses())
-                .programmingLanguage(cv.getProgrammingLanguage())
-                .skillsAndTools(cv.getSkillsAndTools())
-                .language(cv.getLanguage())
-                .languageLevel(cv.getLanguageLevel())
-                .hobby(cv.getHobby())
-                .followPosition(cv.getFollowPosition())
-                .visible(true)
-                .user(userMapper.map(user))
-                .address(addressMapper.map(addressCV))
-                .build();
-
-
-        cvDAO.saveCV(newEntity);
-        return cvMapper.map(newEntity);
     }
 
 
     @Transactional
     public void updateCV(CV updatedCv) {
-        if (updatedCv.getId() != null) {
-            CV cv = cvDAO.findById(updatedCv.getId());
-            CvEntity cvEntity = cvMapper.map(cv);
-
-            cvEntity.setName(updatedCv.getName());
-            cvEntity.setSurname(updatedCv.getSurname());
-            cvEntity.setDateOfBirth(updatedCv.getDateOfBirth());
-            cvEntity.setSex(updatedCv.getSex());
-            cvEntity.setMaritalStatus(updatedCv.getMaritalStatus());
-            cvEntity.setContactEmail(updatedCv.getContactEmail());
-            cvEntity.setPhoneNumber(updatedCv.getPhoneNumber());
-            cvEntity.setEducation(updatedCv.getEducation());
-            cvEntity.setWorkExperience(updatedCv.getWorkExperience());
-            cvEntity.setSocialMediaProfil(updatedCv.getSocialMediaProfil());
-            cvEntity.setProjects(updatedCv.getProjects());
-            cvEntity.setAboutMe(updatedCv.getAboutMe());
-            cvEntity.setCertificatesOfCourses(updatedCv.getCertificatesOfCourses());
-            cvEntity.setProgrammingLanguage(updatedCv.getProgrammingLanguage());
-            cvEntity.setSkillsAndTools(updatedCv.getSkillsAndTools());
-            cvEntity.setLanguage(updatedCv.getLanguage());
-            cvEntity.setLanguageLevel(updatedCv.getLanguageLevel());
-            cvEntity.setHobby(updatedCv.getHobby());
-            cvEntity.setFollowPosition(updatedCv.getFollowPosition());
-
-            cvDAO.saveCV(cvEntity);
-
+        if (updatedCv != null) {
+          cvDAO.updateCV(updatedCv);
         } else {
             throw new EntityNotFoundException("Not found CV entity with ID: " + updatedCv.getId());
         }
