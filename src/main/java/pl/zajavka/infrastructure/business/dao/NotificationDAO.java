@@ -28,4 +28,6 @@ public interface NotificationDAO {
     boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntity);
 
     Page<NotificationEntity> findAll(Pageable pageable);
+
+    List<Notification> findListByJobOfferId(Integer id);
 }

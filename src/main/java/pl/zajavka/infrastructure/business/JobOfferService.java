@@ -103,26 +103,26 @@
 //    }
 //}
 package pl.zajavka.infrastructure.business;
-//
+
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.zajavka.infrastructure.business.dao.JobOfferDAO;
-import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
-import pl.zajavka.infrastructure.security.mapper.UserMapper;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.Notification;
+import pl.zajavka.infrastructure.domain.User;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -131,102 +131,31 @@ import java.util.Optional;
 @Service
 public class JobOfferService {
     private JobOfferJpaRepository jobOfferRepository;
-    private UserMapper userMapper;
     private JobOfferMapper jobOfferMapper;
     private NotificationJpaRepository notificationJpaRepository;
     private final JobOfferDAO jobOfferDAO;
+    private final NotificationDAO notificationDAO;
 
     @Transactional
     public JobOffer create(JobOffer jobOffer, User user) {
-
-        OffsetDateTime currentDateTime = OffsetDateTime.now();
-
-        JobOfferEntity newJobOfferEntity = JobOfferEntity.builder()
-                .companyName(jobOffer.getCompanyName())
-                .position(jobOffer.getPosition())
-                .responsibilities(jobOffer.getResponsibilities())
-                .requiredTechnologies(jobOffer.getRequiredTechnologies())
-                .experience(jobOffer.getExperience())
-                .jobLocation(jobOffer.getJobLocation())
-                .typeOfContract(jobOffer.getTypeOfContract())
-                .typeOfWork(jobOffer.getTypeOfWork())
-                .salaryMin(jobOffer.getSalaryMin())
-                .salaryMax(jobOffer.getSalaryMax())
-                .requiredLanguage(jobOffer.getRequiredLanguage())
-                .requiredLanguageLevel(jobOffer.getRequiredLanguageLevel())
-                .benefits(jobOffer.getBenefits())
-                .jobDescription(jobOffer.getJobDescription())
-                .jobOfferDateTime(currentDateTime)
-                .neededStaff(jobOffer.getNeededStaff())
-                .hiredCount(0)
-                .active(true)
-                .user(userMapper.map(user))
-                .build();
-
-
-        jobOfferRepository.saveAndFlush(newJobOfferEntity);
-        return jobOfferMapper.map(newJobOfferEntity);
-
+        return jobOfferDAO.create(jobOffer, user);
     }
-
 
 
     @Transactional
-    public JobOffer updateJobOffer(JobOffer jobOffer){
-        if (jobOffer.getId() != null) {
-            JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOffer.getId())
-                    .orElseThrow(() -> new EntityNotFoundException("JobOffer with ID " + jobOffer.getId() + " not found"));
-
-
-            jobOfferEntity.setCompanyName(jobOffer.getCompanyName());
-            jobOfferEntity.setPosition(jobOffer.getPosition());
-            jobOfferEntity.setResponsibilities(jobOffer.getResponsibilities());
-            jobOfferEntity.setRequiredTechnologies(jobOffer.getRequiredTechnologies());
-            jobOfferEntity.setBenefits(jobOffer.getBenefits());
-            jobOfferEntity.setExperience(jobOffer.getExperience());
-            jobOfferEntity.setSalaryMin(jobOffer.getSalaryMin());
-            jobOfferEntity.setSalaryMax(jobOffer.getSalaryMax());
-            jobOfferEntity.setJobLocation(jobOffer.getJobLocation());
-            jobOfferEntity.setTypeOfContract(jobOffer.getTypeOfContract());
-            jobOfferEntity.setTypeOfWork(jobOffer.getTypeOfWork());
-            jobOfferEntity.setJobDescription(jobOffer.getJobDescription());
-            jobOfferEntity.setRequiredLanguage(jobOffer.getRequiredLanguage());
-
-
-            JobOfferEntity jobOfferEntityUpdate = jobOfferRepository.save(jobOfferEntity);
-
-            return jobOfferMapper.map(jobOfferEntityUpdate);
-        } else {
-            throw new EntityNotFoundException("Job Offer ID cannot be null");
-        }
+    public JobOffer updateJobOffer(JobOffer jobOffer) {
+        return jobOfferDAO.updateJobOffer(jobOffer);
     }
 
     public void deleteJobOfferAndSetNullInNotifications(Integer jobOfferId) {
-
-        JobOfferEntity jobOfferEntity = jobOfferRepository.findById(jobOfferId)
-                .orElseThrow(() -> new IllegalArgumentException("Job Offer with ID " + jobOfferId + " not founded"));
-
-        List<NotificationEntity> notifications = notificationJpaRepository.findByJobOfferId(jobOfferEntity.getId());
-
-
-        for (NotificationEntity notification : notifications) {
-            notification.setJobOffer(null);
-            notification.setCompanyMessage("Your Job Offer has been deleted");
-            notification.setCandidateMessage("The user deleted their Job Offer");
-            notification.setStatus(Status.REJECT);
-
-        }
-
-        jobOfferRepository.deleteById(jobOfferEntity.getId());
+        JobOffer jobOffer = jobOfferDAO.findById(jobOfferId);
+        notificationDAO.findListByJobOfferId(jobOffer.getId());
+        jobOfferDAO.deleteById(jobOfferId);
     }
 
-
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
-        List<JobOfferEntity> searchJobOfferEntities =  jobOfferRepository.findActiveJobOffersByKeywordAndCategory(keyword, category);
-        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
-                .map(jobOfferMapper::map)
-                .toList();
-        return jobOffers;
+        return jobOfferDAO.searchJobOffersByKeywordAndCategory(keyword, category);
+
     }
 
 
@@ -244,11 +173,11 @@ public class JobOfferService {
     }
 
     public JobOffer findById(Integer jobOfferId) {
-      return  jobOfferDAO.findById(jobOfferId);
+        return jobOfferDAO.findById(jobOfferId);
     }
 
     public List<JobOffer> findListByUser(User loggedInUser) {
-       return jobOfferDAO.findListByUser(loggedInUser);
+        return jobOfferDAO.findListByUser(loggedInUser);
     }
 
     public Optional<JobOffer> findByUser(User loggedInUser) {

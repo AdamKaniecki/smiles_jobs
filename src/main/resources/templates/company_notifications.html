@@ -37,8 +37,8 @@
     <td>
       <span th:text="${#temporals.format(notificationDTO.dateTime, 'yyyy-MM-dd HH:mm')}"></span>
       <div class="mt-2" th:if="${notificationDTO.dateTime == null}">
-        <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null}">
-          <input type="hidden" name="jobOfferId" th:value="${notificationDTO.jobOffer.id}">
+        <form th:action="@{/arrangeInterview}" method="post" th:if="${notificationDTO.cv != null && notificationDTO.status.getDisplayName() != 'Reject'}">
+          <input type="hidden" name="jobOfferId" th:if="${notificationDTO.jobOffer != null}" th:value="${notificationDTO.jobOffer.id}">
           <input type="hidden" name="cvId" th:value="${notificationDTO.cv.id}">
           <input type="hidden" name="notificationId" th:value="${notificationDTO.id}">
           <div class="form-row">

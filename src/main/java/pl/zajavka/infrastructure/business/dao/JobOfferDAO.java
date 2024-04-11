@@ -13,4 +13,11 @@ public interface JobOfferDAO {
     List<JobOffer> findListByUser(User user);
     Optional<JobOffer> findByUser(User loggedInUser);
     JobOffer saveJobOffer(JobOffer jobOffer);
+    JobOffer create(JobOffer jobOffer, User user);
+   JobOffer updateJobOffer(JobOffer jobOffer);
+
+    void deleteById(Integer jobOfferId);
+
+    List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category);
+
 }

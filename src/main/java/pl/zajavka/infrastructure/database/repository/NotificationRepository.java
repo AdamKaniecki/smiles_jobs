@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.business.dao.NotificationDAO;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
+import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
 import pl.zajavka.infrastructure.domain.Notification;
@@ -65,5 +66,19 @@ private final UserMapper userMapper;
     @Override
     public Page<NotificationEntity> findAll(Pageable pageable) {
         return notificationJpaRepository.findAll(pageable);
+    }
+
+
+    @Override
+    public List<Notification> findListByJobOfferId(Integer id) {
+        List<NotificationEntity> notifications = notificationJpaRepository.findByJobOfferId(id);
+        for (NotificationEntity notification : notifications) {
+            notification.setJobOffer(null);
+            notification.setCompanyMessage("Your Job Offer has been deleted");
+            notification.setCandidateMessage("The company deleted their Job Offer");
+            notification.setStatus(Status.REJECT);
+
+        }
+        return notificationMapper.mapToList(notifications);
     }
 }
