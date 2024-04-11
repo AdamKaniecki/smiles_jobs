@@ -9,6 +9,7 @@ import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.JobOfferFixtures;
@@ -93,6 +94,69 @@ public class JobOfferRepositoryTest extends AbstractIT {
         verify(userMapper, times(1)).map(user);
         verify(jobOfferJpaRepository, times(1)).findListByUser(any());
         verify(jobOfferMapper, times(1)).map(jobOfferEntityList);
+    }
+
+    @Test
+    void testFindByUser() {
+        // given
+        User user = UserFixtures.someUser2();
+        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+
+        when(userMapper.map(user)).thenReturn(UserFixtures.someUserEntity2());
+        when(jobOfferJpaRepository.findByUser(any())).thenReturn(Optional.of(jobOfferEntity));
+        when(jobOfferMapper.map(jobOfferEntity)).thenReturn(jobOffer);
+
+        // when
+        Optional<JobOffer> result = jobOfferRepository.findByUser(user);
+
+        // then
+        assertNotNull(result);
+        assertTrue(result.isPresent());
+        assertEquals(jobOffer, result.get());
+        verify(userMapper, times(1)).map(user);
+        verify(jobOfferJpaRepository, times(1)).findByUser(any());
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity);
+    }
+
+    @Test
+    void testFindByUser_NotFound() {
+        // given
+        User user = new User();
+
+        when(userMapper.map(user)).thenReturn(new UserEntity());
+        when(jobOfferJpaRepository.findByUser(any())).thenReturn(Optional.empty());
+
+        // when
+        Optional<JobOffer> result = jobOfferRepository.findByUser(user);
+
+        // then
+        assertNotNull(result);
+        assertFalse(result.isPresent());
+        verify(userMapper, times(1)).map(user);
+        verify(jobOfferJpaRepository, times(1)).findByUser(any());
+        verifyNoMoreInteractions(jobOfferMapper);
+    }
+
+    @Test
+    void testSaveJobOffer() {
+        // given
+        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+
+        when(jobOfferMapper.map(jobOffer)).thenReturn(jobOfferEntity);
+        when(jobOfferJpaRepository.save(jobOfferEntity)).thenReturn(jobOfferEntity);
+        when(jobOfferMapper.map(jobOfferEntity)).thenReturn(jobOffer);
+
+        // when
+        JobOffer result = jobOfferRepository.saveJobOffer(jobOffer);
+
+        // then
+        assertNotNull(result);
+        assertEquals(jobOffer, result);
+        verify(jobOfferMapper, times(1)).map(jobOffer);
+        verify(jobOfferJpaRepository, times(1)).save(jobOfferEntity);
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity);
     }
 
 }
