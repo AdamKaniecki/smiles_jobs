@@ -8,10 +8,13 @@ import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.JobOfferFixtures;
+import pl.zajavka.util.UserFixtures;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -69,4 +72,27 @@ public class JobOfferRepositoryTest extends AbstractIT {
         verify(jobOfferJpaRepository, times(1)).findById(id);
         verifyNoMoreInteractions(jobOfferMapper);
     }
+
+    @Test
+    void testFindListByUser() {
+        // given
+        User user = UserFixtures.someUser2();
+        List<JobOfferEntity> jobOfferEntityList = List.of(JobOfferFixtures.someJobOfferEntity1(),JobOfferFixtures.someJobOfferEntity1());
+        List<JobOffer> jobOfferList = List.of(JobOfferFixtures.someJobOffer1(), JobOfferFixtures.someJobOffer2());
+
+        when(userMapper.map(user)).thenReturn(UserFixtures.someUserEntity2());
+        when(jobOfferJpaRepository.findListByUser(any())).thenReturn(jobOfferEntityList);
+        when(jobOfferMapper.map(jobOfferEntityList)).thenReturn(jobOfferList);
+
+        // when
+        List<JobOffer> result = jobOfferRepository.findListByUser(user);
+
+        // then
+        assertNotNull(result);
+        assertEquals(jobOfferList, result);
+        verify(userMapper, times(1)).map(user);
+        verify(jobOfferJpaRepository, times(1)).findListByUser(any());
+        verify(jobOfferMapper, times(1)).map(jobOfferEntityList);
+    }
+
 }
