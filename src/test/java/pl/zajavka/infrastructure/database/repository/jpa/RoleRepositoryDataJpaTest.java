@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.RoleRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

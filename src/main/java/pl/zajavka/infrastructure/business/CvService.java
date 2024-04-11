@@ -102,4 +102,8 @@ public class CvService {
         return cvMapper.map(cvEntity);
     }
 
+    public void saveCV(CV cv){
+        cvDAO.saveCV(cv);
+    }
+
 }

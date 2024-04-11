@@ -43,6 +43,7 @@ public class NotificationService {
     private CvMapper cvMapper;
     private JobOfferRepository jobOfferRepository;
     private CvRepository cvRepository;
+    private CvService cvService;
     private final NotificationDAO notificationDAO;
     private NotificationMapperDTO notificationMapperDTO;
 
@@ -158,7 +159,7 @@ public class NotificationService {
 
             CV cv = notification.getCv();
             cv.setVisible(false);
-            cvRepository.saveCV(cv);
+            cvService.saveCV(cv);
             userService.save(loggedInUser);
             userService.save(recipient);
 

@@ -2,11 +2,13 @@ package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.AddressFixtures;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.UserFixtures;
@@ -21,6 +23,7 @@ public class CvRepositoryDataJpaTest extends AbstractJpaIT {
 
 
     private UserRepository userRepository;
+    @InjectMocks
     private CvJpaRepository cvJpaRepository;
 
     @Test

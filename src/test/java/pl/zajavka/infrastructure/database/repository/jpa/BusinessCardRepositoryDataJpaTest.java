@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

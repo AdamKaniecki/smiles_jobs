@@ -34,7 +34,6 @@ public class CvController {
     private UserService userService;
     private CvMapperDTO cvMapperDTO;
     private UserMapperDTO userMapperDTO;
-    private CvRepository cvRepository;
 
 
     @GetMapping("/CvForm")

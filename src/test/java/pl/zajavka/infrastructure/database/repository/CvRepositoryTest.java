@@ -4,18 +4,14 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.repository.jpa.AbstractJpaIT;
 import pl.zajavka.infrastructure.database.repository.jpa.CvJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
-import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
-import pl.zajavka.util.AddressFixtures;
+import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.UserFixtures;
 
@@ -27,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-public class CvRepositoryTest extends AbstractJpaIT {
+public class CvRepositoryTest extends AbstractIT {
 
 
     @InjectMocks

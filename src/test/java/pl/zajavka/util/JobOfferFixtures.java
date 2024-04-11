@@ -62,6 +62,33 @@ public class JobOfferFixtures {
                 .build();
     }
 
+    public static JobOffer someJobOffer1(){
+
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        return JobOffer.builder()
+                .companyName("januszex")
+                .position("junior java developer")
+                .responsibilities("support")
+                .requiredTechnologies("spring")
+                .experience("two years")
+                .jobLocation("remote")
+                .typeOfContract("b2b")
+                .typeOfWork("FULL-TIME JOB")
+                .salaryMin(new BigDecimal("4000")) // Przykładowe wynagrodzenie minimalne
+                .salaryMax(new BigDecimal("6000")) // Przykładowe wynagrodzenie maksymalne
+                .requiredLanguage("English") // Wymagany język
+                .requiredLanguageLevel("B2") // Poziom wymaganego języka
+                .benefits("fruits") // Korzyści oferowane przez pracodawcę
+                .jobDescription("example about us") // Opis stanowiska pracy
+                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
+                .active(true) // Czy oferta pracy jest aktywna
+                .neededStaff(5) // Ilość potrzebnych pracowników
+                .hiredCount(0) // Liczba zatrudnionych pracowników
+                .build();
+    }
+
+
+
 
 //    public static JobOffer someJobOffer1(){
 //        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();

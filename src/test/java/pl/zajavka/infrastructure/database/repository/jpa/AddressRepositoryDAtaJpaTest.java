@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
+import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.AddressFixtures;
 
 import java.util.Optional;

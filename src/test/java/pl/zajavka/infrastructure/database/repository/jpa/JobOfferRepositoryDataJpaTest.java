@@ -2,10 +2,13 @@ package pl.zajavka.infrastructure.database.repository.jpa;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.UserFixtures;
 
 import java.math.BigDecimal;
@@ -19,7 +22,9 @@ import static pl.zajavka.util.JobOfferFixtures.*;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
 
+    @InjectMocks
     private JobOfferJpaRepository jobOfferJpaRepository;
+
     private UserRepository userRepository;
 
     @Test

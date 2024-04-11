@@ -1,4 +1,4 @@
-package pl.zajavka.infrastructure.database.repository.jpa;
+package pl.zajavka.integration;
 
 import lombok.NonNull;
 import org.springframework.context.ApplicationContextInitializer;

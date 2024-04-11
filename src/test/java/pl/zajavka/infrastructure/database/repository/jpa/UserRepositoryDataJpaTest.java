@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.UserFixtures;
 
 import java.util.List;

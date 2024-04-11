@@ -9,6 +9,7 @@ import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.NotificationFixtures;

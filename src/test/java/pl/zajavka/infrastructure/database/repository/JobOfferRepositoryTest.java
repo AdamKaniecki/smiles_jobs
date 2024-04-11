@@ -1,0 +1,72 @@
+package pl.zajavka.infrastructure.database.repository;
+
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
+import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
+import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.security.mapper.UserMapper;
+import pl.zajavka.integration.AbstractIT;
+import pl.zajavka.util.JobOfferFixtures;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+
+public class JobOfferRepositoryTest extends AbstractIT {
+
+    @InjectMocks
+    private JobOfferRepository jobOfferRepository;
+
+    @Mock
+    private JobOfferJpaRepository jobOfferJpaRepository;
+
+    @Mock
+    private JobOfferMapper jobOfferMapper;
+
+    @Mock
+    private UserMapper userMapper;
+
+
+    @Test
+    void testFindById() {
+        // given
+        Integer id = 1;
+        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+
+        when(jobOfferJpaRepository.findById(id)).thenReturn(Optional.of(jobOfferEntity));
+        when(jobOfferMapper.map(jobOfferEntity)).thenReturn(jobOffer);
+
+        // when
+        JobOffer result = jobOfferRepository.findById(id);
+
+        // then
+        assertNotNull(result); // Sprawdza, czy zwrócony wynik nie jest null
+        assertEquals(jobOffer, result); // Sprawdza, czy zwrócony wynik jest równy oczekiwanemu obiektowi JobOffer
+        verify(jobOfferJpaRepository, times(1)).findById(id); // Sprawdza, czy metoda findById została wywołana dokładnie raz z odpowiednim argumentem
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity); // Sprawdza, czy metoda map z JobOfferMapper została wywołana dokładnie raz z odpowiednim argumentem
+    }
+
+    @Test
+    void testFindById_EntityNotFoundException() {
+        // given
+        Integer id = 1;
+
+        when(jobOfferJpaRepository.findById(id)).thenReturn(Optional.empty());
+
+        // when
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> jobOfferRepository.findById(id));
+
+        // then
+        assertNotNull(exception);
+        assertEquals("Not found JobOffer with ID: " + id, exception.getMessage());
+        verify(jobOfferJpaRepository, times(1)).findById(id);
+        verifyNoMoreInteractions(jobOfferMapper);
+    }
+}
