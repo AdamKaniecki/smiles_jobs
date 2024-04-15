@@ -16,7 +16,7 @@ public interface NotificationDAO {
     Notification findById(Integer notificationId);
     List<Notification> findByUser(User user);
 
-    List<NotificationEntity> findByCvId(Integer id);
+    List<Notification> findByCvId(Integer id);
 
 
     List<Notification> findLatestByUser(User loggedInUser);
@@ -27,7 +27,7 @@ public interface NotificationDAO {
 
     boolean existsBySenderUserAndJobOffer(UserEntity userEntity, JobOfferEntity jobOfferEntity);
 
-    Page<NotificationEntity> findAll(Pageable pageable);
+    Page<Notification> findAll(Pageable pageable);
 
-    List<Notification> findListByJobOfferId(Integer id);
+    List<Notification> findListByJobOfferIdToDelete(Integer id);
 }

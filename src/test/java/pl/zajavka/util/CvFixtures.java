@@ -12,50 +12,6 @@ import pl.zajavka.infrastructure.security.UserEntity;
 public class CvFixtures {
 
 
-//    public static CV someCV1() {
-//
-//        Address address = Address.builder()
-//                .city("Sample City")
-//                .country("Sample Country")
-//                .streetAndNumber("Sample Street 125")
-//                .postalCode("09-500")
-//                .build();
-//
-//        User user = User.builder()
-//                .userName("sample_user")
-//                .email("sample@example.com")
-//                .password("password123")
-//                .active(true)
-//                .build();
-//
-//
-//        CV cv = CV.builder()
-//                .name("A")
-//                .surname("Z")
-//                .dateOfBirth("19999")
-//                .sex("man")
-//                .maritalStatus("married")
-//                .phoneNumber("+48 999 120 000")
-//                .contactEmail("a@gmail.com")
-//                .workExperience("ccc")
-//                .education("ddd")
-//                .socialMediaProfil("lll")
-//                .projects("lllll")
-//                .aboutMe("ooo")
-//                .certificatesOfCourses("ccc")
-//                .programmingLanguage("jjj")
-//                .skillsAndTools("sss")
-//                .language("eee")
-//                .languageLevel("a2")
-//                .hobby("ppp")
-//                .followPosition("jjjj")
-//                .visible(true)
-//                .address(address)
-//                .user(user)
-//                .build();
-//        return cv;
-//    }
-
     public static CvEntity someCvEntity1() {
 
         AddressEntity address = AddressEntity.builder()
@@ -130,7 +86,6 @@ public class CvFixtures {
                 .socialMediaProfil("linked2")
                 .projects("smiles2")
                 .hobby("Reading, Travelling2")
-
                 .address(address)
                 .user(user)
                 .build();

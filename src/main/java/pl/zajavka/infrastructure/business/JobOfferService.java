@@ -130,9 +130,6 @@ import java.util.Optional;
 @AllArgsConstructor
 @Service
 public class JobOfferService {
-    private JobOfferJpaRepository jobOfferRepository;
-    private JobOfferMapper jobOfferMapper;
-    private NotificationJpaRepository notificationJpaRepository;
     private final JobOfferDAO jobOfferDAO;
     private final NotificationDAO notificationDAO;
 
@@ -149,7 +146,7 @@ public class JobOfferService {
 
     public void deleteJobOfferAndSetNullInNotifications(Integer jobOfferId) {
         JobOffer jobOffer = jobOfferDAO.findById(jobOfferId);
-        notificationDAO.findListByJobOfferId(jobOffer.getId());
+        notificationDAO.findListByJobOfferIdToDelete(jobOffer.getId());
         jobOfferDAO.deleteById(jobOfferId);
     }
 
@@ -160,11 +157,7 @@ public class JobOfferService {
 
 
     public List<JobOffer> searchJobOffersBySalary(String category, BigDecimal salary) {
-        List<JobOfferEntity> searchJobOfferEntities = jobOfferRepository.findActiveJobOffersBySalaryAndCategory(category, salary);
-        List<JobOffer> jobOffers = searchJobOfferEntities.stream()
-                .map(jobOfferMapper::map)
-                .toList();
-        return jobOffers;
+       return jobOfferDAO.searchJobOffersBySalary(category,  salary);
     }
 
     @Transactional

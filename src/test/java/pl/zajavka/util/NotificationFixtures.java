@@ -51,6 +51,17 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
+    public static Notification sampleNotification2(){
+        LocalDateTime notificationDateTime = LocalDateTime.now();
+        return Notification.builder()
+                .companyMessage("randomMessage3")
+                .candidateMessage("randomMessage4")
+                .status(Status.WAITING_FOR_INTERVIEW)
+                .dateTime(notificationDateTime)
+                .build();
+
+    }
+
     public static List<NotificationDTO> sampleNotificationDTOList(){
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
         User user = User.builder()
@@ -145,5 +156,25 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .build();
         List<Notification> notifications = List.of(notification1,notification2);
         return notifications;
+    }
+
+    public static List<NotificationEntity> sampleNotificationEntityList(){
+        LocalDateTime notificationDateTime = LocalDateTime.now();
+        LocalDateTime notification2DateTime = LocalDateTime.now();
+        NotificationEntity notification1 = NotificationEntity.builder()
+                .companyMessage("randomMessage1")
+                .candidateMessage("randomMessage2")
+                .status(Status.WAITING_FOR_INTERVIEW)
+                .dateTime(notificationDateTime)
+                .build();
+
+        NotificationEntity notification2 = NotificationEntity.builder()
+                .companyMessage("randomMessage1")
+                .candidateMessage("randomMessage2")
+                .status(Status.WAITING_FOR_INTERVIEW)
+                .dateTime(notification2DateTime)
+                .build();
+
+        return List.of(notification1,notification2);
     }
 }

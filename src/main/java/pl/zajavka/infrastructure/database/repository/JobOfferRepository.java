@@ -12,6 +12,7 @@ import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -120,6 +121,15 @@ public class JobOfferRepository implements JobOfferDAO {
     @Override
     public List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category) {
         List<JobOfferEntity> searchJobOfferEntities = jobOfferJpaRepository.findActiveJobOffersByKeywordAndCategory(keyword, category);
+        return searchJobOfferEntities.stream()
+                .map(jobOfferMapper::map)
+                .toList();
+
+    }
+
+    @Override
+    public List<JobOffer> searchJobOffersBySalary(String category, BigDecimal salary) {
+        List<JobOfferEntity> searchJobOfferEntities = jobOfferJpaRepository.findActiveJobOffersBySalaryAndCategory(category, salary);
         return searchJobOfferEntities.stream()
                 .map(jobOfferMapper::map)
                 .toList();

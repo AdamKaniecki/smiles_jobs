@@ -43,8 +43,9 @@ private final UserMapper userMapper;
     }
 
     @Override
-    public List<NotificationEntity> findByCvId(Integer id) {
-        return notificationJpaRepository.findByCvId(id);
+    public List<Notification> findByCvId(Integer id) {
+        List<NotificationEntity> notifications = notificationJpaRepository.findByCvId(id);
+        return notificationMapper.mapToList(notifications);
     }
 
 
@@ -64,13 +65,14 @@ private final UserMapper userMapper;
     }
 
     @Override
-    public Page<NotificationEntity> findAll(Pageable pageable) {
-        return notificationJpaRepository.findAll(pageable);
+    public Page<Notification> findAll(Pageable pageable) {
+        Page<NotificationEntity> notificationEntities =notificationJpaRepository.findAll(pageable);
+        return notificationEntities.map(notificationMapper::map);
     }
 
 
     @Override
-    public List<Notification> findListByJobOfferId(Integer id) {
+    public List<Notification> findListByJobOfferIdToDelete(Integer id) {
         List<NotificationEntity> notifications = notificationJpaRepository.findByJobOfferId(id);
         for (NotificationEntity notification : notifications) {
             notification.setJobOffer(null);
@@ -81,4 +83,8 @@ private final UserMapper userMapper;
         }
         return notificationMapper.mapToList(notifications);
     }
+
+
+
+
 }

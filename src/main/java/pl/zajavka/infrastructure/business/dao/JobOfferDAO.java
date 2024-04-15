@@ -3,6 +3,7 @@ package pl.zajavka.infrastructure.business.dao;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,5 +20,7 @@ public interface JobOfferDAO {
     void deleteById(Integer jobOfferId);
 
     List<JobOffer> searchJobOffersByKeywordAndCategory(String keyword, String category);
+
+    List<JobOffer> searchJobOffersBySalary(String category, BigDecimal salary);
 
 }

@@ -42,7 +42,6 @@ public class NotificationService {
     private JobOfferMapper jobOfferMapper;
     private CvMapper cvMapper;
     private JobOfferRepository jobOfferRepository;
-    private CvRepository cvRepository;
     private CvService cvService;
     private final NotificationDAO notificationDAO;
     private NotificationMapperDTO notificationMapperDTO;
@@ -190,8 +189,7 @@ public class NotificationService {
 
 
     public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
-        Page<NotificationEntity> notificationEntities = notificationDAO.findAll(pageable);
-        return notificationEntities.map(notificationMapper::map);
+        return notificationDAO.findAll(pageable);
     }
 
     @Transactional

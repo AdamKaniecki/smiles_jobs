@@ -6,6 +6,7 @@ import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.RoleEntity;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -16,8 +17,16 @@ import java.util.Set;
 public class JobOfferFixtures {
     public static JobOfferEntity someJobOfferEntity1(){
 
+        UserEntity user = UserEntity.builder()
+                .userName("sample_user")
+                .email("sample@example.com")
+                .password("password123")
+                .active(true)
+                .build();
+
         OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
         return JobOfferEntity.builder()
+                .id(1)
                 .companyName("januszex")
                 .position("junior java developer")
                 .responsibilities("support")
@@ -36,6 +45,7 @@ public class JobOfferFixtures {
                 .active(true) // Czy oferta pracy jest aktywna
                 .neededStaff(5) // Ilość potrzebnych pracowników
                 .hiredCount(0) // Liczba zatrudnionych pracowników
+                .user(user)
                 .build();
     }
     public static JobOfferEntity someJobOfferEntity2(){
@@ -64,8 +74,16 @@ public class JobOfferFixtures {
 
     public static JobOffer someJobOffer1(){
 
+        User user = User.builder()
+                .userName("sample_user")
+                .email("sample@example.com")
+                .password("password123")
+                .active(true)
+                .build();
+
         OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
         return JobOffer.builder()
+                .id(1)
                 .companyName("januszex")
                 .position("junior java developer")
                 .responsibilities("support")
@@ -84,6 +102,7 @@ public class JobOfferFixtures {
                 .active(true) // Czy oferta pracy jest aktywna
                 .neededStaff(5) // Ilość potrzebnych pracowników
                 .hiredCount(0) // Liczba zatrudnionych pracowników
+                .user(user)
                 .build();
     }
 

@@ -17,6 +17,7 @@ import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 
@@ -58,9 +59,9 @@ public class CvService {
     public void deleteCVAndSetNullInNotifications(CV cv, Address address) {
         if (cv != null) {
             CvEntity cvEntity = cvMapper.map(cv);
-            List<NotificationEntity> notifications = notificationDAO.findByCvId(cvEntity.getId());
+            List<Notification> notifications = notificationDAO.findByCvId(cvEntity.getId());
 
-            for (NotificationEntity notification : notifications) {
+            for (Notification notification : notifications) {
                 notification.setCv(null);
                 notification.setCompanyMessage("The user deleted their CV");
                 notification.setCandidateMessage("Your CV has been deleted");

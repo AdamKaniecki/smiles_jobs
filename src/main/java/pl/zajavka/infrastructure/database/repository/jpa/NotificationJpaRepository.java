@@ -34,6 +34,8 @@ public interface NotificationJpaRepository extends JpaRepository<NotificationEnt
     List<NotificationEntity> findByJobOfferId(Integer id);
 
 
+    void deleteById(Integer id);
+
     @Query("SELECT n FROM NotificationEntity n WHERE n.senderUser = :user OR n.receiverUser = :user ORDER BY n.id DESC")
     List<NotificationEntity> findLatestByUser(@Param("user") UserEntity user);
 

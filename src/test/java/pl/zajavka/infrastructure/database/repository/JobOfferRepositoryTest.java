@@ -4,14 +4,17 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.JobOfferJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
+import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
+import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 
@@ -78,7 +81,7 @@ public class JobOfferRepositoryTest extends AbstractIT {
     void testFindListByUser() {
         // given
         User user = UserFixtures.someUser2();
-        List<JobOfferEntity> jobOfferEntityList = List.of(JobOfferFixtures.someJobOfferEntity1(),JobOfferFixtures.someJobOfferEntity1());
+        List<JobOfferEntity> jobOfferEntityList = List.of(JobOfferFixtures.someJobOfferEntity1(), JobOfferFixtures.someJobOfferEntity1());
         List<JobOffer> jobOfferList = List.of(JobOfferFixtures.someJobOffer1(), JobOfferFixtures.someJobOffer2());
 
         when(userMapper.map(user)).thenReturn(UserFixtures.someUserEntity2());
@@ -159,4 +162,49 @@ public class JobOfferRepositoryTest extends AbstractIT {
         verify(jobOfferMapper, times(1)).map(jobOfferEntity);
     }
 
+    @Test
+    void testCreate() {
+        // given
+        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
+        JobOffer createdJobOffer = JobOfferFixtures.someJobOffer1();
+        User user = UserFixtures.someUser2();
+        UserEntity userEntity = UserFixtures.someUserEntity2();
+
+
+        when(userMapper.map(user));
+        when(jobOfferMapper.map(jobOfferEntity));
+
+        // when
+        JobOffer result = jobOfferRepository.create(createdJobOffer, user);
+
+        // then
+        assertNotNull(result);
+        assertEquals(createdJobOffer, result);
+        verify(jobOfferRepository, times(1)).create(createdJobOffer, user);
+
+        assertEquals(createdJobOffer.getId(), result.getId());
+        assertEquals(createdJobOffer.getCompanyName(), result.getCompanyName());
+        assertEquals(createdJobOffer.getPosition(), result.getPosition());
+        assertEquals(createdJobOffer.getResponsibilities(), result.getResponsibilities());
+        assertEquals(createdJobOffer.getRequiredTechnologies(), result.getRequiredTechnologies());
+        assertEquals(createdJobOffer.getExperience(), result.getExperience());
+        assertEquals(createdJobOffer.getJobLocation(), result.getJobLocation());
+        assertEquals(createdJobOffer.getTypeOfContract(), result.getTypeOfContract());
+        assertEquals(createdJobOffer.getTypeOfWork(), result.getTypeOfWork());
+        assertEquals(createdJobOffer.getSalaryMin(), result.getSalaryMin());
+        assertEquals(createdJobOffer.getSalaryMax(), result.getSalaryMax());
+        assertEquals(createdJobOffer.getRequiredLanguage(), result.getRequiredLanguage());
+        assertEquals(createdJobOffer.getRequiredLanguageLevel(), result.getRequiredLanguageLevel());
+        assertEquals(createdJobOffer.getBenefits(), result.getBenefits());
+        assertEquals(createdJobOffer.getJobDescription(), result.getJobDescription());
+        assertEquals(createdJobOffer.getJobOfferDateTime(), result.getJobOfferDateTime());
+        assertEquals(createdJobOffer.getActive(), result.getActive());
+        assertEquals(createdJobOffer.getNeededStaff(), result.getNeededStaff());
+        assertEquals(createdJobOffer.getHiredCount(), result.getHiredCount());
+    }
+
+
+
+
 }
+
