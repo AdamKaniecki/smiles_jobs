@@ -13,7 +13,6 @@ import java.util.Set;
 @UtilityClass
 public class BusinessCardFixtures {
 
-    private  BusinessCardJpaRepository businessCardJpaRepository;
 
     public static BusinessCardEntity someBusinessCardEntity() {
 
@@ -45,7 +44,7 @@ public class BusinessCardFixtures {
                 .user(userEntity)
                 .build();
 
-        businessCardJpaRepository.save(businessCardEntity);
+
 
         return businessCardEntity;
 

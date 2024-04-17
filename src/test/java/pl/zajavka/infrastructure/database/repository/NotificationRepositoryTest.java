@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class NotificationRepositoryTest extends AbstractIT {
 
@@ -189,7 +189,7 @@ public class NotificationRepositoryTest extends AbstractIT {
         notificationRepository.deleteByCvId(cvId);
 
         // Then
-        Mockito.verify(notificationJpaRepository).deleteById(cvId);; // Sprawdzenie, czy metoda deleteById została wywołana z prawidłowym argumentem.
+        verify(notificationJpaRepository).deleteById(cvId);; // Sprawdzenie, czy metoda deleteById została wywołana z prawidłowym argumentem.
     }
 
     @Test
@@ -229,7 +229,7 @@ public class NotificationRepositoryTest extends AbstractIT {
         notificationRepository.save(notificationEntity);
 
         // Then
-        Mockito.verify(notificationJpaRepository).save(notificationEntity);
+        verify(notificationJpaRepository).save(notificationEntity);
     }
 
     @Test
@@ -241,12 +241,51 @@ public class NotificationRepositoryTest extends AbstractIT {
         notificationRepository.deleteByCvId(cvId);
 
         // Then
-        Mockito.verify(notificationJpaRepository).deleteById(cvId);
+        verify(notificationJpaRepository).deleteById(cvId);
+    }
+
+    @Test
+    void testFindListByJobOfferIdToDelete() {
+        // Given
+        Integer jobOfferId = 1;
+        List<NotificationEntity> expectedNotifications = NotificationFixtures.sampleNotificationEntityList();
+        // Zaktualizuj dane oczekiwanych powiadomień tak, aby zawierały poprawną wiadomość od firmy
+        // Zaktualizuj dane oczekiwanych powiadomień tak, aby zawierały poprawną wiadomość od firmy
+
+
+        List<Notification> notifications = NotificationFixtures.sampleNotificationList();
+        for (Notification notification : notifications) {
+            notification.setCompanyMessage("Your Job Offer has been deleted");
+            notification.setCandidateMessage("The company deleted their Job Offer");
+            notification.setStatus(Status.REJECT);
+        }
+
+        when(notificationJpaRepository.findByJobOfferId(jobOfferId)).thenReturn(expectedNotifications);
+        when(notificationMapper.mapToList(expectedNotifications)).thenReturn(notifications);
+        // When
+        List<Notification> actualNotifications = notificationRepository.findListByJobOfferIdToDelete(jobOfferId);
+
+
+        // Then
+        assertNotNull(actualNotifications); // Sprawdź, czy lista nie jest nullem
+        assertEquals(notifications.size(), actualNotifications.size()); // Sprawdź, czy liczba powiadomień jest taka sama jak oczekiwana
+
+        // Sprawdź, czy każde powiadomienie na liście ma ustawione pola zgodnie z oczekiwaniami
+        for (Notification notification : actualNotifications) {
+            assertNull(notification.getJobOffer()); // Upewnij się, że pole jobOffer jest nullem
+            assertEquals("Your Job Offer has been deleted", notification.getCompanyMessage()); // Sprawdź, czy wiadomość dla firmy jest poprawna
+            assertEquals("The company deleted their Job Offer", notification.getCandidateMessage()); // Sprawdź, czy wiadomość dla kandydata jest poprawna
+            assertEquals(Status.REJECT, notification.getStatus()); // Sprawdź, czy status jest poprawny
+        }
+
+        // Sprawdź, czy metoda findByJobOfferId została wywołana dokładnie raz z odpowiednim argumentem
+        verify(notificationJpaRepository, times(1)).findByJobOfferId(jobOfferId);
+        // Sprawdź, czy metoda mapToList została wywołana dokładnie raz z oczekiwanymi argumentami
+        verify(notificationMapper, times(1)).mapToList(expectedNotifications);
+    }
     }
 
 
-
-}
 
 
 

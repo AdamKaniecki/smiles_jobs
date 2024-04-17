@@ -241,5 +241,79 @@ public class JobOfferRepositoryTest extends AbstractIT {
         verify(jobOfferJpaRepository, times(1)).deleteById(jobOfferId); // Sprawdź, czy metoda deleteById została wywołana raz z odpowiednim argumentem
     }
 
+    @Test
+    void testSearchJobOfferByKeywordAndCategory() {
+        // given
+        String keyword = "Java";
+        String category = "requiredTechnologies";
+
+        JobOfferEntity jobOfferEntity1 = JobOfferFixtures.someJobOfferEntity1();
+        JobOfferEntity jobOfferEntity2 = JobOfferFixtures.someJobOfferEntity2();
+
+        // Zakładamy, że istnieją encje CV pasujące do kryteriów wyszukiwania
+        when(jobOfferJpaRepository.findActiveJobOffersByKeywordAndCategory(keyword, category))
+                .thenReturn(List.of(jobOfferEntity1, jobOfferEntity2));
+
+        JobOffer jobOffer1 = JobOfferFixtures.someJobOffer3();
+        JobOffer jobOffer2 = JobOfferFixtures.someJobOffer4();
+
+        // Mockowanie mapowania cvEntity na JobOffer
+        when(jobOfferMapper.map(jobOfferEntity1)).thenReturn(jobOffer1);
+        when(jobOfferMapper.map(jobOfferEntity2)).thenReturn(jobOffer2);
+
+        // when
+        List<JobOffer> jobOfferList = jobOfferRepository.searchJobOffersByKeywordAndCategory(keyword, category);
+
+        // then
+        assertNotNull(jobOfferList); // Upewnij się, że lista nie jest nullem
+        assertEquals(2, jobOfferList.size()); // Sprawdź, czy lista zawiera 2 oferty pracy
+
+        // Sprawdź, czy pierwsza oferta pracy ma oczekiwane wartości
+        assertEquals(jobOffer1.getPosition(), jobOfferList.get(0).getPosition());
+        verify(jobOfferJpaRepository, times(1)).findActiveJobOffersByKeywordAndCategory(keyword, category); // Sprawdź, czy metoda findActiveJobOffersByKeywordAndCategory została wywołana dokładnie raz z odpowiednimi argumentami
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity1); // Sprawdź, czy metoda map została wywołana raz dla pierwszego jobOfferEntity
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity2); // Sprawdź, czy metoda map została wywołana raz dla drugiego jobOfferEntity
+
+    }
+
+    @Test
+    void testSearchJobOffersBySalary() {
+        // given
+        String category = "salaryMin";
+        BigDecimal salary = new BigDecimal("5000.00");
+
+        JobOfferEntity jobOfferEntity1 = JobOfferFixtures.someJobOfferEntity1();
+        JobOfferEntity jobOfferEntity2 = JobOfferFixtures.someJobOfferEntity2();
+
+
+
+        // Zakładamy, że istnieją encje ofert pracy pasujące do kryteriów wyszukiwania
+        when(jobOfferJpaRepository.findActiveJobOffersBySalaryAndCategory(category, salary))
+                .thenReturn(List.of(jobOfferEntity1, jobOfferEntity2));
+
+        JobOffer jobOffer1 = JobOfferFixtures.someJobOffer3();
+        JobOffer jobOffer2 = JobOfferFixtures.someJobOffer4();
+
+
+        // Mockowanie mapowania jobOfferEntity na JobOffer
+        when(jobOfferMapper.map(jobOfferEntity1)).thenReturn(jobOffer1);
+        when(jobOfferMapper.map(jobOfferEntity2)).thenReturn(jobOffer2);
+
+        // when
+        List<JobOffer> jobOfferList = jobOfferRepository.searchJobOffersBySalary(category, salary);
+
+        // then
+        assertNotNull(jobOfferList); // Upewnij się, że lista nie jest nullem
+        assertEquals(2, jobOfferList.size()); // Sprawdź, czy lista zawiera 2 oferty pracy
+
+
+        // Sprawdź, czy pierwsza oferta pracy ma oczekiwane wartości
+        assertEquals(jobOffer1.getPosition(), jobOfferList.get(0).getPosition());
+        verify(jobOfferJpaRepository, times(1)).findActiveJobOffersBySalaryAndCategory(category, salary); // Sprawdź, czy metoda findActiveJobOffersBySalaryAndCategory została wywołana dokładnie raz z odpowiednimi argumentami
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity1); // Sprawdź, czy metoda map została wywołana raz dla pierwszego jobOfferEntity
+        verify(jobOfferMapper, times(1)).map(jobOfferEntity2); // Sprawdź, czy metoda map została wywołana raz dla drugiego jobOfferEntity
+    }
+
+
 }
 

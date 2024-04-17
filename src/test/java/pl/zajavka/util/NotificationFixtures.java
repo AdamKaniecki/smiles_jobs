@@ -2,6 +2,7 @@ package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
 import pl.zajavka.controller.dto.NotificationDTO;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
@@ -9,6 +10,7 @@ import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.RoleEntity;
+import pl.zajavka.infrastructure.security.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -19,7 +21,10 @@ import java.util.Set;
 public class NotificationFixtures {
 
 public static NotificationEntity sampleNotificationEntity1(){
+
     LocalDateTime notificationDateTime = LocalDateTime.now();
+
+
     return NotificationEntity.builder()
             .companyMessage("randomMessage1")
             .candidateMessage("randomMessage2")
