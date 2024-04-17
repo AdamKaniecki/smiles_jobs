@@ -9,6 +9,8 @@ import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.domain.BusinessCard;
+import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 
@@ -109,5 +111,65 @@ public class BusinessCardRepositoryTest extends AbstractIT {
 
         // Then
         Mockito.verify(businessCardJpaRepository).deleteById(id); // Sprawdzamy, czy metoda deleteById w repozytorium została wywołana z odpowiednim argumentem
+    }
+
+    @Test
+    void testFindByUser_WhenBusinessCardExists() {
+        // Given
+        User loggedInUser = new User(); // Tworzymy przykładowego użytkownika
+        BusinessCardEntity businessCardEntity = new BusinessCardEntity(); // Tworzymy przykładową encję BusinessCardEntity
+        BusinessCard businessCard = new BusinessCard(); // Tworzymy przykładowy obiekt BusinessCard
+        when(userMapper.map(loggedInUser)).thenReturn(new UserEntity()); // Mockujemy mapowanie użytkownika na encję
+        when(businessCardJpaRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(Optional.of(businessCardEntity)); // Mockujemy metodę findByUser w repozytorium, aby zwróciła Optional z encją
+        when(businessCardMapper.map(businessCardEntity)).thenReturn(businessCard); // Mockujemy mapowanie encji na obiekt domenowy
+
+        // When
+        BusinessCard result = businessCardRepository.findByUser(loggedInUser); // Wywołujemy testowaną metodę
+
+        // Then
+        assertNotNull(result); // Upewniamy się, że zwrócony obiekt nie jest nullem
+        assertEquals(businessCard, result); // Upewniamy się, że zwrócony obiekt jest poprawny
+    }
+
+    @Test
+    void testFindByUser_WhenBusinessCardDoesNotExist() {
+        // Given
+        User loggedInUser = new User(); // Tworzymy przykładowego użytkownika
+        when(userMapper.map(loggedInUser)).thenReturn(new UserEntity()); // Mockujemy mapowanie użytkownika na encję
+        when(businessCardJpaRepository.findByUser(Mockito.any(UserEntity.class))).thenReturn(Optional.empty()); // Mockujemy metodę findByUser w repozytorium, aby zwróciła pusty Optional
+
+        // When
+        BusinessCard result = businessCardRepository.findByUser(loggedInUser); // Wywołujemy testowaną metodę
+
+        // Then
+        assertNull(result); // Upewniamy się, że zwrócony obiekt jest nullem
+    }
+
+    @Test
+    void testExistByUser_WhenBusinessCardExists() {
+        // Given
+        User loggedInUser = new User(); // Tworzymy przykładowego użytkownika
+        when(userMapper.map(loggedInUser)).thenReturn(new UserEntity()); // Mockujemy mapowanie użytkownika na encję
+        when(businessCardJpaRepository.existsByUser(Mockito.any(UserEntity.class))).thenReturn(true); // Mockujemy metodę existsByUser w repozytorium, aby zwróciła true
+
+        // When
+        boolean result = businessCardRepository.existByUser(loggedInUser); // Wywołujemy testowaną metodę
+
+        // Then
+        assertTrue(result); // Upewniamy się, że zwrócony wynik jest true
+    }
+
+    @Test
+    void testExistByUser_WhenBusinessCardDoesNotExist() {
+        // Given
+        User loggedInUser = new User(); // Tworzymy przykładowego użytkownika
+        when(userMapper.map(loggedInUser)).thenReturn(new UserEntity()); // Mockujemy mapowanie użytkownika na encję
+        when(businessCardJpaRepository.existsByUser(Mockito.any(UserEntity.class))).thenReturn(false); // Mockujemy metodę existsByUser w repozytorium, aby zwróciła false
+
+        // When
+        boolean result = businessCardRepository.existByUser(loggedInUser); // Wywołujemy testowaną metodę
+
+        // Then
+        assertFalse(result); // Upewniamy się, że zwrócony wynik jest false
     }
 }
