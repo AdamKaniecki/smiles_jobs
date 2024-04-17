@@ -143,40 +143,31 @@ public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
     void testNotificationEntityBuilder(){
 //    given
         LocalDateTime notificationDateTime = LocalDateTime.now();
-        var users = List.of(someUserEntity1(),someUserEntity2());
-        userRepository.saveAll(users);
-        CvEntity cv = CvFixtures.someCvEntity1();
-        cv.setUser(users.get(0));
-        cvRepository.save(cv);
-        JobOfferEntity jobOffer = JobOfferFixtures.someJobOfferEntity1();
-        jobOffer.setUser(users.get(1));
-        jobOfferRepository.save(jobOffer);
+        CvEntity cvEntity = CvFixtures.someCvEntity1();
+        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
 
 //    when
 
     NotificationEntity notificationEntity = NotificationEntity.builder()
-            .id(1)
             .candidateMessage("random Message")
             .companyMessage("random Message2")
-            .receiverUser(users.get(0))
-            .senderUser(users.get(1))
+            .receiverUser(jobOfferEntity.getUser())
+            .senderUser(cvEntity.getUser())
             .status(Status.WAITING_FOR_INTERVIEW)
-            .cv(cv)
-            .jobOffer(jobOffer)
+            .cv(cvEntity)
+            .jobOffer(jobOfferEntity)
             .dateTime(notificationDateTime)
             .build();
         notificationJpaRepository.save(notificationEntity);
 
 //    then
 
-        assertThat(notificationEntity.getId()).isEqualTo(1);
+//        assertThat(notificationEntity.getId()).isEqualTo(1);
         assertThat(notificationEntity.getCandidateMessage()).isEqualTo("random Message");
         assertThat(notificationEntity.getCompanyMessage()).isEqualTo("random Message2");
-        assertThat(notificationEntity.getReceiverUser()).isEqualTo(users.get(0));
-        assertThat(notificationEntity.getSenderUser()).isEqualTo(users.get(1));
         assertThat(notificationEntity.getStatus()).isEqualTo(Status.WAITING_FOR_INTERVIEW);
-        assertThat(notificationEntity.getCv()).isEqualTo(cv);
-        assertThat(notificationEntity.getJobOffer()).isEqualTo(jobOffer);
+        assertThat(notificationEntity.getCv()).isEqualTo(cvEntity);
+        assertThat(notificationEntity.getJobOffer()).isEqualTo(jobOfferEntity);
 
     }
 

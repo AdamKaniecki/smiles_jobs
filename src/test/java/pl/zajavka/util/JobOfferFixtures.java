@@ -26,7 +26,6 @@ public class JobOfferFixtures {
 
         OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
         return JobOfferEntity.builder()
-                .id(1)
                 .companyName("januszex")
                 .position("junior java developer")
                 .responsibilities("support")
@@ -134,51 +133,51 @@ public class JobOfferFixtures {
 
 
 
-//    public static JobOffer someJobOffer1(){
-//        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        User user = User.builder()
-//                .userName("adam112")
-//                .roles(Set.of(candidateRole))
-//                .password("adam1112")
-//                .email("adam21113@poczta.onet.pl")
-//                .active(true)
-//                .build();
-//
-//        return JobOffer.builder()
-//                .id(1)
-//                .companyName("company1")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime)
-//                .user(user)
-//                .build();
-//    }
-//
-//    public static JobOffer someJobOffer2(){
-//        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        User user = User.builder()
-//                .userName("adam1312")
-//                .roles(Set.of(candidateRole))
-//                .password("adam13112")
-//                .email("adam2111e3@poczta.onet.pl")
-//                .active(true)
-//                .build();
-//
-//        return JobOffer.builder()
-//                .id(1)
-//                .companyName("company2")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime)
-//                .user(user)
-//                .build();
-//    }
+    public static JobOffer someJobOffer3(){
+        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_COMPANY").build();
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        User user = User.builder()
+                .userName("adam112")
+                .roles(Set.of(candidateRole))
+                .password("adam1112")
+                .email("adam21113@poczta.onet.pl")
+                .active(true)
+                .build();
+
+        return JobOffer.builder()
+                .id(1)
+                .companyName("company1")
+                .position("junior java developer")
+                .responsibilities("utrzymywanie aplikacji")
+                .requiredTechnologies("spring")
+                .benefits("owocowe czwartki")
+                .jobOfferDateTime(jobOfferDateTime)
+                .user(user)
+                .build();
+    }
+
+    public static JobOffer someJobOffer4(){
+        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
+        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+        User user = User.builder()
+                .userName("adam1312")
+                .roles(Set.of(candidateRole))
+                .password("adam13112")
+                .email("adam2111e3@poczta.onet.pl")
+                .active(true)
+                .build();
+
+        return JobOffer.builder()
+                .id(1)
+                .companyName("company2")
+                .position("junior java developer")
+                .responsibilities("utrzymywanie aplikacji")
+                .requiredTechnologies("spring")
+                .benefits("owocowe czwartki")
+                .jobOfferDateTime(jobOfferDateTime)
+                .user(user)
+                .build();
+    }
 
 //    public static List<JobOfferDTO> jobOfferDTOs(){
 //
