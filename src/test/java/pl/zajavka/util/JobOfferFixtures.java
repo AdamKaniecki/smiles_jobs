@@ -146,12 +146,24 @@ public class JobOfferFixtures {
 
         return JobOffer.builder()
                 .id(1)
-                .companyName("company1")
+                .companyName("januszex")
                 .position("junior java developer")
-                .responsibilities("utrzymywanie aplikacji")
+                .responsibilities("support")
                 .requiredTechnologies("spring")
-                .benefits("owocowe czwartki")
-                .jobOfferDateTime(jobOfferDateTime)
+                .experience("two years")
+                .jobLocation("remote")
+                .typeOfContract("b2b")
+                .typeOfWork("FULL-TIME JOB")
+                .salaryMin(new BigDecimal("4000")) // Przykładowe wynagrodzenie minimalne
+                .salaryMax(new BigDecimal("6000")) // Przykładowe wynagrodzenie maksymalne
+                .requiredLanguage("English") // Wymagany język
+                .requiredLanguageLevel("B2") // Poziom wymaganego języka
+                .benefits("fruits") // Korzyści oferowane przez pracodawcę
+                .jobDescription("example about us") // Opis stanowiska pracy
+                .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
+                .active(true) // Czy oferta pracy jest aktywna
+                .neededStaff(5) // Ilość potrzebnych pracowników
+                .hiredCount(0) // Liczba zatrudnionych pracowników
                 .user(user)
                 .build();
     }

@@ -17,8 +17,9 @@ public class UserFixtures {
 
 
     public static UserEntity someUserEntity1() {
-        RoleEntity candidateRole = RoleEntity.builder().role("ROLE_CANDIDATE").build();
+        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
         UserEntity userEntity = UserEntity.builder()
+//                .id(1)
                 .userName("adam12")
                 .roles(Set.of(candidateRole))
                 .password("adam112")
@@ -55,10 +56,11 @@ public class UserFixtures {
     public static User someUser1() {
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
         User user = User.builder()
-                .userName("adam112")
+//                .id(1)
+                .userName("adam12")
                 .roles(Set.of(candidateRole))
-                .password("adam1112")
-                .email("adam21113@poczta.onet.pl")
+                .password("adam112")
+                .email("adam2113@poczta.onet.pl")
                 .active(true)
                 .build();
         return user;

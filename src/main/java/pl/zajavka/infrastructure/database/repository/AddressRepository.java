@@ -23,10 +23,7 @@ public class AddressRepository implements AddressDAO {
         return addressMapper.map(addressEntity);
     }
 
-    @Override
-    public AddressEntity saveAndFlush(AddressEntity entity) {
-        return addressJpaRepository.saveAndFlush(entity);
-    }
+
 
     @Override
     public boolean existsById(Integer id) {
@@ -43,4 +40,17 @@ public class AddressRepository implements AddressDAO {
     addressJpaRepository.deleteById(id);
     }
 
+    @Override
+    public Address createAddress(Address address) {
+        AddressEntity entity = AddressEntity.builder()
+                .country(address.getCountry())
+                .city(address.getCity())
+                .streetAndNumber(address.getStreetAndNumber())
+                .postalCode(address.getPostalCode())
+                .build();
+
+        AddressEntity createEntity = addressJpaRepository.saveAndFlush(entity);
+
+        return addressMapper.map(createEntity);
+    }
 }

@@ -26,16 +26,8 @@ public class AddressService {
 
     @Transactional
     public Address createAddress(Address address) {
-        AddressEntity entity = AddressEntity.builder()
-                .country(address.getCountry())
-                .city(address.getCity())
-                .streetAndNumber(address.getStreetAndNumber())
-                .postalCode(address.getPostalCode())
-                .build();
+        return addressDAO.createAddress(address);
 
-        AddressEntity created = addressDAO.saveAndFlush(entity);
-
-        return addressMapper.map(created);
     }
 
     @Transactional

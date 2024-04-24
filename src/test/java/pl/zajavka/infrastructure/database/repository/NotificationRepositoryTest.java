@@ -4,16 +4,23 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.CvMapper;
+import pl.zajavka.infrastructure.database.repository.mapper.JobOfferMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.NotificationMapper;
+import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
+import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
@@ -24,17 +31,29 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
+import static pl.zajavka.util.UserFixtures.someUserEntity1;
+import static pl.zajavka.util.UserFixtures.someUserEntity2;
 
 public class NotificationRepositoryTest extends AbstractIT {
 
     @Mock
     private NotificationJpaRepository notificationJpaRepository;
-
     @Mock
     private NotificationMapper notificationMapper;
-
     @Mock
     private  UserMapper userMapper;
+
+//    @Mock
+//    private  UserRepository userRepository;
+//    @Mock
+//    private  CvRepository cvRepository;
+//    @Mock
+//    private  JobOfferRepository jobOfferRepository;
+    @Mock
+    private  CvMapper cvMapper;
+    @Mock
+    private  JobOfferMapper jobOfferMapper;
+
 
     @InjectMocks
     private NotificationRepository notificationRepository;
@@ -192,29 +211,19 @@ public class NotificationRepositoryTest extends AbstractIT {
         verify(notificationJpaRepository).deleteById(cvId);; // Sprawdzenie, czy metoda deleteById została wywołana z prawidłowym argumentem.
     }
 
-    @Test
-    void existsBySenderUserAndJobOffer_ShouldReturnTrue_WhenNotificationExists() {
-        // Given
-        UserEntity userEntity = UserFixtures.someUserEntity2();
-        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
-        when(notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity)).thenReturn(true);
 
-        // When
-        boolean result = notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
 
-        // Then
-        assertEquals(true, result);
-    }
+
 
     @Test
     void existsBySenderUserAndJobOffer_ShouldReturnFalse_WhenNotificationDoesNotExist() {
         // Given
-        UserEntity userEntity = UserFixtures.someUserEntity2();
-        JobOfferEntity jobOfferEntity = JobOfferFixtures.someJobOfferEntity1();
-        when(notificationJpaRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity)).thenReturn(false);
+        User user = UserFixtures.someUser2();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+        when(notificationJpaRepository.existsBySenderUserAndJobOffer(userMapper.map(user), jobOfferMapper.map(jobOffer))).thenReturn(false);
 
         // When
-        boolean result = notificationRepository.existsBySenderUserAndJobOffer(userEntity, jobOfferEntity);
+        boolean result = notificationRepository.existsBySenderUserAndJobOffer(user, jobOffer);
 
         // Then
         assertEquals(false, result);
@@ -283,7 +292,47 @@ public class NotificationRepositoryTest extends AbstractIT {
         // Sprawdź, czy metoda mapToList została wywołana dokładnie raz z oczekiwanymi argumentami
         verify(notificationMapper, times(1)).mapToList(expectedNotifications);
     }
-    }
+//    @Test
+//    void testCreateNotification() {
+//        // Given
+//        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+//        CV cv = CvFixtures.someCv1();
+//        User loggedInUser = UserFixtures.someUser1();
+//        User adresat = UserFixtures.someUser2();
+//
+//        // Zakładamy, że repozytorium zapisze encję i zwróci odpowiednią encję powiadomienia
+//        NotificationEntity notificationEntity = new NotificationEntity();
+//        when(notificationJpaRepository.save(any(NotificationEntity.class))).thenReturn(notificationEntity);
+//
+//        // Zakładamy, że mapper przemapuje encję na obiekt domenowy
+//        Notification expectedNotification = NotificationFixtures.sampleNotification1();
+//        when(notificationMapper.map(notificationEntity)).thenReturn(expectedNotification);
+//
+//        // Zakładamy, że mappery przemapują encje na obiekty domenowe
+//        when(cvMapper.map(cv)).thenReturn(new CvEntity());
+//        when(jobOfferMapper.map(jobOffer)).thenReturn(new JobOfferEntity());
+//
+//        // When
+//        Notification createdNotification = notificationRepository.createNotification(jobOffer, cv, loggedInUser, adresat);
+//
+//        // Then
+//        assertEquals(expectedNotification, createdNotification); // Sprawdzenie, czy utworzone powiadomienie jest oczekiwanym powiadomieniem
+//
+//        // Sprawdzenie, czy metoda save została wywołana dokładnie raz z odpowiednią encją powiadomienia
+//        verify(notificationRepository, times(1)).save(any(NotificationEntity.class));
+//
+//        // Sprawdzenie, czy metoda map została wywołana dokładnie raz z odpowiednią encją powiadomienia
+//        verify(notificationMapper, times(1)).map(notificationEntity);
+//
+//        // Sprawdzenie, czy metody map zostały wywołane dokładnie raz z odpowiednimi encjami
+//        verify(cvMapper, times(1)).map(cv);
+//        verify(jobOfferMapper, times(1)).map(jobOffer);
+//    }
+}
+
+
+
+
 
 
 
