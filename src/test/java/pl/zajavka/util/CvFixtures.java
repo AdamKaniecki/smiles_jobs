@@ -6,7 +6,10 @@ import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
+import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
+
+import java.util.Set;
 
 @UtilityClass
 public class CvFixtures {
@@ -180,6 +183,50 @@ public class CvFixtures {
                 .build();
 
 
+
+    }
+
+    public static CV someCv1forNotification() {
+        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
+        Address address = Address.builder()
+                .city("Sample City")
+                .country("Sample Country")
+                .streetAndNumber("Sample Street 125")
+                .postalCode("09-500")
+                .build();
+
+        User user = User.builder()
+                .userName("sample_user")
+                .email("sample@example.com")
+                .password("password123")
+                .active(true)
+                .roles(Set.of(candidateRole))
+                .build();
+
+        return CV.builder()
+                .name("John")
+                .surname("Doe")
+                .dateOfBirth("1990-01-01")
+                .sex("Male")
+                .maritalStatus("Single")
+                .phoneNumber("123456789")
+                .contactEmail("john@example.com")
+                .workExperience("5 years")
+                .education("Master's Degree")
+                .socialMediaProfil("linked")
+                .projects("smiles")
+                .aboutMe("coś tam")
+                .certificatesOfCourses("zajavka")
+                .programmingLanguage("Java, Python")
+                .skillsAndTools("IntelliJ IDEA, Git")
+                .language("English")
+                .languageLevel("A2")
+                .hobby("Reading, Travelling")
+                .followPosition("junior")
+                .visible(true)
+                .user(user)
+                .address(address)
+                .build();
 
     }
 

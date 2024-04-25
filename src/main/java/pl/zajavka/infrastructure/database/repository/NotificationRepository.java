@@ -103,7 +103,7 @@ private final JobOfferRepository jobOfferRepository;
 
     @Transactional
     @Override
-    public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User adresat) {
+    public Notification createNotification(JobOffer jobOffer, CV cv, User loggedInUser, User recipient) {
         NotificationEntity notificationEntity = NotificationEntity.builder()
                 .status(Status.UNDER_REVIEW)
                 .candidateMessage("CV sent, await interview offer")
@@ -111,7 +111,7 @@ private final JobOfferRepository jobOfferRepository;
                 .jobOffer(jobOfferMapper.map(jobOffer))
                 .cv(cvMapper.map(cv))
                 .senderUser(userMapper.map(loggedInUser))
-                .receiverUser(userMapper.map(adresat))
+                .receiverUser(userMapper.map(recipient))
                 .build();
         notificationJpaRepository.save(notificationEntity);
         return notificationMapper.map(notificationEntity);

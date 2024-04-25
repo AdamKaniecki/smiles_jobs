@@ -292,42 +292,44 @@ public class NotificationRepositoryTest extends AbstractIT {
         // Sprawdź, czy metoda mapToList została wywołana dokładnie raz z oczekiwanymi argumentami
         verify(notificationMapper, times(1)).mapToList(expectedNotifications);
     }
-//    @Test
-//    void testCreateNotification() {
-//        // Given
-//        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
-//        CV cv = CvFixtures.someCv1();
-//        User loggedInUser = UserFixtures.someUser1();
-//        User adresat = UserFixtures.someUser2();
-//
-//        // Zakładamy, że repozytorium zapisze encję i zwróci odpowiednią encję powiadomienia
-//        NotificationEntity notificationEntity = new NotificationEntity();
-//        when(notificationJpaRepository.save(any(NotificationEntity.class))).thenReturn(notificationEntity);
-//
-//        // Zakładamy, że mapper przemapuje encję na obiekt domenowy
-//        Notification expectedNotification = NotificationFixtures.sampleNotification1();
-//        when(notificationMapper.map(notificationEntity)).thenReturn(expectedNotification);
-//
-//        // Zakładamy, że mappery przemapują encje na obiekty domenowe
-//        when(cvMapper.map(cv)).thenReturn(new CvEntity());
-//        when(jobOfferMapper.map(jobOffer)).thenReturn(new JobOfferEntity());
-//
-//        // When
-//        Notification createdNotification = notificationRepository.createNotification(jobOffer, cv, loggedInUser, adresat);
-//
-//        // Then
-//        assertEquals(expectedNotification, createdNotification); // Sprawdzenie, czy utworzone powiadomienie jest oczekiwanym powiadomieniem
-//
-//        // Sprawdzenie, czy metoda save została wywołana dokładnie raz z odpowiednią encją powiadomienia
-//        verify(notificationRepository, times(1)).save(any(NotificationEntity.class));
-//
-//        // Sprawdzenie, czy metoda map została wywołana dokładnie raz z odpowiednią encją powiadomienia
-//        verify(notificationMapper, times(1)).map(notificationEntity);
-//
-//        // Sprawdzenie, czy metody map zostały wywołane dokładnie raz z odpowiednimi encjami
-//        verify(cvMapper, times(1)).map(cv);
-//        verify(jobOfferMapper, times(1)).map(jobOffer);
-//    }
+
+    @Test
+    void createNotification_ShouldSaveNotificationAndReturnMappedEntity() {
+        // Given
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        CV cv = CvFixtures.someCv1forNotification();
+        User loggedInUser = cv.getUser();
+        User recipient = jobOffer.getUser();
+
+        // Tworzymy oczekiwaną encję powiadomienia
+        NotificationEntity expectedNotificationEntity = NotificationEntity.builder()
+                .status(Status.UNDER_REVIEW)
+                .candidateMessage("CV sent, await interview offer")
+                .companyMessage("I would like to work for you")
+                .jobOffer(jobOfferMapper.map(jobOffer))
+                .cv(cvMapper.map(cv))
+                .senderUser(userMapper.map(loggedInUser))
+                .receiverUser(userMapper.map(recipient))
+                .build();
+
+        // Zdefiniuj zachowanie mocka dla mappera encji powiadomienia
+        when(notificationMapper.map(any(NotificationEntity.class))).thenReturn(NotificationFixtures.sampleNotification1());
+
+        // Zdefiniuj zachowanie mocka dla zapisu encji powiadomienia
+        when(notificationJpaRepository.save(any(NotificationEntity.class))).thenReturn(expectedNotificationEntity);
+
+        // When
+        Notification createdNotification = notificationRepository.createNotification(jobOffer, cv, loggedInUser, recipient);
+
+        // Then
+        assertEquals(NotificationFixtures.sampleNotification1(), createdNotification);
+
+        // Sprawdź, czy metoda save została wywołana raz z odpowiednią encją powiadomienia
+        verify(notificationJpaRepository, times(1)).save(any(NotificationEntity.class));
+
+        // Sprawdź, czy metoda map została wywołana raz z oczekiwaną encją powiadomienia
+        verify(notificationMapper, times(1)).map(expectedNotificationEntity);
+    }
 }
 
 
