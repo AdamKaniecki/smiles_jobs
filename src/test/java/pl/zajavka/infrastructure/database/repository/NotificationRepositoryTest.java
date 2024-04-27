@@ -1,6 +1,7 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,6 +26,7 @@ import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,18 +43,18 @@ public class NotificationRepositoryTest extends AbstractIT {
     @Mock
     private NotificationMapper notificationMapper;
     @Mock
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
-//    @Mock
-//    private  UserRepository userRepository;
-//    @Mock
+    @Mock
+    private UserRepository userRepository;
+    //    @Mock
 //    private  CvRepository cvRepository;
 //    @Mock
 //    private  JobOfferRepository jobOfferRepository;
     @Mock
-    private  CvMapper cvMapper;
+    private CvMapper cvMapper;
     @Mock
-    private  JobOfferMapper jobOfferMapper;
+    private JobOfferMapper jobOfferMapper;
 
 
     @InjectMocks
@@ -72,10 +74,10 @@ public class NotificationRepositoryTest extends AbstractIT {
 
         // Then
         assertNotNull(actualNotification);
-        assertNotNull( actualNotification.getStatus());
-        assertNotNull( actualNotification.getDateTime());
-        assertNotNull( actualNotification.getCompanyMessage());
-        assertNotNull( actualNotification.getCandidateMessage());
+        assertNotNull(actualNotification.getStatus());
+        assertNotNull(actualNotification.getDateTime());
+        assertNotNull(actualNotification.getCompanyMessage());
+        assertNotNull(actualNotification.getCandidateMessage());
     }
 
     @Test
@@ -208,11 +210,9 @@ public class NotificationRepositoryTest extends AbstractIT {
         notificationRepository.deleteByCvId(cvId);
 
         // Then
-        verify(notificationJpaRepository).deleteById(cvId);; // Sprawdzenie, czy metoda deleteById została wywołana z prawidłowym argumentem.
+        verify(notificationJpaRepository).deleteById(cvId);
+        ; // Sprawdzenie, czy metoda deleteById została wywołana z prawidłowym argumentem.
     }
-
-
-
 
 
     @Test
@@ -329,8 +329,66 @@ public class NotificationRepositoryTest extends AbstractIT {
 
         // Sprawdź, czy metoda map została wywołana raz z oczekiwaną encją powiadomienia
         verify(notificationMapper, times(1)).map(expectedNotificationEntity);
+
+        assertNotNull(createdNotification);
     }
-}
+
+
+
+//        @Test
+//        public void arrangeInterview_ShouldSaveNotificationWithMeetingSchedulingStatus_AndUpdateUsers() {
+//            // Given
+//            Notification notification = NotificationFixtures.sampleNotification1fully();
+//            NotificationEntity notificationEntity = NotificationFixtures.sampleNotificationEntity1fully();
+//
+//
+//            when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+//
+//
+//            notificationRepository.arrangeInterview(notification, notification.getSender(),notification.getReceiver(),notification.getDateTime());
+//
+//            verify(notificationMapper).map(notification); // 1. Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+//
+//        }
+
+    @Test
+    public void arrangeInterview_ShouldSaveNotificationWithMeetingSchedulingStatus() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+        LocalDateTime proposedDateTime = notification.getDateTime();
+
+        // Ustawienie odpowiedniego statusu dla mockowanej notyfikacji
+        notification.setStatus(Status.UNDER_REVIEW);
+
+        // Mapowanie notyfikacji na encję
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setStatus(Status.MEETING_SCHEDULING);
+        notificationEntity.setDateTime(proposedDateTime);
+        notificationEntity.setCandidateMessage("Accept the meeting schedule or request another");
+        notificationEntity.setCompanyMessage("The meeting schedule proposal has been sent");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
+        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+
+
+        // When
+        notificationRepository.arrangeInterview(notification, loggedInUser, recipient, proposedDateTime);
+
+        // Then
+        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+        verify(notificationMapper).map(notification);
+
+        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+        verify(notificationJpaRepository).save(notificationEntity);
+
+    }
+    }
+
+
+
+
 
 
 

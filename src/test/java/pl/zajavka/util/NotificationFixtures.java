@@ -16,21 +16,21 @@ import java.util.Set;
 @UtilityClass
 public class NotificationFixtures {
 
-public static NotificationEntity sampleNotificationEntity1(){
+    public static NotificationEntity sampleNotificationEntity1() {
 
-    LocalDateTime notificationDateTime = LocalDateTime.now();
+        LocalDateTime notificationDateTime = LocalDateTime.now();
 
 
-    return NotificationEntity.builder()
-            .companyMessage("randomMessage1")
-            .candidateMessage("randomMessage2")
-            .status(Status.WAITING_FOR_INTERVIEW)
-            .dateTime(notificationDateTime)
-            .build();
+        return NotificationEntity.builder()
+                .companyMessage("randomMessage1")
+                .candidateMessage("randomMessage2")
+                .status(Status.WAITING_FOR_INTERVIEW)
+                .dateTime(notificationDateTime)
+                .build();
 
-}
+    }
 
-    public static NotificationEntity sampleNotificationEntity2(){
+    public static NotificationEntity sampleNotificationEntity2() {
         LocalDateTime notificationDateTime = LocalDateTime.now();
         return NotificationEntity.builder()
                 .companyMessage("randomMessage3")
@@ -41,7 +41,7 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
-    public static Notification sampleNotification1(){
+    public static Notification sampleNotification1() {
         LocalDateTime notificationDateTime = LocalDateTime.now();
         return Notification.builder()
                 .companyMessage("randomMessage1")
@@ -52,7 +52,7 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
-    public static Notification sampleNotification2(){
+    public static Notification sampleNotification2() {
         LocalDateTime notificationDateTime = LocalDateTime.now();
         return Notification.builder()
                 .companyMessage("randomMessage3")
@@ -63,7 +63,7 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
-    public static List<NotificationDTO> sampleNotificationDTOList(){
+    public static List<NotificationDTO> sampleNotificationDTOList() {
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
         User user = User.builder()
                 .id(1)
@@ -123,7 +123,7 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .build();
 
 
-       NotificationDTO notificationDTO1 = NotificationDTO.builder()
+        NotificationDTO notificationDTO1 = NotificationDTO.builder()
                 .companyMessage("randomMessage1")
                 .candidateMessage("randomMessage2")
                 .status(Status.WAITING_FOR_INTERVIEW)
@@ -139,7 +139,7 @@ public static NotificationEntity sampleNotificationEntity1(){
         return notificationDTOs;
     }
 
-    public static List<Notification> sampleNotificationList(){
+    public static List<Notification> sampleNotificationList() {
         LocalDateTime notificationDateTime = LocalDateTime.now();
         LocalDateTime notification2DateTime = LocalDateTime.now();
         Notification notification1 = Notification.builder()
@@ -155,11 +155,11 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .status(Status.WAITING_FOR_INTERVIEW)
                 .dateTime(notification2DateTime)
                 .build();
-        List<Notification> notifications = List.of(notification1,notification2);
+        List<Notification> notifications = List.of(notification1, notification2);
         return notifications;
     }
 
-    public static List<NotificationEntity> sampleNotificationEntityList(){
+    public static List<NotificationEntity> sampleNotificationEntityList() {
         LocalDateTime notificationDateTime = LocalDateTime.now();
         LocalDateTime notification2DateTime = LocalDateTime.now();
         NotificationEntity notification1 = NotificationEntity.builder()
@@ -176,11 +176,11 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .dateTime(notification2DateTime)
                 .build();
 
-        return List.of(notification1,notification2);
+        return List.of(notification1, notification2);
     }
 
 
-    public static Notification sampleNotification1fully(){
+    public static Notification sampleNotification1fully() {
 
         LocalDateTime notificationDateTime = LocalDateTime.now();
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
@@ -200,7 +200,7 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .roles(Set.of(candidateRole))
                 .build();
 
-            CV cv =   CV.builder()
+        CV cv = CV.builder()
                 .name("John")
                 .surname("Doe")
                 .dateOfBirth("1990-01-01")
@@ -235,7 +235,7 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .active(true)
                 .build();
 
-    JobOffer jobOffer = JobOffer.builder()
+        JobOffer jobOffer = JobOffer.builder()
                 .id(1)
                 .companyName("januszex")
                 .position("junior java developer")
@@ -260,6 +260,7 @@ public static NotificationEntity sampleNotificationEntity1(){
 
 
         return Notification.builder()
+                .id(1)
                 .companyMessage("I would like to work for you")
                 .candidateMessage("CV sent, await interview offer")
                 .sender(user)
@@ -272,7 +273,7 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
-    public static NotificationEntity sampleNotificationEntity1fully(){
+    public static NotificationEntity sampleNotificationEntity1fully() {
 
         LocalDateTime notificationDateTime = LocalDateTime.now();
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
@@ -292,7 +293,7 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .roles(Set.of(candidateRole))
                 .build();
 
-        CvEntity cv =   CvEntity.builder()
+        CvEntity cv = CvEntity.builder()
                 .name("John")
                 .surname("Doe")
                 .dateOfBirth("1990-01-01")
@@ -351,6 +352,7 @@ public static NotificationEntity sampleNotificationEntity1(){
                 .build();
 
 
+
         return NotificationEntity.builder()
                 .id(1)
                 .companyMessage("I would like to work for you")
@@ -365,5 +367,27 @@ public static NotificationEntity sampleNotificationEntity1(){
 
     }
 
+    public static Notification sampleNotification1forArrange() {
+        LocalDateTime notificationDateTime = LocalDateTime.now();
+        return Notification.builder()
+                .companyMessage("I would like to work for you")
+                .candidateMessage("CV sent, await interview offer")
+                .status(Status.UNDER_REVIEW)
+                .dateTime(notificationDateTime)
+                .build();
 
+
+    }
+
+    public static NotificationEntity sampleNotificationEntity1forArrange() {
+        LocalDateTime notificationDateTime = LocalDateTime.now();
+        return NotificationEntity.builder()
+                .companyMessage("I would like to work for you")
+                .candidateMessage("CV sent, await interview offer")
+                .status(Status.UNDER_REVIEW)
+                .dateTime(notificationDateTime)
+                .build();
+
+
+    }
 }
