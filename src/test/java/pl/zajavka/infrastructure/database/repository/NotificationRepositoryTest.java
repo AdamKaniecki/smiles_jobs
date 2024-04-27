@@ -335,21 +335,6 @@ public class NotificationRepositoryTest extends AbstractIT {
 
 
 
-//        @Test
-//        public void arrangeInterview_ShouldSaveNotificationWithMeetingSchedulingStatus_AndUpdateUsers() {
-//            // Given
-//            Notification notification = NotificationFixtures.sampleNotification1fully();
-//            NotificationEntity notificationEntity = NotificationFixtures.sampleNotificationEntity1fully();
-//
-//
-//            when(notificationMapper.map(notification)).thenReturn(notificationEntity);
-//
-//
-//            notificationRepository.arrangeInterview(notification, notification.getSender(),notification.getReceiver(),notification.getDateTime());
-//
-//            verify(notificationMapper).map(notification); // 1. Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
-//
-//        }
 
     @Test
     public void arrangeInterview_ShouldSaveNotificationWithMeetingSchedulingStatus() {
@@ -371,8 +356,6 @@ public class NotificationRepositoryTest extends AbstractIT {
         notificationEntity.setSenderUser(userMapper.map(loggedInUser));
         notificationEntity.setReceiverUser(userMapper.map(recipient));
         when(notificationMapper.map(notification)).thenReturn(notificationEntity);
-
-
         // When
         notificationRepository.arrangeInterview(notification, loggedInUser, recipient, proposedDateTime);
 
@@ -383,8 +366,108 @@ public class NotificationRepositoryTest extends AbstractIT {
         // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
         verify(notificationJpaRepository).save(notificationEntity);
 
+        // Sprawdzenie pól encji notificationEntity
+        assertEquals(Status.MEETING_SCHEDULING, notificationEntity.getStatus());
+        assertEquals(proposedDateTime, notificationEntity.getDateTime());
+        assertEquals("Accept the meeting schedule or request another", notificationEntity.getCandidateMessage());
+        assertEquals("The meeting schedule proposal has been sent", notificationEntity.getCompanyMessage());
+        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
+        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
     }
+
+    @Test
+    public void arrangeInterview_ShouldThrowException_WhenStatusIsNotUnderReviewOrMeetingScheduling() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        notification.setStatus(Status.WAITING_FOR_INTERVIEW); // Ustawienie statusu na coś innego niż UNDER_REVIEW lub MEETING_SCHEDULING
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+        LocalDateTime proposedDateTime = notification.getDateTime();
+
+        // Mockowanie zachowania metody map z NotificationMapper
+        when(notificationMapper.map(notification)).thenReturn(NotificationFixtures.sampleNotificationEntity1fully());
+
+        // When
+        try {
+            notificationRepository.arrangeInterview(notification, loggedInUser, recipient, proposedDateTime);
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Cannot arrange interview when the status is not Under Review or Meeting Scheduling.", e.getMessage());
+
+//
+        }
     }
+
+
+    @Test
+    public void changeMeetingDate_ShouldSaveNotificationWithDateTimeNull() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+
+
+        // Ustawienie odpowiedniego statusu dla mockowanej notyfikacji
+        notification.setStatus(Status.MEETING_SCHEDULING);
+//        notification.setDateTime(null);
+
+        // Mapowanie notyfikacji na encję
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setStatus(Status.MEETING_SCHEDULING);
+        notificationEntity.setDateTime(null);
+        notificationEntity.setCandidateMessage("The request to change the schedule has been sent");
+        notificationEntity.setCompanyMessage("Please request a change of schedule");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
+        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+
+        // When
+        notificationRepository.changeMeetingDate(notification, loggedInUser, recipient);
+
+        // Then
+        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+        verify(notificationMapper).map(notification);
+
+        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+        verify(notificationJpaRepository).save(notificationEntity);
+
+        // Sprawdzenie pól encji notificationEntity
+        assertEquals(Status.MEETING_SCHEDULING, notificationEntity.getStatus());
+        assertEquals(notificationEntity.getDateTime(),null);
+        assertEquals("The request to change the schedule has been sent", notificationEntity.getCandidateMessage());
+        assertEquals("Please request a change of schedule", notificationEntity.getCompanyMessage());
+        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
+        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
+    }
+
+
+    @Test
+    public void changeMeetingDateTime_ShouldThrowException_WhenStatusIsNotMeetingScheduling() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        notification.setStatus(Status.WAITING_FOR_INTERVIEW); // Ustawienie statusu na coś innego niż MEETING_SCHEDULING lub MEETING_SCHEDULING
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+
+        // Mockowanie zachowania metody map z NotificationMapper
+        when(notificationMapper.map(notification)).thenReturn(NotificationFixtures.sampleNotificationEntity1fully());
+
+        // When
+        try {
+            notificationRepository.changeMeetingDate(notification, loggedInUser, recipient);
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Cannot change meeting date when the status is not Meeting Scheduling.", e.getMessage());
+
+//
+        }
+
+    }
+}
+
+
+
+
 
 
 
