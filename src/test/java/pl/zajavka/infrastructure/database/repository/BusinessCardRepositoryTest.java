@@ -7,16 +7,20 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
+import pl.zajavka.util.BusinessCardFixtures;
+import pl.zajavka.util.UserFixtures;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static wiremock.com.google.common.base.Verify.verify;
 
@@ -28,8 +32,10 @@ public class BusinessCardRepositoryTest extends AbstractIT {
     private BusinessCardMapper businessCardMapper;
     @Mock
     private UserMapper userMapper;
+    @Mock
+    private AddressMapper addressMapper;
     @InjectMocks
-    BusinessCardRepository businessCardRepository;
+    private BusinessCardRepository businessCardRepository;
 
 
     @Test
@@ -172,4 +178,31 @@ public class BusinessCardRepositoryTest extends AbstractIT {
         // Then
         assertFalse(result); // Upewniamy się, że zwrócony wynik jest false
     }
+
+    @Test
+    public void testCreateBusinessCard() {
+        // Given
+
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+        User user = businessCard.getUser();
+        when(businessCardMapper.map(any(BusinessCardEntity.class))).thenReturn(businessCard);
+
+        // When
+        BusinessCard result = businessCardRepository.createBusinessCard(businessCard, user);
+
+        // Then
+        // Verify that result is not null
+        assertNotNull(result);
+        assertNotNull(result.getPhoneNumber());
+        assertNotNull(result.getCertificatesAndAwards());
+        assertNotNull(result.getCompanyDescription());
+        assertNotNull(result.getOffice());
+        assertNotNull(result.getRecruitmentEmail());
+        assertNotNull(result.getScopeOperations());
+        assertNotNull(result.getTechnologiesAndTools());
+
+    }
+
+
+
 }

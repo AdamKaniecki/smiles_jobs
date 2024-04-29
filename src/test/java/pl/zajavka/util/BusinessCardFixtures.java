@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
+import pl.zajavka.infrastructure.domain.Address;
+import pl.zajavka.infrastructure.domain.BusinessCard;
+import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.RoleEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
 
@@ -36,7 +39,7 @@ public class BusinessCardFixtures {
                 .office("Office 123")
                 .scopeOperations("Scope of operations")
                 .recruitmentEmail("recruitment@example.com")
-                .phoneNumber("+1234567890")
+                .phoneNumber("+12 345 678 090")
                 .companyDescription("Company description")
                 .technologiesAndTools("Technologies and tools")
                 .certificatesAndAwards("Certificates and awards")
@@ -50,7 +53,30 @@ public class BusinessCardFixtures {
 
     }
 
+    public static BusinessCard someBusinessCard() {
 
+        Address address = Address.builder()
+                .city("Sample City")
+                .country("Sample Country")
+                .streetAndNumber("Sample Street 125")
+                .postalCode("09-500")
+                .build();
+
+        BusinessCard businessCard = BusinessCard.builder()
+                .id(1)
+                .office("Office 123")
+                .scopeOperations("Scope of operations")
+                .recruitmentEmail("recruitment@example.com")
+                .phoneNumber("+12 345 678 090")
+                .companyDescription("Company description")
+                .technologiesAndTools("Technologies and tools")
+                .certificatesAndAwards("Certificates and awards")
+                .address(address)
+                .build();
+
+
+        return businessCard;
+    }
 
 
 }

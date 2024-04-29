@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import pl.zajavka.infrastructure.business.dao.BusinessCardDAO;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
+import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
+import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
@@ -20,6 +22,7 @@ public class BusinessCardRepository implements BusinessCardDAO {
     private final BusinessCardJpaRepository businessCardJpaRepository;
     private final BusinessCardMapper businessCardMapper;
     private final UserMapper userMapper;
+    private final AddressMapper addressMapper;
 
     public Optional<BusinessCard> findById2(Integer id) {
         return businessCardJpaRepository.findById(id).map(businessCardMapper::map);
@@ -51,5 +54,23 @@ public class BusinessCardRepository implements BusinessCardDAO {
     @Override
     public void deleteById(Integer id) {
         businessCardJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
+        Address address = businessCard.getAddress();
+        BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
+                .office(businessCard.getOffice())
+                .scopeOperations(businessCard.getScopeOperations())
+                .recruitmentEmail(businessCard.getRecruitmentEmail())
+                .phoneNumber(businessCard.getPhoneNumber())
+                .companyDescription(businessCard.getCompanyDescription())
+                .technologiesAndTools(businessCard.getTechnologiesAndTools())
+                .certificatesAndAwards(businessCard.getCertificatesAndAwards())
+                .user(userMapper.map(user))
+                .address(addressMapper.map(address))
+                .build();
+        businessCardJpaRepository.save(businessCardEntity);
+        return businessCardMapper.map(businessCardEntity);
     }
 }

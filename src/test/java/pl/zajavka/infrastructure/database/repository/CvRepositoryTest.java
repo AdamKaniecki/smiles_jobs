@@ -269,37 +269,36 @@ public class CvRepositoryTest extends AbstractIT {
     @Test
     void testCreateCV() {
         CV createdCV = CvFixtures.someCv1();
-        CvEntity cvEntity = CvFixtures.someCvEntity1();
-        User user = CvFixtures.someCv1().getUser();
+        User user = createdCV.getUser();
 
         // when
-        when(cvMapper.map(createdCV)).thenReturn(cvEntity);
+        when(cvMapper.map(any(CvEntity.class))).thenReturn(createdCV);
         // when
-        cvRepository.createCV(createdCV, user);
+        CV result = cvRepository.createCV(createdCV, user);
 
         // then
-        assertNotNull(createdCV); // Sprawdzenie, czy utworzony obiekt CV nie jest null
+        assertNotNull(result); // Sprawdzenie, czy utworzony obiekt CV nie jest null
 
         // Sprawdzenie, czy pola obiektu CV nie są null
-        assertNotNull(createdCV.getName());
-        assertNotNull(createdCV.getSurname());
-        assertNotNull(createdCV.getDateOfBirth());
-        assertNotNull(createdCV.getSex());
-        assertNotNull(createdCV.getMaritalStatus());
-        assertNotNull(createdCV.getContactEmail());
-        assertNotNull(createdCV.getPhoneNumber());
-        assertNotNull(createdCV.getEducation());
-        assertNotNull(createdCV.getWorkExperience());
-        assertNotNull(createdCV.getSocialMediaProfil());
-        assertNotNull(createdCV.getProjects());
-        assertNotNull(createdCV.getAboutMe());
-        assertNotNull(createdCV.getCertificatesOfCourses());
-        assertNotNull(createdCV.getProgrammingLanguage());
-        assertNotNull(createdCV.getSkillsAndTools());
-        assertNotNull(createdCV.getLanguage());
-        assertNotNull(createdCV.getLanguageLevel());
-        assertNotNull(createdCV.getHobby());
-        assertNotNull(createdCV.getFollowPosition());
+        assertNotNull(result.getName());
+        assertNotNull(result.getSurname());
+        assertNotNull(result.getDateOfBirth());
+        assertNotNull(result.getSex());
+        assertNotNull(result.getMaritalStatus());
+        assertNotNull(result.getContactEmail());
+        assertNotNull(result.getPhoneNumber());
+        assertNotNull(result.getEducation());
+        assertNotNull(result.getWorkExperience());
+        assertNotNull(result.getSocialMediaProfil());
+        assertNotNull(result.getProjects());
+        assertNotNull(result.getAboutMe());
+        assertNotNull(result.getCertificatesOfCourses());
+        assertNotNull(result.getProgrammingLanguage());
+        assertNotNull(result.getSkillsAndTools());
+        assertNotNull(result.getLanguage());
+        assertNotNull(result.getLanguageLevel());
+        assertNotNull(result.getHobby());
+        assertNotNull(result.getFollowPosition());
 
     }
 

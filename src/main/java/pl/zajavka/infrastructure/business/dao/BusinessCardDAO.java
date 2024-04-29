@@ -18,4 +18,6 @@ public interface BusinessCardDAO {
     void save(BusinessCardEntity businessCardEntity);
 
     void deleteById(Integer id);
+
+    BusinessCard createBusinessCard(BusinessCard businessCard, User user);
 }

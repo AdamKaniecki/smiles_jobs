@@ -26,21 +26,24 @@ public class BusinessCardService {
 
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
-        Address address = businessCard.getAddress();
-        BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
-                .office(businessCard.getOffice())
-                .scopeOperations(businessCard.getScopeOperations())
-                .recruitmentEmail(businessCard.getRecruitmentEmail())
-                .phoneNumber(businessCard.getPhoneNumber())
-                .companyDescription(businessCard.getCompanyDescription())
-                .technologiesAndTools(businessCard.getTechnologiesAndTools())
-                .certificatesAndAwards(businessCard.getCertificatesAndAwards())
-                .user(userMapper.map(user))
-                .address(addressMapper.map(address))
-                .build();
+    return businessCardDAO.createBusinessCard(businessCard,user);
 
-        businessCardDAO.save(businessCardEntity);
-        return businessCardMapper.map(businessCardEntity);
+
+//        Address address = businessCard.getAddress();
+//        BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
+//                .office(businessCard.getOffice())
+//                .scopeOperations(businessCard.getScopeOperations())
+//                .recruitmentEmail(businessCard.getRecruitmentEmail())
+//                .phoneNumber(businessCard.getPhoneNumber())
+//                .companyDescription(businessCard.getCompanyDescription())
+//                .technologiesAndTools(businessCard.getTechnologiesAndTools())
+//                .certificatesAndAwards(businessCard.getCertificatesAndAwards())
+//                .user(userMapper.map(user))
+//                .address(addressMapper.map(address))
+//                .build();
+//
+//        businessCardDAO.save(businessCardEntity);
+
     }
 
 
