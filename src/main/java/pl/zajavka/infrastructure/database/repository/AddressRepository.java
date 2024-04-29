@@ -53,4 +53,15 @@ public class AddressRepository implements AddressDAO {
 
         return addressMapper.map(createEntity);
     }
+
+    @Override
+    public void updateAddress(Address address) {
+        AddressEntity existingEntity = addressMapper.map(address);
+        existingEntity.setCountry(address.getCountry());
+        existingEntity.setCity(address.getCity());
+        existingEntity.setStreetAndNumber(address.getStreetAndNumber());
+        existingEntity.setPostalCode(address.getPostalCode());
+
+        addressJpaRepository.save(existingEntity);
+    }
 }

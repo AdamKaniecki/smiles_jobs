@@ -47,8 +47,8 @@ public class NotificationRepositoryTest extends AbstractIT {
 
     @Mock
     private UserRepository userRepository;
-    //    @Mock
-//    private  CvRepository cvRepository;
+    @Mock
+    private  CvRepository cvRepository;
 //    @Mock
 //    private  JobOfferRepository jobOfferRepository;
     @Mock
@@ -459,10 +459,150 @@ public class NotificationRepositoryTest extends AbstractIT {
         } catch (IllegalStateException e) {
             assertEquals("Cannot change meeting date when the status is not Meeting Scheduling.", e.getMessage());
 
-//
+        }
+    }
+
+
+    @Test
+    public void acceptMeetingDate_ShouldSaveNotification() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+
+        // Ustawienie odpowiedniego statusu dla mockowanej notyfikacji
+        notification.setStatus(Status.MEETING_SCHEDULING);
+
+        // Mapowanie notyfikacji na encję
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setStatus(Status.WAITING_FOR_INTERVIEW);
+        notificationEntity.setCandidateMessage("The meeting schedule has been accepted");
+        notificationEntity.setCompanyMessage("The meeting schedule has been accepted");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
+        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+
+        // When
+        notificationRepository.acceptMeetingDateTime(notification, loggedInUser, recipient);
+
+        // Then
+        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+        verify(notificationMapper).map(notification);
+
+        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+        verify(notificationJpaRepository).save(notificationEntity);
+
+        // Sprawdzenie pól encji notificationEntity
+        assertEquals(Status.WAITING_FOR_INTERVIEW, notificationEntity.getStatus());;
+        assertEquals("The meeting schedule has been accepted", notificationEntity.getCandidateMessage());
+        assertEquals("The meeting schedule has been accepted", notificationEntity.getCompanyMessage());
+        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
+        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
+    }
+
+
+    @Test
+    public void acceptMeetingDateTime_ShouldThrowException_WhenStatusIsNotMeetingScheduling() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        notification.setStatus(Status.WAITING_FOR_INTERVIEW); // Ustawienie statusu na coś innego niż MEETING_SCHEDULING lub MEETING_SCHEDULING
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+
+        // Mockowanie zachowania metody map z NotificationMapper
+        when(notificationMapper.map(notification)).thenReturn(NotificationFixtures.sampleNotificationEntity1fully());
+
+        // When
+        try {
+            notificationRepository.acceptMeetingDateTime(notification, loggedInUser, recipient);
+            fail("Expected IllegalStateException to be thrown");
+        } catch (IllegalStateException e) {
+            assertEquals("Cannot accept meeting date when the status is not Meeting Scheduling.", e.getMessage());
+
         }
 
+
     }
+
+    @Test
+    public void declineCandidate_ShouldSaveNotification() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setStatus(Status.REJECT);
+        notificationEntity.setCandidateMessage("Unfortunately, you have not been hired");
+        notificationEntity.setCompanyMessage("The rejection response has been sent");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
+        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+
+        // When
+        notificationRepository.declineCandidate(notification, loggedInUser, recipient);
+
+        // Then
+        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+        verify(notificationMapper).map(notification);
+
+        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+        verify(notificationJpaRepository).save(notificationEntity);
+
+        // Sprawdzenie pól encji notificationEntity
+        assertEquals(Status.REJECT, notificationEntity.getStatus());;
+        assertEquals("Unfortunately, you have not been hired", notificationEntity.getCandidateMessage());
+        assertEquals("The rejection response has been sent", notificationEntity.getCompanyMessage());
+        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
+        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
+    }
+
+
+
+    @Test
+    public void hiredCandidate_ShouldSaveNotification() {
+        // Given
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+        User loggedInUser = notification.getSender();
+        User recipient = notification.getReceiver();
+        notification.setStatus(Status.WAITING_FOR_INTERVIEW);
+
+        NotificationEntity notificationEntity = new NotificationEntity();
+        notificationEntity.setStatus(Status.HIRED);
+        notificationEntity.setCandidateMessage("Congratulations! You have been hired; your status is now changed to invisible");
+        notificationEntity.setCompanyMessage("The positive response has been sent");
+        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
+        notificationEntity.setReceiverUser(userMapper.map(recipient));
+        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
+        CV cv = notification.getCv();
+
+        JobOffer jobOffer = mock(JobOffer.class); // Mockowanie JobOffer
+
+        when(notification.getJobOffer()).thenReturn(jobOffer); // Zwrócenie mockowanego obiektu JobOffer z notyfikacji
+
+        // Ustawienie zachowania dla metod wywoływanych na obiekcie JobOffer
+
+
+
+        // When
+        notificationRepository.hiredCandidate(notification, loggedInUser, recipient);
+
+        // Then
+        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
+        verify(notificationMapper).map(notification);
+
+        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+        verify(notificationJpaRepository).save(notificationEntity);
+
+        // Sprawdzenie pól encji notificationEntity
+        assertEquals(Status.REJECT, notificationEntity.getStatus());;
+        assertEquals("Congratulations! You have been hired; your status is now changed to invisible", notificationEntity.getCandidateMessage());
+        assertEquals("The positive response has been sent", notificationEntity.getCompanyMessage());
+        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
+        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
+        verify(cvRepository).saveCV(cv);
+    }
+
 }
 
 

@@ -14,4 +14,6 @@ public interface AddressDAO {
 
     void deleteById(Integer id);
     Address createAddress(Address address);
+
+    void updateAddress(Address address);
 }

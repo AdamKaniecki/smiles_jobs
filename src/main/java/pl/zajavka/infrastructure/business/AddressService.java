@@ -35,16 +35,10 @@ public class AddressService {
 
         if (!addressDAO.existsById(address.getId())) {
             throw new EntityNotFoundException("Address with id " + address.getId() + " not found");
+        } else {
+            addressDAO.updateAddress(address);
+
         }
-
-        AddressEntity existingEntity = addressMapper.map(address);
-
-        existingEntity.setCountry(address.getCountry());
-        existingEntity.setCity(address.getCity());
-        existingEntity.setStreetAndNumber(address.getStreetAndNumber());
-        existingEntity.setPostalCode(address.getPostalCode());
-
-        addressDAO.save(existingEntity);
     }
 
 
@@ -58,11 +52,6 @@ public class AddressService {
             throw new IllegalArgumentException("Address cannot be null");
         }
     }
-
-
-
-
-
 
     public String determineRoleSpecificString(User loggedInUser) {
 

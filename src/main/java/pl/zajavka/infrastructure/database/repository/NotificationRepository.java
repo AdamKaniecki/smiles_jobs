@@ -195,8 +195,8 @@ private final JobOfferRepository jobOfferRepository;
         if (currentStatus != Status.REJECT) {
             NotificationEntity notificationEntity = notificationMapper.map(notification);
             notificationEntity.setStatus(HIRED);
-            notificationEntity.setCompanyMessage("wysłano odpowiedź pozytywną ");
-            notificationEntity.setCandidateMessage("Gratulacje! zostałeś zatrudniony, twoje status zostaje zmieniony na bierny");
+            notificationEntity.setCompanyMessage("The positive response has been sent");
+            notificationEntity.setCandidateMessage("Congratulations! You have been hired; your status is now changed to invisible");
             notificationEntity.setSenderUser(userMapper.map(loggedInUser));
             notificationEntity.setReceiverUser(userMapper.map(recipient));
             notificationJpaRepository.save(notificationEntity);
