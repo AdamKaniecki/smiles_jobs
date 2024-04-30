@@ -30,9 +30,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class CvService {
 
-    private CvMapper cvMapper;
-    private CvJpaRepository cvRepository;
-    private UserMapper userMapper;
     private final NotificationDAO notificationDAO;
     private final CvDAO cvDAO;
     private final CvMapperDTO cvMapperDTO;
@@ -84,15 +81,5 @@ public class CvService {
       return cvDAO.findByUserOpt(user);
     }
 
-//    public CV findByUser(User user){
-//      return   cvDAO.findByUser(user);
-////        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
-////                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
-////        return cvMapper.map(cvEntity);
-//    }
-
-    public void saveCV(CV cv){
-        cvDAO.saveCV(cv);
-    }
 
 }

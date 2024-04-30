@@ -45,17 +45,6 @@ public class CvRepository implements CvDAO {
         return cvMapper.map(cvEntity);
     }
 
-//    @Override
-//    public CV findByUser(User user) {
-////        Optional<CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
-////        CvEntity cvEntity = cvEntityOptional.orElseThrow(() -> new EntityNotFoundException("CV not found for the user"));
-////        return cvMapper.map(cvEntity);
-//        CvEntity cvEntity = cvJpaRepository.findByUser(userMapper.map(user))
-//                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
-//        return cvMapper.map(cvEntity);
-//    }
-
-
     @Override
     public List<CV> searchCvByKeywordAndCategory(String keyword, String category) {
         List<CvEntity> searchResultEntities = cvJpaRepository.findCvByKeywordAndCategory(keyword, category);
