@@ -56,10 +56,21 @@ public class BusinessCardFixtures {
     public static BusinessCard someBusinessCard() {
 
         Address address = Address.builder()
+                .id(1)
                 .city("Sample City")
                 .country("Sample Country")
                 .streetAndNumber("Sample Street 125")
                 .postalCode("09-500")
+                .build();
+
+        RoleEntity companyRole = RoleEntity.builder().role("ROLE_COMPANY").build();
+        User user = User.builder()
+                .id(1)
+                .userName("john34")
+                .password("john34")
+                .email("john34@example.com")
+                .roles(Set.of(companyRole))
+                .active(true)
                 .build();
 
         BusinessCard businessCard = BusinessCard.builder()
@@ -72,6 +83,7 @@ public class BusinessCardFixtures {
                 .technologiesAndTools("Technologies and tools")
                 .certificatesAndAwards("Certificates and awards")
                 .address(address)
+                .user(user)
                 .build();
 
 

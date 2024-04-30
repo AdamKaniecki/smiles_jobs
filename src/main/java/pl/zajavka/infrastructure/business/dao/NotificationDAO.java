@@ -21,7 +21,6 @@ public interface NotificationDAO {
 
     List<Notification> findByCvId(Integer id);
 
-
     List<Notification> findLatestByUser(User loggedInUser);
 
     void save(NotificationEntity notificationEntity);
@@ -45,4 +44,6 @@ public interface NotificationDAO {
     void declineCandidate(Notification notification, User loggedInUser, User recipient);
 
     void hiredCandidate(Notification notification, User loggedInUser, User recipient);
+
+    List<Notification> findByCvIdToDelete(Integer id);
 }

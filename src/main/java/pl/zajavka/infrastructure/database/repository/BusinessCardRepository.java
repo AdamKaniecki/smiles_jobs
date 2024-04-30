@@ -73,4 +73,20 @@ public class BusinessCardRepository implements BusinessCardDAO {
         businessCardJpaRepository.save(businessCardEntity);
         return businessCardMapper.map(businessCardEntity);
     }
+
+    @Override
+    public BusinessCard updateBusinessCard(BusinessCard updateBusinessCard) {
+        BusinessCardEntity businessCardEntity = businessCardMapper.map(updateBusinessCard);
+
+        businessCardEntity.setOffice(updateBusinessCard.getOffice());
+        businessCardEntity.setScopeOperations(updateBusinessCard.getScopeOperations());
+        businessCardEntity.setRecruitmentEmail(updateBusinessCard.getRecruitmentEmail());
+        businessCardEntity.setPhoneNumber(updateBusinessCard.getPhoneNumber());
+        businessCardEntity.setCompanyDescription(updateBusinessCard.getCompanyDescription());
+        businessCardEntity.setTechnologiesAndTools(updateBusinessCard.getTechnologiesAndTools());
+        businessCardEntity.setCertificatesAndAwards(updateBusinessCard.getCertificatesAndAwards());
+        businessCardJpaRepository.save(businessCardEntity);
+
+        return businessCardMapper.map(businessCardEntity);
+    }
 }

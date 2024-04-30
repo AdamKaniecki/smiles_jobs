@@ -218,4 +218,19 @@ private final JobOfferRepository jobOfferRepository;
             throw new IllegalStateException("Cannot hire candidate when the status is REJECT.");
         }
     }
-}
+
+    @Override
+    public List<Notification> findByCvIdToDelete(Integer id) {
+        List<NotificationEntity> notifications = notificationJpaRepository.findByCvId(id);
+        for (NotificationEntity notification : notifications) {
+            notification.setCv(null);
+            notification.setCompanyMessage("The Candidate has been deleted his CV");
+            notification.setCandidateMessage("Your CV has been deleted");
+            notification.setStatus(Status.REJECT);
+
+        }
+        return notificationMapper.mapToList(notifications);
+    }
+
+    }
+

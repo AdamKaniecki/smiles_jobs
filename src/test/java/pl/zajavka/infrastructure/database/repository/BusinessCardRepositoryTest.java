@@ -6,15 +6,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
+import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.repository.jpa.BusinessCardJpaRepository;
 import pl.zajavka.infrastructure.database.repository.mapper.AddressMapper;
 import pl.zajavka.infrastructure.database.repository.mapper.BusinessCardMapper;
 import pl.zajavka.infrastructure.domain.BusinessCard;
+import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.BusinessCardFixtures;
+import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import java.util.Optional;
@@ -202,6 +205,7 @@ public class BusinessCardRepositoryTest extends AbstractIT {
         assertNotNull(result.getTechnologiesAndTools());
 
     }
+
 
 
 

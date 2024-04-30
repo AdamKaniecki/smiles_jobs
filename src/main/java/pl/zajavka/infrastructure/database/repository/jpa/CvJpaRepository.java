@@ -34,5 +34,6 @@ public interface CvJpaRepository extends JpaRepository<CvEntity, Integer> {
 
     List<CvEntity> findAll();
 
-
+    @Override
+    void deleteById(Integer id);
 }

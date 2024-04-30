@@ -215,18 +215,13 @@ public String redirectToShowMyCV(
     }
 
     @DeleteMapping("/deleteCV")
-    public String deleteCV(@ModelAttribute("cvDTO") CvDTO deleteCvDTO, Model model) {
-        CV cvToDelete = cvMapperDTO.map(deleteCvDTO);
-        cvService.findById(cvToDelete.getId());
-        if (cvToDelete != null) {
-            Address address = cvToDelete.getAddress();
-            cvService.deleteCVAndSetNullInNotifications(cvToDelete, address);
-            model.addAttribute("cvDTO", cvMapperDTO.map(cvToDelete));
+    public String deleteCV(@ModelAttribute("cvDTO") CvDTO deleteCvDTO) {
+            CV cvToDelete = cvMapperDTO.map(deleteCvDTO);
+            cvService.deleteCVAndSetNullInNotifications(cvToDelete.getId());
             return "cv_deleted_successfully";
         }
 
-        return "home";
-    }
+
 
     @GetMapping("/cv/{cvId}")
     public String showCvDetails(@PathVariable Integer cvId, Model model) {

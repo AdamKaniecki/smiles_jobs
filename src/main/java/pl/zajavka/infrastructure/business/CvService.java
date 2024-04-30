@@ -56,22 +56,10 @@ public class CvService {
 
 
     @Transactional
-    public void deleteCVAndSetNullInNotifications(CV cv, Address address) {
-        if (cv != null) {
-            CvEntity cvEntity = cvMapper.map(cv);
-            List<Notification> notifications = notificationDAO.findByCvId(cvEntity.getId());
-
-            for (Notification notification : notifications) {
-                notification.setCv(null);
-                notification.setCompanyMessage("The user deleted their CV");
-                notification.setCandidateMessage("Your CV has been deleted");
-                notification.setStatus(Status.REJECT);
-            }
-
-            cvDAO.deleteById(cvEntity.getId());
-        } else {
-            throw new IllegalArgumentException("CV cannot be null");
-        }
+    public void deleteCVAndSetNullInNotifications(Integer cvId) {
+            CV cv = cvDAO.findById(cvId);
+            notificationDAO.findByCvIdToDelete(cv.getId());
+            cvDAO.deleteById(cvId);
     }
 
     public boolean existByUser(User loggedInUser) {

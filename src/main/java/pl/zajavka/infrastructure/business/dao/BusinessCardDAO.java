@@ -20,4 +20,6 @@ public interface BusinessCardDAO {
     void deleteById(Integer id);
 
     BusinessCard createBusinessCard(BusinessCard businessCard, User user);
+
+    BusinessCard updateBusinessCard(BusinessCard updateBusinessCard);
 }

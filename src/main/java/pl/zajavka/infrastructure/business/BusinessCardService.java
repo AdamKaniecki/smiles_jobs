@@ -18,31 +18,13 @@ import pl.zajavka.infrastructure.security.mapper.UserMapper;
 @Service
 @AllArgsConstructor
 public class BusinessCardService {
-    private BusinessCardMapper businessCardMapper;
-    private UserMapper userMapper;
-    private AddressMapper addressMapper;
+    private final BusinessCardMapper businessCardMapper;
     private final BusinessCardDAO businessCardDAO;
 
 
     @Transactional
     public BusinessCard createBusinessCard(BusinessCard businessCard, User user) {
-    return businessCardDAO.createBusinessCard(businessCard,user);
-
-
-//        Address address = businessCard.getAddress();
-//        BusinessCardEntity businessCardEntity = BusinessCardEntity.builder()
-//                .office(businessCard.getOffice())
-//                .scopeOperations(businessCard.getScopeOperations())
-//                .recruitmentEmail(businessCard.getRecruitmentEmail())
-//                .phoneNumber(businessCard.getPhoneNumber())
-//                .companyDescription(businessCard.getCompanyDescription())
-//                .technologiesAndTools(businessCard.getTechnologiesAndTools())
-//                .certificatesAndAwards(businessCard.getCertificatesAndAwards())
-//                .user(userMapper.map(user))
-//                .address(addressMapper.map(address))
-//                .build();
-//
-//        businessCardDAO.save(businessCardEntity);
+        return businessCardDAO.createBusinessCard(businessCard, user);
 
     }
 
@@ -51,20 +33,8 @@ public class BusinessCardService {
     public BusinessCard updateBusinessCard(BusinessCard updateBusinessCard) {
         if (updateBusinessCard.getId() != null) {
             businessCardDAO.findById(updateBusinessCard.getId());
+            return businessCardDAO.updateBusinessCard(updateBusinessCard);
 
-            BusinessCardEntity businessCardEntity = businessCardMapper.map(updateBusinessCard);
-
-            businessCardEntity.setOffice(updateBusinessCard.getOffice());
-            businessCardEntity.setScopeOperations(updateBusinessCard.getScopeOperations());
-            businessCardEntity.setRecruitmentEmail(updateBusinessCard.getRecruitmentEmail());
-            businessCardEntity.setPhoneNumber(updateBusinessCard.getPhoneNumber());
-            businessCardEntity.setCompanyDescription(updateBusinessCard.getCompanyDescription());
-            businessCardEntity.setTechnologiesAndTools(updateBusinessCard.getTechnologiesAndTools());
-            businessCardEntity.setCertificatesAndAwards(updateBusinessCard.getCertificatesAndAwards());
-
-            businessCardDAO.save(businessCardEntity);
-
-            return businessCardMapper.map(businessCardEntity);
         } else {
             throw new EntityNotFoundException("Business Card ID cannot be null");
         }
