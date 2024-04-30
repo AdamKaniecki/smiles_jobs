@@ -38,7 +38,7 @@ public class CommunicationController {
             String username = authentication.getName();
             User loggedInUser = userService.findByUserName(username);
             JobOffer jobOffer = jobOfferService.findById(jobOfferId);
-            CV cv = cvService.findByUser2(loggedInUser);
+            CV cv = cvService.findByUser(loggedInUser);
             User adresat = jobOffer.getUser();
 
             // Sprawdź, czy CV użytkownika istnieje

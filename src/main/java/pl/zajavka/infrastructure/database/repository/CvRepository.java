@@ -45,12 +45,15 @@ public class CvRepository implements CvDAO {
         return cvMapper.map(cvEntity);
     }
 
-    @Override
-    public CV findByUser(User user) {
-        Optional<CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
-        CvEntity cvEntity = cvEntityOptional.orElseThrow(() -> new EntityNotFoundException("CV not found for the user"));
-        return cvMapper.map(cvEntity);
-    }
+//    @Override
+//    public CV findByUser(User user) {
+////        Optional<CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
+////        CvEntity cvEntity = cvEntityOptional.orElseThrow(() -> new EntityNotFoundException("CV not found for the user"));
+////        return cvMapper.map(cvEntity);
+//        CvEntity cvEntity = cvJpaRepository.findByUser(userMapper.map(user))
+//                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
+//        return cvMapper.map(cvEntity);
+//    }
 
 
     @Override
@@ -136,5 +139,16 @@ public class CvRepository implements CvDAO {
 
     }
 
+    @Override
+    public Optional<CV> findByUserOpt(User user) {
+        Optional<CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
+        return cvEntityOptional.map(cvMapper::map);
+    }
 
+    @Override
+    public CV findByUser(User user) {
+       Optional <CvEntity> cvEntityOptional = cvJpaRepository.findByUser(userMapper.map(user));
+        return cvEntityOptional.map(cvMapper::map).orElse(null);
+
+    }
 }

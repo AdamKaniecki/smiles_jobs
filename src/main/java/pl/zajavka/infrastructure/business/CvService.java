@@ -80,16 +80,16 @@ public class CvService {
                 .toList();
     }
 
-    public Optional<CV> findByUser3(User user) {
-        Optional<CvEntity> cvEntityOptional = cvRepository.findByUser(userMapper.map(user));
-        return cvEntityOptional.map(cvMapper::map);
+    public Optional<CV> findByUserOpt(User user) {
+      return cvDAO.findByUserOpt(user);
     }
 
-    public CV findByUser2(User user){
-        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
-                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
-        return cvMapper.map(cvEntity);
-    }
+//    public CV findByUser(User user){
+//      return   cvDAO.findByUser(user);
+////        CvEntity cvEntity = cvRepository.findByUser(userMapper.map(user))
+////                .orElseThrow(()-> new EntityNotFoundException("Not found CV for user: " + user.getUserName()));
+////        return cvMapper.map(cvEntity);
+//    }
 
     public void saveCV(CV cv){
         cvDAO.saveCV(cv);

@@ -99,14 +99,13 @@ public String redirectToShowMyCV(
     String username = authentication.getName();
     User loggedInUser = userService.findByUserName(username);
     if (loggedInUser != null) {
-        Optional<CV> userCV = cvService.findByUser3(loggedInUser);
+        Optional<CV> userCV = cvService.findByUserOpt(loggedInUser);
         if (userCV.isPresent()) {
             CV cv = userCV.get();
             CvDTO cvDTO = cvMapperDTO.map(cv);
             model.addAttribute("cvDTO", cvMapperDTO.map(cvDTO));
 
             return "show_my_cv";
-
         }
     }
 

@@ -4,6 +4,7 @@ import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CvDAO {
     List<CV> findAll();
@@ -25,5 +26,7 @@ public interface CvDAO {
    CV createCV(CV cv, User user);
 
 
+    Optional<CV> findByUserOpt(User user);
 
+//    CV findByUser2(User user);
 }
