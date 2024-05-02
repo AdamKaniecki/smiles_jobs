@@ -25,7 +25,7 @@ public class JobOfferRepository implements JobOfferDAO {
     private final JobOfferMapper jobOfferMapper;
     private final UserMapper userMapper;
 
-    public Optional<JobOffer> findById2(Integer id) {
+    public Optional<JobOffer> findByIdOpt(Integer id) {
         return jobOfferJpaRepository.findById(id).map(jobOfferMapper::map);
     }
 

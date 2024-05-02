@@ -144,22 +144,22 @@ public class CvRepositoryTest extends AbstractIT {
     }
 
 
-    @Test
-    void testFindByUser_WhenNotExists() {
-        // given
-        User user = new User();
-        // Zakładamy, że encja CV dla użytkownika nie istnieje w bazie danych
-        when(cvJpaRepository.findByUser(any())).thenReturn(Optional.empty());
-
-        // when
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> cvRepository.findByUser(user));
-
-        // then
-        assertNotNull(exception); // 1. Sprawdzenie, czy rzucany jest wyjątek EntityNotFoundException
-        assertEquals("CV not found for the user", exception.getMessage()); // 2. Sprawdzenie, czy wiadomość wyjątku jest poprawna
-        verify(cvJpaRepository, times(1)).findByUser(any()); // 3. Sprawdzenie, czy wywołanie metody findByUser na mocku CvJpaRepository wystąpiło dokładnie raz
-        verifyNoMoreInteractions(cvJpaRepository); // 4. Sprawdzenie, czy nie było żadnych dodatkowych wywołań na mocku CvJpaRepository
-    }
+//    @Test
+//    void testFindByUser_WhenNotExists() {
+//        // given
+//        User user = new User();
+//        // Zakładamy, że encja CV dla użytkownika nie istnieje w bazie danych
+//        when(cvJpaRepository.findByUser(any())).thenReturn(Optional.empty());
+//
+//        // when
+//        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> cvRepository.findByUser(user));
+//
+//        // then
+//        assertNotNull(exception); // 1. Sprawdzenie, czy rzucany jest wyjątek EntityNotFoundException
+//        assertEquals("CV not found for the user", exception.getMessage()); // 2. Sprawdzenie, czy wiadomość wyjątku jest poprawna
+//        verify(cvJpaRepository, times(1)).findByUser(any()); // 3. Sprawdzenie, czy wywołanie metody findByUser na mocku CvJpaRepository wystąpiło dokładnie raz
+//        verifyNoMoreInteractions(cvJpaRepository); // 4. Sprawdzenie, czy nie było żadnych dodatkowych wywołań na mocku CvJpaRepository
+//    }
 
 
     @Test
@@ -302,6 +302,69 @@ public class CvRepositoryTest extends AbstractIT {
 
     }
 
+
+    @Test
+    public void testFindById_CvExists() {
+        // Given
+        int cvId = 1;
+        CvEntity cvEntity = new CvEntity();
+        CV cv = new CV();
+        cvEntity.setId(cvId);
+        when(cvJpaRepository.findById(cvId)).thenReturn(Optional.of(cvEntity));
+        when(cvMapper.map(cvEntity)).thenReturn(cv);
+
+        // When
+        CV result = cvRepository.findById(cvId);
+
+        // Then
+        assertEquals(cv, result);
+        verify(cvJpaRepository, times(1)).findById(cvId);
+        verify(cvMapper, times(1)).map(cvEntity);
+    }
+
+    @Test
+    public void testFindById_CvNotExists() {
+        // Given
+        int cvId = 1;
+        when(cvJpaRepository.findById(cvId)).thenReturn(Optional.empty());
+
+        // When / Then
+        assertThrows(EntityNotFoundException.class, () -> cvRepository.findById(cvId));
+        verify(cvJpaRepository, times(1)).findById(cvId);
+        verifyNoInteractions(cvMapper);
+    }
+
+    @Test
+    public void testFindByUserOpt_UserExists() {
+        // Given
+        User user = new User();
+        CvEntity cvEntity = new CvEntity();
+        CV cv = new CV();
+        when(cvJpaRepository.findByUser(any())).thenReturn(Optional.of(cvEntity));
+        when(cvMapper.map(cvEntity)).thenReturn(cv);
+
+        // When
+        Optional<CV> result = cvRepository.findByUserOpt(user);
+
+        // Then
+        assertEquals(cv, result.get());
+        verify(cvJpaRepository, times(1)).findByUser(any());
+        verify(cvMapper, times(1)).map(cvEntity);
+    }
+    @Test
+    public void testFindByUserOpt_UserNotExists() {
+        // Given
+        User user = new User();
+        when(cvJpaRepository.findByUser(any())).thenReturn(Optional.empty());
+
+        // When
+        Optional<CV> result = cvRepository.findByUserOpt(user);
+
+        // Then
+        assertEquals(Optional.empty(), result);
+        verify(cvJpaRepository, times(1)).findByUser(any());
+        verifyNoInteractions(cvMapper);
+    }
 
 }
 

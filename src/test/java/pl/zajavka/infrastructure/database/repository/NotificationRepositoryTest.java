@@ -5,6 +5,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
@@ -27,6 +30,8 @@ import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,9 +61,12 @@ public class NotificationRepositoryTest extends AbstractIT {
     @Mock
     private JobOfferMapper jobOfferMapper;
 
+    @Mock
+    private JobOfferRepository jobOfferRepository;
 
     @InjectMocks
     private NotificationRepository notificationRepository;
+
 
     @Test
     void findById_ShouldReturnNotification_WhenNotificationExists() {
@@ -559,48 +567,111 @@ public class NotificationRepositoryTest extends AbstractIT {
 
 
 
+    @Test
+    public void testFindAll() {
+        // Given
+        Pageable pageable = Pageable.unpaged();
+        List<NotificationEntity> notificationEntities = Collections.singletonList(new NotificationEntity());
+        Page<NotificationEntity> notificationEntityPage = new PageImpl<>(notificationEntities);
+        List<Notification> notifications = Collections.singletonList(NotificationFixtures.sampleNotification1());
+        Page<Notification> expectedPage = new PageImpl<>(notifications);
+        when(notificationJpaRepository.findAll(pageable)).thenReturn(notificationEntityPage);
+
+
+        // When
+        Page<Notification> result = notificationRepository.findAll(pageable);
+
+        // Then
+        assertEquals(expectedPage.getContent().size(), result.getContent().size());
+        assertEquals(expectedPage.getTotalElements(), result.getTotalElements());
+        assertEquals(expectedPage.getTotalPages(), result.getTotalPages());
+        verify(notificationJpaRepository, times(1)).findAll(pageable);
+
+
+    }
+    @Test
+    public void findByCvIdToDeleteTest() {
+        // Given
+        Integer cvId = 1;
+        List<NotificationEntity> notificationEntities = NotificationFixtures.sampleNotificationEntityList();
+        List<Notification> expectedNotifications = NotificationFixtures.sampleNotificationList();
+
+        // Mockowanie zwracanych wartości przez metodę notificationJpaRepository.findByCvId
+        when(notificationJpaRepository.findByCvId(cvId)).thenReturn(notificationEntities);
+
+        // Mockowanie zwracanych wartości przez metodę notificationMapper.mapToList
+        when(notificationMapper.mapToList(notificationEntities)).thenReturn(expectedNotifications);
+
+        // When
+        List<Notification> result = notificationRepository.findByCvIdToDelete(cvId);
+
+        // Then
+        // Sprawdzenie czy wynik zgadza się z oczekiwaniami
+        assertEquals(expectedNotifications.size(), result.size());
+        assertEquals(expectedNotifications, result);
+
+        // Sprawdzenie czy metoda notificationJpaRepository.findByCvId została wywołana z odpowiednim argumentem
+        verify(notificationJpaRepository).findByCvId(cvId);
+        // Sprawdzenie czy metoda notificationMapper.mapToList została wywołana z odpowiednim argumentem
+        verify(notificationMapper).mapToList(notificationEntities);
+
+        // Sprawdzenie czy wiadomości zostały zmienione
+        for (NotificationEntity notificationEntity : notificationEntities) {
+            assertEquals("The Candidate has been deleted his CV", notificationEntity.getCompanyMessage());
+            assertEquals("Your CV has been deleted", notificationEntity.getCandidateMessage());
+            assertEquals(Status.REJECT, notificationEntity.getStatus());
+        }
+
+        // Sprawdzenie czy cv jest nullem dla każdej powstałej notyfikacji
+        for (Notification notification : result) {
+            assertNull(notification.getCv());
+        }
+    }
+
 //    @Test
-//    public void hiredCandidate_ShouldSaveNotification() {
+//    public void testHiredCandidate() {
 //        // Given
-//        Notification notification = NotificationFixtures.sampleNotification1fully();
-//        User loggedInUser = notification.getSender();
-//        User recipient = notification.getReceiver();
-//        notification.setStatus(Status.WAITING_FOR_INTERVIEW);
+//        Notification notification = new Notification();
+//        notification.setStatus(Status.PENDING); // Assuming the initial status is PENDING
+//        User loggedInUser = new User();
+//        User recipient = new User();
+//        CV cv = new CV();
+//        JobOffer jobOffer = new JobOffer();
 //
-//        NotificationEntity notificationEntity = new NotificationEntity();
-//        notificationEntity.setStatus(Status.HIRED);
-//        notificationEntity.setCandidateMessage("Congratulations! You have been hired; your status is now changed to invisible");
-//        notificationEntity.setCompanyMessage("The positive response has been sent");
-//        notificationEntity.setSenderUser(userMapper.map(loggedInUser));
-//        notificationEntity.setReceiverUser(userMapper.map(recipient));
+//        NotificationEntity notificationEntity = new NotificationEntity(); // Mocked notification entity
 //        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
-//        CV cv = notification.getCv();
 //
-//        JobOffer jobOffer = mock(JobOffer.class); // Mockowanie JobOffer
-//
-//        when(notification.getJobOffer()).thenReturn(jobOffer); // Zwrócenie mockowanego obiektu JobOffer z notyfikacji
-//
-//        // Ustawienie zachowania dla metod wywoływanych na obiekcie JobOffer
-//
-//
+//        // Mockowanie CV
+//        when(notification.getCv()).thenReturn(cv);
 //
 //        // When
 //        notificationRepository.hiredCandidate(notification, loggedInUser, recipient);
 //
 //        // Then
-//        // Sprawdzenie, czy metoda map z NotificationMapper została wywołana z odpowiednim argumentem
-//        verify(notificationMapper).map(notification);
-//
-//        // Sprawdzenie, czy save zostało wywołane na notificationJpaRepository z odpowiednią encją
+//        // Verify if the notification status is changed to HIRED
+//        verify(notificationEntity).setStatus(Status.HIRED);
+//        // Verify if the company message is set correctly
+//        verify(notificationEntity).setCompanyMessage("The positive response has been sent");
+//        // Verify if the candidate message is set correctly
+//        verify(notificationEntity).setCandidateMessage("Congratulations! You have been hired; your status is now changed to invisible");
+//        // Verify if save method is called on notification repository with the correct notification entity
 //        verify(notificationJpaRepository).save(notificationEntity);
 //
-//        // Sprawdzenie pól encji notificationEntity
-//        assertEquals(Status.REJECT, notificationEntity.getStatus());;
-//        assertEquals("Congratulations! You have been hired; your status is now changed to invisible", notificationEntity.getCandidateMessage());
-//        assertEquals("The positive response has been sent", notificationEntity.getCompanyMessage());
-//        assertEquals(userMapper.map(loggedInUser), notificationEntity.getSenderUser());
-//        assertEquals(userMapper.map(recipient), notificationEntity.getReceiverUser());
+//        // Verify if the CV is set to invisible and saved
+//        cv.setVisible(false);
 //        verify(cvRepository).saveCV(cv);
+//
+//        // Verify if the loggedInUser and recipient are saved
+//        verify(userRepository, times(2)).save(loggedInUser);
+//        verify(userRepository).save(recipient);
+//
+//        // Verify if the hired count is incremented for the job offer
+//        jobOffer.setHiredCount(jobOffer.getHiredCount() + 1);
+//        // Assuming isFullyStaffed() returns true when the hired count is equal to a predefined max count
+//        if (jobOffer.isFullyStaffed()) {
+//            jobOffer.setActive(false);
+//        }
+//        verify(jobOfferRepository).saveJobOffer(jobOffer);
 //    }
 
 }

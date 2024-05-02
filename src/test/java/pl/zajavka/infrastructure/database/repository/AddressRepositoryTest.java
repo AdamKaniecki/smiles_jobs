@@ -144,4 +144,29 @@ public class AddressRepositoryTest extends AbstractIT {
         verify(addressMapper).map(entity); // Sprawdź, czy metoda map została wywołana z odpowiednim argumentem
     }
 
+    @Test
+    public void testUpdateAddress_Success() {
+        // Given
+        Address address = new Address();
+        address.setId(1);
+        address.setCountry("Poland");
+        address.setCity("Warsaw");
+        address.setStreetAndNumber("Example Street 123");
+        address.setPostalCode("00-000");
+
+        AddressEntity addressEntity = new AddressEntity();
+        when(addressMapper.map(address)).thenReturn(addressEntity);
+        when(addressJpaRepository.save(addressEntity)).thenReturn(addressEntity);
+
+        // When
+        addressRepository.updateAddress(address);
+
+        // Then
+        verify(addressJpaRepository, times(1)).save(addressEntity);
+        assertEquals(address.getCountry(), addressEntity.getCountry());
+        assertEquals(address.getCity(), addressEntity.getCity());
+        assertEquals(address.getStreetAndNumber(), addressEntity.getStreetAndNumber());
+        assertEquals(address.getPostalCode(), addressEntity.getPostalCode());
+    }
+
 }

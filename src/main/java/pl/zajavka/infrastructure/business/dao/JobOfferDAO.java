@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface JobOfferDAO {
 
-    Optional<JobOffer> findById2(Integer id);
+    Optional<JobOffer> findByIdOpt(Integer id);
     JobOffer findById(Integer id);
     List<JobOffer> findListByUser(User user);
     Optional<JobOffer> findByUser(User loggedInUser);

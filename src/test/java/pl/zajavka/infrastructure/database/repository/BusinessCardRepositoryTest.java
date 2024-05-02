@@ -206,6 +206,38 @@ public class BusinessCardRepositoryTest extends AbstractIT {
 
     }
 
+    @Test
+    public void testUpdateBusinessCard_Success() {
+        // Given
+        BusinessCard updateBusinessCard = new BusinessCard(); // Stwórz obiekt BusinessCard do testów
+        updateBusinessCard.setId(1);
+        updateBusinessCard.setOffice("New Office");
+        updateBusinessCard.setScopeOperations("New Scope Operations");
+        updateBusinessCard.setRecruitmentEmail("new@example.com");
+        updateBusinessCard.setPhoneNumber("123456789");
+        updateBusinessCard.setCompanyDescription("New Company Description");
+        updateBusinessCard.setTechnologiesAndTools("New Technologies and Tools");
+        updateBusinessCard.setCertificatesAndAwards("New Certificates and Awards");
+
+        BusinessCardEntity businessCardEntity = new BusinessCardEntity(); // Mockuj Entity
+        when(businessCardMapper.map(updateBusinessCard)).thenReturn(businessCardEntity);
+        when(businessCardJpaRepository.save(businessCardEntity)).thenReturn(businessCardEntity);
+        when(businessCardMapper.map(businessCardEntity)).thenReturn(updateBusinessCard);
+
+        // When
+        BusinessCard updatedCard = businessCardRepository.updateBusinessCard(updateBusinessCard);
+
+        // Then
+        assertEquals(updateBusinessCard.getId(), updatedCard.getId());
+        assertEquals(updateBusinessCard.getOffice(), updatedCard.getOffice());
+        assertEquals(updateBusinessCard.getScopeOperations(), updatedCard.getScopeOperations());
+        assertEquals(updateBusinessCard.getRecruitmentEmail(), updatedCard.getRecruitmentEmail());
+        assertEquals(updateBusinessCard.getPhoneNumber(), updatedCard.getPhoneNumber());
+        assertEquals(updateBusinessCard.getCompanyDescription(), updatedCard.getCompanyDescription());
+        assertEquals(updateBusinessCard.getTechnologiesAndTools(), updatedCard.getTechnologiesAndTools());
+        assertEquals(updateBusinessCard.getCertificatesAndAwards(), updatedCard.getCertificatesAndAwards());
+    }
+
 
 
 
