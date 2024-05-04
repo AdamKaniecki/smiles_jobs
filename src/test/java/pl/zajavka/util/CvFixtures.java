@@ -1,6 +1,7 @@
 package pl.zajavka.util;
 
 import lombok.experimental.UtilityClass;
+import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.CV;
@@ -204,6 +205,49 @@ public class CvFixtures {
                 .build();
 
         return CV.builder()
+                .name("John")
+                .surname("Doe")
+                .dateOfBirth("1990-01-01")
+                .sex("Male")
+                .maritalStatus("Single")
+                .phoneNumber("123456789")
+                .contactEmail("john@example.com")
+                .workExperience("5 years")
+                .education("Master's Degree")
+                .socialMediaProfil("linked")
+                .projects("smiles")
+                .aboutMe("coś tam")
+                .certificatesOfCourses("zajavka")
+                .programmingLanguage("Java, Python")
+                .skillsAndTools("IntelliJ IDEA, Git")
+                .language("English")
+                .languageLevel("A2")
+                .hobby("Reading, Travelling")
+                .followPosition("junior")
+                .visible(true)
+                .user(user)
+                .address(address)
+                .build();
+
+    }
+
+    public static CvDTO someCvDTO() {
+
+        Address address = Address.builder()
+                .city("Sample City")
+                .country("Sample Country")
+                .streetAndNumber("Sample Street 125")
+                .postalCode("09-500")
+                .build();
+
+        User user = User.builder()
+                .userName("sample_user")
+                .email("sample@example.com")
+                .password("password123")
+                .active(true)
+                .build();
+
+        return CvDTO.builder()
                 .name("John")
                 .surname("Doe")
                 .dateOfBirth("1990-01-01")

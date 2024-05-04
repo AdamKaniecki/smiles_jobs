@@ -631,12 +631,14 @@ public class NotificationRepositoryTest extends AbstractIT {
 //    @Test
 //    public void testHiredCandidate() {
 //        // Given
-//        Notification notification = new Notification();
-//        notification.setStatus(Status.PENDING); // Assuming the initial status is PENDING
+//        Notification notification = NotificationFixtures.sampleNotification1();
+//        notification.setStatus(Status.WAITING_FOR_INTERVIEW); // Assuming the initial status is PENDING
 //        User loggedInUser = new User();
 //        User recipient = new User();
-//        CV cv = new CV();
-//        JobOffer jobOffer = new JobOffer();
+//        // Mockowanie CV
+//        CV cv = mock(CV.class);
+//        when(notification.getCv()).thenReturn(cv);
+//        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
 //
 //        NotificationEntity notificationEntity = new NotificationEntity(); // Mocked notification entity
 //        when(notificationMapper.map(notification)).thenReturn(notificationEntity);
@@ -661,9 +663,7 @@ public class NotificationRepositoryTest extends AbstractIT {
 //        cv.setVisible(false);
 //        verify(cvRepository).saveCV(cv);
 //
-//        // Verify if the loggedInUser and recipient are saved
-//        verify(userRepository, times(2)).save(loggedInUser);
-//        verify(userRepository).save(recipient);
+//
 //
 //        // Verify if the hired count is incremented for the job offer
 //        jobOffer.setHiredCount(jobOffer.getHiredCount() + 1);
