@@ -36,15 +36,9 @@ import static pl.zajavka.infrastructure.database.entity.Status.HIRED;
 @AllArgsConstructor
 public class NotificationService {
 
-    private NotificationMapper notificationMapper;
-    private UserMapper userMapper;
-    private UserService userService;
-    private JobOfferMapper jobOfferMapper;
-    private CvMapper cvMapper;
-    private JobOfferRepository jobOfferRepository;
-    private CvService cvService;
+    private final NotificationMapper notificationMapper;
     private final NotificationDAO notificationDAO;
-    private NotificationMapperDTO notificationMapperDTO;
+    private final NotificationMapperDTO notificationMapperDTO;
 
 
 
@@ -80,10 +74,10 @@ public class NotificationService {
     }
 
 
-    public boolean isNotificationDateTimeAfterNow(Notification notification) {
-        LocalDateTime notificationDateTime = notification.getDateTime();
-        return notificationDateTime != null && LocalDateTime.now().isAfter(notificationDateTime);
-    }
+//    public boolean isNotificationDateTimeAfterNow(Notification notification) {
+//        LocalDateTime notificationDateTime = notification.getDateTime();
+//        return notificationDateTime != null && LocalDateTime.now().isAfter(notificationDateTime);
+//    }
 
     public void declineCandidate(Notification notification, User loggedInUser, User recipient) {
         notificationDAO.declineCandidate(notification, loggedInUser, recipient);
@@ -96,23 +90,23 @@ public class NotificationService {
 
     }
 
-    public void deleteNotificationsByCvId(Integer cvId) {
-        notificationDAO.deleteByCvId(cvId);
-    }
+//    public void deleteNotificationsByCvId(Integer cvId) {
+//        notificationDAO.deleteByCvId(cvId);
+//    }
 
     public boolean hasUserSentCVToJobOffer(User loggedInUser, JobOffer jobOffer) {
         return notificationDAO.existsBySenderUserAndJobOffer(loggedInUser, jobOffer);
     }
 
+//
+//    public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
+//        return notificationDAO.findAll(pageable);
+//    }
 
-    public Page<Notification> findAllNotificationsForPage(Pageable pageable) {
-        return notificationDAO.findAll(pageable);
-    }
-
-    @Transactional
-    public boolean canChangeMeetingDate(Notification notification) {
-        return notification.getStatus() != Status.WAITING_FOR_INTERVIEW;
-    }
+//    @Transactional
+//    public boolean canChangeMeetingDate(Notification notification) {
+//        return notification.getStatus() != Status.WAITING_FOR_INTERVIEW;
+//    }
 
     public List<NotificationDTO> findLatestByUser(User loggedInUser) {
         List<Notification> latestNotifications = notificationDAO.findLatestByUser(loggedInUser);

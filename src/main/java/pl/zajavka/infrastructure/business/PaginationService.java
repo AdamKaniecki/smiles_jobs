@@ -50,12 +50,4 @@ public class PaginationService {
 
 }
 
-//    public Page<JobOfferEntity> paginate(int pageNumber, int pageSize){
-//        System.out.printf("pagination. pn: %s, ps: %s ####%n", pageNumber, pageSize);
-//
-//        Sort sort = Sort.by("id").ascending();
-//
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-//        return jobOfferRepository.findAll(pageable);
-//    }
-//}
+
