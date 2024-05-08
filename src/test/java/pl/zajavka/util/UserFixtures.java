@@ -19,7 +19,7 @@ public class UserFixtures {
     public static UserEntity someUserEntity1() {
         RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_CANDIDATE").build();
         UserEntity userEntity = UserEntity.builder()
-                .id(1)
+//                .id(1)
                 .userName("adam12")
                 .roles(Set.of(candidateRole))
                 .password("adam112")
