@@ -8,7 +8,7 @@ import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserJpaRepository;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
@@ -25,7 +25,7 @@ import static pl.zajavka.util.UserFixtures.*;
 public class NotificationRepositoryDataJpaTest extends AbstractJpaIT {
 
     private NotificationJpaRepository notificationJpaRepository;
-    private UserJpaRepository userRepository;
+    private UserRepository userRepository;
 
     private CvJpaRepository cvRepository;
     private JobOfferJpaRepository jobOfferRepository;

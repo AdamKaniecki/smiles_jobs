@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserJpaRepository;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.UserFixtures;
 
@@ -24,7 +24,7 @@ public class JobOfferRepositoryDataJpaTest extends AbstractJpaIT {
     @InjectMocks
     private JobOfferJpaRepository jobOfferJpaRepository;
 
-    private UserJpaRepository userRepository;
+    private UserRepository userRepository;
 
     @Test
     public void testSaveJobOffer() {

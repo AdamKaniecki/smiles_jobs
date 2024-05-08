@@ -17,7 +17,7 @@ import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserJpaRepository;
+import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.CvFixtures;
@@ -44,7 +44,7 @@ public class NotificationRepositoryTest extends AbstractIT {
     private UserMapper userMapper;
 
     @Mock
-    private UserJpaRepository userRepository;
+    private UserRepository userRepository;
     @Mock
     private  CvRepository cvRepository;
 //    @Mock
