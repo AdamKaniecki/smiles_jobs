@@ -37,6 +37,7 @@ public class PaginationService {
         return new PageImpl<>(notifications.subList(start, end), pageable, notifications.size());
     }
 
+
     public Page<CV> findAll(Pageable pageable) {
         Page<CvEntity> cvEntities = cvRepository.findAll(pageable);
         return cvEntities.map(cvMapper::map);

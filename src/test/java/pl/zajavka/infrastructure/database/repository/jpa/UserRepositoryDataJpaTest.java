@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.infrastructure.security.UserJpaRepository;
 import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.UserFixtures;
 
@@ -21,7 +21,7 @@ public class UserRepositoryDataJpaTest extends AbstractJpaIT {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Test
     void findByUserName_ReturnsUser_WhenUserExists() {

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.AddressEntity;
 import pl.zajavka.infrastructure.database.entity.CvEntity;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.infrastructure.security.UserJpaRepository;
 import pl.zajavka.integration.AbstractJpaIT;
 import pl.zajavka.util.AddressFixtures;
 import pl.zajavka.util.CvFixtures;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CvRepositoryDataJpaTest extends AbstractJpaIT {
 
 
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
     @InjectMocks
     private CvJpaRepository cvJpaRepository;
 

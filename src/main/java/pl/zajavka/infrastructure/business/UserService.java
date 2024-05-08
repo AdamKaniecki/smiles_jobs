@@ -1,5 +1,4 @@
 package pl.zajavka.infrastructure.business;
-
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +15,11 @@ import pl.zajavka.infrastructure.security.RoleRepository;
 import pl.zajavka.infrastructure.security.UserEntity;
 import pl.zajavka.infrastructure.security.UserRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+
 
 @Service
 @AllArgsConstructor
@@ -36,7 +36,6 @@ public class  UserService {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
-
 
         Set<RoleEntity> roles = new HashSet<>();
         RoleEntity candidateRole = roleRepository.findByRole("ROLE_CANDIDATE");

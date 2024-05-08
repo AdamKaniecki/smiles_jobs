@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.zajavka.infrastructure.database.entity.BusinessCardEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.infrastructure.security.UserJpaRepository;
 import pl.zajavka.integration.AbstractJpaIT;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BusinessCardRepositoryDataJpaTest extends AbstractJpaIT {
 
     private BusinessCardJpaRepository businessCardJpaRepository;
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
 
     @Test
     void testBuilder() {

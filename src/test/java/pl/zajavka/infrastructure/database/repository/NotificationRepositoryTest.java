@@ -1,15 +1,11 @@
 package pl.zajavka.infrastructure.database.repository;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import pl.zajavka.infrastructure.database.entity.CvEntity;
-import pl.zajavka.infrastructure.database.entity.JobOfferEntity;
 import pl.zajavka.infrastructure.database.entity.NotificationEntity;
 import pl.zajavka.infrastructure.database.entity.Status;
 import pl.zajavka.infrastructure.database.repository.jpa.NotificationJpaRepository;
@@ -21,7 +17,7 @@ import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.Notification;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.infrastructure.security.UserEntity;
-import pl.zajavka.infrastructure.security.UserRepository;
+import pl.zajavka.infrastructure.security.UserJpaRepository;
 import pl.zajavka.infrastructure.security.mapper.UserMapper;
 import pl.zajavka.integration.AbstractIT;
 import pl.zajavka.util.CvFixtures;
@@ -30,7 +26,6 @@ import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +33,6 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-import static pl.zajavka.util.UserFixtures.someUserEntity1;
-import static pl.zajavka.util.UserFixtures.someUserEntity2;
 
 public class NotificationRepositoryTest extends AbstractIT {
 
@@ -51,7 +44,7 @@ public class NotificationRepositoryTest extends AbstractIT {
     private UserMapper userMapper;
 
     @Mock
-    private UserRepository userRepository;
+    private UserJpaRepository userRepository;
     @Mock
     private  CvRepository cvRepository;
 //    @Mock
