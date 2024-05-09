@@ -67,13 +67,13 @@ public class UserFixtures {
     }
 
     public static User someUser2() {
-        RoleEntity candidateRole = RoleEntity.builder().id(2).role("ROLE_COMPANY").build();
+        RoleEntity companyRole = RoleEntity.builder().id(2).role("ROLE_COMPANY").build();
         User user = User.builder()
-                .id(2)
+//                .id(2)
                 .userName("adam122222")
-                .roles(Set.of(candidateRole))
+                .roles(Set.of(companyRole))
                 .password("adam122212")
-//                .email("adam2112223@poczta.onet.pl")
+                .email("adam2112223@poczta.onet.pl")
                 .active(true)
                 .build();
         return user;
