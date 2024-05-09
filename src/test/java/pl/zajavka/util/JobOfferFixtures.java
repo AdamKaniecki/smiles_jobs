@@ -329,31 +329,30 @@ public class JobOfferFixtures {
 //
 //    }
 //
-//    public static JobOfferDTO someJobOfferDTO() {
-//
-//        RoleEntity candidateRole = RoleEntity.builder().id(1).role("ROLE_COMPANY").build();
-//        OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
-//        User user = User.builder()
-//                .id(1)
-//                .userName("adam112")
-//                .roles(Set.of(candidateRole))
-//                .password("adam1112")
-//                .email("adam21113@poczta.onet.pl")
-//                .active(true)
-//                .build();
-//
-//        JobOfferDTO jobOfferDTO = JobOfferDTO.builder()
-//                .id(1)
-//                .companyName("company1")
-//                .position("junior java developer")
-//                .responsibilities("utrzymywanie aplikacji")
-//                .requiredTechnologies("spring")
-//                .benefits("owocowe czwartki")
-//                .jobOfferDateTime(jobOfferDateTime)
-//                .user(user)
-//                .build();
-//
-//        return jobOfferDTO;
-//
-//    }
+public static JobOfferDTO someJobOffer3DTO(){
+    OffsetDateTime jobOfferDateTime = OffsetDateTime.now();
+
+
+    return JobOfferDTO.builder()
+            .id(1)
+            .companyName("januszex")
+            .position("junior java developer")
+            .responsibilities("support")
+            .requiredTechnologies("spring")
+            .experience("two years")
+            .jobLocation("remote")
+            .typeOfContract("b2b")
+            .typeOfWork("FULL-TIME JOB")
+            .salaryMin(new BigDecimal("4000")) // Przykładowe wynagrodzenie minimalne
+            .salaryMax(new BigDecimal("6000")) // Przykładowe wynagrodzenie maksymalne
+            .requiredLanguage("English") // Wymagany język
+            .requiredLanguageLevel("B2") // Poziom wymaganego języka
+            .benefits("fruits") // Korzyści oferowane przez pracodawcę
+            .jobDescription("example about us") // Opis stanowiska pracy
+            .jobOfferDateTime(jobOfferDateTime) // Przykładowa data i czas
+            .active(true) // Czy oferta pracy jest aktywna
+            .neededStaff(5) // Ilość potrzebnych pracowników
+            .hiredCount(0) // Liczba zatrudnionych pracowników
+            .build();
+}
 }

@@ -101,7 +101,7 @@ public class CandidatePortalController {
                 searchResults = jobOfferService.searchJobOffersBySalary(category, salaryMinValue);
             } catch (NumberFormatException e) {
 
-                return "error_page"; // Zwróć widok strony błędu
+                return "error"; // Zwróć widok strony błędu
             }
         } else {
             searchResults = jobOfferService.searchJobOffersByKeywordAndCategory(keyword, category);
@@ -117,6 +117,10 @@ public class CandidatePortalController {
 
         return "search_job_offers_results";
     }
+
+
+
+
 
 }
 
