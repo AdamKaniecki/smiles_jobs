@@ -55,8 +55,7 @@ public class CompanyPortalController {
         model.addAttribute("currentPage", cvDTOPage.getNumber()) ;
         model.addAttribute("totalPages", cvDTOPage.getTotalPages());
         model.addAttribute("totalItems", cvDTOPage.getTotalElements());
-//
-//
+
         List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
         model.addAttribute("notificationDTOs",notificationDTOs);
 

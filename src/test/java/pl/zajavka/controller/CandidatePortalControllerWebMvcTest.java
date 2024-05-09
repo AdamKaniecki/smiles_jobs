@@ -93,7 +93,7 @@ public class CandidatePortalControllerWebMvcTest {
     }
 
     @Test
-    public void testGetAllNotifications() throws Exception {
+    public void testGetCandidateNotifications() throws Exception {
         // given
         User user = UserFixtures.someUser1();
         List<NotificationDTO> notificationDTOs = new ArrayList<>();
