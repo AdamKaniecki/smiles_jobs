@@ -40,7 +40,6 @@ public class CandidatePortalController {
     private PaginationService paginationService;
 
 
-
     @SneakyThrows
     @GetMapping(CANDIDATE_PORTAL)
     public String getCandidatePortalPage(
@@ -51,7 +50,6 @@ public class CandidatePortalController {
     ) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-
         Page<JobOfferDTO> jobOfferDTOsPage = paginationService.findAllJobOffersForPage(pageable)
                 .map(jobOfferMapperDTO::map);
 
@@ -61,14 +59,20 @@ public class CandidatePortalController {
         model.addAttribute("totalJobOfferItems", jobOfferDTOsPage.getTotalElements());
 
         List<NotificationDTO> notificationDTOs = notificationService.findLatestByUser(loggedInUser);
-        model.addAttribute("notificationDTOs",notificationDTOs);
+        model.addAttribute("notificationDTOs", notificationDTOs);
+
 
         return "candidate_portal";
     }
 
+//
+
+//
+
+
     @GetMapping("/candidateNotifications")
     public String getAllNotifications(Authentication authentication, Model model,
-                                      @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+                                      @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
@@ -82,7 +86,6 @@ public class CandidatePortalController {
 
         return "candidate_notifications";
     }
-
 
 
     @GetMapping("/searchJobOffers")
@@ -115,7 +118,7 @@ public class CandidatePortalController {
         return "search_job_offers_results";
     }
 
-    }
+}
 
 
 
