@@ -3,7 +3,6 @@ package pl.zajavka.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -16,7 +15,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.zajavka.controller.dto.CvDTO;
-import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.CvService;
@@ -24,10 +22,8 @@ import pl.zajavka.infrastructure.business.NotificationService;
 import pl.zajavka.infrastructure.business.PaginationService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.CV;
-import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.util.CvFixtures;
-import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import java.util.ArrayList;
@@ -37,7 +33,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @Slf4j
 @ActiveProfiles("test")
