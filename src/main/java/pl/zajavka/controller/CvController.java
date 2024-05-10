@@ -107,10 +107,9 @@ public class CvController {
 
 
     @GetMapping("/showCV")
-    public String showMyCV(@RequestParam Integer id, Model model) {
+    public String showCV(@RequestParam Integer id, Model model) {
 
         CV cv = cvService.findById(id);
-
         if (cv != null) {
             CvDTO cvDTO = cvMapperDTO.map(cv);
             model.addAttribute("cvDTO", cvDTO);

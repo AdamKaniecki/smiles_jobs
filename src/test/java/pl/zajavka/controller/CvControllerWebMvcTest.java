@@ -174,4 +174,23 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cvDTO"));
     }
 
+
+    @Test
+    public void testShowCV_CVExists_ReturnsRedirect() throws Exception {
+        // Given
+        int cvId = 123;
+        CV cv = new CV();
+        when(cvService.findById(cvId)).thenReturn(cv);
+
+        CvDTO cvDTO = CvFixtures.someCvDTO();
+        when(cvMapperDTO.map(cv)).thenReturn(cvDTO);
+
+        UserDTO userDTO = new UserDTO(); // Assuming UserDTO is a DTO for User
+        when(userMapperDTO.map(cv.getUser())).thenReturn(userDTO);
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/showCV?id=" + cvId))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/showCV?id=" + cvId));
+    }
 }
