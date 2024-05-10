@@ -193,4 +193,16 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/showCV?id=" + cvId));
     }
+
+    @Test
+    public void testShowMyCV_CVNotFound_ReturnsCvNotFound() throws Exception {
+        // Given
+        int cvId = 123;
+        when(cvService.findById(cvId)).thenReturn(null);
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/showCV?id=" + cvId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
+    }
 }
