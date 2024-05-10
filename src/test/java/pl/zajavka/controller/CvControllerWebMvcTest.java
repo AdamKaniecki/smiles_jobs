@@ -158,6 +158,20 @@ public class CvControllerWebMvcTest {
     }
 
 
+    @Test
+    public void testRedirectToShowMyCV_UserHasNoCV_ReturnsCvNotFound() throws Exception {
+        // Given
+        Authentication authentication = new UsernamePasswordAuthenticationToken("adam12", "testPassword");
+        User loggedInUser = UserFixtures.someUser1();
+        when(userService.findByUserName("adam12")).thenReturn(loggedInUser);
 
+        when(cvService.findByUserOpt(loggedInUser)).thenReturn(Optional.empty());
+
+        // When, Then
+        mockMvc.perform(MockMvcRequestBuilders.get("/ShowMyCV").principal(authentication))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_not_found"))
+                .andExpect(MockMvcResultMatchers.model().attributeDoesNotExist("cvDTO"));
+    }
 
 }
