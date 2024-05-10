@@ -235,4 +235,24 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("userDTO"))
                 .andExpect(MockMvcResultMatchers.model().attribute("address", address));
     }
+
+    @Test
+    public void testUpdateMyCV_UserLoggedIn_CVNotFound_ReturnsCvNotFound() throws Exception {
+        // Given
+        String username = "adam12";
+        User loggedInUser = UserFixtures.someUser1();
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(cvService.findByUser(loggedInUser)).thenReturn(null);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/updateCvForm")
+                .principal(authentication);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
+    }
 }
