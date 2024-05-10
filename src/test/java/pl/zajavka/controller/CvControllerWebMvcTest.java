@@ -255,4 +255,34 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
     }
+
+    @Test
+    public void testUpdateCv_CvFound_ReturnsCvUpdateSuccessfully() throws Exception {
+        // Given
+        String username = "adam12";
+        User loggedInUser = UserFixtures.someUser1();
+
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        CvDTO updateCvDTO = new CvDTO(); // Assuming CvDTO contains necessary fields
+
+        CV cv = new CV();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(cvService.findByUser(loggedInUser)).thenReturn(cv);
+        when(cvMapperDTO.map(cv)).thenReturn(updateCvDTO);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/updateCVDone")
+                .principal(authentication)
+                .flashAttr("cvDTO", updateCvDTO);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_update successfully"));
+    }
+
+
 }
