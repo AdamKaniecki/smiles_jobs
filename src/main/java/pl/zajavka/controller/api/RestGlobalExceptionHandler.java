@@ -19,7 +19,7 @@ import java.util.UUID;
     // finalnie użytkownik otrzyma jedynie identyfikator błędu a my będziemy mogli odnaleźć go w swoich logach
     @Slf4j
     @RestControllerAdvice
-    @Order(Ordered.HIGHEST_PRECEDENCE) // nadajemy najwyższy priorytet naszej obsłudze błędów
+//    @Order(Ordered.HIGHEST_PRECEDENCE) // nadajemy najwyższy priorytet naszej obsłudze błędów
     public class RestGlobalExceptionHandler extends ResponseEntityExceptionHandler  //tu mówimy, że jeśli wpadnie wyjątek i framework
             // będzie go próbował obsłużyć po swojemu to ma
             // go przekierować do mnie po ja chce obsługiwać

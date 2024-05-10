@@ -54,11 +54,9 @@ public class CvController {
             model.addAttribute("userDTO", user);
             model.addAttribute("cvDTO", cvDTO);
 
-
             return "create_cv";
         } else {
-
-            return "login";
+            return "error";
         }
     }
 
@@ -78,7 +76,6 @@ public class CvController {
             if (cvService.existByUser(loggedInUser)) {
                 return "cv_already_created";
             }
-
             CV cv = cvMapperDTO.map(cvDTO);
             cvService.createCV(cv, loggedInUser);
 
@@ -86,31 +83,28 @@ public class CvController {
             model.addAttribute("userDTO", loggedInUser);
             return "cv_created_successfully";
         } else {
-            return "login";
+            return "error";
         }
     }
 
-
-@GetMapping("/ShowMyCV")
-public String redirectToShowMyCV(
-        Authentication authentication,
-        Model model
-) {
-    String username = authentication.getName();
-    User loggedInUser = userService.findByUserName(username);
-    if (loggedInUser != null) {
+    @GetMapping("/ShowMyCV")
+    public String redirectToShowMyCV(
+            Authentication authentication,
+            Model model
+    ) {
+        String username = authentication.getName();
+        User loggedInUser = userService.findByUserName(username);
         Optional<CV> userCV = cvService.findByUserOpt(loggedInUser);
         if (userCV.isPresent()) {
             CV cv = userCV.get();
-            CvDTO cvDTO = cvMapperDTO.map(cv);
-            model.addAttribute("cvDTO", cvMapperDTO.map(cvDTO));
-
+            model.addAttribute("cvDTO", cvMapperDTO.map(cv));
             return "show_my_cv";
         }
+
+        return "cv_not_found";
     }
 
-    return "cv_not_found";  // Przekieruj na stronę główną lub obsłuż inaczej
-}
+
 
     @GetMapping("/showCV")
     public String showMyCV(@RequestParam Integer id, Model model) {
@@ -215,16 +209,15 @@ public String redirectToShowMyCV(
 
     @DeleteMapping("/deleteCV")
     public String deleteCV(@ModelAttribute("cvDTO") CvDTO deleteCvDTO) {
-            CV cvToDelete = cvMapperDTO.map(deleteCvDTO);
-            cvService.deleteCVAndSetNullInNotifications(cvToDelete.getId());
-            return "cv_deleted_successfully";
-        }
-
+        CV cvToDelete = cvMapperDTO.map(deleteCvDTO);
+        cvService.deleteCVAndSetNullInNotifications(cvToDelete.getId());
+        return "cv_deleted_successfully";
+    }
 
 
     @GetMapping("/cv/{cvId}")
     public String showCvDetails(@PathVariable Integer cvId, Model model) {
-           CV cv = cvService.findById(cvId);
+        CV cv = cvService.findById(cvId);
         if (cv != null) {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
 
@@ -235,7 +228,7 @@ public String redirectToShowMyCV(
     }
 
     @GetMapping("/cvNotFound")
-    public String cvNotFound(){
+    public String cvNotFound() {
         return "cv_not_found";
     }
 
