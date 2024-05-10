@@ -205,4 +205,34 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
     }
+
+    @Test
+    public void testUpdateMyCV_UserLoggedIn_CVFound_ReturnsUpdateCvForm() throws Exception {
+        // Given
+        String username = "adam12";
+        User loggedInUser = UserFixtures.someUser1();
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        Address address = AddressFixtures.someAddress();
+        CV userCV = new CV();
+        userCV.setAddress(address);
+        CvDTO cvDTO = new CvDTO();
+        UserDTO userDTO = new UserDTO(); // Assuming UserDTO is a DTO for User
+
+        when(cvService.findByUser(loggedInUser)).thenReturn(userCV);
+        when(cvMapperDTO.map(userCV)).thenReturn(cvDTO);
+        when(userMapperDTO.map(loggedInUser)).thenReturn(userDTO);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/updateCvForm")
+                .principal(authentication);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("update_cv_form"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("cvDTO"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("userDTO"))
+                .andExpect(MockMvcResultMatchers.model().attribute("address", address));
+    }
 }
