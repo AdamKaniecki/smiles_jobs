@@ -183,8 +183,6 @@ public class CvController {
 
             return "cv_not_found";
         }
-
-
     }
 
     @PutMapping("/updateAddressDone")
@@ -193,14 +191,13 @@ public class CvController {
     ) {
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-
         Address address = addressService.findById(updateAddress.getId());
-
         address.setCountry(updateAddress.getCountry());
         address.setCity(updateAddress.getCity());
         address.setStreetAndNumber(updateAddress.getStreetAndNumber());
-        addressService.updateAddress(address);
+        address.setPostalCode(updateAddress.getPostalCode());
 
+        addressService.updateAddress(address);
         model.addAttribute("address", address);
 
         return addressService.determineRoleSpecificString(loggedInUser);

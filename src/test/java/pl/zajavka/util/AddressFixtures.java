@@ -9,6 +9,7 @@ public class AddressFixtures {
 
     public static AddressEntity someAddressEntity1() {
         AddressEntity addressEntity = AddressEntity.builder()
+//                .id(1)
                 .country("Poland")
                 .city("Warsaw")
                 .postalCode("00-001")
@@ -21,6 +22,7 @@ public class AddressFixtures {
     public static Address someAddress() {
 
         Address address = Address.builder()
+                .id(1)
                 .country("Poland")
                 .city("Warsaw")
                 .postalCode("00-001")

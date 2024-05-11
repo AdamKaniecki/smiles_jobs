@@ -303,4 +303,29 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
     }
 
+    @Test
+    public void testUpdateAddress_AddressFound_ReturnsUpdateAddressSuccessfullyForCandidate() throws Exception {
+        // Given
+        String username = "adam12";
+        User loggedInUser = UserFixtures.someUser1();
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        Address updateAddress = AddressFixtures.someAddress();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(addressService.findById(updateAddress.getId())).thenReturn(updateAddress);
+        when(addressService.determineRoleSpecificString(loggedInUser)).thenReturn("update_address_successfully_cv");
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/updateAddressDone")
+                .principal(authentication)
+                .flashAttr("address", updateAddress);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("update_address_successfully_cv"));
+    }
+
+
+
 }
