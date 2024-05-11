@@ -216,7 +216,6 @@ public class CvController {
         CV cv = cvService.findById(cvId);
         if (cv != null) {
             model.addAttribute("cvDTO", cvMapperDTO.map(cv));
-
             return "show_cv";
         } else {
             return "cv_not_found";

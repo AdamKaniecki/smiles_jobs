@@ -366,4 +366,26 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.view().name("cv_deleted_successfully"));
     }
 
+    @Test
+    public void testShowCvDetails_CVFound_ReturnsShowCvView() throws Exception {
+        // Given
+        Integer cvId = 1;
+        CV cv = CvFixtures.someCv1();
+        CvDTO cvDTO = CvFixtures.someCvDTO();
+
+        when(cvService.findById(cvId)).thenReturn(cv);
+        when(cvMapperDTO.map(cv)).thenReturn(cvDTO);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cv/{cvId}", cvId);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("cvDTO"))
+                .andExpect(MockMvcResultMatchers.view().name("show_cv"));
+    }
+
+
+
+
 }
