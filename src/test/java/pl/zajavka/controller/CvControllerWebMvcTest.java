@@ -385,7 +385,20 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.view().name("show_cv"));
     }
 
+    @Test
+    public void testShowCvDetails_CVNotFound_ReturnsCvNotFoundView() throws Exception {
+        // Given
+        Integer cvId = 1;
 
+        when(cvService.findById(cvId)).thenReturn(null);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cv/{cvId}", cvId);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
+    }
 
 
 }
