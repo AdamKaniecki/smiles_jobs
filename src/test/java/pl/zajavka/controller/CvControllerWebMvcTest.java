@@ -400,5 +400,16 @@ public class CvControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
     }
 
+    @Test
+    public void testCvNotFound_ReturnsCvNotFoundView() throws Exception {
+        // Given
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/cvNotFound");
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_not_found"));
+    }
+
 
 }
