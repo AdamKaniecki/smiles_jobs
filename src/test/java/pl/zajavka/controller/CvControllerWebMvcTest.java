@@ -35,8 +35,7 @@ import pl.zajavka.util.UserFixtures;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -347,6 +346,24 @@ public class CvControllerWebMvcTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("update_address_successfully_business_card"));
+    }
+
+    @Test
+    public void testDeleteCV_CVFound_ReturnsCVDeletedSuccessfully() throws Exception {
+        // Given
+        CvDTO deleteCvDTO = CvFixtures.someCvDTO();
+        CV cvToDelete = new CV();
+
+        when(cvMapperDTO.map(deleteCvDTO)).thenReturn(cvToDelete);
+        doNothing().when(cvService).deleteCVAndSetNullInNotifications(cvToDelete.getId());
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/deleteCV")
+                .flashAttr("cvDTO", deleteCvDTO);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("cv_deleted_successfully"));
     }
 
 }
