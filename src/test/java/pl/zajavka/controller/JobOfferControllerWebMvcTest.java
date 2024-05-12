@@ -128,7 +128,27 @@ public class JobOfferControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
     }
 
+    @Test
+    public void testShowJobOfferDetails_BusinessCardNotFound_ReturnsJobOfferDetailsViewWithoutBusinessCard() throws Exception {
+        // Given
+        Integer jobOfferId = 1;
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        JobOfferDTO jobOfferDTO = JobOfferFixtures.someJobOffer3DTO();
+        BusinessCard businessCard = null;
 
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
+        when(businessCardService.findByUser(jobOffer.getUser())).thenReturn(businessCard);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/jobOffer/{jobOfferId}", jobOfferId);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"))
+                .andExpect(MockMvcResultMatchers.model().attribute("businessCardDTO", Matchers.instanceOf(BusinessCardDTO.class)))
+                .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
+    }
 
 
 }
