@@ -2,6 +2,7 @@ package pl.zajavka.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -126,6 +127,7 @@ public class JobOfferControllerWebMvcTest {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("businessCardDTO"))
                 .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
     }
+
 
 
 
