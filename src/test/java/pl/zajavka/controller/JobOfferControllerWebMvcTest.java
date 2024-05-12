@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.zajavka.controller.dto.BusinessCardDTO;
 import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
@@ -22,8 +23,10 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.BusinessCardService;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
+import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.util.BusinessCardFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 
@@ -99,6 +102,31 @@ public class JobOfferControllerWebMvcTest {
         // Optionally, you can also verify if the jobOfferService.create method was called with the correct parameters
         verify(jobOfferService, times(1)).create(jobOffer, loggedInUser);
     }
+
+    @Test
+    public void testShowJobOfferDetails_JobOfferFound_ReturnsJobOfferDetailsView() throws Exception {
+        // Given
+        Integer jobOfferId = 1;
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        JobOfferDTO jobOfferDTO = JobOfferFixtures.someJobOffer3DTO();
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
+        when(businessCardService.findByUser(jobOffer.getUser())).thenReturn(businessCard);
+        when(businessCardMapperDTO.map(businessCard)).thenReturn(businessCardDTO);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/jobOffer/{jobOfferId}", jobOfferId);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("businessCardDTO"))
+                .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
+    }
+
 
 
 }
