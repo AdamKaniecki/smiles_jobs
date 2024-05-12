@@ -67,8 +67,6 @@ public class JobOfferController {
         jobOfferService.create(jobOffer, loggedInUser);
 
         model.addAttribute("jobOfferDTO", jobOfferDTO);
-//        model.addAttribute("userDTO", loggedInUser);
-
         return "job_offer_created_successfully";
     }
 
