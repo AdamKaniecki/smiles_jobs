@@ -207,6 +207,40 @@ public class BusinessCardControllerWebMvcTest {
                 .andExpect(model().attribute("businessCardDTO", new BusinessCardDTO()));
     }
 
+    @Test
+    public void testUpdateMyBusinessCard_UserBusinessCardFound_ReturnsUpdateBusinessCardForm() throws Exception {
+        // Given
+        String username = "john_doe";
+        User loggedInUser = UserFixtures.someUser1();
+        BusinessCard userBusinessCard = BusinessCardFixtures.someBusinessCard();
+        Address address = AddressFixtures.someAddress();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+        businessCardDTO.setAddress(address);
+        UserDTO userDTO = UserFixtures.someUserDTO1();
+
+        // Mockowanie autentykacji, serwisu użytkownika i serwisu wizytówek
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(businessCardService.findByUser(loggedInUser)).thenReturn(userBusinessCard);
+
+        // Mockowanie mapowania encji na DTO
+        when(businessCardMapperDTO.map(userBusinessCard)).thenReturn(businessCardDTO);
+        when(userMapperDTO.map(loggedInUser)).thenReturn(userDTO);
+
+        // When, Then
+        mockMvc.perform(get("/updateBusinessCardForm").principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("update_business_card_form"))
+                .andExpect(model().attributeExists("businessCardDTO"))
+                .andExpect(model().attributeExists("userDTO"))
+                .andExpect(model().attributeExists("address"))
+                .andExpect(model().attribute("businessCardDTO", businessCardDTO))
+                .andExpect(model().attribute("userDTO", userDTO))
+                .andExpect(model().attribute("address", userBusinessCard.getAddress()));
+    }
+
+
 
 }
 
