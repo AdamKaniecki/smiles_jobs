@@ -123,6 +123,33 @@ public class BusinessCardControllerWebMvcTest {
                 .andExpect(view().name("business_card_already_create"));
     }
 
+    @Test
+    public void testShowMyBusinessCard_ReturnsBusinessCardSuccessfully() throws Exception {
+        // Given
+        String username = "john_doe";
+        User loggedInUser = UserFixtures.someUser1();
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+        Address address = AddressFixtures.someAddress();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+        businessCardDTO.setAddress(address);
+
+        // Mockowanie autentykacji i serwisu użytkownika
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(businessCardService.findByUser(loggedInUser)).thenReturn(businessCard);
+
+        // Mockowanie mapowania encji na DTO
+        when(businessCardMapperDTO.map(businessCard)).thenReturn(businessCardDTO);
+
+        // When, Then
+        mockMvc.perform(get("/showMyBusinessCard").principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("show_my_businessCard"))
+                .andExpect(model().attributeExists("businessCardDTO"))
+                .andExpect(model().attribute("businessCardDTO", businessCardDTO));
+    }
+
 
 }
 
