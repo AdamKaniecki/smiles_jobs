@@ -150,6 +150,23 @@ public class BusinessCardControllerWebMvcTest {
                 .andExpect(model().attribute("businessCardDTO", businessCardDTO));
     }
 
+    @Test
+    public void testShowMyBusinessCard_ReturnsBusinessCardNotFoundView() throws Exception {
+        // Given
+        String username = "john_doe";
+        User loggedInUser = UserFixtures.someUser1();
+
+        // Mockowanie autentykacji i serwisu użytkownika
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(businessCardService.findByUser(loggedInUser)).thenReturn(null);
+
+        // When, Then
+        mockMvc.perform(get("/showMyBusinessCard").principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("businessCard_not_found"));
+    }
 
 }
 
