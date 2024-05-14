@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
@@ -232,5 +233,26 @@ public void testShowMyJobOffers_LoggedInUser_ReturnsJobOffersSuccessfully() thro
 
 
 
+    @Test
+    public void testUpdateJobOffer_ReturnsUpdateSuccessView() throws Exception {
+        // Given
+        JobOfferDTO updateJobOfferDTO = JobOfferFixtures.someJobOffer3DTO();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+
+        // Mockowanie serwisu ofert pracy
+        when(jobOfferService.findById(updateJobOfferDTO.getId())).thenReturn(jobOffer);
+
+        // Mockowanie mapowania DTO na ofertę pracy
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(updateJobOfferDTO);
+
+        // When, Then
+        mockMvc.perform(put("/updateJobOfferDone").flashAttr("jobOfferDTO", updateJobOfferDTO))
+                .andExpect(status().isOk())
+                .andExpect(view().name("job_offer_update_successfully"))
+                .andExpect(model().attributeExists("jobOfferDTO"));
+
+        // Sprawdzenie czy serwis został wywołany z odpowiednim obiektem oferty pracy
+        verify(jobOfferService, times(1)).updateJobOffer(jobOffer);
+    }
 
 }
