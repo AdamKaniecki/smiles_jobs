@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pl.zajavka.controller.dto.BusinessCardDTO;
 import pl.zajavka.controller.dto.JobOfferDTO;
+import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.controller.dto.mapper.JobOfferMapperDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
@@ -31,7 +32,12 @@ import pl.zajavka.util.BusinessCardFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -63,15 +69,15 @@ public class JobOfferControllerWebMvcTest {
         when(authentication.getName()).thenReturn(username);
         when(userService.findByUserName(username)).thenReturn(loggedInUser);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/JobOfferForm")
+        MockHttpServletRequestBuilder requestBuilder = get("/JobOfferForm")
                 .principal(authentication)
                 .flashAttr("jobOfferDTO", jobOfferDTO);
 
         // When, Then
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("create_job_offer"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("create_job_offer"))
+                .andExpect(model().attributeExists("jobOfferDTO"));
     }
 
 
@@ -96,9 +102,9 @@ public class JobOfferControllerWebMvcTest {
 
         // When, Then
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("job_offer_created_successfully"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("job_offer_created_successfully"))
+                .andExpect(model().attributeExists("jobOfferDTO"));
 
         // Optionally, you can also verify if the jobOfferService.create method was called with the correct parameters
         verify(jobOfferService, times(1)).create(jobOffer, loggedInUser);
@@ -118,14 +124,14 @@ public class JobOfferControllerWebMvcTest {
         when(businessCardService.findByUser(jobOffer.getUser())).thenReturn(businessCard);
         when(businessCardMapperDTO.map(businessCard)).thenReturn(businessCardDTO);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/jobOffer/{jobOfferId}", jobOfferId);
+        MockHttpServletRequestBuilder requestBuilder = get("/jobOffer/{jobOfferId}", jobOfferId);
 
         // When, Then
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("businessCardDTO"))
-                .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("jobOfferDTO"))
+                .andExpect(model().attributeExists("businessCardDTO"))
+                .andExpect(view().name("job_offer_details"));
     }
 
     @Test
@@ -140,15 +146,91 @@ public class JobOfferControllerWebMvcTest {
         when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
         when(businessCardService.findByUser(jobOffer.getUser())).thenReturn(businessCard);
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/jobOffer/{jobOfferId}", jobOfferId);
+        MockHttpServletRequestBuilder requestBuilder = get("/jobOffer/{jobOfferId}", jobOfferId);
 
         // When, Then
         mockMvc.perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.model().attributeExists("jobOfferDTO"))
-                .andExpect(MockMvcResultMatchers.model().attribute("businessCardDTO", Matchers.instanceOf(BusinessCardDTO.class)))
-                .andExpect(MockMvcResultMatchers.view().name("job_offer_details"));
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("jobOfferDTO"))
+                .andExpect(model().attribute("businessCardDTO", Matchers.instanceOf(BusinessCardDTO.class)))
+                .andExpect(view().name("job_offer_details"));
     }
+
+@Test
+public void testShowMyJobOffers_LoggedInUser_ReturnsJobOffersSuccessfully() throws Exception {
+    // Given
+    String username = "john_doe";
+    User loggedInUser = UserFixtures.someUser1();
+    List<JobOffer> jobOffers = List.of(JobOfferFixtures.someJobOffer3());
+    List<JobOfferDTO> jobOffersDTO = List.of(JobOfferFixtures.someJobOffer3DTO());
+
+    when(jobOfferMapperDTO.map(any(JobOffer.class))).thenAnswer(invocation -> {
+        JobOffer jobOffer = invocation.getArgument(0);
+        return jobOffersDTO.stream()
+                .filter(dto -> dto.getId().equals(jobOffer.getId())) // zakładając, że DTO i oryginalna oferta mają te same identyfikatory
+                .findFirst()
+                .orElse(null); // W rzeczywistości ta linia powinna być zaimplementowana w sposób odpowiadający logice mapowania
+    });
+
+
+    // Mockowanie autentykacji i serwisu użytkownika
+    Authentication authentication = Mockito.mock(Authentication.class);
+    when(authentication.getName()).thenReturn(username);
+    when(userService.findByUserName(username)).thenReturn(loggedInUser);
+    when(jobOfferService.findListByUser(loggedInUser)).thenReturn(jobOffers);
+
+    // When, Then
+    mockMvc.perform(get("/showMyJobOffers").principal(authentication))
+            .andExpect(status().isOk())
+            .andExpect(view().name("show_my_job_offers"))
+            .andExpect(model().attributeExists("jobOffersDTO"));
+}
+
+    @Test
+    public void testShowMyJobOffers_NotLoggedInUser_RedirectsToLogin() throws Exception {
+        // Given
+        String username = "anonymousUser";
+        User loggedInUser = null;
+
+        // Mockowanie autentykacji i serwisu użytkownika
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+
+        // When, Then
+        mockMvc.perform(get("/showMyJobOffers").principal(authentication))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    public void testUpdateMyJobOffer_ReturnsUpdateForm() throws Exception {
+        // Given
+        int jobId = 1;
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+        User user = jobOffer.getUser();
+
+        JobOfferDTO jobOfferDTO = JobOfferFixtures.someJobOffer3DTO();
+        UserDTO userDTO = UserFixtures.someUserDTO1();
+
+        // Mockowanie serwisu ofert pracy
+        when(jobOfferService.findById(jobId)).thenReturn(jobOffer);
+
+        // Mockowanie mapowania oferty pracy na DTO
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
+
+        // Mockowanie mapowania użytkownika na DTO
+        when(userMapperDTO.map(user)).thenReturn(userDTO);
+
+        // When, Then
+        mockMvc.perform(get("/updateJobOfferForm").param("id", String.valueOf(jobId)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("update_job_offer_form"))
+                .andExpect(model().attributeExists("jobOfferDTO"))
+                .andExpect(model().attributeExists("userDTO"));
+    }
+
+
 
 
 }

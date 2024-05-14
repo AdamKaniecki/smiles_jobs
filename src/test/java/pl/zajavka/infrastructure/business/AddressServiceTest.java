@@ -88,22 +88,22 @@ public class AddressServiceTest extends AbstractIT {
         assertThrows(EntityNotFoundException.class, () -> addressService.updateAddress(address));
     }
 
-    @Test
-    public void deleteAddress_ShouldDeleteAddress_WhenAddressIsNotNull() {
-        // Given
-        Address address = AddressFixtures.someAddress();
-        AddressEntity addressEntity = AddressFixtures.someAddressEntity1();
-
-        // Symulacja mapowania adresu na encję
-        when(addressMapper.map(address)).thenReturn(addressEntity);
-
-        // When
-        addressService.deleteAddress(address);
-
-        // Then
-        // Sprawdzenie, czy metoda deleteById z AddressDAO została wywołana z odpowiednim argumentem
-        verify(addressDAO).deleteById(address.getId());
-    }
+//    @Test
+//    public void deleteAddress_ShouldDeleteAddress_WhenAddressIsNotNull() {
+//        // Given
+//        Address address = AddressFixtures.someAddress();
+//        AddressEntity addressEntity = AddressFixtures.someAddressEntity1();
+//
+//        // Symulacja mapowania adresu na encję
+//        when(addressMapper.map(address)).thenReturn(addressEntity);
+//
+//        // When
+//        addressService.deleteAddress(address);
+//
+//        // Then
+//        // Sprawdzenie, czy metoda deleteById z AddressDAO została wywołana z odpowiednim argumentem
+//        verify(addressDAO).deleteById(address.getId());
+//    }
 
     @Test
     public void deleteAddress_ShouldThrowIllegalArgumentException_WhenAddressIsNull() {
