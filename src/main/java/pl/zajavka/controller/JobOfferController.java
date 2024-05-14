@@ -156,6 +156,8 @@ public class JobOfferController {
         return "redirect:/showMyJobOffers";
     }
 
+
+
 }
 
 

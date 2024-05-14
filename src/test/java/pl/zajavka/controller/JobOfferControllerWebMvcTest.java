@@ -36,8 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Slf4j
@@ -254,5 +253,27 @@ public void testShowMyJobOffers_LoggedInUser_ReturnsJobOffersSuccessfully() thro
         // Sprawdzenie czy serwis został wywołany z odpowiednim obiektem oferty pracy
         verify(jobOfferService, times(1)).updateJobOffer(jobOffer);
     }
+
+    @Test
+    public void testDeleteJobOffer_LoggedInUser_ReturnsRedirectToShowMyJobOffers() throws Exception {
+        // Given
+        String username = "john_doe";
+        User loggedInUser = UserFixtures.someUser1();
+        Integer jobOfferId = 1;
+
+        // Mockowanie autentykacji i serwisu użytkownika
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+
+        // When, Then
+        mockMvc.perform(delete("/deleteJobOffer/{jobOfferId}", jobOfferId).principal(authentication))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/showMyJobOffers"));
+
+        // Sprawdzenie czy metoda deleteJobOfferAndSetNullInNotifications została wywołana raz
+        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+    }
+
 
 }
