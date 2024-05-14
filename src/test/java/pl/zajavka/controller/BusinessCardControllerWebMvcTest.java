@@ -311,6 +311,17 @@ public class BusinessCardControllerWebMvcTest {
         verify(addressService, times(1)).deleteAddress(businessCard.getAddress());
     }
 
+    @Test
+    public void testBusinessCardAlert() throws Exception {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/businessCardNotFound")
+                .principal(authentication);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(view().name("businessCard_not_found"));
+    }
+
 
 
 }
