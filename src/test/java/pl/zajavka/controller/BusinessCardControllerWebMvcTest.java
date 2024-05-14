@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zajavka.controller.dto.BusinessCardDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
@@ -25,6 +28,7 @@ import pl.zajavka.util.BusinessCardFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.http.RequestEntity.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -256,6 +260,31 @@ public class BusinessCardControllerWebMvcTest {
         mockMvc.perform(get("/updateBusinessCardForm").principal(authentication))
                 .andExpect(status().isOk())
                 .andExpect(view().name("businessCard_not_found"));
+    }
+
+    @Test
+    public void testUpdateBusinessCard_UpdateSuccessful_ReturnsUpdateBusinessCardSuccessfullyView() throws Exception {
+        // Given
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        BusinessCardDTO updateBusinessCardDTO = new BusinessCardDTO();
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+
+        // Mockowanie serwisu wizytówek
+        when(businessCardService.findById(updateBusinessCardDTO.getId())).thenReturn(businessCard);
+
+
+
+        // Utworzenie zapytania HTTP
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/updateBusinessCardDone")
+                .principal(authentication);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(view().name("update_business_card_successfully"));
+//                .andExpect(model().attributeExists("businessCardDTO"))
+//                .andExpect(model().attribute("businessCardDTO", businessCardMapperDTO.map(businessCard)));
     }
 
 
