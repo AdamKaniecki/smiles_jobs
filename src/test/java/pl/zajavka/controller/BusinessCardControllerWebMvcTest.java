@@ -168,5 +168,29 @@ public class BusinessCardControllerWebMvcTest {
                 .andExpect(view().name("businessCard_not_found"));
     }
 
+    @Test
+    public void testShowBusinessCard_BusinessCardFound_ReturnsBusinessCardSuccessfully() throws Exception {
+        // Given
+        int businessCardId = 1;
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+        Address address = AddressFixtures.someAddress();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+        businessCardDTO.setAddress(address);
+
+        // Mockowanie serwisu wizytówek
+        when(businessCardService.findById(businessCardId)).thenReturn(businessCard);
+
+        // Mockowanie mapowania encji na DTO
+        when(businessCardMapperDTO.map(businessCard)).thenReturn(businessCardDTO);
+
+        // When, Then
+        mockMvc.perform(get("/businessCard/{businessCardId}", businessCardId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("show_businessCard"))
+                .andExpect(model().attributeExists("businessCardDTO"))
+                .andExpect(model().attribute("businessCardDTO", businessCardDTO));
+    }
+
+
 }
 
