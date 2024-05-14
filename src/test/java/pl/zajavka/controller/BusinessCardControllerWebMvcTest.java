@@ -105,5 +105,24 @@ public class BusinessCardControllerWebMvcTest {
 
     }
 
+    @Test
+    public void testCreateBusinessCard_ReturnsBusinessCardAlreadyCreatedView() throws Exception {
+        // Given
+        String username = "john_doe";
+        User loggedInUser = UserFixtures.someUser1();
+
+        // Mockowanie autentykacji i serwisu użytkownika
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(businessCardService.existByUser(loggedInUser)).thenReturn(true);
+
+        // When, Then
+        mockMvc.perform(post("/createBusinessCard").principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("business_card_already_create"));
+    }
+
+
 }
 
