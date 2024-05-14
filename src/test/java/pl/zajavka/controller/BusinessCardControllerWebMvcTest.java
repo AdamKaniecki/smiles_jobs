@@ -27,7 +27,7 @@ import pl.zajavka.util.AddressFixtures;
 import pl.zajavka.util.BusinessCardFixtures;
 import pl.zajavka.util.UserFixtures;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.RequestEntity.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -283,9 +283,34 @@ public class BusinessCardControllerWebMvcTest {
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andExpect(view().name("update_business_card_successfully"));
-//                .andExpect(model().attributeExists("businessCardDTO"))
-//                .andExpect(model().attribute("businessCardDTO", businessCardMapperDTO.map(businessCard)));
+
     }
+
+    @Test
+    public void testDeleteBusinessCard_DeletionSuccessful_ReturnsBusinessCardDeletedSuccessfullyView() throws Exception {
+        // Given
+        Authentication authentication = Mockito.mock(Authentication.class);
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+        BusinessCard businessCard = BusinessCardFixtures.someBusinessCard();
+
+        // Mockowanie serwisu wizytówek
+        when(businessCardService.findById(businessCardDTO.getId())).thenReturn(businessCard);
+
+        // Utworzenie zapytania HTTP DELETE
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/deleteBusinessCard")
+                        .principal(authentication);
+
+        // When, Then
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(view().name("business_card_deleted_successfully"));
+//             ;
+
+        // Sprawdzenie, czy metoda deleteBusinessCard została wywołana
+        verify(businessCardService, times(1)).deleteBusinessCard(businessCard);
+        verify(addressService, times(1)).deleteAddress(businessCard.getAddress());
+    }
+
 
 
 }
