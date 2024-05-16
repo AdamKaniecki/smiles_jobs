@@ -27,6 +27,8 @@ import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -147,6 +149,58 @@ public class CommunicationControllerWebMvcTest {
                         .principal(authentication))
                 .andExpect(status().isOk())
                 .andExpect(view().name("change_meeting_date_successfully"));
+    }
+
+    @Test
+    void testAcceptNotification_Success() throws Exception {
+        // given
+        Integer notificationId = 1;
+        Integer jobOfferId = 1;
+        Authentication authentication = mock(Authentication.class);
+        String username = "testUser";
+        User loggedInUser = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        when(notificationService.findById(notificationId)).thenReturn(notification);
+
+        // when/then
+        mockMvc.perform(post("/acceptMeetingDate")
+                        .param("notificationId", notificationId.toString())
+                        .param("jobOfferId", jobOfferId.toString())
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("meeting_date_successfully"));
+    }
+
+    @Test
+    void testArrangeInterview_Success() throws Exception {
+        // given
+        Integer cvId = 1;
+        Integer notificationId = 1;
+        LocalDateTime proposedDateTime = LocalDateTime.now();
+        Authentication authentication = mock(Authentication.class);
+        String username = "testUser";
+        User loggedInUser = new User();
+        User cvUser = new User();
+        Notification notification =NotificationFixtures.sampleNotification1fully();
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(userService.getUserByCv(cvId)).thenReturn(cvUser);
+        when(notificationService.findById(notificationId)).thenReturn(notification);
+
+        // when/then
+        mockMvc.perform(post("/arrangeInterview")
+                        .param("cvId", cvId.toString())
+                        .param("notificationId", notificationId.toString())
+                        .param("proposedDateTime", proposedDateTime.toString())
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("arrange_interview_successfully"));
     }
 
 }
