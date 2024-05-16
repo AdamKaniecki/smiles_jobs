@@ -75,9 +75,9 @@ public class CommunicationController {
         User loggedInUser = userService.findByUserName(username);
         JobOffer jobOffer = jobOfferService.findById(jobOfferId);
         Notification notification = notificationService.findById(notificationId);
-        User adresat = jobOffer.getUser();
+        User recipient = jobOffer.getUser();
 
-        notificationService.changeMeetingDate(notification, loggedInUser, adresat);
+        notificationService.changeMeetingDate(notification, loggedInUser, recipient);
 
         return "change_meeting_date_successfully";
     }

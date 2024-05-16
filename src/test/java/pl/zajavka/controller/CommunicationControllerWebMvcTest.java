@@ -29,6 +29,7 @@ import pl.zajavka.util.UserFixtures;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -51,7 +52,7 @@ public class CommunicationControllerWebMvcTest {
     MockMvc mockMvc;
 
     @Test
-    void sendCV_Success() throws Exception {
+    void testSendCV_Success() throws Exception {
         // given
         JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
         Notification notification = NotificationFixtures.sampleNotification1fully();
@@ -67,7 +68,7 @@ public class CommunicationControllerWebMvcTest {
         when(notificationService.createNotification(jobOffer, cv, loggedUser, recipient )).thenReturn(notification);
 
         //  when/then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendCV")
+        MockHttpServletRequestBuilder requestBuilder = post("/sendCV")
                 .param("jobOfferId","1")
                 .principal(authentication);
 
@@ -78,7 +79,7 @@ public class CommunicationControllerWebMvcTest {
 
 
     @Test
-    void sendCV_CVNotFound() throws Exception {
+    void testSendCV_CVNotFound() throws Exception {
         // given
         JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
         CV cv = null; // CV nie zostało znalezione
@@ -90,7 +91,7 @@ public class CommunicationControllerWebMvcTest {
         when(jobOfferService.findById(jobOffer.getId())).thenReturn(jobOffer);
 
         // when/then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendCV")
+        MockHttpServletRequestBuilder requestBuilder = post("/sendCV")
                 .param("jobOfferId", "1")
                 .principal(authentication);
 
@@ -100,7 +101,7 @@ public class CommunicationControllerWebMvcTest {
     }
 
     @Test
-    void sendCV_CVAlreadySent() throws Exception {
+    void testSendCV_CVAlreadySent() throws Exception {
         // given
         JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
         CV cv = CvFixtures.someCv1();
@@ -114,13 +115,38 @@ public class CommunicationControllerWebMvcTest {
         when(notificationService.hasUserSentCVToJobOffer(loggedUser, jobOffer)).thenReturn(true);
 
         // when/then
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendCV")
+        MockHttpServletRequestBuilder requestBuilder = post("/sendCV")
                 .param("jobOfferId", "1")
                 .principal(authentication);
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andExpect(view().name("cv_already_sent"));
+    }
+
+    @Test
+    void testChangeMeetingDate_Success() throws Exception {
+        // given
+        Integer notificationId = 1;
+        Integer jobOfferId = 1;
+        Authentication authentication = mock(Authentication.class);
+        String username = "testUser";
+        User loggedInUser = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        when(notificationService.findById(notificationId)).thenReturn(notification);
+
+        // when/then
+        mockMvc.perform(post("/changeMeetingDate")
+                        .param("notificationId", notificationId.toString())
+                        .param("jobOfferId", jobOfferId.toString())
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("change_meeting_date_successfully"));
     }
 
 }
