@@ -203,4 +203,29 @@ public class CommunicationControllerWebMvcTest {
                 .andExpect(view().name("arrange_interview_successfully"));
     }
 
+    @Test
+    void testDeclineCandidate_Success() throws Exception {
+        // given
+        Integer cvId = 1;
+        Integer notificationId = 1;
+        Authentication authentication = mock(Authentication.class);
+        String username = "testUser";
+        User loggedInUser = new User();
+        User cvUser = new User();
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(userService.getUserByCv(cvId)).thenReturn(cvUser);
+        when(notificationService.findById(notificationId)).thenReturn(notification);
+
+        // when/then
+        mockMvc.perform(post("/decline")
+                        .param("notificationId", notificationId.toString())
+                        .param("cvId", cvId.toString())
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(view().name("decline_successfully"));
+    }
+
 }
