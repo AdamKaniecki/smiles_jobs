@@ -99,4 +99,28 @@ public class CommunicationControllerWebMvcTest {
                 .andExpect(view().name("cv_not_found"));
     }
 
+    @Test
+    void sendCV_CVAlreadySent() throws Exception {
+        // given
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        CV cv = CvFixtures.someCv1();
+        Authentication authentication = mock(Authentication.class);
+        String username = "testUser";
+        User loggedUser = cv.getUser();
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(cvService.findByUser(any(User.class))).thenReturn(cv);
+        when(jobOfferService.findById(jobOffer.getId())).thenReturn(jobOffer);
+        when(notificationService.hasUserSentCVToJobOffer(loggedUser, jobOffer)).thenReturn(true);
+
+        // when/then
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/sendCV")
+                .param("jobOfferId", "1")
+                .principal(authentication);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(view().name("cv_already_sent"));
+    }
+
 }
