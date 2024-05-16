@@ -57,7 +57,7 @@ public class CommunicationController {
                 return "cv_send_successfully";
             }
         } catch (EntityNotFoundException e) {
-            // Obsłuż wyjątek EntityNotFoundException i zwróć widok cv_not_found
+
             return "cv_not_found";
         }
     }
