@@ -115,6 +115,32 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(content().string("Business card already created"));
     }
 
+    @Test
+    void testShowMyBusinessCardExists() throws Exception {
+        // Arrange
+        String username = "testUser";
+        User user = new User();
+        BusinessCard businessCard = new BusinessCard();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+
+        when(userService.findByUserName(anyString())).thenReturn(user);
+        when(businessCardService.findByUser(any(User.class))).thenReturn(businessCard);
+        when(businessCardMapperDTO.map(any(BusinessCard.class))).thenReturn(businessCardDTO);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        MockHttpServletRequestBuilder request = get("/api/showMyBusinessCard")
+                .principal(authentication);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("{}")); // You can customize this to match the actual expected JSON structure of BusinessCardDTO
+    }
+
+
 
 }
 
