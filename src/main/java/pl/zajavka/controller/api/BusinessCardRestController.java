@@ -86,13 +86,20 @@ public class BusinessCardRestController {
         }
     }
 
+
+
     @PutMapping("/updateBusinessCard")
     public ResponseEntity<String> updateCv(@Valid @RequestBody BusinessCardDTO updateBusinessCardDTO, Authentication authentication) {
-
         String username = authentication.getName();
         User loggedInUser = userService.findByUserName(username);
-        BusinessCard businessCard = businessCardService.findByUser(loggedInUser);
+        if (loggedInUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
 
+        BusinessCard businessCard = businessCardService.findByUser(loggedInUser);
+        if (businessCard == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Business card not found");
+        }
 
         businessCard.setOffice(updateBusinessCardDTO.getOffice());
         businessCard.setScopeOperations(updateBusinessCardDTO.getScopeOperations());
