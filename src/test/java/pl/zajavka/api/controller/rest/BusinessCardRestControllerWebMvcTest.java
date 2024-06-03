@@ -160,6 +160,25 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void testShowBusinessCardExists() throws Exception {
+        // Arrange
+        Integer businessCardId = 1;
+        BusinessCard businessCard = new BusinessCard();
+        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
+
+        when(businessCardService.findById(anyInt())).thenReturn(businessCard);
+        when(businessCardMapperDTO.map(businessCard)).thenReturn(businessCardDTO);
+
+        MockHttpServletRequestBuilder request = get("/api/showBusinessCard/{businessCardId}", businessCardId);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("{}")); // Customize to match the actual expected JSON structure of BusinessCardDTO
+    }
+
 
 
 }
