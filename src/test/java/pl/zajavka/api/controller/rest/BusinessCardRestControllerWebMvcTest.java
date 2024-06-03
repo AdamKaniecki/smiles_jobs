@@ -65,7 +65,6 @@ public class BusinessCardRestControllerWebMvcTest {
     void testCreateBusinessCard() throws Exception {
         // Arrange
         String username = "testUser";
-        BusinessCardDTO businessCardDTO = new BusinessCardDTO();
         BusinessCard businessCard = new BusinessCard();
         Address address = new Address();
         User user = new User();
@@ -93,7 +92,28 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Business card created successfully"));
     }
+    @Test
+    void testCreateBusinessCardAlreadyExists() throws Exception {
+        // Arrange
+        String username = "testUser";
+        User user = new User();
 
+        when(userService.findByUserName(anyString())).thenReturn(user);
+        when(businessCardService.existByUser(any(User.class))).thenReturn(true);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        MockHttpServletRequestBuilder request = post("/api/createBusinessCard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"Test Business Card\"}")
+                .principal(authentication);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Business card already created"));
+    }
 
 
 }
