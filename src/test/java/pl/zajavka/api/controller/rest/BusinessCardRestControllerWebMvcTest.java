@@ -212,6 +212,20 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(content().string("Business card deleted successfully"));
     }
 
+    @Test
+    void testDeleteBusinessCardNotExists() throws Exception {
+        // Arrange
+        Integer businessCardId = 1;
+
+        when(businessCardService.findById(anyInt())).thenReturn(null);
+
+        MockHttpServletRequestBuilder request = delete("/api/deleteBusinessCard/{businessCardId}", businessCardId);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+    }
+
 
 }
 
