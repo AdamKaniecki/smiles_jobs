@@ -5,10 +5,10 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
+
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.UUID;
     // finalnie użytkownik otrzyma jedynie identyfikator błędu a my będziemy mogli odnaleźć go w swoich logach
     @Slf4j
-    @RestControllerAdvice
+    @RestControllerAdvice(annotations = RestController.class)
 //    @Order(Ordered.HIGHEST_PRECEDENCE) // nadajemy najwyższy priorytet naszej obsłudze błędów
     public class RestGlobalExceptionHandler extends ResponseEntityExceptionHandler  //tu mówimy, że jeśli wpadnie wyjątek i framework
             // będzie go próbował obsłużyć po swojemu to ma
