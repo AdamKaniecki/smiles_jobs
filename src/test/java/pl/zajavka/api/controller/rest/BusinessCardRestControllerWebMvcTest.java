@@ -30,8 +30,7 @@ import pl.zajavka.util.BusinessCardFixtures;
 import pl.zajavka.util.UserFixtures;
 
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -193,6 +192,25 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void testDeleteBusinessCardExists() throws Exception {
+        // Arrange
+        Integer businessCardId = 1;
+        BusinessCard businessCard = new BusinessCard();
+        Address address = new Address();
+        businessCard.setAddress(address);
+
+        when(businessCardService.findById(anyInt())).thenReturn(businessCard);
+        doNothing().when(businessCardService).deleteBusinessCard(businessCard);
+        doNothing().when(addressService).deleteAddress(address);
+
+        MockHttpServletRequestBuilder request = delete("/api/deleteBusinessCard/{businessCardId}", businessCardId);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string("Business card deleted successfully"));
+    }
 
 
 }
