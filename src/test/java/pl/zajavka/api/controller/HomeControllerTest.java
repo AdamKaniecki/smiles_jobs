@@ -1,4 +1,4 @@
-package pl.zajavka.controller;
+package pl.zajavka.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -8,10 +8,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.zajavka.controller.HomeController;
+
+import java.net.URI;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static pl.zajavka.controller.HomeController.HOME;
 
 @ActiveProfiles("test")
 @WebMvcTest(controllers = HomeController.class)
@@ -24,7 +26,7 @@ class HomeControllerTest {
     @Test
     void homeWorksCorrectly() throws Exception {
 //        given/when/then
-        mockMvc.perform(MockMvcRequestBuilders.get(HOME))
+        mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"));
 

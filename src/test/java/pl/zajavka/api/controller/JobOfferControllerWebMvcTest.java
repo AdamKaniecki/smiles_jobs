@@ -1,4 +1,4 @@
-package pl.zajavka.controller;
+package pl.zajavka.api.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import pl.zajavka.controller.JobOfferController;
 import pl.zajavka.controller.dto.BusinessCardDTO;
 import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.UserDTO;

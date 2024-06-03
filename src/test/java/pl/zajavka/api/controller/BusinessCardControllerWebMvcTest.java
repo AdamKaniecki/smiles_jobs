@@ -1,4 +1,4 @@
-package pl.zajavka.controller;
+package pl.zajavka.api.controller;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import pl.zajavka.controller.BusinessCardController;
 import pl.zajavka.controller.dto.BusinessCardDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;

@@ -1,4 +1,4 @@
-package pl.zajavka.controller;
+package pl.zajavka.api.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.validation.BindingResult;
+import pl.zajavka.controller.CvController;
 import pl.zajavka.controller.dto.CvDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
