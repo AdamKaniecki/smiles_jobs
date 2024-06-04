@@ -280,6 +280,30 @@ public class BusinessCardRestControllerWebMvcTest {
                 .andExpect(content().string("User not found"));
     }
 
+    @Test
+    void testUpdateBusinessCardNotFound() throws Exception {
+        // Arrange
+        String username = "testUser";
+        User user = new User();
+
+        when(userService.findByUserName(anyString())).thenReturn(user);
+        when(businessCardService.findByUser(any(User.class))).thenReturn(null);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        MockHttpServletRequestBuilder request = put("/api/updateBusinessCard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"office\":\"New Office\",\"scopeOperations\":\"New Scope\",\"recruitmentEmail\":\"new.email@example.com\",\"phoneNumber\":\"+12 345 678 999\",\"companyDescription\":\"New Description\",\"technologiesAndTools\":\"New Technologies\",\"certificatesAndAwards\":\"New Awards\"}")
+                .principal(authentication);
+
+        // Act & Assert
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Business card not found"));
+    }
+
+
 
 }
 
