@@ -39,11 +39,6 @@ public class CommunicationRestController {
             User adresat = jobOffer.getUser();
 
 
-            if (cv == null) {
-
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
-            }
-
             if (notificationService.hasUserSentCVToJobOffer(loggedInUser, jobOffer)) {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CV already sent");

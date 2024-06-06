@@ -134,5 +134,36 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(content().string("CV not found"));
     }
 
+    @Test
+    void testSendCVAlreadySent() throws Exception {
+        // Arrange
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setCvId(1);
+        request.setNotificationId(1);
+
+        User user = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        CV cv = new CV();
+
+        when(userService.findByUserName(username)).thenReturn(user);
+        when(jobOfferService.findById(anyInt())).thenReturn(jobOffer);
+        when(cvService.findByUser(any(User.class))).thenReturn(cv);
+        when(notificationService.hasUserSentCVToJobOffer(any(User.class), any(JobOffer.class))).thenReturn(true);
+
+        MockHttpServletRequestBuilder mockRequest = post("/api/sendCV")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .principal(authentication);
+
+        // Act & Assert
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("CV already sent"));
+    }
+
 
 }
