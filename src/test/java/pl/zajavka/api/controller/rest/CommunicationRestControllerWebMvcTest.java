@@ -1,5 +1,6 @@
 package pl.zajavka.api.controller.rest;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import pl.zajavka.controller.api.CommunicationRestController;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.JobOfferService;
@@ -24,7 +24,6 @@ import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.MeetingInterviewRequest;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.util.CvFixtures;
 import pl.zajavka.util.JobOfferFixtures;
 import pl.zajavka.util.UserFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
@@ -112,6 +111,27 @@ public class CommunicationRestControllerWebMvcTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk())
                 .andExpect(content().string("CV sent successfully"));
+    }
+
+    @Test
+    void testSendCVNotFoundException() throws Exception {
+        // Arrange
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+
+        when(userService.findByUserName(username)).thenThrow(new EntityNotFoundException());
+
+        MockHttpServletRequestBuilder mockRequest = post("/api/sendCV")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+                .principal(authentication);
+
+        // Act & Assert
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("CV not found"));
     }
 
 
