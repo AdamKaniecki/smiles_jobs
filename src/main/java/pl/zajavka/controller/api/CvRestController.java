@@ -61,7 +61,7 @@ public class CvRestController {
             return ResponseEntity.ok(cvDTO);
         }
 
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You have not created your CV yet") ;
 
     }
 

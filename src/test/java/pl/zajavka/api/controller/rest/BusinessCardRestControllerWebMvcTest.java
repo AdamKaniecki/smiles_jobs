@@ -12,11 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import pl.zajavka.controller.BusinessCardController;
 import pl.zajavka.controller.api.BusinessCardRestController;
 import pl.zajavka.controller.dto.BusinessCardDTO;
-import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.BusinessCardMapperDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.AddressService;
@@ -25,13 +22,11 @@ import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.Address;
 import pl.zajavka.infrastructure.domain.BusinessCard;
 import pl.zajavka.infrastructure.domain.User;
-import pl.zajavka.util.AddressFixtures;
-import pl.zajavka.util.BusinessCardFixtures;
-import pl.zajavka.util.UserFixtures;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @ActiveProfiles("test")
