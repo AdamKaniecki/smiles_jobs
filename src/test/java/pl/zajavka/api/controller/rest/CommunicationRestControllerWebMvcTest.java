@@ -359,4 +359,57 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Notification or job offer not found"));
     }
+
+    @Test
+    void testAcceptNotificationBadRequest() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(jobOfferService.findById(anyInt())).thenReturn(JobOfferFixtures.someJobOffer1());
+        when(notificationService.findById(anyInt())).thenReturn(NotificationFixtures.sampleNotification1());
+        Mockito.doThrow(new RuntimeException("Some error")).when(notificationService).acceptMeetingDateTime(any(), any(), any());
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/acceptMeetingDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("An error occurred while accepting meeting date"));
+    }
+
+    @Test
+    void testDeclineNotificationSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        User cvUser = new User();
+        Notification notification = NotificationFixtures.sampleNotification1();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(userService.getUserByCv(anyInt())).thenReturn(cvUser);
+        when(notificationService.findById(anyInt())).thenReturn(notification);
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/decline")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Notification declined successfully"));
+    }
 }
