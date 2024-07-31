@@ -461,4 +461,32 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("An error occurred while declining notification"));
     }
+
+    @Test
+    void testHiredNotificationSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        User cvUser = new User();
+        Notification notification = NotificationFixtures.sampleNotification1();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(userService.getUserByCv(anyInt())).thenReturn(cvUser);
+        when(notificationService.findById(anyInt())).thenReturn(notification);
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/hired")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Candidate hired successfully"));
+    }
 }
