@@ -24,6 +24,7 @@ import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -126,5 +127,23 @@ public class CvRestControllerWebMvcTest {
     }
 
 
+    @Test
+    void testRedirectToShowMyCVSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        CV userCV = new CV();
+        CvDTO cvDTO = new CvDTO();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(cvService.findByUser(loggedInUser)).thenReturn(userCV);
+        when(cvMapperDTO.map(userCV)).thenReturn(cvDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyCV")
+                        .principal(authentication))
+                .andExpect(status().isOk());
+    }
 
 }
