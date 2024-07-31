@@ -412,4 +412,28 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Notification declined successfully"));
     }
+
+    @Test
+    void testDeclineNotificationEntityNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(userService.getUserByCv(anyInt())).thenThrow(new EntityNotFoundException("User not found"));
+        when(notificationService.findById(anyInt())).thenReturn(NotificationFixtures.sampleNotification1());
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/decline")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Notification or user not found"));
+    }
 }
