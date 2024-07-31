@@ -67,5 +67,21 @@ public class CvRestControllerWebMvcTest {
                 .andExpect(content().string("CV created successfully"));
     }
 
+    @Test
+    void testCreateCVUnauthorized() throws Exception {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(null);
+
+        CvDTO cvDTO = new CvDTO();
+        String jsonRequest = new ObjectMapper().writeValueAsString(cvDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/createCV")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("User not authenticated"));
+    }
+
 
 }
