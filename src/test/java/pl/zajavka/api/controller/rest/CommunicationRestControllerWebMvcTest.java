@@ -436,4 +436,29 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Notification or user not found"));
     }
+
+    @Test
+    void testDeclineNotificationBadRequest() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(userService.getUserByCv(anyInt())).thenReturn(new User());
+        when(notificationService.findById(anyInt())).thenReturn(NotificationFixtures.sampleNotification1());
+        Mockito.doThrow(new RuntimeException("Some error")).when(notificationService).declineCandidate(any(), any(), any());
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/decline")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("An error occurred while declining notification"));
+    }
 }
