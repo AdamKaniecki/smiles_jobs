@@ -146,4 +146,23 @@ public class CvRestControllerWebMvcTest {
                 .andExpect(status().isOk());
     }
 
+
+    @Test
+    void testRedirectToShowMyCVNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(cvService.findByUser(loggedInUser)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyCV")
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("You have not created your CV yet"));
+    }
+
+
 }
