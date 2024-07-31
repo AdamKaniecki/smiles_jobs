@@ -335,4 +335,28 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Meeting date accepted successfully"));
     }
+
+    @Test
+    void testAcceptNotificationEntityNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(jobOfferService.findById(anyInt())).thenThrow(new EntityNotFoundException("JobOffer not found"));
+        when(notificationService.findById(anyInt())).thenReturn(NotificationFixtures.sampleNotification1());
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/acceptMeetingDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Notification or job offer not found"));
+    }
 }
