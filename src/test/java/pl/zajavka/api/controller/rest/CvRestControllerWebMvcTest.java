@@ -84,4 +84,24 @@ public class CvRestControllerWebMvcTest {
     }
 
 
+    @Test
+    void testCreateCVUserNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(null);
+
+        CvDTO cvDTO = new CvDTO();
+        String jsonRequest = new ObjectMapper().writeValueAsString(cvDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/createCV")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found"));
+    }
+
+
 }
