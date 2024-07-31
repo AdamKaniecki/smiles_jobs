@@ -265,8 +265,7 @@ public class CommunicationRestControllerWebMvcTest {
 
         when(userService.findByUserName(username)).thenReturn(new User());
         when(jobOfferService.findById(anyInt())).thenThrow(new EntityNotFoundException("JobOffer not found"));
-        Notification notification = NotificationFixtures.sampleNotification1();
-
+        when(notificationService.findById(anyInt())).thenReturn(NotificationFixtures.sampleNotification1());
 
         MeetingInterviewRequest request = new MeetingInterviewRequest();
         request.setJobOfferId(1);
@@ -280,5 +279,30 @@ public class CommunicationRestControllerWebMvcTest {
                         .principal(authentication))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Notification or job offer not found"));
+    }
+
+    @Test
+    void testChangeMeetingDateBadRequest() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(new User());
+        when(jobOfferService.findById(anyInt())).thenReturn(JobOfferFixtures.someJobOffer1());
+        when(notificationService.findById(anyInt())).thenReturn( NotificationFixtures.sampleNotification1());
+        Mockito.doThrow(new RuntimeException("Some error")).when(notificationService).changeMeetingDate(any(), any(), any());
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/changeMeetingDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("An error occurred while changing meeting date"));
     }
 }
