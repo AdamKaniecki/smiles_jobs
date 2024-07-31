@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,16 +16,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zajavka.controller.api.CommunicationRestController;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.NotificationService;
 import pl.zajavka.infrastructure.business.UserService;
-import pl.zajavka.infrastructure.domain.CV;
-import pl.zajavka.infrastructure.domain.JobOffer;
-import pl.zajavka.infrastructure.domain.MeetingInterviewRequest;
-import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.infrastructure.domain.*;
 import pl.zajavka.util.JobOfferFixtures;
+import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,6 +62,8 @@ public class CommunicationRestControllerWebMvcTest {
     void setUp() {
         objectMapper = new ObjectMapper();  // Inicjalizacja ObjectMapper przed użyciem
     }
+
+
 
     @Test
     void testObjectMapperSerialization() throws wiremock.com.fasterxml.jackson.core.JsonProcessingException {
@@ -139,7 +141,6 @@ public class CommunicationRestControllerWebMvcTest {
         // Arrange
         String username = "testUser";
         Authentication authentication = Mockito.mock(Authentication.class);
-        when(authentication.getName()).thenReturn(username);
         MeetingInterviewRequest request = new MeetingInterviewRequest();
         request.setJobOfferId(1);
         request.setCvId(1);
@@ -148,7 +149,7 @@ public class CommunicationRestControllerWebMvcTest {
         User user = new User();
         JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
         CV cv = new CV();
-
+        when(authentication.getName()).thenReturn(username);
         when(userService.findByUserName(username)).thenReturn(user);
         when(jobOfferService.findById(anyInt())).thenReturn(jobOffer);
         when(cvService.findByUser(any(User.class))).thenReturn(cv);
@@ -163,6 +164,97 @@ public class CommunicationRestControllerWebMvcTest {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("CV already sent"));
+    }
+
+    @Test
+    void testArrangeInterviewSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+        request.setJobOfferId(1);
+
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        User cvUser = new User();
+        cvUser.setUserName("cvUser");
+
+        Notification notification = NotificationFixtures.sampleNotification1fully();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(userService.getUserByCv(anyInt())).thenReturn(cvUser);
+        when(notificationService.findById(anyInt())).thenReturn(notification);
+
+        String jsonRequest = objectMapper.writeValueAsString(request);
+        System.out.println(jsonRequest);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/arrangeInterview")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Interview arranged successfully"));
+    }
+
+    @Test
+    void testArrangeInterviewEntityNotFoundException() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setCvId(1);
+        request.setNotificationId(1);
+        request.setJobOfferId(1);
+
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        when(userService.findByUserName(username)).thenReturn(null);
+        when(userService.getUserByCv(anyInt())).thenThrow(new EntityNotFoundException());
+        when(notificationService.findById(1)).thenReturn(NotificationFixtures.sampleNotification1forArrange());
+
+        String jsonRequest = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/arrangeInterview")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Notification or user not found"));
+    }
+
+    @Test
+    void testChangeMeetingDateSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+        Notification notification = NotificationFixtures.sampleNotification1();
+        User adresat = new User();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(anyInt())).thenReturn(jobOffer);
+        when(notificationService.findById(anyInt())).thenReturn(notification);
+        jobOffer.setUser(adresat);
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/changeMeetingDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Meeting date changed successfully"));
     }
 
 
