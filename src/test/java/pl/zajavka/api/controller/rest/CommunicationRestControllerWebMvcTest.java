@@ -305,4 +305,34 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("An error occurred while changing meeting date"));
     }
+
+    @Test
+    void testAcceptNotificationSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
+        Notification notification = NotificationFixtures.sampleNotification1();
+        User adresat = new User();
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(anyInt())).thenReturn(jobOffer);
+        when(notificationService.findById(anyInt())).thenReturn(notification);
+        jobOffer.setUser(adresat);
+
+        MeetingInterviewRequest request = new MeetingInterviewRequest();
+        request.setJobOfferId(1);
+        request.setNotificationId(1);
+
+        String jsonRequest = new ObjectMapper().writeValueAsString(request);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/acceptMeetingDate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Meeting date accepted successfully"));
+    }
 }
