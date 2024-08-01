@@ -2,6 +2,7 @@ package pl.zajavka.api.controller.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.User;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,6 +42,14 @@ public class CvRestControllerWebMvcTest {
     private UserService userService;
     @MockBean
     private CvMapperDTO cvMapperDTO;
+
+    @MockBean
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        objectMapper = new ObjectMapper();  // Inicjalizacja ObjectMapper przed użyciem
+    }
 
     private MockMvc mockMvc;
 
@@ -162,6 +171,72 @@ public class CvRestControllerWebMvcTest {
                         .principal(authentication))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("You have not created your CV yet"));
+    }
+
+    @Test
+    void testShowCVSuccess() throws Exception {
+        Integer cvId = 1;
+        CV cv = new CV();
+        CvDTO cvDTO = new CvDTO();
+
+        when(cvService.findById(cvId)).thenReturn(cv);
+        when(cvMapperDTO.map(cv)).thenReturn(cvDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/showCV/{id}", cvId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testShowCVNotFound() throws Exception {
+        Integer cvId = 1;
+
+        when(cvService.findById(cvId)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/showCV/{id}", cvId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testUpdateCvSuccess() throws Exception {
+        String username = "testUser";
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+        CV cv = new CV();
+        CvDTO cvDTO = new CvDTO();
+        cvDTO.setName("New Name");
+        cvDTO.setSurname("New Surname");
+        cvDTO.setSex("Male");
+        cvDTO.setDateOfBirth("1990-01-01");
+        cvDTO.setMaritalStatus("Single");
+        cvDTO.setPhoneNumber("+48 669 666 665");
+        cvDTO.setContactEmail("new.email@example.com");
+        cvDTO.setSkillsAndTools("Java, Spring");
+        cvDTO.setProgrammingLanguage("Java");
+        cvDTO.setFollowPosition("Developer");
+        cvDTO.setAboutMe("Passionate developer");
+        cvDTO.setCertificatesOfCourses("Java Certification");
+        cvDTO.setProjects("Project A, Project B");
+        cvDTO.setSocialMediaProfil("LinkedIn Profile");
+        cvDTO.setEducation("Master's in Computer Science");
+        cvDTO.setWorkExperience("5 years");
+        cvDTO.setLanguage("English");
+        cvDTO.setLanguageLevel("Fluent");
+        cvDTO.setHobby("Reading");
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(cvService.findByUser(loggedInUser)).thenReturn(cv);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/updateCv")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(cvDTO))
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("CV updated successfully"));
     }
 
 
