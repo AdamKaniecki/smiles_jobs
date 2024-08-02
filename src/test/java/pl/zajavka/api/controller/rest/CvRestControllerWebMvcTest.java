@@ -11,8 +11,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zajavka.controller.api.CvRestController;
 import pl.zajavka.controller.dto.CvDTO;
@@ -20,12 +23,18 @@ import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.SearchRequest;
 import pl.zajavka.infrastructure.domain.User;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -238,6 +247,27 @@ public class CvRestControllerWebMvcTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("CV updated successfully"));
     }
+
+
+    @Test
+    void testSearchCVUnauthorized() throws Exception {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setKeyword("Java");
+        searchRequest.setCategory("Programming");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/searchCV")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchRequest)))
+                .andExpect(status().isUnauthorized());
+    }
+
 
 
 }
