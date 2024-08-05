@@ -72,7 +72,7 @@ public class JobOfferRestControllerWebMvcTest {
         when(authentication.getName()).thenReturn(username);
 
         User loggedInUser = new User();
-        JobOffer jobOffer = JobOfferFixtures.someJobOffer3forNotification();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
 
         when(userService.findByUserName(username)).thenReturn(loggedInUser);
         when(jobOfferService.create(jobOffer,loggedInUser)).thenReturn(jobOffer);
@@ -87,6 +87,21 @@ public class JobOfferRestControllerWebMvcTest {
                         .principal(authentication))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("Job offer created successfully"));
+    }
+
+    @Test
+    void testCreateJobOfferUserUnauthorized() throws Exception {
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(null);
+
+        JobOfferDTO jobOfferDTO = new JobOfferDTO();
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/createJobOffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(jobOfferDTO))
+                        .principal(authentication))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("User not authenticated"));
     }
 
 }
