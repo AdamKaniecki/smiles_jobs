@@ -251,12 +251,6 @@ public class CvRestControllerWebMvcTest {
 
     @Test
     void testSearchCVUnauthorized() throws Exception {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        when(authentication.isAuthenticated()).thenReturn(false);
-
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
 
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.setKeyword("Java");
@@ -268,6 +262,23 @@ public class CvRestControllerWebMvcTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    void testSearchCVAuthorized() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setKeyword("Java");
+        searchRequest.setCategory("Programming");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/searchCV")
+                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(searchRequest))
+                        .principal(authentication))
+
+                .andExpect(status().isOk());
+    }
 
 
 }
