@@ -104,4 +104,24 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(content().string("User not authenticated"));
     }
 
+
+    @Test
+    void testCreateJobOfferUserNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(null);
+
+        JobOfferDTO jobOfferDTO = new JobOfferDTO();
+        // Ustaw pola jobOfferDTO
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/createJobOffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(jobOfferDTO))
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found"));
+    }
+
 }
