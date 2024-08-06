@@ -32,7 +32,11 @@ import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.util.JobOfferFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -124,4 +128,26 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(content().string("User not found"));
     }
 
-}
+
+    @Test
+    void testShowMyJobOffersSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User user = new User();
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        JobOfferDTO jobOfferDTO = new JobOfferDTO();
+
+
+        when(userService.findByUserName(username)).thenReturn(user);
+        when(jobOfferService.findListByUser(user)).thenReturn(List.of(jobOffer));
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyJobOffers")
+                        .principal(authentication))
+                 .andExpect(status().isOk());
+    }
+    }
+
+
