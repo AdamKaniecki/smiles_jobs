@@ -186,6 +186,33 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testDeleteJobOfferSuccess() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(username);
+        User loggedInUser = new User();
+        Integer jobOfferId = 1;
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        jobOffer.setId(jobOfferId);
+        jobOffer.setUser(loggedInUser); // loggedInUser is the owner
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+
+        // Wykonanie testu
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteJobOffer/{id}", jobOfferId)
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("JobOffer deleted successfully"));
+
+        // Weryfikacja
+//        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+    }
+
 
 }
 
