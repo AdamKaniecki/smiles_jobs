@@ -163,6 +163,30 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Job offers Not Found"));
     }
+
+    @Test
+    void testShowJobOffersSuccess() throws Exception {
+        Integer jobOfferId = 1;
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        JobOfferDTO jobOfferDTO = new JobOfferDTO();
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/showJobOffer/{id}", jobOfferId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+    @Test
+    void testShowJobOffersNotFound() throws Exception {
+        Integer jobOfferId = 1;
+        when(jobOfferService.findById(jobOfferId)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/showJobOffer/{id}", jobOfferId)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+
 }
 
 
