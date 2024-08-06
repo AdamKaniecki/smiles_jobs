@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,7 +80,7 @@ public class JobOfferRestControllerWebMvcTest {
         JobOffer jobOffer = JobOfferFixtures.someJobOffer1();
 
         when(userService.findByUserName(username)).thenReturn(loggedInUser);
-        when(jobOfferService.create(jobOffer,loggedInUser)).thenReturn(jobOffer);
+        when(jobOfferService.create(jobOffer, loggedInUser)).thenReturn(jobOffer);
         when(jobOfferMapperDTO.map(any(JobOfferDTO.class))).thenReturn(jobOffer);
 
         JobOfferDTO jobOfferDTO = new JobOfferDTO();
@@ -146,8 +147,24 @@ public class JobOfferRestControllerWebMvcTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyJobOffers")
                         .principal(authentication))
-                 .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
+
+    @Test
+    void testShowMyJobOffersNotFound() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyJobOffers")
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Job offers Not Found"));
     }
+}
+
+
 
 

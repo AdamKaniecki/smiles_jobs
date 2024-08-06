@@ -56,6 +56,7 @@ public class JobOfferRestController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok(jobOfferDTOs);
         }
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Job offers Not Found");
     }
 
