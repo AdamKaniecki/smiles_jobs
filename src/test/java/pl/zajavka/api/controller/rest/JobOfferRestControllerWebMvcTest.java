@@ -39,8 +39,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -204,14 +205,46 @@ public class JobOfferRestControllerWebMvcTest {
         when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
 
         // Wykonanie testu
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/deleteJobOffer/{id}", jobOfferId)
+        mockMvc.perform(delete("/api/deleteJobOffer/{id}", jobOfferId)
                         .principal(authentication))
                 .andExpect(status().isOk())
                 .andExpect(content().string("JobOffer deleted successfully"));
 
         // Weryfikacja
-//        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
     }
+    @Test
+    public void testDeleteJobOfferInternalServerError() throws Exception {
+        // Przygotowanie danych
+        Integer jobOfferId = 1;
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        jobOffer.setId(jobOfferId);
+        jobOffer.setUser(loggedInUser); // loggedInUser is the owner
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+        doThrow(new RuntimeException("Unexpected error")).when(jobOfferService).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+
+        // Wykonanie testu
+        mockMvc.perform(delete("/api/deleteJobOffer/{id}", jobOfferId)
+                        .principal(authentication))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("An error occurred while deleting job offer"));
+
+        // Weryfikacja
+        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+    }
+
+
 
 
 }
