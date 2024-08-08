@@ -345,7 +345,6 @@ public class JobOfferRestControllerWebMvcTest {
     @Test
     public void testUpdateJobOfferForbidden() throws Exception {
         // Przygotowanie danych
-        Integer jobOfferId = 1;
         String username = "testUser";
         User loggedInUser = new User();
         loggedInUser.setUserName(username);
@@ -359,7 +358,6 @@ public class JobOfferRestControllerWebMvcTest {
         differentUser.setUserName("differentUser");
 
         JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
-        jobOffer.setId(jobOfferId);
         jobOffer.setUser(differentUser); // loggedInUser is not the owner
 
         // Mockowanie zachowań
@@ -376,6 +374,38 @@ public class JobOfferRestControllerWebMvcTest {
 
         // Weryfikacja
         verify(jobOfferService, times(0)).updateJobOffer(jobOffer);
+    }
+
+    @Test
+    public void testUpdateJobOfferInternalServerError() throws Exception {
+        // Przygotowanie danych
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        JobOfferDTO  jobOfferDTO = new JobOfferDTO();
+
+        when(authentication.getName()).thenReturn(username);
+
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        jobOffer.setUser(loggedInUser); // loggedInUser is the owner
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferDTO.getId())).thenReturn(jobOffer);
+        doThrow(new RuntimeException("Unexpected error")).when(jobOfferService).updateJobOffer(jobOffer);
+
+        // Wykonanie testu
+        mockMvc.perform(put("/api/updateJobOffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(jobOfferDTO))
+                        .principal(authentication))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("An error occurred while updating the job offer"));
+
+        // Weryfikacja
+//        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
     }
 
 }
