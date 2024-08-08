@@ -301,6 +301,47 @@ public class JobOfferRestControllerWebMvcTest {
         // Weryfikacja
         verify(jobOfferService, times(0)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
     }
+    @Test
+    void testUpdateJobOfferSuccess() throws Exception {
+        String username = "testUser";
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        JobOfferDTO  jobOfferDTO = new JobOfferDTO();
+        jobOfferDTO.setCompanyName("New Name");
+        jobOfferDTO.setPosition("New Surname");
+        jobOfferDTO.setResponsibilities("fg");
+        jobOfferDTO.setRequiredTechnologies("fgh");
+        jobOfferDTO.setExperience("ghj");
+        jobOfferDTO.setJobLocation("hjk");
+        jobOfferDTO.setTypeOfContract("jik");
+        jobOfferDTO.setTypeOfWork("iku");
+        jobOfferDTO.setSalaryMin(new BigDecimal("4000"));
+        jobOfferDTO.setSalaryMax(new BigDecimal("8000"));
+        jobOfferDTO.setRequiredLanguage("kok");
+        jobOfferDTO.setRequiredLanguageLevel("kol");
+        jobOfferDTO.setBenefits("kol");
+        jobOfferDTO.setJobDescription("kol");
+//        jobOfferDTO.setJobOfferDateTime(OffsetDateTime.now());
+//        jobOfferDTO.setActive(();
+//        jobOfferDTO.setNeededStaff(();
+//        jobOfferDTO.setHiredCount(();
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferDTO.getId())).thenReturn(jobOffer);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/updateJobOffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(jobOfferDTO))
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Job offer updated successfully"));
+    }
+
+
 
 }
 
