@@ -244,7 +244,31 @@ public class JobOfferRestControllerWebMvcTest {
         verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
     }
 
+    @Test
+    public void testDeleteJobOfferNotFound() throws Exception {
+        // Przygotowanie danych
 
+        Integer jobOfferId = 1;
+        String username = "testuser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+
+        User loggedInUser = new User();
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(null);
+
+        // Wykonanie testu
+        mockMvc.perform(delete("/api/deleteJobOffer/{id}", jobOfferId)
+                        .principal(authentication))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Job Offer not found"));
+
+        // Weryfikacja
+        verify(jobOfferService, times(0)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+    }
 
 
 }
