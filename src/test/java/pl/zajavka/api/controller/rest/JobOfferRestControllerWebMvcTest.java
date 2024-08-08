@@ -270,6 +270,37 @@ public class JobOfferRestControllerWebMvcTest {
         verify(jobOfferService, times(0)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
     }
 
+    @Test
+    public void testDeleteJobOfferForbidden() throws Exception {
+        // Przygotowanie danych
+        Integer jobOfferId = 1;
+        String username = "testuser";
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User differentUser = new User();
+        differentUser.setUserName("differentUser");
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        jobOffer.setId(jobOfferId);
+        jobOffer.setUser(differentUser); // loggedInUser is not the owner
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(null);
+        when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
+
+        // Wykonanie testu
+        mockMvc.perform(delete("/api/deleteJobOffer/{id}", jobOfferId)
+                        .principal(authentication))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("You are not authorized to delete this job offer"));
+
+        // Weryfikacja
+        verify(jobOfferService, times(0)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+    }
 
 }
 
