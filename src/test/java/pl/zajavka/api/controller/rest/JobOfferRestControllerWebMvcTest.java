@@ -42,6 +42,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -333,7 +334,7 @@ public class JobOfferRestControllerWebMvcTest {
         when(userService.findByUserName(username)).thenReturn(loggedInUser);
         when(jobOfferService.findById(jobOfferDTO.getId())).thenReturn(jobOffer);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/updateJobOffer")
+        mockMvc.perform(put("/api/updateJobOffer")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(jobOfferDTO))
                         .principal(authentication))
@@ -341,7 +342,41 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(content().string("Job offer updated successfully"));
     }
 
+    @Test
+    public void testUpdateJobOfferForbidden() throws Exception {
+        // Przygotowanie danych
+        Integer jobOfferId = 1;
+        String username = "testUser";
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+        JobOfferDTO  jobOfferDTO = new JobOfferDTO();
 
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        User differentUser = new User();
+        differentUser.setUserName("differentUser");
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3();
+        jobOffer.setId(jobOfferId);
+        jobOffer.setUser(differentUser); // loggedInUser is not the owner
+
+        // Mockowanie zachowań
+        when(userService.findByUserName(username)).thenReturn(null);
+        when(jobOfferService.findById(jobOfferDTO.getId())).thenReturn(jobOffer);
+
+        // Wykonanie testu
+        mockMvc.perform(put("/api/updateJobOffer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(jobOfferDTO))
+                        .principal(authentication))
+                .andExpect(status().isForbidden())
+                .andExpect(content().string("You are not authorized to update this job offer"));
+
+        // Weryfikacja
+        verify(jobOfferService, times(0)).updateJobOffer(jobOffer);
+    }
 
 }
 
