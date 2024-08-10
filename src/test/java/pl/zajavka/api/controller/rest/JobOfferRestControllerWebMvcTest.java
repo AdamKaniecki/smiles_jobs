@@ -41,8 +41,7 @@ import java.util.stream.Collectors;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -147,7 +146,7 @@ public class JobOfferRestControllerWebMvcTest {
         when(jobOfferService.findListByUser(user)).thenReturn(List.of(jobOffer));
         when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyJobOffers")
+        mockMvc.perform(get("/api/ShowMyJobOffers")
                         .principal(authentication))
                 .andExpect(status().isOk());
     }
@@ -160,7 +159,7 @@ public class JobOfferRestControllerWebMvcTest {
         when(authentication.getName()).thenReturn(username);
         when(userService.findByUserName(username)).thenReturn(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/ShowMyJobOffers")
+        mockMvc.perform(get("/api/ShowMyJobOffers")
                         .principal(authentication))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Job offers Not Found"));
@@ -174,7 +173,7 @@ public class JobOfferRestControllerWebMvcTest {
         when(jobOfferService.findById(jobOfferId)).thenReturn(jobOffer);
         when(jobOfferMapperDTO.map(jobOffer)).thenReturn(jobOfferDTO);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/showJobOffer/{id}", jobOfferId)
+        mockMvc.perform(get("/api/showJobOffer/{id}", jobOfferId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -183,7 +182,7 @@ public class JobOfferRestControllerWebMvcTest {
         Integer jobOfferId = 1;
         when(jobOfferService.findById(jobOfferId)).thenReturn(null);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/showJobOffer/{id}", jobOfferId)
+        mockMvc.perform(get("/api/showJobOffer/{id}", jobOfferId)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }
@@ -405,8 +404,25 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(content().string("An error occurred while updating the job offer"));
 
         // Weryfikacja
-//        verify(jobOfferService, times(1)).deleteJobOfferAndSetNullInNotifications(jobOfferId);
+        verify(jobOfferService, times(1)).updateJobOffer(jobOffer);
     }
+
+    @Test
+    void testSearchJobOffers_whenUserIsNotAuthenticated_shouldReturnUnauthorized() throws Exception {
+
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(null);
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        mockMvc.perform(get("/api/searchJobOffers")
+                        .contentType(MediaType.APPLICATION_JSON)  // ustawienie typu zawartości na JSON
+                        .principal(authentication)
+                        .content("{}")) // Wysyłam puste ciało żądania
+                .andExpect(status().isUnauthorized());
+    }
+
+
 
 }
 

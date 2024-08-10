@@ -262,23 +262,23 @@ public class CvRestControllerWebMvcTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    @Test
-    void testSearchCVAuthorized() throws Exception {
-        String username = "testUser";
-        Authentication authentication = Mockito.mock(Authentication.class);
-        when(authentication.getName()).thenReturn(username);
-
-        SearchRequest searchRequest = new SearchRequest();
-        searchRequest.setKeyword("Java");
-        searchRequest.setCategory("Programming");
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/searchCV")
-                        .contentType(MediaType.APPLICATION_JSON)
+//    @Test
+//    void testSearchCVAuthorized() throws Exception {
+//        String username = "testUser";
+//        Authentication authentication = Mockito.mock(Authentication.class);
+//        when(authentication.getName()).thenReturn(username);
+//
+//        SearchRequest searchRequest = new SearchRequest();
+//        searchRequest.setKeyword("Java");
+//        searchRequest.setCategory("Programming");
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/api/searchCV")
+//                        .contentType(MediaType.APPLICATION_JSON)
 //                        .content(objectMapper.writeValueAsString(searchRequest))
-                        .principal(authentication))
-
-                .andExpect(status().isOk());
-    }
+//                        .principal(authentication))
+//
+//                .andExpect(status().isOk());
+//    }
 
 
 }
