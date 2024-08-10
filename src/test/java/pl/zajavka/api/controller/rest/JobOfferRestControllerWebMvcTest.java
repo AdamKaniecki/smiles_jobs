@@ -29,12 +29,14 @@ import pl.zajavka.infrastructure.business.JobOfferService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.CV;
 import pl.zajavka.infrastructure.domain.JobOffer;
+import pl.zajavka.infrastructure.domain.SearchRequest;
 import pl.zajavka.infrastructure.domain.User;
 import pl.zajavka.util.JobOfferFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -420,6 +422,49 @@ public class JobOfferRestControllerWebMvcTest {
                         .principal(authentication)
                         .content("{}")) // Wysyłam puste ciało żądania
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void testSearchJobOffers_whenCategoryIsSalaryMinAndKeywordIsNotANumber_shouldReturnBadRequest() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setCategory("salaryMin");
+        searchRequest.setKeyword("notANumber");
+
+        mockMvc.perform(get("/api/searchJobOffers")
+                        .principal(authentication)
+                        .contentType(MediaType.APPLICATION_JSON)  // ustawienie typu zawartości na JSON
+                        .content("{\"category\": \"salaryMin\", \"keyword\": \"notANumber\"}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testSearchJobOffers_whenCategoryIsNotSalaryMin_shouldReturnOk() throws Exception {
+
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        JobOfferDTO  jobOfferDTO = new JobOfferDTO();
+
+        when(authentication.getName()).thenReturn(username);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setCategory("position");
+        searchRequest.setKeyword("developer");
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3(); // Stwórz przykładową ofertę pracy
+        when(jobOfferService.searchJobOffersByKeywordAndCategory(eq("developer"), eq("position")))
+                .thenReturn(Collections.singletonList(jobOffer));
+        when(jobOfferMapperDTO.map(any(JobOffer.class))).thenReturn(jobOfferDTO);
+
+        mockMvc.perform(get("/api/searchJobOffers")
+                        .principal(authentication)
+                        .contentType("application/json")
+                        .content("{\"category\": \"position\", \"keyword\": \"developer\"}"))
+                .andExpect(status().isOk());
     }
 
 
