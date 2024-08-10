@@ -467,6 +467,29 @@ public class JobOfferRestControllerWebMvcTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void testSearchJobOffers_whenCategoryIsSalaryMinAndKeywordIsANumber_shouldReturnOk() throws Exception {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setCategory("salaryMin");
+        searchRequest.setKeyword("5000");String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        JobOfferDTO  jobOfferDTO = new JobOfferDTO();
+
+        when(authentication.getName()).thenReturn(username);
+        when(authentication.isAuthenticated()).thenReturn(true);
+
+        JobOffer jobOffer = JobOfferFixtures.someJobOffer3(); // Stwórz przykładową ofertę pracy
+        when(jobOfferService.searchJobOffersBySalary(eq("salaryMin"), any(BigDecimal.class)))
+                .thenReturn(Collections.singletonList(jobOffer));
+
+        when(jobOfferMapperDTO.map(any(JobOffer.class))).thenReturn(jobOfferDTO);
+
+        mockMvc.perform(get("/api/searchJobOffers")
+                        .principal(authentication)
+                        .contentType("application/json")
+                        .content("{\"category\": \"salaryMin\", \"keyword\": \"5000\"}"))
+                .andExpect(status().isOk());
+    }
 
 
 }
