@@ -19,22 +19,28 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zajavka.controller.api.CvRestController;
 import pl.zajavka.controller.dto.CvDTO;
+import pl.zajavka.controller.dto.JobOfferDTO;
 import pl.zajavka.controller.dto.mapper.CvMapperDTO;
 import pl.zajavka.infrastructure.business.CvService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.CV;
+import pl.zajavka.infrastructure.domain.JobOffer;
 import pl.zajavka.infrastructure.domain.SearchRequest;
 import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.util.CvFixtures;
+import pl.zajavka.util.JobOfferFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -279,6 +285,27 @@ public class CvRestControllerWebMvcTest {
 //
 //                .andExpect(status().isOk());
 //    }
+
+    @Test
+    void testSearchCV_whenCategoryAndKeyword_shouldReturnOk() throws Exception {
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        // Mockowanie odpowiedzi serwisu
+        List<CvDTO> mockCvDTOList = Arrays.asList(new CvDTO(), new CvDTO());  // Zastąp odpowiednimi danymi
+        when(cvService.searchCvByKeywordAndCategory("someKeyword", "categoryName"))
+                .thenReturn(mockCvDTOList);
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.setCategory("categoryName");
+        searchRequest.setKeyword("someKeyword");
+
+        mockMvc.perform(get("/api/searchCV")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .principal(authentication)
+                        .content("{\"category\": \"categoryName\", \"keyword\": \"someKeyword\"}"))
+                .andExpect(status().isOk());
+    }
 
 
 }
