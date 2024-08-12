@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import pl.zajavka.controller.api.BusinessCardRestController;
 import pl.zajavka.controller.api.UserRestController;
+import pl.zajavka.controller.dto.NotificationDTO;
 import pl.zajavka.controller.dto.UserDTO;
 import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.NotificationService;
@@ -166,6 +167,30 @@ public class UserRestControllerWebMvcTest {
                         .principal(authentication))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string("An error occurred while updating user data"));
+    }
+
+    @Test
+    public void testGetNotifications() throws Exception {
+        // Mockowanie danych wejściowych
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        User loggedInUser = new User();
+        loggedInUser.setUserName(username);
+
+        NotificationDTO notification1 = new NotificationDTO();
+        NotificationDTO notification2 = new NotificationDTO();
+        List<NotificationDTO> notifications = List.of(notification1, notification2);
+
+        when(authentication.getName()).thenReturn(username);
+        when(userService.findByUserName(username)).thenReturn(loggedInUser);
+        when(notificationService.findByUser(loggedInUser)).thenReturn(notifications);
+
+        // Wykonanie żądania GET i weryfikacja odpowiedzi
+        mockMvc.perform(get("/api/myNotifications")
+                        .principal(authentication)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(notifications)));
     }
 
 }
