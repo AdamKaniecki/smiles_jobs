@@ -95,4 +95,20 @@ public class UserRestControllerWebMvcTest {
     }
 
 
+    @Test
+    public void testAddCompany() throws Exception {
+
+        // Przykładowe dane wejściowe
+        UserDTO userDTO = new UserDTO();
+        User createdUser = new User();
+        // Mockowanie
+        when(userMapperDTO.map(any(UserDTO.class))).thenReturn(createdUser);
+        when(userService.createCompany(any(User.class))).thenReturn(createdUser);
+
+        // Wykonanie żądania POST i weryfikacja wyniku
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/createCompany")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isCreated());
+    }
 }
