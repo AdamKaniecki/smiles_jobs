@@ -26,8 +26,7 @@ import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.RequestEntity.post;
 import static org.springframework.http.RequestEntity.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -141,6 +140,32 @@ public class UserRestControllerWebMvcTest {
 
         // Weryfikacja, czy dane użytkownika zostały zaktualizowane
         verify(userService).updateUser(any(User.class));
+    }
+
+    @Test
+    public void testUpdateCandidateFailure() throws Exception {
+        // Mockowanie danych wejściowych
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserName("newUsername");
+        userDTO.setActive(true);
+        userDTO.setEmail("newemail@example.com");
+
+//        when(authentication.getName()).thenReturn("currentUsername");
+        when(userService.findByUserName("testUser")).thenReturn(new User());
+
+        // Symulacja wyjątku podczas aktualizacji użytkownika
+        doThrow(new RuntimeException("Update failed")).when(userService).updateUser(any(User.class));
+
+        // Wykonanie żądania PUT i weryfikacja odpowiedzi
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/updateUser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO))
+                        .principal(authentication))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("An error occurred while updating user data"));
     }
 
 }
