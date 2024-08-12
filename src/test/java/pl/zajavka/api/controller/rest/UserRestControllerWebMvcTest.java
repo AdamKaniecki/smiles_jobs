@@ -3,11 +3,13 @@ package pl.zajavka.api.controller.rest;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,8 +26,10 @@ import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.RequestEntity.post;
+import static org.springframework.http.RequestEntity.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -111,4 +115,32 @@ public class UserRestControllerWebMvcTest {
                         .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isCreated());
     }
+
+
+    @Test
+    public void testUpdateCandidateSuccess() throws Exception {
+        // Mockowanie danych wejściowych
+        String username = "testUser";
+        Authentication authentication = Mockito.mock(Authentication.class);
+        when(authentication.getName()).thenReturn(username);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserName("newUsername");
+        userDTO.setActive(true);
+        userDTO.setEmail("newemail@example.com");
+        User loggedInUser = new User();
+
+
+        when(userService.findByUserName("testUser")).thenReturn(loggedInUser);
+        // Wykonanie żądania PUT i weryfikacja odpowiedzi
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/updateUser")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(userDTO))
+                        .principal(authentication))
+                .andExpect(status().isOk());
+
+        // Weryfikacja, czy dane użytkownika zostały zaktualizowane
+        verify(userService).updateUser(any(User.class));
+    }
+
 }
