@@ -514,6 +514,41 @@ public class CommunicationRestControllerWebMvcTest {
                 .andExpect(content().string("Notification or user not found"));
     }
 
+   @Test
+    void testArrangeInterviewBadRequest() throws Exception {
+       String username = "testUser";
+       Authentication authentication = Mockito.mock(Authentication.class);
+       when(authentication.getName()).thenReturn(username);
+       MeetingInterviewRequest request = new MeetingInterviewRequest();
+       request.setCvId(1);
+       request.setNotificationId(1);
+       request.setJobOfferId(null);
+
+       User loggedInUser = new User();
+       loggedInUser.setUserName(username);
+
+       User cvUser = new User();
+       cvUser.setUserName("cvUser");
+
+
+       when(userService.findByUserName(username)).thenReturn(loggedInUser);
+       when(userService.getUserByCv(anyInt())).thenReturn(cvUser);
+
+
+
+       String jsonRequest = objectMapper.writeValueAsString(request);
+       System.out.println(jsonRequest);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/arrangeInterview")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonRequest)
+                        .principal(authentication))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("An error occurred while arranging interview"));
+    }
+
+
 
 
 }
