@@ -32,7 +32,7 @@ public class UserRestController {
     private UserMapperDTO userMapperDTO;
     private NotificationService notificationService;
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/users")
     public UsersDTO usersList() {
         return UsersDTO.of(userService.findUsers().stream()
                 .map(a -> userMapperDTO.map(a))
@@ -63,7 +63,6 @@ public class UserRestController {
     @PostMapping("/createCompany")
     public ResponseEntity<UserDTO> addCompany(
             @RequestBody UserDTO userDTO
-
 
     ) {
 
