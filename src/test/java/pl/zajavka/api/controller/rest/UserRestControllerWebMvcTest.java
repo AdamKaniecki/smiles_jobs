@@ -21,10 +21,13 @@ import pl.zajavka.controller.dto.mapper.UserMapperDTO;
 import pl.zajavka.infrastructure.business.NotificationService;
 import pl.zajavka.infrastructure.business.UserService;
 import pl.zajavka.infrastructure.domain.User;
+import pl.zajavka.util.NotificationFixtures;
 import pl.zajavka.util.UserFixtures;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -191,6 +194,24 @@ public class UserRestControllerWebMvcTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(notifications)));
+    }
+
+    @Test
+    public void testCandidateDetailsSuccess() throws Exception {
+        // Mockowanie danych wejściowych
+        Integer userId = 1;
+        User user = UserFixtures.someUser1();
+        user.setId(userId);
+
+        UserDTO userDTO = UserFixtures.someUserDTO1();
+
+        when(userService.findById(userId)).thenReturn(user);
+        when(userMapperDTO.map(user)).thenReturn(userDTO);
+
+        // Wykonanie żądania GET i weryfikacja odpowiedzi
+        mockMvc.perform(get("/api/{userId}", userId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }
