@@ -81,9 +81,9 @@ openApiGenerate {
             serializationLibrary: "jackson"
     ]
     outputDir = "$buildDir/generated-sources/openapi".toString()
-    inputSpec = "$rootDir/src/main/resources/gloat-v1.0.0.json".toString()
-    apiPackage = "pl.zajavka.infrastructure.gloat.api"
-    modelPackage = "pl.zajavka.infrastructure.gloat.model"
+    inputSpec = "$rootDir/src/main/resources/cvApi-v3.0.1.json".toString()
+    apiPackage = "pl.zajavka.infrastructure.cvApi.api"
+    modelPackage = "pl.zajavka.infrastructure.cvApi.model"
     validateSpec = false // dodaj tę linijkę, aby wyłączyć walidację specyfikacji
 }
 

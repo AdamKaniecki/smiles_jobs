@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -12,6 +13,10 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import pl.zajavka.infrastructure.cvApi.ApiClient;
+import pl.zajavka.infrastructure.cvApi.api.CvRestControllerApi;
+import pl.zajavka.infrastructure.cvApi.model.CvDTO;
+import pl.zajavka.infrastructure.cvApi.model.CvDTOs;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
@@ -24,7 +29,9 @@ public class WebClientConfiguration {
 //    dwiema aplikacjami to musielibyśmy napisać dwie konfiguracje WebClienta
 
 //    public static final String PET_STORE_URL = "https://swagger-ui/index.html";
-    public static final String GLOAT_URL = "https://swagger.gloat.com/#/";
+    @Value("${api.cv.url}")
+    private String cvUrl;
+    public static final String API_URL = "http://localhost:9000/swagger-ui/index.html";
     public static final int TIMEOUT = 5000; // api powinno odpowiedzieć w ciągu 5 sekund a jak nie to powinno zwrocic wyjątek
                                             // timeout Exception
 
@@ -59,10 +66,23 @@ public class WebClientConfiguration {
 
 //        tworzenie instancji tego Web Clienta
         return WebClient.builder()
-                .baseUrl(GLOAT_URL)
+                .baseUrl(API_URL)
                 .exchangeStrategies(exchangeStrategies)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 
     }
+    @Bean
+    public ApiClient apiClient(final WebClient webClient) {
+        ApiClient apiClient = new ApiClient(webClient);
+        apiClient.setBasePath(cvUrl);
+        return apiClient;
+    }
+
+    @Bean
+    public CvRestControllerApi cvRestControllerApi(final ApiClient apiClient) {
+        return new CvRestControllerApi(apiClient);
+    }
+
+
 }

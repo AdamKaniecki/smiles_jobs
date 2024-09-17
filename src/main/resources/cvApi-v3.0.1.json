@@ -1,0 +1,253 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CV API applications",
+    "contact": {
+      "name": "CV API",
+      "url": "https://zajavka.pl",
+      "email": "adam2113@poczta.onet.pl"
+    },
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:9000",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/{cvId}": {
+      "get": {
+        "tags": [
+          "cv-rest-controller"
+        ],
+        "operationId": "cvDetailsAsJson",
+        "parameters": [
+          {
+            "name": "cvId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CvDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "cv-rest-controller"
+        ],
+        "operationId": "updateCv",
+        "parameters": [
+          {
+            "name": "cvId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CvDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cv-rest-controller"
+        ],
+        "operationId": "deleteCv",
+        "parameters": [
+          {
+            "name": "cvId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/createCV": {
+      "post": {
+        "tags": [
+          "cv-rest-controller"
+        ],
+        "operationId": "addCv",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CvDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CvDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cvList": {
+      "get": {
+        "tags": [
+          "cv-rest-controller"
+        ],
+        "operationId": "allCv",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CvDTOs"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CvDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "surname": {
+            "type": "string"
+          },
+          "dateOfBirth": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "maritalStatus": {
+            "type": "string"
+          },
+          "contactEmail": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "education": {
+            "type": "string"
+          },
+          "workExperience": {
+            "type": "string"
+          },
+          "socialMediaProfil": {
+            "type": "string"
+          },
+          "projects": {
+            "type": "string"
+          },
+          "aboutMe": {
+            "type": "string"
+          },
+          "certificatesOfCourses": {
+            "type": "string"
+          },
+          "programmingLanguage": {
+            "type": "string"
+          },
+          "skillsAndTools": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "languageLevel": {
+            "type": "string"
+          },
+          "hobby": {
+            "type": "string"
+          },
+          "followPosition": {
+            "type": "string"
+          },
+          "visible": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CvDTOs": {
+        "type": "object",
+        "properties": {
+          "cvDTOList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CvDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}

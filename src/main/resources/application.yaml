@@ -1,6 +1,10 @@
 server:
   port: 8800
 
+#to nie wiem czy dobrze skonfigurowałem
+api:
+  cv:
+    url: http://localhost:9000/swagger-ui/index.html
 
 
 

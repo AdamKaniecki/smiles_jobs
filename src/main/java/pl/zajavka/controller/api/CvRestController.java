@@ -109,29 +109,29 @@ public class CvRestController {
     }
 
 
-//    @DeleteMapping("/deleteCV/{cvId}")
-//    public ResponseEntity<String> deleteCV(@PathVariable("cvId") Integer cvId, Authentication authentication) {
-//        try {
-//            String username = authentication.getName();
-//            User loggedInUser = userService.findByUserName(username);
-//
-//             CV cv = cvService.findById(cvId);
-//            if (cv != null) {
-//                Address address = cv.getAddress();
-//                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
-//                if (!cv.getUser().equals(loggedInUser)) {
-//                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this CV");
-//                }
-//
-//                cvService.deleteCVAndSetNullInNotifications(cv);
-//                return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
-//            }
-//
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting CV");
-//        }
-//}
+    @DeleteMapping("/deleteCV/{cvId}")
+    public ResponseEntity<String> deleteCV(@PathVariable("cvId") Integer cvId, Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            User loggedInUser = userService.findByUserName(username);
+
+             CV cv = cvService.findById(cvId);
+            if (cv != null) {
+                Address address = cv.getAddress();
+                // Sprawdzenie, czy zalogowany użytkownik jest właścicielem oferty pracy
+                if (!cv.getUser().equals(loggedInUser)) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to delete this CV");
+                }
+
+                cvService.deleteCVAndSetNullInNotifications(cvId);
+                return ResponseEntity.status(HttpStatus.OK).body("CV deleted successfully");
+            }
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CV not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while deleting CV");
+        }
+}
     @GetMapping("/searchCV")
     public ResponseEntity<List<CvDTO>> searchCV(@RequestBody SearchRequest searchRequest, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
